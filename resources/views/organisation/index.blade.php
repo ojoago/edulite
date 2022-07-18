@@ -1,3 +1,6 @@
+@extends('layout.mainlayout')
+@section('title','dashboard')
+@section('content')
 @foreach($data as $row)
 <a href="{{route('update.organisation',[base64Encode($row->pid)])}}">{{$row->names}}</a><br>
 @endforeach
@@ -23,3 +26,4 @@
     <!-- <input type="text" name="reg_number"><br> -->
     <button type="submit">Create</button>
 </form>
+@endsection

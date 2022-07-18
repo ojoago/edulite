@@ -29,7 +29,7 @@ class AssessmentTitleController extends Controller
         $term = Term::where('school_pid',getSchoolPid())->get(['pid','term']);//
         $classes = Classes::where('school_pid',getSchoolPid())->get(['pid','class']);//
         $arm = ClassArm::where('school_pid',getSchoolPid())->get(['pid','arm']);//class arm
-        $score = ScoreSetting::where('school_pid',getSchoolPid())->get(['pid','score'])->dd();//class arm
+        $score = ScoreSetting::where('school_pid',getSchoolPid())->get(['pid','score']);//class arm
         return view('school.framework.assessment.index',compact('data','session','term','classes','arm'));
     }
     public function createAssessmentTitle(Request $request)

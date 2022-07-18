@@ -48,8 +48,11 @@ class AuthController extends Controller
             'email' => 'required',
             'password' => 'required',
         ]);
+        // $pid = User::where('email',$request->email)
+        //                 ->orwhere('gsm', $request->email)
+        //                 ->orwhere('username', $request->email)->pluck('pid')->first();
         if (auth()->attempt($request->only('email', 'password'))) {
-            return redirect()->to('users-dashboard');
+            return redirect()->route('users.dashboard');
         }
         return back()->with('message', "error|Invalid login details");
     }

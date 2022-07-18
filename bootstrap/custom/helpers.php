@@ -32,7 +32,20 @@ use Illuminate\Support\Facades\Session;
         if(getUserPid()){//check if user is still logged
             return base64Decode(session('activeRecordPid')); //return school pid
         }
-       // bruteLogout();
+        // bruteLogout();
+    }
+    function setSchoolUserPid($pid){ //set pid key of the table to be acted upone 
+        session(['schoolUserPid'=>base64Encode($pid)]); //get user pid
+    }
+    function getSchoolUserPid(){ //set pid key of the table to be acted upone 
+        return base64Decode(session('schoolUserPid')); //get user pid
+    }
+    function setUserActiveRole($code){
+        session(['userActiveRole' => base64Encode($code)]); //get user pid
+    }
+    function getUserActiveRole(){
+        return 200;
+        return base64Decode(session('userActiveRole')); 
     }
     function getUserPid(){
         if(auth()->user()){

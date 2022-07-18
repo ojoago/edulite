@@ -4,22 +4,43 @@ namespace App\Http\Controllers\School;
 
 use App\Http\Controllers\Controller;
 use App\Models\School\School;
+use App\Models\School\Staff\SchoolStaff;
 use Illuminate\Http\Request;
 
 class SchoolController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
         setSchoolPid('4695NJ102161072M4N26902OU226');
         $data = School::where('pid', getSchoolPid())->get();
         return view('school.index',compact('data'));
     }
-
+    public function schoolLogin($id)
+    {
+        $id=base64Decode($id);
+        $schoolUser = SchoolStaff::where(['school_pid'=>$id,'user_pid'=>getUserPid()])->first();
+        if(!$schoolUser){
+            return redirect()->back()->with('error','you are doing it wrong');
+        }
+        setSchoolPid($id);
+        setSchoolUserPid($schoolUser->pid);
+        return redirect()->route('my.school.dashboard');
+    }
+    public function mySchoolDashboard(){
+       
+        $data = School::where('pid', getSchoolPid())->get();
+        return view('school.dashboard.admin-dashboard', compact('data'));
+    }
     public function create(Request $request){
         $request->validate([
             "state_id" =>"required|int",

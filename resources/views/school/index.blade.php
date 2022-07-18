@@ -1,5 +1,8 @@
+@extends('layout.mainlayout')
+@section('title','lite')
+@section('content')
 @foreach($data as $row)
-<a href="{{route('update.school',[base64Encode($row->pid)])}}">{{$row->school_name}}</a><br>
+<a href="{{route('login.school',[base64Encode($row->pid)])}}">{{$row->school_name}}</a><br>
 <a href="{{route('school.staff',[base64Encode($row->pid)])}}">Staff</a><br>
 @endforeach
 <a href="{{route('school.class')}}">Class</a><br>
@@ -11,7 +14,7 @@
 <a href="{{route('school.attendance')}}">Atend</a><br>
 <a href="{{route('school.registration')}}">reg</a><br>
 <a href="{{route('school.users')}}">school Users</a>
-{{flashMessage()}}
+{{!!flashMessage()!!}}
 <form action="" method="post">
     @csrf
     <select type="text" name="state_id" placeholder="" required>
@@ -51,7 +54,7 @@
     <!-- <input type="text" name="reg_number"><br> -->
     <button type="submit">Create</button>
 </form>
-
+@endsection
 
 
 <!-- school_logo
