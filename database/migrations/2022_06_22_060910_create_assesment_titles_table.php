@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('category')->nullable();
             $table->string('description')->nullable();
             $table->string('pid')->unique();
-            $table->string('status')->default(1)->comment('1 enabled, 2 disabled');
+            $table->string('status')->default(1)->comment('1 enabled, 0 disabled');
             $table->string('staff_pid')->comment('creator');
             $table->timestamps();
         });

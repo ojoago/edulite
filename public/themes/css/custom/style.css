@@ -11,7 +11,15 @@ body{
     flex-direction: column;
     justify-content: flex-start;
 }
-
+.pointer{
+    cursor: pointer;
+}
+.custom-check{
+    transform: scale(1.5);
+}
+.removeRow{
+    width: 10px;;
+}
 /* spinner  */
  /* loader */
  .overlay {

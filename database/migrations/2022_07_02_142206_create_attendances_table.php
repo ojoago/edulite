@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->string('school_pid')->nullable();
-            $table->string('taken_pid');
+            $table->string('record_pid');
             $table->string('student_pid');
             $table->integer('status')->comment('0 absent,1 present');
             $table->string('date',20)->nullable();

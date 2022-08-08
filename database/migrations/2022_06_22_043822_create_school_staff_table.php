@@ -18,10 +18,13 @@ return new class extends Migration
             $table->string('school_pid');
             $table->string('user_pid');
             $table->string('pid')->unique();
-            $table->string('role_id')->comment('actor');
+            $table->string('role_id')->nullable()->comment('actor');
             $table->string('staff_id')->nullable()->comment('staff id card number');
-            $table->string('status')->default(1)->comment('1 = active, 0 disbled');
-            $table->string('access')->nullable()->comment('role access');
+            $table->string('status')->default(1)->comment('1 = active, 0 disbled, 3 sacked,4 left the school');
+            $table->text('access')->nullable()->comment('role access');
+            $table->text('stamp')->nullable()->comment('official stampd');
+            $table->text('signature')->nullable()->comment('officail signature');
+            $table->text('image_path')->nullable()->comment('profile pix');
             $table->timestamps();
         });
     }

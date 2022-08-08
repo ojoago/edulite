@@ -10,6 +10,7 @@ use App\Models\School\Framework\Class\ClassArm;
 use App\Models\School\Framework\Session\Session;
 use App\Models\School\Framework\Attendance\AttendanceType;
 use App\Models\School\Framework\Attendance\ClassAttendance;
+use Illuminate\Support\Facades\Validator;
 
 class AttendanceTypeController extends Controller
 {
@@ -24,28 +25,40 @@ class AttendanceTypeController extends Controller
      */
     public function index()
     {
-        $cnd = ['school_pid'=>getSchoolPid()];
-        $data = AttendanceType::where($cnd)->get(['pid','title']);
-        $arm = ClassArm::where($cnd)->get(['pid','arm']);
-        $session = Session::where($cnd)->get(['pid','session']);
-        $cat = Category::where($cnd)->get(['pid','category']);
-        $term = Term::where($cnd)->get(['pid','term']);
-        return view('school.framework.attendance.index',compact('data','arm','session','cat','term'));
+        $data = AttendanceType::where('school_pid', getSchoolPid())->get(['pid', 'title', 'description', 'created_at']);
+        return datatables($data)
+        ->addColumn('action', function ($data) {
+            $html = '<a href="/reminders/' . $data->pid . '/done"><button class="button is-primary" type="submit" data-toggle="tooltip" title="Edit Session"><i class="fa fa-check-square-o" aria-hidden="true"></i></button></a>';
+            return $html;
+        })
+        ->editColumn('created_at', function ($data) {
+            return date('d F Y', strtotime($data->created_at));
+        })
+        ->rawColumns(['data', 'action'])
+        ->make(true);
+        
     }
 
     public function createAttendanceType(Request $request){
-        $request->validate([
-            'title'=>'required'
-        ]);
-        $request['pid'] = public_id();
-        $request['staff_pid'] = getUserPid();
-        $request['school_pid'] = getSchoolPid();
-        // dd($request->all());
-        $result = $this->createOrUpdateAttendanceType($request->all());
-        if($result){
-            return redirect()->back()->with('success','attendance type created');
+        $validator = Validator::make($request->all(),[
+            'title' => 'required|string'
+        ],['title.required'=>'Enter Attendance Name','title.string'=>'Attendance Name should be text']);
+        if(!$validator->fails()){
+            $data['pid'] = public_id();
+            $data['staff_pid'] = getSchoolUserPid();
+            $data['school_pid'] = getSchoolPid();
+            $data['title'] = $request->title;
+            $data['description'] = $request->description;
+            $result = $this->createOrUpdateAttendanceType($data);
+            if($result){
+
+                return response()->json(['status'=>1,'message'=>'Attendance Type Created Successfully']);
+                
+            }
+            return response()->json(['status'=>2,'message'=>'Something Went Wrong']);
         }
-        return redirect()->back()->with('error','failed to create type');
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+        
     }
 
     private function createOrUpdateAttendanceType($data){

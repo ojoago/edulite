@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('school_grades', function (Blueprint $table) {
+        Schema::create('school_grades', function (Blueprint $table) {// grade params
             $table->id();
             $table->string('school_pid');
             $table->string('category_pid'); //school category

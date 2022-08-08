@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\School\School;
+use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
@@ -19,7 +20,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('users.dashboard');
+        setSchoolPid();//set school pid to null
+        $data = School::where('user_pid', getUserPid())->get();
+        // return view('school.index', );
+        return view('users.dashboard', compact('data'));
     }
 
     /**

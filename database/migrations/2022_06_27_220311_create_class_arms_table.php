@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('arm');
             $table->string('pid')->unique();
             $table->string('staff_pid')->comment('creator');
-            $table->string('status')->comment('1 enabled, 2 disabled');
+            $table->string('status')->comment('1 enabled, 0 disabled');
             $table->timestamps();
         });
     }

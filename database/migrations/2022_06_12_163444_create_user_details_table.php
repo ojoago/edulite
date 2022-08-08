@@ -20,11 +20,14 @@ return new class extends Migration
             $table->string('firstname');
             $table->string('lastname');
             $table->string('othername')->nullable();
-            $table->string('address');
-            $table->string('dob', 20);
-            $table->string('gender', 10);
-            $table->string('religion');
-            $table->string('title');
+            $table->string('fullname')->nullable();
+            $table->string('address')->nullable();
+            $table->string('dob', 20)->nullable();
+            $table->string('gender', 10)->nullable();
+            $table->string('religion')->nullable();
+            $table->string('title')->nullable();
+            $table->string('state')->nullable();
+            $table->string('lga')->nullable();
             $table->timestamps();
         });
     }

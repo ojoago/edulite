@@ -9,6 +9,6 @@ class Classes extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'pid','staff_pid','class','category_pid','school_pid'
+        'pid','staff_pid','class','category_pid','school_pid', 'class_number'
     ];
 }

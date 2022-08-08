@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('session');
             $table->string('school_pid');
             $table->string('pid')->unique();
+            $table->string('staff_pid');
             $table->timestamps();
         });
     }

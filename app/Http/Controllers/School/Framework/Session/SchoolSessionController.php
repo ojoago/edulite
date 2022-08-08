@@ -5,8 +5,6 @@ namespace App\Http\Controllers\School\Framework\Session;
 use App\Http\Controllers\Controller;
 use App\Models\School\Framework\Session\ActiveSession;
 use App\Models\School\Framework\Session\Session;
-use App\Models\School\Staff\SchoolStaff;
-use Dflydev\DotAccessData\Data;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,72 +20,130 @@ class SchoolSessionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function ajax()
-    {
-        $data = Session::where(['school_pid'=>getSchoolPid()])->get(['pid','session','created_at']);
-        return datatables($data)->make(true);
-       return view('school.framework.session.school_session',compact('data'));
-    }
+
+    //  create and list session tab begin 
     public function index()
     {
-        $data = Session::where(['school_pid'=>getSchoolPid()])->get(['pid','session','created_at']);
-       return view('school.framework.session.school_session',compact('data'));
+        // datatable serve 
+        $data = Session::where(['school_pid'=>getSchoolPid()])->select(['pid','session','created_at']);
+        return datatables($data)->editColumn('created_at', function ($data) {
+            return date('d F Y', strtotime($data->created_at));
+        })->make(true);
+
+        // return datatables($data)
+        //     // ->addColumn('action', function ($data) {
+        //     //         $html = '
+        //     //             <a href="/reminders/' . $data->pid . '/done"><button class="button is-primary" type="submit" data-toggle="tooltip" title="Edit Session"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
+        //     //             </a>
+        //     //         </a>';
+        //     //     return $html;
+        //     // })
+        //     ->editColumn('created_at', function ($data) {
+        //         return date('d F Y', strtotime($data->created_at));
+        //     })
+        //     // ->rawColumns(['data','action'])
+        //     ->make(true);
     }
+
     public function createSession(Request $request)
     {
-        //return 'it sends';
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'session' => 'required'
         ]);
-       if(!$validator->fails()){
-            
+        if (!$validator->fails()) {
             $data = [
-                'pid' =>public_id(),
-                'school_pid'=>getSchoolPid(),
-                'staff_pid'=>getSchoolUserPid(),
-                'session'=>$request->session
+                'pid' => public_id(),
+                'school_pid' => getSchoolPid(),
+                'staff_pid' => getSchoolUserPid(),
+                'session' => $request->session
             ];
-            $query = Session::where(['school_pid'=>getSchoolPid(),'session'=>$data['session']])->first();
-            if($query){
+            $query = Session::where(['school_pid' => getSchoolPid(), 'session' => $data['session']])->first();
+            if ($query) {
                 $data = $query;
                 // $msg = "exists in is it";
             }
             $result = $this->createOrUpdateSession($data);
             if ($result) {
-                return response()->json(['status'=>1,'message'=> 'Session created']);
+                return response()->json(['status' => 1, 'message' => 'Session created']);
             }
-       }
-       
-        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+        }
+
+        return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
     }
 
-    private function createOrUpdateSession($data){
+    private function createOrUpdateSession($data)
+    {
         try {
-           return  Session::updateOrCreate(['pid'=>$data['pid'],'school_pid'=>$data['school_pid']],$data);
+            return  Session::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
             dd($error);
         }
     }
+
+    // end 
+
+    
+    // active session tab
+
+    public function loadSchoolActiveSession()
+    {
+        $data = Session::join('active_sessions', 'sessions.pid', 'active_sessions.session_pid')
+        ->where(['sessions.school_pid' => getSchoolPid()])
+            ->select(['sessions.session', 'active_sessions.created_at']);
+        return datatables($data)->editColumn('created_at', function ($data) {
+            return date('d F Y', strtotime($data->created_at));
+        })->make(true);
+    }
+    // load list of session on create active session modal dropdown 
+    public function loadSchoolSession()
+    {
+        $result = Session::where(['school_pid'=>getSchoolPid()])
+                            ->limit(10)->orderBy('id','DESC')
+                            ->get(['pid', 'session']);
+        foreach($result as $row){
+                $data[] = [
+                    'id'=>$row->pid,
+                    'text'=>$row->session,
+                ];
+        }
+        return response()->json($data);
+    }
+   
+    
     public function setActiveSession(Request $request)
     {
-       $request->validate([
-            'session_pid'=>'required'
-       ]);
-       try {
-            $request['school_pid'] = getSchoolPid();
-            //    $request['staff_pid'] = getUserPid();
-            $result = ActiveSession::updateOrCreate(['session_pid' => $request['session_pid'], 'school_pid' => $request['school_pid']], $request->all());
-            if ($result) {
-                return redirect()->back()->with('success', 'session updated');
+        $validator = Validator::make($request->all(), [
+            'active_session' => 'required'
+        ]
+        // , ['session_pid:required' => 'Select Active Session']
+    );
+        if(!$validator->fails()){
+            $data = [
+                'school_pid'=>getSchoolPid(),
+                'session_pid'=>$request->active_session
+            ];
+            $result = $this->updateActiveSession($data);
+            if($result){
+                return response()->json(['status' => 1, 'message' => 'School Active session updated']);
             }
-            return redirect()->back()->with('error', 'failed to create session');
-       } catch (\Throwable $e) {
+            return response()->json(['status' => 2, 'message' => 'update failed']);
+        }
+
+        return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+    }
+
+    private function updateActiveSession($data){
+        try {
+          return ActiveSession::updateOrCreate(['school_pid' => $data['school_pid']],$data);
+            
+        } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
+            
             dd($error);
-       }
+        }
     }
 
     /**

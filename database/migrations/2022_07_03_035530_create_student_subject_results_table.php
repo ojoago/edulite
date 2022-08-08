@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('student_subject_results', function (Blueprint $table) {
             $table->id();
             $table->string('student_pid');
+            $table->string('class_result_pid');
             $table->string('assessment_pid');
             $table->string('comment')->nullable();
             $table->string('position')->nullable();
@@ -23,6 +24,9 @@ return new class extends Migration
             $table->float('min_score')->nullable();
             $table->float('max_score')->nullable();
             $table->float('avg_score')->nullable();
+            $table->string('subjects')->nullable();
+            $table->text('subject_teacher_comment')->nullable();
+            // $table->text('subject_teacher_comment')->nullable();
             $table->timestamps();
         });
     }

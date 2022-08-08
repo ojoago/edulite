@@ -2,18 +2,22 @@
 <html lang="en">
 @include('layout.theme.head')
 
+@auth
+@if(getSchoolPid())
+    @include('layout.theme.school-header')
+    @include('layout.theme.sidebar')
+@else
+    @include('layout.theme.header')
+@endif
+@endauth
+<main id="main" class="main">
+    @yield('content')
     @auth
-        @include('layout.theme.header')
-        @include('layout.theme.sidebar')
-    @endauth
-    <main id="main" class="main">
-        @yield('content')
-        @auth
-        @include('layout.theme.footer')
-    </main>
-        <!-- include('layout.partials.modals') -->
-    @endauth
-    <!-- include('layout.partials.footer-scripts') -->
+    @include('layout.theme.footer')
+</main>
+<!-- include('layout.partials.modals') -->
+@endauth
+<!-- include('layout.partials.footer-scripts') -->
 
 </body>
 

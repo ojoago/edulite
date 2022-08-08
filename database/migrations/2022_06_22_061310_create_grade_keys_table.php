@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('remark')->nullable();
             $table->float('min_score')->default(0);
             $table->float('max_score')->default(0);
-            $table->string('color');
+            $table->string('color')->nullable();
             $table->string('pid')->unique();
             $table->timestamps();
         });

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('user_pid');
             $table->text('school_pid');
             $table->string('pid')->unique();
-            $table->text('parent_image_path');
+            $table->text('parent_image_path')->nullable();
             $table->timestamps();
         });
     }

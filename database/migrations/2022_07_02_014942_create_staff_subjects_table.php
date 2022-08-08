@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('staff_pid');
             $table->string('arm_pid');
             $table->string('session_pid');
+            $table->string('category_pid');
             $table->string('term_pid');
             $table->string('pid')->unique();
             $table->string('subject_pid');

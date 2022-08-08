@@ -9,9 +9,9 @@ class ScoreSetting extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'school_pid','pid','session_pid','class_arm_pid','term_pid',
-        'score',
+        'school_pid','pid','score',
         'assessment_type_pid',//this is supossed to be assessment title
-        'type','order','status','class_pid','category_pid'
+        'type','order', 
+        'score_data_pid'// foreign key
     ];
 }

@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers\School\Staff;
 
-use App\Http\Controllers\Controller;
-use App\Models\School\Framework\Class\ClassArm;
-use App\Models\School\Framework\Session\Session;
-use App\Models\School\Framework\Subject\Subject;
-use App\Models\School\Framework\Term\Term;
-use App\Models\School\Staff\SchoolStaff;
-use App\Models\School\Staff\StaffClass;
-use App\Models\School\Staff\StaffSubject;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\School\Staff\StaffClass;
+use App\Models\School\Staff\SchoolStaff;
+use App\Models\School\Staff\StaffSubject;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Auths\AuthController;
+use App\Http\Controllers\Users\UserDetailsController;
 
 class StaffController extends Controller
 {
-
+    private $pwd = 1234567;
     public function __construct()
     {
         $this->middleware('auth');
@@ -24,36 +23,137 @@ class StaffController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index()
     {
-        $cnd = ['school_pid'=>getSchoolPid()];
-        $data = SchoolStaff::where($cnd)->get();
-        $arm = ClassArm::where($cnd)->get();
-        $sbj = Subject::where($cnd)->get();
-        $session = Session::where($cnd)->get();
-        $term = Term::where($cnd)->get();
-        return view('school.staff.index',compact('data','arm','sbj','session','term'));
+        // $cnd = ['school_staff.school_pid'=>getSchoolPid()];
+        $data = SchoolStaff::join('users','users.pid','school_staff.user_pid')
+                    ->join('user_details','users.pid','user_details.user_pid')
+                    ->where(['school_staff.school_pid' => getSchoolPid(), 'school_staff.status'=>1])
+                    ->get([
+                        'gsm','username','email','staff_id','fullname',
+                        'role_id','school_staff.pid', 'school_staff.created_at'
+                    ]);
+        return $this->useDataTable($data);
+    }
+    public function inActiveStaff()
+    {
+        // $cnd = ['school_staff.school_pid'=>getSchoolPid()];
+        $data = SchoolStaff::join('users','users.pid','school_staff.user_pid')
+                    ->join('user_details','users.pid','user_details.user_pid')
+                    ->where(['school_staff.school_pid' => getSchoolPid()])
+                    ->where('school_staff.status','<>',1)
+                    ->get([
+                        'gsm','username','email','staff_id','fullname',
+                        'role_id','school_staff.pid', 'school_staff.created_at'
+                    ]);
+        return $this->useDataTable($data);
+    }
+    private function useDataTable($data){
+        return datatables($data)
+        ->addColumn('action', function ($data) {
+            return view('school.lists.staff.action-buttons', ['data' => $data]);
+        })->editColumn('created_at', function ($data) {
+            return $data->created_at->diffForHumans();
+        })->addIndexColumn()
+        ->editColumn('role_id', function ($data) {
+            return matchStaffRole($data->role_id);
+        })
+        ->make(true);
+    }
+    public function staffProfile($id)
+    {
+        setActionablePid($id);
+        return redirect()->route('view.staff.profile');
+    }
+    public function viewStaffProfile()
+    {
+        
+        return view('school.staff.staff-profile');
     }
 
-    public function create(Request $request){
-        $request->validate([
-            'role_id'=>'required',
-            'staff_id'=>'required',
-        ]);
+    public function createStaff(Request $request){
+        $validator = Validator::make($request->all(),[
+            'firstname'=>'required|string|min:3|max:25',
+            'lastname'=> 'required|string|min:3|max:25',
+            'gsm'=> 'required|min:11|max:11|unique:users,gsm',
+            'username'=> 'nullable|unique:users,username',
+            'email'=> 'nullable|email|unique:users,email',
+            'gender'=>'required',
+            'dob'=>'required|date',
+            'role'=>'required',
+            'address'=>'required|string',
+        ],['gsm.required'=>'Enter Phone Number','dob.required'=>'Enter you date of birth']);
         
+        if(!$validator->fails()){
+            $data = [
+                'gsm' => $request->gsm,
+                'email'=> $request->email,
+                'account_status' =>1,
+                'password'=>$this->pwd,
+                'username'=> $request->username ?? AuthController::uniqueUsername($request->firstname)
+            ];
+            $detail = [
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'othername' => $request->othername,
+                'gender' => $request->gender,
+                'dob' => $request->dob,
+                'religion' => $request->religion,
+                'state' => $request->state,
+                'lga' => $request->lga,
+                'address' => $request->address,
+            ];
+            $user = AuthController::createUser($data);
+            if($user){
+                $detail['user_pid'] = $user->pid;
+                $userDetails = UserDetailsController::insertUserDetails($detail);
+                if($userDetails){
+                   $result = $this->registerStaffToSchool(['role'=>$request->role,'user_pid'=>$user->pid]);
+                   if($result){
+
+                        return response()->json(['status' => 1, 'message' => 'Staff Registration Successfull, Staff Id '.$result->staff_id.' & username is '.$data['username']]);
+
+                    }
+
+                    return response()->json(['status' => 1, 'message' => 'user account created, but not linked to school!! use '.$data['gsm'].' or '.$data['username'].' to link to school']);
+                
+                }
+            }
+
+            return response()->json(['status' => 1, 'message' => 'user account not completed, and not linked to school!! use '.$data['gsm']. ' or ' . $data['username'] . ' to link to school, while the use link to update details']);
+
+        }
+
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+    }
+
+    private function registerStaffToSchool(array $data){
         try {
-            $request['school_pid'] = getSchoolPid();
-            $request['pid'] = public_id();
-            $request['user_pid'] = getUserPid();
-            SchoolStaff::create($request->all());
-            return redirect()->back()->with('success','staff created successfully');
+            $data = [
+                'staff_id' =>    self::staffUniqueId(),
+                'school_pid' =>  getSchoolPid(),
+                'user_pid' =>    $data['user_pid'],
+                'pid' =>         public_id(),
+                'role_id' =>     $data['role'],
+            ];
+            return SchoolStaff::create($data);
+           
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
             dd($error);
         }
     }
-
+    public static function staffUniqueId(){
+        $id = self::countStaff() + 1;
+        $id =strlen($id) == 1 ? '0'.$id : $id;
+        return strtoupper(date('yM')).$id;
+    }
+    
+    public static function countStaff(){
+       return SchoolStaff::where(['school_pid'=>getSchoolPid()])->where('staff_id','like','%'.date('yM').'%')->count('id');
+    }
+    
     public function activateStaffAccount($pid){
         $staff = SchoolStaff::where(['school_pid' => getSchoolPid(),'pid' => $pid])->first(['id','status']);
         try {

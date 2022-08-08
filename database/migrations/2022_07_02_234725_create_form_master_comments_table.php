@@ -11,6 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
+    //form master defined comment
     public function up()
     {
         Schema::create('form_master_comments', function (Blueprint $table) {

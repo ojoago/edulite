@@ -23,8 +23,9 @@ return new class extends Migration
             $table->string('school_moto')->nullable();
             $table->string('school_logo')->nullable();
             $table->string('school_website')->nullable();
-            // $table->string('school_theme')->nullable();
-            $table->string('school_handle')->nullable();
+            $table->integer('state_id')->nullable();
+            $table->integer('lga_id')->nullable();
+            $table->string('school_handle')->nullable()->unique();
             $table->timestamps();
         });
     }

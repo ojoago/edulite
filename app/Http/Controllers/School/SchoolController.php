@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class SchoolController extends Controller
 {
+   
     public function __construct()
     {
         $this->middleware('auth');
@@ -21,19 +22,21 @@ class SchoolController extends Controller
 
     public function index()
     {
-        setSchoolPid('4695NJ102161072M4N26902OU226');
         $data = School::where('pid', getSchoolPid())->get();
         return view('school.index',compact('data'));
     }
     public function schoolLogin($id)
     {
         $id=base64Decode($id);
-        $schoolUser = SchoolStaff::where(['school_pid'=>$id,'user_pid'=>getUserPid()])->first();
+        $schoolUser = SchoolStaff::join('schools','schools.pid','school_staff.school_pid')
+                        ->where(['school_pid'=>$id, 'school_staff.user_pid'=>getUserPid()])->first(['school_staff.pid', 'school_name']);
         if(!$schoolUser){
             return redirect()->back()->with('error','you are doing it wrong');
         }
         setSchoolPid($id);
+        setSchoolType();
         setSchoolUserPid($schoolUser->pid);
+        setSchoolName($schoolUser->school_name);
         return redirect()->route('my.school.dashboard');
     }
     public function mySchoolDashboard(){
@@ -41,7 +44,7 @@ class SchoolController extends Controller
         $data = School::where('pid', getSchoolPid())->get();
         return view('school.dashboard.admin-dashboard', compact('data'));
     }
-    public function create(Request $request){
+    public function createSchool(Request $request){
         $request->validate([
             "state_id" =>"required|int",
             "lga_id" => "required|int",
@@ -52,9 +55,21 @@ class SchoolController extends Controller
             "school_handle" => "required",
         ]);
         try {
+            $data = [
+                "state_id" => $request->state_id,
+                "lga_id" => $request->lga_id,
+                "school_name" => $request->school_name,
+                "school_contact" => $request->school_contact,
+                "school_address" => $request->school_address,
+                "school_moto" => $request->school_moto,
+                "school_handle" => $request->school_handle,
+                "pid" => public_id(),
+                "user_pid" => getUserPid(),
+                'school_handle'=>$this->schoolHandle(),
+            ];
             $request['pid'] = public_id();
             $request['user_pid'] = getUserPid();
-            School::create($request->all());
+            School::create($data);
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
@@ -62,28 +77,22 @@ class SchoolController extends Controller
         }
        
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function schoolHandle()
     {
-        //
+        $id = $this->countSchool() + 1;
+        $id = strlen($id) == 1 ? '0' . $id : $id;
+        return strtoupper(date('yM')) . $id;
+    }
+    public function countSchool()
+    {
+        return School::where('school_handle', 'like', '%' . date('yM') . '%')->count('id');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public static function getSchoolHandle()
     {
-        //
+        return School::where(['pid' => getSchoolPid()])->pluck('school_handle')->first();
     }
-
     /**
      * Update the specified resource in storage.
      *

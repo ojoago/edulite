@@ -11,6 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
+    //principal defined comments
     public function up()
     {
         Schema::create('principal_comments', function (Blueprint $table) {

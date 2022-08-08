@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('attendance_types', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('type');
             $table->string('pid')->unique();
             $table->string('description')->nullable();
             $table->string('school_pid');

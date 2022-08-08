@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('school_pid');
             $table->string('pid')->unique();
             $table->string('status')->default(1)->comment('1 enable, 0 disable');
-            $table->string('subject_type_pid')->comment('subject tpye pid');
+            $table->string('subject_type_pid')->comment('subject type pid');
+            $table->string('category_pid')->comment('subject type pid');
             $table->string('staff_pid')->comment('staff pid');
             $table->timestamps();
         });

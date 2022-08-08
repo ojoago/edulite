@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Psychomotor extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'title','school_pid','pid','max_score','staff_pid'
+    ]; 
 }

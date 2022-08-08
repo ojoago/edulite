@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('email')->unique()->nullable();
             $table->string('username')->unique()->nullable();
-            $table->string('gsm')->nullable();
+            $table->string('gsm')->unique()->nullable();
             $table->string('pid')->unique();
             $table->integer('account_status')->default(0);
             $table->string('password');

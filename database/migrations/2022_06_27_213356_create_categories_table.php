@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('pid')->unique();
             $table->string('category');
             $table->string('description')->nullable();
-            $table->string('staff_pid')->nullable();
+            $table->string('staff_pid')->nullable()->comment('creator');
+            $table->string('head')->comment('pricipal/head');
             $table->timestamps();
         });
     }

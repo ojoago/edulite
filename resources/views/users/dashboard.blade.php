@@ -10,13 +10,14 @@
         </ol>
     </nav>
 </div>
-<a href="{{route('create.organisation')}}">create organisation</a><br>
-<a href="{{route('create.school')}}">create School</a><br>
+
+<!-- <a href="{{route('create.organisation')}}">create organisation</a><br> -->
+<a href="{{route('create.school')}}">create lite</a><br>
 <div class="row">
     <div class="col-lg-8">
         <div class="row">
+            @foreach($data as $row)
 
-            <!-- Sales Card -->
             <div class="col-xxl-4 col-md-6">
                 <div class="card info-card sales-card">
 
@@ -42,7 +43,7 @@
                             </div>
                             <div class="ps-3">
                                 <h6>145</h6>
-                                <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+                                <span class="text-success small pt-1 fw-bold">12%</span> <a href="{{route('login.school',[base64Encode($row->pid)])}}">{{$row->school_name}}</a></span>
 
                             </div>
                         </div>
@@ -50,6 +51,9 @@
 
                 </div>
             </div><!-- End Sales Card -->
+
+            @endforeach
+            <!-- Sales Card -->
 
             <!-- Revenue Card -->
             <div class="col-xxl-4 col-md-6">

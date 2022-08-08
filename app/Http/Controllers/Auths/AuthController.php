@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Auths;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Users\UserDetail;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -15,16 +15,42 @@ class AuthController extends Controller
             'username'=>'required|unique:users,username',
             'password'=>'required|min:6|confirmed'
         ]);
-        $request['pid'] = public_id();
-        $request['password'] = Hash::make($request->password);
+        $data = [
+            'email'=>$request->email,
+            'username'=>$request->username,
+            'password'=>$request->password,
+        ];
         // dd($request->all());
-        $user = User::create($request->all());
+        $user = self::createUser($data);
         $token = $user->createToken('traqToken')->plainTextToken;
         $response = [
             'user' => $user,
             'token' => $token,
         ];
         return response($response,201);
+    }
+
+    public static function createUser($data){
+        try {
+        $data['pid']  = public_id();
+           return User::create($data);
+        } catch (\Throwable $e) {
+            $error = $e->getMessage();
+            logError($error);
+            dd($error);
+        }
+    }
+   
+    public static function uniqueUsername($firstname)
+    {
+       $count = UserDetail::where('firstname' ,$firstname)
+                                ->orWhere(['firstname' => strtolower($firstname)])
+                                ->orWhere(['firstname' => strtoupper($firstname)])
+                                ->count('id');
+        if ($count == 0) {
+            return $firstname;
+        }
+        return $firstname.date('ym') . $count;
     }
     public function verifyAccount($id){
         $user= User::where('pid',$id)->first(['id','account_status','email_verified_at']);
@@ -58,10 +84,17 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request){
+        self::logUserout();
+        return redirect()->route('login');
+    }
+    public static function logUserout(){
         if (auth()->user()) {
             auth()->logout();
         }
-        return redirect()->route('login');
-
+        setSchoolPid();
+        setActionablePid();
+        setSchoolUserPid();
+        setUserActiveRole();
+        setSchoolName();
     }
 }

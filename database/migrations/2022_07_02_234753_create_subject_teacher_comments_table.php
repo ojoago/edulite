@@ -11,6 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
+    // subject teacher defined comments
     public function up()
     {
         Schema::create('subject_teacher_comments', function (Blueprint $table) {

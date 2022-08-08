@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('psychomotors', function (Blueprint $table) {
+        Schema::create('student_pick_up_riders', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
             $table->string('school_pid');
-            $table->string('pid')->unique();
-            $table->float('max_score')->default(0);
+            $table->string('student_pid');
+            $table->string('rider_pid');
             $table->string('status')->default(1);
+            $table->string('note')->nullable();
+            $table->string('school_user_pid')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('psychomotors');
+        Schema::dropIfExists('student_pick_up_riders');
     }
 };

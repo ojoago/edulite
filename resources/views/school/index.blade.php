@@ -2,6 +2,9 @@
 @section('title','lite')
 @section('content')
 @foreach($data as $row)
+<br>
+{{$row->pid}}
+<br>
 <a href="{{route('login.school',[base64Encode($row->pid)])}}">{{$row->school_name}}</a><br>
 <a href="{{route('school.staff',[base64Encode($row->pid)])}}">Staff</a><br>
 @endforeach
@@ -11,7 +14,7 @@
 <a href="{{route('school.subject.type')}}">SType</a><br>
 <a href="{{route('school.assessment.title')}}">Asses</a><br>
 <a href="{{route('school.grade.key')}}">Gray</a><br>
-<a href="{{route('school.attendance')}}">Atend</a><br>
+<a href="{{route('school.attendance.setting')}}">Atend</a><br>
 <a href="{{route('school.registration')}}">reg</a><br>
 <a href="{{route('school.users')}}">school Users</a>
 {{!!flashMessage()!!}}

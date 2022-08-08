@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('category_pid');
             $table->string('pid')->unique();
             $table->string('class');
-            $table->string('staff_pid');
-            $table->string('status')->comment('1 enabled, 2 disabled');
+            $table->string('staff_pid')->comment('creator');
+            $table->string('status')->default(1)->comment('1 enabled, 0 disabled');
             $table->timestamps();
         });
     }

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('subject_types', function (Blueprint $table) {
             $table->id();
-            $table->string('subject');
+            $table->string('subject_type');
             $table->string('description')->nullable();
             $table->string('school_pid');
             $table->string('pid')->unique();
