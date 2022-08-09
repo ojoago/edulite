@@ -11,4 +11,8 @@ class Classes extends Model
     protected $fillable = [
         'pid','staff_pid','class','category_pid','school_pid', 'class_number'
     ];
+
+    public function setClassAttribute($value){
+        $this->attributes['class'] = strtoupper($value);
+    }
 }

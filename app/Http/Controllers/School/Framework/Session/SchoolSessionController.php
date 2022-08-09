@@ -96,20 +96,7 @@ class SchoolSessionController extends Controller
             return date('d F Y', strtotime($data->created_at));
         })->make(true);
     }
-    // load list of session on create active session modal dropdown 
-    public function loadSchoolSession()
-    {
-        $result = Session::where(['school_pid'=>getSchoolPid()])
-                            ->limit(10)->orderBy('id','DESC')
-                            ->get(['pid', 'session']);
-        foreach($result as $row){
-                $data[] = [
-                    'id'=>$row->pid,
-                    'text'=>$row->session,
-                ];
-        }
-        return response()->json($data);
-    }
+    
    
     
     public function setActiveSession(Request $request)

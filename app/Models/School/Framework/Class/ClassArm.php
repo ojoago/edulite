@@ -11,4 +11,8 @@ class ClassArm extends Model
     protected $fillable = [
         'pid','school_pid','arm','class_pid','staff_pid'
     ];
+    
+    public function setArmAttribute($value){
+        $this->attributes['arm'] = strtoupper($value);
+    }
 }

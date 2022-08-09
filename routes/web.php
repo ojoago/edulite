@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auths\AuthController;
+use App\Http\Controllers\Framework\Select2Controller;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\School\Staff\StaffController;
@@ -86,12 +87,16 @@ Route::get('load-school-category', [ClassController::class, 'loadCategory'])->na
 Route::get('load-school-class', [ClassController::class, 'loadClasses'])->name('load.school.classes');
 // tab 3 
 Route::get('load-school-class-arm', [ClassController::class, 'loadClassArm'])->name('load.school.class.arm');
+// tab 4 
+Route::get('load-school-class-arm-subject', [ClassController::class, 'loadClassArmSubject'])->name('load.school.class.arm.subject');
 // create category 
 Route::post('create-lite-category', [ClassController::class, 'createCategory'])->name('create.school.category');
 // create class 
 Route::post('lite-class', [ClassController::class, 'createClass'])->name('create.school.class');
 // create class arm 
 Route::post('lite-arm', [ClassController::class, 'createClassArm'])->name('create.school.class.arm');
+// create class arm 
+Route::post('create-class-arm-subject', [ClassController::class, 'createClassArmSubject'])->name('create.school.class.arm.subject');
 // academic session
 Route::view('lite-session', 'school.framework.session.school_session')->name('school.session')->middleware('auth');
 // load session on tab with datatable server  
@@ -120,17 +125,21 @@ Route::post('lite-assessment-title', [AssessmentTitleController::class, 'createA
 
 // load dropdon select2
 // load school on dropdon using select2  
-Route::get('load-available-session', [SchoolSessionController::class, 'loadSchoolSession'])->name('load.available.session')->middleware('auth');
+Route::get('load-available-session', [Select2Controller::class, 'loadSchoolSession'])->name('load.available.session')->middleware('auth');
 // load category 
-Route::get('load-available-category', [ClassController::class, 'loadAvailableCategory'])->name('load.available.category')->middleware('auth');
+Route::get('load-available-category', [Select2Controller::class, 'loadAvailableCategory'])->name('load.available.category')->middleware('auth');
 // load assessment title 
 Route::get('load-available-title', [AssessmentTitleController::class, 'loadAvailableTitle'])->name('load.available.title');
 // load term 
 Route::get('load-available-term', [SchooltermController::class, 'loadSchoolTerm'])->name('load.available.term')->middleware('auth');
 // load classes 
-Route::get('load-available-class', [ClassController::class, 'loadAvailableClass'])->name('load.available.class');
+Route::post('load-available-class', [Select2Controller::class, 'loadAvailableClass'])->name('load.available.class');
 // load classe arm 
-Route::get('load-available-class-arm', [ClassController::class, 'loadAvailableClassArm'])->name('load.available.class.arm');
+Route::post('load-available-class-arm', [Select2Controller::class, 'loadAvailableClassArm'])->name('load.available.class.arm');
+// load category subject 
+Route::post('load-available-category-subject', [Select2Controller::class, 'loadAvailableSelectedCategorySubject'])->name('load.available.category.subject');
+// load school head of staff 
+Route::get('load-available-school-category-head', [Select2Controller::class, 'loadAvailableCategoryHead'])->name('load.available.school.category.head');
 // load subject type 
 Route::get('drop-down-subject-type', [SubjectTypeController::class, 'loadAvailableSubjectType'])->name('load.available.subject.type');
 // score settings 

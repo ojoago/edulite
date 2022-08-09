@@ -49,6 +49,7 @@
                             <th>Category</th>
                             <th>Class</th>
                             <th>Status</th>
+                            <th>Date</th>
                             <th>Created By</th>
                             <th>Action</th>
                         </tr>
@@ -77,18 +78,21 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="class-subject" role="tabpanel" aria-labelledby="class-subject">
-                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassArmModal">
+                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createArmSubjectModal">
                     Create CLA
                 </button>
-                List sson lca arm    
+                List sson lca arm
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="classArmTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="classArmSubjectTable">
                     <thead>
                         <tr>
-                            <th>sbj</th>
+                            <th>Session</th>
+                            <th>CLass</th>
+                            <th>Subject</th>
                             <th>Status</th>
                             <th>Date</th>
                             <th>Created By</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -114,7 +118,8 @@
                     @csrf
                     <input type="text" name="category" class="form-control form-control-sm" placeholder="school category" required>
                     <p class="text-danger category_error"></p>
-                    <select name="staff_pid" id="staffSelect2" style="width: 100%;">
+                    <label for="head_pid">PrinX/Head</label>
+                    <select name="head_pid" id="staffSelect2" style="width: 100%;">
                     </select>
                     <p class="text-danger staff_pid_error"></p>
                     <textarea type="text" name="description" class="form-control form-control-sm" placeholder="description" required></textarea>
@@ -142,11 +147,34 @@
                     <select name="category_pid" id="classCategorySelect2" style="width: 100%;">
                     </select>
                     <p class="text-danger category_pid_error"></p>
-                    <input type="text" name="class" placeholder="class e.g JSS 1" class="form-control form-control-sm" required>
-                    <p class="text-danger class_error"></p>
-                    <input type="number" name="class_number" placeholder="class number e.g 1,2,3 e.t.c" class="form-control form-control-sm" required>
-                    <p class="text-danger class_number_error"></p>
-                    <p>class number is used to promote student to the next class automatically by the system if need be</p>
+                    <button id="addMore" type="button" class="btn btn-danger btn-sm btn-small m-3">Add More Row</button><br>
+                    <i id="addMoreRow"></i>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <input type="text" name="class" placeholder="class e.g JSS 1" class="form-control form-control-sm" required>
+                            <p class="text-danger class_error"></p>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group mb-3">
+                                <select name="class_number" id="classNumberSelect2" class="form-control form-control-sm">
+                                    <option disabled selected>Select Class Number</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                    <option value="4">Four</option>
+                                    <option value="5">Five</option>
+                                    <option value="6">Six</option>
+                                    <option value="7">Seven</option>
+                                    <option value="8">Eight</option>
+                                    <option value="9">Nine</option>
+                                    <option value="10">Ten</option>
+                                </select>
+                                <i class="bi bi-x-circle-fill text-white m-2"></i>
+                            </div>
+                            <p class="text-danger class_number_error"></p>
+                        </div>
+                    </div>
+                    <p>{Class equivalence in number} is used to promote student to the next class automatically by the system if need be</p>
                 </form>
             </div>
             <div class="modal-footer">
@@ -158,7 +186,7 @@
 </div>
 <!-- create school category modal  -->
 <div class="modal fade" id="createClassArmModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create Lite Class Arm</h5>
@@ -167,14 +195,27 @@
             <div class="modal-body">
                 <form action="" method="post" class="" id="createClassArmForm">
                     @csrf
-                    <select name="category_pid" id="categorySelect2" style="width: 100%;">
-                    </select>
-                    <p class="text-danger category_pid_error"></p>
-                    <select name="class_pid" id="classSelect2" style="width: 100%;">
-                    </select>
-                    <p class="text-danger class_pid_error"></p>
-                    <input type="text" name="arm" placeholder="class arm" class="form-control form-control-sm" required>
-                    <p class="text-danger arm_error"></p>
+                    <button id="addMoreArm" type="button" class="btn btn-danger btn-sm btn-small mb-1">Add More Row</button><br>
+                    <i id="addMoreArmRow"></i>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <select name="category_pid[]" id="categorySelect2" style="width: 100%;">
+                            </select>
+                            <p class="text-danger category_pid_error"></p>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="class_pid[]" id="classSelect2" style="width: 100%;">
+                            </select>
+                            <p class="text-danger class_pid_error"></p>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group mb-3">
+                                <input type="text" name="arm[]" placeholder="class arm" class="form-control form-control-sm" required>
+                                <i class="bi bi-x-circle-fill text-white m-2 removeRowBtn"></i>
+                            </div>
+                            <p class="text-danger arm_error"></p>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -184,11 +225,122 @@
         </div>
     </div>
 </div>
+<!-- create class subject  -->
+<div class="modal fade" id="createArmSubjectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Lite Cls sbj</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="createArmSubjectForm">
+                    @csrf
+                    <label for="category_pid">Category</label>
+                    <select name="category_pid" id="sbjCategorySelect2" class="categorySelect2" style="width: 100%;">
+                    </select>
+                    <p class="text-danger category_pid_error"></p>
+                    <label for="session_pid">Session</label>
+                    <select name="session_pid" id="sessionSelect2" placeholder="select" class="sessionSelect2" style="width: 100%;">
+                    </select>
+                    <p class="text-danger session_pid_error"></p>
+                    <label for="class_pid">Cls</label>
+                    <select name="class_pid" id="classSelect24sub" class="classSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger class_pid_error"></p>
+                    <label for="arm_pid">Am</label>
+                    <select name="arm_pid" id="armSelect24sub" style="width: 100%;" class="armSelect2 form-control form-control-sm">
+                    </select>
+                    <p class="text-danger arm_pid_error"></p>
+                    <label for="subject_pid">sbj</label>
+                    <select name="subject_pid[]" id="subjectSelect2" multiple="multiple" style="width: 100%;" class="subjectSelect2 form-control form-control-sm">
+                    </select>
+                    <p class="text-danger subject_pid_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="createArmSubjectBtn">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {
+        // add more title 
+        $('#addMore').click(function() {
+            $('#addMoreRow').prepend(
+                `
+                 <div class="row addedRow">
+                        <div class="col-md-7">
+                            <input type="text" name="class" placeholder="class e.g JSS 1" class="form-control form-control-sm" required>
+                            <p class="text-danger class_error"></p>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group mb-3">
+                                <select name="class_number" id="classNumberSelect2" class="form-control form-control-sm">
+                                <option disabled selected>Select Class Number</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                                <option value="4">Four</option>
+                                <option value="5">Five</option>
+                                <option value="6">Six</option>
+                                <option value="7">Seven</option>
+                                <option value="8">Eight</option>
+                                <option value="9">Nine</option>
+                                <option value="10">Ten</option>
+                            </select>
+                            <i class="bi bi-x-circle-fill text-danger m-2 removeRowBtn"></i>
+                            </div>
+                            <p class="text-danger class_number_error"></p>
+                        </div>
+                    </div>
+                `
+            );
+            // init select2 again 
+        });
 
+        $(document).on('click', '.addedRow .removeRowBtn', function() {
+            $(this).parent().parent().parent().remove();
+        });
+        $('#addMoreArm').click(function() {
+            $('#addMoreArmRow').prepend(
+                `
+                 <div class="row">
+                        <div class="col-md-4">
+                            <select name="category_pid[]" id="categorySelect2" style="width: 100%;">
+                            </select>
+                            <p class="text-danger category_pid_error"></p>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="class_pid[]" id="classSelect2" style="width: 100%;">
+                            </select>
+                            <p class="text-danger class_pid_error"></p>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group mb-3">
+                                <input type="text" name="arm[]" placeholder="class arm" class="form-control form-control-sm" required>
+                                <i class="bi bi-x-circle-fill text-danger m-2 removeRowBtn"></i>
+                            </div>
+                            <p class="text-danger arm_error"></p>
+                        </div>
+                    </div>
+                `
+            );
+            // init select2 again 
+        });
+
+        $(document).on('click', '.addedRow .removeRowBtn', function() {
+            $(this).parent().parent().parent().remove();
+        });
+        $("#classNumberSelect2").select2({
+            tags: true,
+            dropdownParent: $('#createClassModal'),
+            width: "100%",
+        });
         // load page content  
         // load school category
         $('#classCategoryTable').DataTable({
@@ -239,6 +391,9 @@
                 {
                     "data": "username"
                 },
+                {
+                    "data": "action"
+                },
             ],
         });
         // load school class arm
@@ -268,54 +423,74 @@
                 },
             ],
         });
+        // load school class arm
+        $('#classArmSubjectTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            },
+            responsive: true,
+            type: "GET",
+            "ajax": "{{route('load.school.class.arm.subject')}}",
+            "columns": [{
+                    "data": "session"
+                },
+                {
+                    "data": "arm"
+                },
+                {
+                    "data": "subject"
+                },
+                {
+                    "data": "status"
+                },
+                {
+                    "data": "created_at"
+                },
+                {
+                    "data": "fullname"
+                },
+                {
+                    "data": "action"
+                },
+            ],
+        });
         // load dropdown on 
 
-        $('#classCategorySelect2').select2({
-            placeholder: 'Select Category',
-            dropdownParent: $('#createClassModal'),
-            ajax: {
-                url: "{{route('load.available.category')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
+
+        // set urls 
+        let sessionselect2Url = "{{route('load.available.session')}}"; //Session url
+        let sbjCategoryselect2Url = "{{route('load.available.category')}}"; //category url
+        let classSelect2Url = "{{route('load.available.class')}}" //class url
+        let classArmSelect2Url = "{{route('load.available.class.arm')}}" //class arm url
+        let categorySubjectUrl = "{{route('load.available.category.subject')}}" //subject by category url
+        let categoryHeadUrl = "{{route('load.available.school.category.head')}}" // head teacher url
+
+        multiSelect2('sessionSelect2', 'createArmSubjectModal', sessionselect2Url, 'Select Session');
+        multiSelect2('classCategorySelect2', 'createClassModal', sbjCategoryselect2Url, 'Select Category');
+        multiSelect2('categorySelect2', 'createClassArmModal', sbjCategoryselect2Url, 'Select Category');
+        $('#categorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('classSelect2', 'createClassArmModal', classSelect2Url, id, 'Select Class');
         });
-        $('#categorySelect2').select2({
-            placeholder: 'Select Category',
-            dropdownParent: $('#createClassArmModal'),
-            ajax: {
-                url: "{{route('load.available.category')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
+        multiSelect2('sbjCategorySelect2', 'createArmSubjectModal', sbjCategoryselect2Url, 'Select Category');
+        // load principal/ head 
+        multiSelect2('staffSelect2', 'createClassCategoryModal', categoryHeadUrl, 'Select Category Head');
+        $('#sbjCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('classSelect24sub', 'createArmSubjectModal', classSelect2Url, id, 'Select Class');
+        });
+        $('#sbjCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('subjectSelect2', 'createArmSubjectModal', categorySubjectUrl, id, 'Select Subject');
+        });
+        $('#classSelect24sub').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('armSelect24sub', 'createArmSubjectModal', classArmSelect2Url, id, 'Select Class Arm');
         });
 
-        $('#classSelect2').select2({
-            placeholder: 'Select CLass',
-            dropdownParent: $('#createClassArmModal'),
-            ajax: {
-                url: "{{route('load.available.class')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
+
         // create school category 
         $('#createClassCategoryBtn').click(function() {
             $('.overlay').show();
@@ -340,8 +515,10 @@
                             $('.' + prefix + '_error').text(val[0]);
                         });
                     } else {
-                        alert_toast(data.message, 'success');
-                        $('#createClassCategoryForm')[0].reset();
+                        // jQuery('.select2-offscreen').select2('val', '');
+                        // alert_toast(data.message, 'success');
+                        // $('#createClassCategoryForm')[0].reset();
+                        successClearForm('createClassCategoryForm', data.message);
                     }
                 },
                 error: function(data) {
@@ -376,8 +553,10 @@
                             $('.' + prefix + '_error').text(val[0]);
                         });
                     } else {
-                        alert_toast(data.message, 'success');
-                        $('#createClassForm')[0].reset();
+                        // jQuery('.select2-offscreen').select2('val', '');
+                        // alert_toast(data.message, 'success');
+                        // $('#createClassForm')[0].reset();
+                        successClearForm('createClassForm', data.message)
                     }
                 },
                 error: function(data) {
@@ -412,13 +591,48 @@
                             $('.' + prefix + '_error').text(val[0]);
                         });
                     } else {
-                        alert_toast(data.message, 'success');
-                        $('#createClassArmForm')[0].reset();
+                        // alert_toast(data.message, 'success');
+                        // $('#createClassArmForm')[0].reset();
+                        successClearForm('createClassArmForm', data.message);
                     }
                 },
                 error: function(data) {
                     // console.log(data);
                     $('#createClassArmBtn').prop('disabled', false);
+                    $('.overlay').hide();
+                    alert_toast('Something Went Wrong', 'error');
+                }
+            });
+        });
+
+        // create school class arm
+        $('#createArmSubjectBtn').click(function() {
+            $('.overlay').show();
+            $.ajax({
+                url: "{{route('create.school.class.arm.subject')}}",
+                type: "POST",
+                data: new FormData($('#createArmSubjectForm')[0]),
+                dataType: "JSON",
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+                    $('#createArmSubjectForm').find('p.text-danger').text('');
+                    $('#createArmSubjectBtn').prop('disabled', true);
+                },
+                success: function(data) {
+                    $('#createArmSubjectBtn').prop('disabled', false);
+                    $('.overlay').hide();
+                    if (data.status === 0) {
+                        alert_toast('Fill in form correctly', 'warning');
+                        $.each(data.error, function(prefix, val) {
+                            $('.' + prefix + '_error').text(val[0]);
+                        });
+                    } else {
+                        successClearForm('createArmSubjectForm', data.message);
+                    }
+                },
+                error: function(data) {
+                    $('#createArmSubjectBtn').prop('disabled', false);
                     $('.overlay').hide();
                     alert_toast('Something Went Wrong', 'error');
                 }

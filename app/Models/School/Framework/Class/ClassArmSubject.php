@@ -5,10 +5,10 @@ namespace App\Models\School\Framework\Class;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class ClassArmSubject extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'pid', 'school_pid', 'category', 'staff_pid','description','head_pid'
+        'session_pid','subject_pid','arm_pid','status','swap_subject_pid','school_pid','staff_pid','pid'
     ];
 }

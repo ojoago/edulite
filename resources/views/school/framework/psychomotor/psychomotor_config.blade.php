@@ -22,7 +22,7 @@
                 <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createPsychomotorModal">
                     Create CY
                 </button>
-                <table class="table table-hover table-striped" id="psychomotor-dataTable">
+                <table class="table table-hover table-striped" id="psychomotorDataTable" width="100%">
                     <thead>
                         <tr>
                             <th>Title</th>
@@ -32,14 +32,13 @@
                             <th>Created By</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
                 </table>
             </div>
             <div class="tab-pane fade" id="effectiveDomain" role="tabpanel" aria-labelledby="profile-tab">
                 <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createEffectiveDomainModal">
                     Create EF
                 </button>
-                <table class="table table-hover table-striped" id="effective-domain-dataTable">
+                <table class="table table-hover table-striped" id="affectiveDomainDataTable" width="100%">
                     <thead>
                         <tr>
                             <th>Title</th>
@@ -49,14 +48,14 @@
                             <th>Created By</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+
                 </table>
             </div>
             <div class="tab-pane fade" id="psychoGrade" role="tabpanel" aria-labelledby="contact-tab">
                 <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createPyschoGradeModal">
                     Create GD
                 </button>
-                <table class="table table-hover table-striped" id="psycho-grade-dataTable">
+                <table class="table table-hover table-striped" id="psychoGradeDataTable" width="100%">
                     <thead>
                         <tr>
                             <th>S/N</th>
@@ -66,7 +65,7 @@
                             <th>Created By</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+
                 </table>
             </div>
         </div><!-- End Default Tabs -->
@@ -170,7 +169,7 @@
 <script>
     $(document).ready(function() {
         // psychomotor-dataTable
-        $('#psychomotor-dataTable').DataTable({
+        $('#psychomotorDataTable').DataTable({
             "processing": true,
             "serverSide": true,
             rowReorder: {
@@ -200,7 +199,7 @@
             ],
         });
         // psychomotor-dataTable
-        $('#effective-domain-dataTable').DataTable({
+        $('#affectiveDomainDataTable').DataTable({
             "processing": true,
             "serverSide": true,
             rowReorder: {
@@ -230,7 +229,7 @@
             ],
         });
         // psychomotor-dataTable
-        $('#psycho-grade-dataTable').DataTable({
+        $('#psychoGradeDataTable').DataTable({
             "processing": true,
             "serverSide": true,
             rowReorder: {

@@ -1,10 +1,8 @@
 @extends('layout.mainlayout')
 @section('title','login')
 @section('content')
-<main>
     <div class="container">
         <section class="section register min-vh-50 d-flex flex-column align-items-center justify-content-center py-4">
-            <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
@@ -73,10 +71,8 @@
 
                     </div>
                 </div>
-            </div>
         </section>
     </div>
-</main>
 <!-- End #main -->
 @endsection
 <div class="modal fade" id="forgetPwd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

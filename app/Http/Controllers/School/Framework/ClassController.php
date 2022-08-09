@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\School\Framework;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use App\Models\School\Framework\Class\Classes;
 use App\Models\School\Framework\Class\Category;
 use App\Models\School\Framework\Class\ClassArm;
-use App\Models\School\Framework\Class\Classes;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Models\School\Framework\Class\ClassArmSubject;
 
 class ClassController extends Controller
 {
@@ -71,39 +72,11 @@ class ClassController extends Controller
         ->where(['classes.school_pid' => getSchoolPid()])
             ->get(['classes.pid', 'category', 'classes.created_at', 'class', 'classes.status','username']);
         return datatables($data)
-            // ->addColumn('action', function ($data) {
-            //     $html = '
-            //     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#editSubjectModal' . $data->pid . '">
-            //         <i class="bi bi-box-arrow-up" aria-hidden="true"></i>
-            //     </button>
-            //     <div class="modal fade" id="editSubjectModal' . $data->pid . '" tabindex="-1">
-            //         <div class="modal-dialog">
-            //             <div class="modal-content">
-            //                 <div class="modal-header">
-            //                     <h5 class="modal-title">Edit Lite S</h5>
-            //                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            //                 </div>
-            //                 <div class="modal-body">
-            //                     <form action="" method="post" class="" id="createSubjectForm">
-            //                         <p class="text-danger category_pid_error"></p>
-            //                         <input type="text" name="subject" value="' . $data->subject_type . '" class="form-control form-control-sm" placeholder="name of school" required>
-            //                         <p class="text-danger subject_error"></p>
-            //                         <textarea type="text" name="description" class="form-control form-control-sm" placeholder="description" required>' . $data->description . '</textarea>
-            //                         <p class="text-danger description_error"></p>
-            //                     </form>
-            //                 </div>
-            //                 <div class="modal-footer">
-            //                     <button type="button" class="btn btn-primary" id="createSubjectBtn">Submit</button>
-            //                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            //                 </div>
-            //             </div>
-            //         </div>
-            //     </div>
-            //     ';
-            //     return $html;
-            // })
+            ->addColumn('action', function ($data) {
+                return view('school.framework.class.class-action-buttons',['data'=>$data]);
+            })
             ->editColumn('created_at', function ($data) {
-                return date('d F Y', strtotime($data->created_at));
+                return $data->created_at->diffForHumans();
             })
             ->editColumn('status', function ($data) {
                 $html = $data->status == 1 ? '<span class="text-success">Enabled</span>' : '<span class="text-danger">Disabled</span>';
@@ -161,58 +134,44 @@ class ClassController extends Controller
             ->rawColumns(['data', 'status'])
             ->make(true);
     }
-
-    // select 2 
-    public function loadAvailableClass()
+    public function loadClassArmSubject()
     {
-        $result = Classes::where(['school_pid' => getSchoolPid(), 'status' => 1])
-            ->orderBy('class')->get(['pid', 'class']); //
-        foreach ($result as $row) {
-            $data[] = [
-                'id' => $row->pid,
-                'text' => $row->class,
-            ];
-        }
-        return response()->json($data);
+        $data = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
+        ->join('subjects', 'subjects.pid', 'subject_pid')
+        ->join('sessions', 'sessions.pid', 'session_pid')
+        ->join('school_staff', 'school_staff.pid', 'class_arm_subjects.staff_pid')
+        ->join('user_details', 'user_details.user_pid', 'school_staff.user_pid')
+        ->where(['class_arm_subjects.school_pid' => getSchoolPid()])
+            ->get(['class_arm_subjects.pid', 'session','arm','subject', 'class_arm_subjects.created_at', 'class_arm_subjects.status', 'user_details.fullname']);
+        return datatables($data)
+            ->addColumn('action', function ($data) {
+                return view('school.framework.class.class-subject-action-buttons',['data'=>$data]);
+            })
+            ->editColumn('created_at', function ($data) {
+                return $data->created_at->diffForHumans();
+            })
+            ->editColumn('status', function ($data) {
+                $html = $data->status == 1 ? '<span class="text-success">Enabled</span>' : '<span class="text-danger">Disabled</span>';
+                return $html;
+            })
+            ->rawColumns(['data', 'status'])
+            ->make(true);
     }
-    public function loadAvailableClassArm()
-    {
-        $result = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1])
-            ->orderBy('arm')->get(['pid', 'arm']); //
-        foreach ($result as $row) {
-            $data[] = [
-                'id' => $row->pid,
-                'text' => $row->arm,
-            ];
-        }
-        return response()->json($data);
-    }
-
-    // select 2 
-    public function loadAvailableCategory()
-    {
-        $result = Category::where(['school_pid' => getSchoolPid()])
-            ->orderBy('category')->get(['pid', 'category']); //
-        foreach ($result as $row) {
-            $data[] = [
-                'id' => $row->pid,
-                'text' => $row->category,
-            ];
-        }
-        return response()->json($data);
-    }
+    
     public function createCategory(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'category' => 'required'
-        ]);
+            'category' => 'required',
+            'head_pid'=>'required'
+        ],['head_pid.required'=>'Select Category Head or Principal']);
         if(!$validator->fails()){
             $data = [
                     'school_pid' => getSchoolPid(),
                     'staff_pid' => getSchoolUserPid(),
                     'pid' => public_id(),
                     'category' => strtoupper($request->category),
-                    'description' => $request->category
+                    'head_pid' => $request->head_pid,
+                    'description' => $request->description
                 ];
             $result = $this->insertOrUpdateCategory($data);
             if ($result) {
@@ -233,7 +192,7 @@ class ClassController extends Controller
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
+           
         }
     }
 
@@ -246,7 +205,7 @@ class ClassController extends Controller
             ,[
             'category_pid.required'=>'select school category',
             'class.required'=>'Enter class Name',
-            'class_number.required'=>'Enter a unique class number',
+            'class_number.required'=>'select Class number',
             'class_number.int'=>'class number must a number',
             ]
         );
@@ -278,7 +237,6 @@ class ClassController extends Controller
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
         }
     }
     public function createClassArm(Request $request)
@@ -319,51 +277,62 @@ class ClassController extends Controller
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
         }
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    
+    public function createClassArmSubject(Request $request){
+       $validator = Validator::make($request->all(),[
+                        'category_pid'=>'required',
+                        'class_pid'=>'required',
+                        'arm_pid'=>'required',
+                        'subject_pid'=> 'required',
+                        'session_pid'=> 'required',
+       ],[
+            'category_pid.required'=>'Select Category',
+            'class_pid.required'=>'Select Class',
+            'arm_pid.required'=>'Select Class Arm',
+            'subject_pid.required'=>'Select one subject at least',
+            'session_pid.required'=>'Select Session',
+        ]);
+            
+        if(!$validator->fails()){
+            $data = [
+                'session_pid'=>$request->session_pid,
+                'sid'=>$request->subject_pid,
+                'arm_pid'=>$request->arm_pid,
+                'pid'=>public_id(),
+                'school_pid'=>getSchoolPid(),
+                'staff_pid'=>getSchoolUserPid(),
+            ];
+            $result = $this->updateOrcreateArmSubject($data);
+            if($result){
+                return response()->json(['status'=>1,'message'=>'Class Subject Created successfully!!!']);
+            }
+            return response()->json(['status'=>'error','message'=>'Something Went Wrong']);
+        }
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+    private function updateOrcreateArmSubject($data){
+        try {
+            $r = false;
+            $dupParams = 
+            ['school_pid' => $data['school_pid'],
+                        // 'subject_pid' => $data['subject_pid'],
+                        'session_pid' => $data['session_pid'],
+                        'arm_pid' => $data['arm_pid'],
+                    ];
+                    // $sid = (array) ;
+                    foreach($data['sid'] as $pid){
+                        $data['subject_pid'] = $dupParams['subject_pid'] = $pid;
+                       $r = ClassArmSubject::updateOrCreate($dupParams, $data);
+                    }
+                    return $r;
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        } catch (\Throwable $e) {
+            $error = $e->getMessage();
+            logError($error);
+        }
     }
 }
