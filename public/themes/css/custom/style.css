@@ -18,7 +18,10 @@ body{
     transform: scale(1.5);
 }
 .removeRow{
-    width: 10px;;
+    width: 10px;
+}
+.hidden-item{
+    visibility: hidden !important;
 }
 /* spinner  */
  /* loader */
@@ -30,6 +33,7 @@ body{
      background: #fff;
      z-index: 1000 !important;
      opacity: 0.7;
+
  }
 
  .loader {
@@ -80,6 +84,23 @@ body{
 
  /* loader stop here */
 
+ #quickFlash{
+    display: none;
+    /* Hidden by default */
+    background: #333;
+    color: #fff;
+    padding: 12px;
+    float: center;
+    outline: none;
+    position: fixed;
+    border-radius: 10px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    top: 80px;
+    /* margin-top: 10% !important; */
+    z-index: 999999 !important;
+    transition: 2s ease;
+ }
 
 .footer{
     margin-top: auto;

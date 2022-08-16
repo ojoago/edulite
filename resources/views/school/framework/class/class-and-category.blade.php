@@ -13,7 +13,7 @@
                 <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab" aria-controls="profile" aria-selected="false">CL</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-justified" type="button" role="tab" aria-controls="contact" aria-selected="false">CLA</button>
+                <button class="nav-link w-100" id="class-arm-tab" data-bs-toggle="tab" data-bs-target="#class-arm" type="button" role="tab" aria-controls="class-arm" aria-selected="false">CLA</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="class-subject-tab" data-bs-toggle="tab" data-bs-target="#class-subject" type="button" role="tab" aria-controls="class-subject" aria-selected="false">CLA SB</button>
@@ -58,7 +58,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane fade" id="contact-justified" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="tab-pane fade" id="class-arm" role="tabpanel" aria-labelledby="class-arm-tab">
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassArmModal">
                     Create CLA
                 </button>
@@ -67,10 +67,11 @@
                     <thead>
                         <tr>
                             <th>Class</th>
-                            <th>CLass Arm</th>
+                            <th>Class Arm</th>
                             <th>Status</th>
                             <th>Date</th>
                             <th>Created By</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -118,7 +119,7 @@
                     @csrf
                     <input type="text" name="category" class="form-control form-control-sm" placeholder="school category" required>
                     <p class="text-danger category_error"></p>
-                    <label for="head_pid">PrinX/Head</label>
+                    <label for="head_pid">Principal/Head</label>
                     <select name="head_pid" id="staffSelect2" style="width: 100%;">
                     </select>
                     <p class="text-danger staff_pid_error"></p>
@@ -421,6 +422,9 @@
                 {
                     "data": "username"
                 },
+                {
+                    "data": "action"
+                },
             ],
         });
         // load school class arm
@@ -460,34 +464,37 @@
 
 
         // set urls 
-        let sessionselect2Url = "{{route('load.available.session')}}"; //Session url
-        let sbjCategoryselect2Url = "{{route('load.available.category')}}"; //category url
-        let classSelect2Url = "{{route('load.available.class')}}" //class url
-        let classArmSelect2Url = "{{route('load.available.class.arm')}}" //class arm url
-        let categorySubjectUrl = "{{route('load.available.category.subject')}}" //subject by category url
-        let categoryHeadUrl = "{{route('load.available.school.category.head')}}" // head teacher url
+        // let sessionselect2Url = "{{route('load.available.session')}}"; //Session url
+        // let sbjCategoryselect2Url = "{{route('load.available.category')}}"; //category url
+        // let classSelect2Url = "{{route('load.available.class')}}" //class url
+        // let classArmSelect2Url = "{{route('load.available.class.arm')}}" //class arm url
+        // let categorySubjectUrl = "{{route('load.available.category.subject')}}" //subject by category url
+        // let categoryHeadUrl = "{{route('load.available.school.category.head')}}" // head teacher url
 
-        multiSelect2('sessionSelect2', 'createArmSubjectModal', sessionselect2Url, 'Select Session');
-        multiSelect2('classCategorySelect2', 'createClassModal', sbjCategoryselect2Url, 'Select Category');
-        multiSelect2('categorySelect2', 'createClassArmModal', sbjCategoryselect2Url, 'Select Category');
+        // createArmTeacherModal
+        multiSelect2('#termSelect24t', 'createArmTeacherModal', 'term', 'Select Term');
+        multiSelect2('#sessionSelect24t', 'createArmTeacherModal', 'session', 'Select Session');
+        multiSelect2('#sessionSelect2', 'createArmSubjectModal', 'session', 'Select Session');
+        multiSelect2('#classCategorySelect2', 'createClassModal', 'category', 'Select Category');
+        multiSelect2('#categorySelect2', 'createClassArmModal', 'category', 'Select Category');
         $('#categorySelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('classSelect2', 'createClassArmModal', classSelect2Url, id, 'Select Class');
+            multiSelect2Post('#classSelect2', 'createClassArmModal', 'class', id, 'Select Class');
         });
-        multiSelect2('sbjCategorySelect2', 'createArmSubjectModal', sbjCategoryselect2Url, 'Select Category');
+        multiSelect2('#sbjCategorySelect2', 'createArmSubjectModal', 'category', 'Select Category');
         // load principal/ head 
-        multiSelect2('staffSelect2', 'createClassCategoryModal', categoryHeadUrl, 'Select Category Head');
+        multiSelect2('#staffSelect2', 'createClassCategoryModal', 'school-category-head', 'Select Category Head');
         $('#sbjCategorySelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('classSelect24sub', 'createArmSubjectModal', classSelect2Url, id, 'Select Class');
+            multiSelect2Post('#classSelect24sub', 'createArmSubjectModal', 'class', id, 'Select Class');
         });
         $('#sbjCategorySelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('subjectSelect2', 'createArmSubjectModal', categorySubjectUrl, id, 'Select Subject');
+            multiSelect2Post('#subjectSelect2', 'createArmSubjectModal', 'category-subject', id, 'Select Subject');
         });
         $('#classSelect24sub').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('armSelect24sub', 'createArmSubjectModal', classArmSelect2Url, id, 'Select Class Arm');
+            multiSelect2Post('#armSelect24sub', 'createArmSubjectModal', 'class-arm', id, 'Select Class Arm');
         });
 
 

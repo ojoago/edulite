@@ -12,6 +12,7 @@
 <main id="main" class="main">
     @yield('content')
     @auth
+    @include('layout.modals.modal')
     @include('layout.theme.footer')
     @include('layout.mainjs')
 </main>

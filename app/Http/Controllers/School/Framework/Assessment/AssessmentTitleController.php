@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers\School\Framework\Assessment;
 
-use App\Http\Controllers\Controller;
-use App\Models\School\Framework\Assessment\AssesmentTitle;
-use App\Models\School\Framework\Assessment\ScoreSetting;
-use App\Models\School\Framework\Class\ClassArm;
-use App\Models\School\Framework\Class\Classes;
-use App\Models\School\Framework\Session\Session;
-use App\Models\School\Framework\Term\Term;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Models\School\Framework\Assessment\AssessmentTitle;
 
 class AssessmentTitleController extends Controller
 {
@@ -26,7 +21,7 @@ class AssessmentTitleController extends Controller
     public function index()
     {
         // $session = Session::where('school_pid',getSchoolPid())->get(['pid','session']);//
-        $data = AssesmentTitle::where('school_pid',getSchoolPid())
+        $data = AssessmentTitle::where('school_pid',getSchoolPid())
                     ->get(['pid','title','description','category','created_at']); //
         // $term = Term::where('school_pid',getSchoolPid())->get(['pid','term']);//
         // $classes = Classes::where('school_pid',getSchoolPid())->get(['pid','class']);//
@@ -41,7 +36,7 @@ class AssessmentTitleController extends Controller
     }
     public function loadAvailableTitle()
     {
-        $result = AssesmentTitle::where(['school_pid'=>getSchoolPid(),'status'=>1])
+        $result = AssessmentTitle::where(['school_pid'=>getSchoolPid(),'status'=>1])
             ->orderBy('title')->get(['pid','title']); //
         foreach ($result as $row) {
             $data[] = [
@@ -86,7 +81,7 @@ class AssessmentTitleController extends Controller
     private function createOrUpdateAssesmentTitle($data)
     {
         try {
-            return  AssesmentTitle::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
+            return  AssessmentTitle::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);

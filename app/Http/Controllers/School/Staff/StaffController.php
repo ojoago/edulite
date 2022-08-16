@@ -237,6 +237,46 @@ class StaffController extends Controller
         }   
     }
     public function StaffSubject(Request $request){
+        
+
+
+
+
+
+        $validator = Validator::make($request->all(),[
+            'category_pid'=>'required',
+            'class_pid'=> 'required',
+            'arm_pid'=> 'required',
+            'session_pid'=> 'required',
+            'term_pid'=> 'required',
+            'teacher_pid'=> 'required',
+            'subject_pid'=> 'required',
+        ],[
+            'category_pid.required'=>'Select Category to get the corresponding classes',
+            'class_pid.required'=>'Select Class to get the corresponding Arms',
+            'arm_pid.required'=>'Select class Arm to get the corresponding Subjects',
+            'term_pid.required'=>'Select Term',
+            'session_pid.required'=>'Select Session',
+            'teacher_pid.required'=>'Select Teacher',
+            'subject_pid.required'=>'Select at least 1 Subject',
+        ]);
+
+        if(!$validator->fails()){
+            $data = [
+                'school_pid'=>getSchoolPid(),
+                'term_pid'=> $request->term_pid,
+                'session_pid'=> $request->session_pid,
+                'teacher_pid'=> $request->teacher_pid,
+                'subject_pid'=> $request->subject_pid,
+                'staff_pid'=> getSchoolUserPid(),
+            ];
+            $result= $this->assignClassArmSubjectToTeacher($data);
+            if($result){
+                return response()->json(['status'=>1,'message'=>'Selected Subject (s) assigned to staff!!!']);
+            }
+            return response()->json(['status'=>'error','message'=>'Something Went Wrong from the Back!']);
+        }
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
         try {
             $request['school_pid'] = getSchoolPid();
             $request['pid'] = public_id();
@@ -251,48 +291,33 @@ class StaffController extends Controller
             dd($error);
         }   
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    
+    private function assignClassArmSubjectToTeacher(array $data){
+        $dupParams = [
+            'term_pid'=>$data['term_pid'],
+            'session_pid'=>$data['session_pid']
+        ];
+        try {
+            foreach ($data['subject_pid'] as $row) {
+                $data['pid'] = public_id();
+                $dupParams['arm_subject_pid'] = $data['arm_subject_pid'] = $row;
+                StaffSubject::updateOrCreate($dupParams, $data);
+            }
+            return true;
+        } catch (\Throwable $e) {
+            $error = $e->getMessage();
+            logError($error);
+            return false;
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    public static function getSubjectTeacherPid(string $session, string $term,string $subject){
+        $teacher = StaffSubject::where([
+            'school_pid'=>getSchoolPid(),
+            'session_pid'=>$session,
+            'term_pid'=>$term,
+            'arm_subject_pid'=>$subject
+            ])->pluck('teacher_pid')->first();
+        return $teacher;
     }
 }

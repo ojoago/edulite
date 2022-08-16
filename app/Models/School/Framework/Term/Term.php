@@ -11,4 +11,8 @@ class Term extends Model
     protected $fillable = [
         'pid','school_pid','description','term'
     ];
+
+    public function setTermAttribute($value){
+        $this->attributes['term'] = strtoupper($value);
+    }
 }

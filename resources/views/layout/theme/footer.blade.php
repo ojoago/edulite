@@ -1,6 +1,7 @@
+    <div class="text-center"> <span id="quickFlash"></span> </div>
 </main>
 <!-- ======= Footer ======= -->
-<div style="flex-grow: 1;"></div>
+<div style=" flex-grow: 1;"></div>
 <footer id="footer" class="footer">
     <div class="copyright">
         &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved

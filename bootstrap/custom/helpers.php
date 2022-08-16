@@ -40,7 +40,7 @@ use App\Http\Controllers\Auths\AuthController;
     }
     function getActionablePid(){ //set pid key of the table to be acted upone 
         if(getUserPid()){//check if user is still logged
-            return base64Decode(session('activeRecordPid')); //return school pid
+            return session('activeRecordPid'); //return school pid
         }
         // bruteLogout();
     }

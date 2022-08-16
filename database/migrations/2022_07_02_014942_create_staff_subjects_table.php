@@ -16,13 +16,15 @@ return new class extends Migration
         Schema::create('staff_subjects', function (Blueprint $table) {
             $table->id();
             $table->string('school_pid');
-            $table->string('staff_pid');
-            $table->string('arm_pid');
             $table->string('session_pid');
-            $table->string('category_pid');
             $table->string('term_pid');
+            $table->string('arm_subject_pid')->comment('the subject assigned to class arm pid ');//the assigned to class arm
+            $table->string('teacher_pid')->comment('teacher pid (staff)');
+            $table->string('staff_pid')->comment('creator');
             $table->string('pid')->unique();
-            $table->string('subject_pid');
+            // $table->string('category_pid');
+            // $table->string('subject_pid');
+            // $table->string('arm_pid');
             $table->timestamps();
         });
     }

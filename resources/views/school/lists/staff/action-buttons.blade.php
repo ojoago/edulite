@@ -16,8 +16,10 @@
                     </a>
                 <?php endif ?>
         </li>
-        <li><a class="dropdown-item" href="#">Class</a></li>
-        <li><a class="dropdown-item" href="#">Subject</a></li>
+        <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#createArmTeacherModal">Assign Class</a></li>
+        <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#createArmSubjectTeacherModal">Assign Subject</a></li>
+        <li><a class="dropdown-item" href="#">Classes</a></li>
+        <li><a class="dropdown-item" href="#">Subjects</a></li>
         <li><a class="dropdown-item" href="#">Edit Role</a></li>
     </ul>
 </div>

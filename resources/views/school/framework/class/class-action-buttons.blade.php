@@ -6,6 +6,5 @@
         <li><a class="dropdown-item" href="#">Edit</a></li>
         <li><a class="dropdown-item" href="#">Details</a></li>
         <li><a class="dropdown-item" href="#">Arms</a></li>
-        <li><a class="dropdown-item" href="#">Class Subject</a></li>
     </ul>
 </div>

@@ -116,6 +116,45 @@
         </li>
     </ul>
 </li><!-- End Forms Nav -->
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#assign-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-file-spreadsheet-fill"></i><span>Assign/Link</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="assign-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+            <a class="pointer" data-bs-target="#createArmTeacherModal" data-bs-toggle="modal">
+                <i class="bi bi-circle"></i><span>Class</span>
+            </a>
+        </li>
+        <li>
+            <a class="pointer" data-bs-target="#createArmSubjectTeacherModal" data-bs-toggle="modal">
+                <i class="bi bi-circle"></i><span>Subject</span>
+            </a>
+        </li>
+        <li>
+            <a class="pointer" data-bs-target="#linkStudentParentModal" data-bs-toggle="modal">
+                <i class="bi bi-circle"></i><span>Link Student To Parent</span>
+            </a>
+        </li>
+        <li>
+            <a class="pointer" data-bs-target="#assignArmToRepModal" data-bs-toggle="modal">
+                <i class="bi bi-circle"></i><span>Class Rep</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="pointer" data-bs-target="#assignArmToPortalModal" data-bs-toggle="modal">
+                <i class="bi bi-circle"></i><span>Portal</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="pointer" data-bs-target="#assignStudentRiderModal" data-bs-toggle="modal">
+                <i class="bi bi-circle"></i><span>Rider</span>
+            </a>
+        </li>
+    </ul>
+</li><!-- End Forms Nav -->
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
@@ -123,7 +162,7 @@
     </a>
     <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-            <a href="tables-general.html">
+            <a href="{{route('student.assessment.form')}}">
                 <i class="bi bi-circle"></i><span>TML</span>
             </a>
         </li>
@@ -160,7 +199,7 @@
                 <i class="bi bi-circle"></i><span>V SCR</span>
             </a>
         </li>
-        
+
     </ul>
 </li><!-- End Charts Nav -->
 

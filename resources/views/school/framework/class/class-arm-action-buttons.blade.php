@@ -3,18 +3,19 @@
         <i class="bi bi-tools"></i>
     </button>
     <ul class="dropdown-menu">
-        <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#createClassSubjectToTeacherModal">Assign to Teacher</a></li>
+        <li><a class="dropdown-item" href="#">Edit</a></li>
         <li><a class="dropdown-item" href="#">Details</a></li>
-        <li><a class="dropdown-item" href="#">Arms</a></li>
+        <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#createArmTeacherModal">Assign to Teacher</a></li>
         <li><a class="dropdown-item" href="#">Class Subject</a></li>
     </ul>
 </div>
+
 <!-- create class subject  -->
-<div class="modal fade" id="createClassSubjectToTeacherModal" tabindex="-1">
+<div class="modal fade" id="createArmTeacherModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Assign Cls sbj to teacher</h5>
+                <h5 class="modal-title">Create Lite Cls sbj</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

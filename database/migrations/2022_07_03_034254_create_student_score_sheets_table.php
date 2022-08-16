@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('student_assesment_records', function (Blueprint $table) {
+        Schema::create('student_score_sheets', function (Blueprint $table) {
             $table->id();
-            $table->string('assessment_pid');
+            $table->string('assessment_pid'); //this need to be changed
             $table->string('student_pid');
             $table->string('ca_type_pid');
             $table->string('score');

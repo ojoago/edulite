@@ -93,43 +93,15 @@ class ClassController extends Controller
         ->where(['class_arms.school_pid' => getSchoolPid()])
             ->get(['class_arms.pid', 'class','arm', 'class_arms.created_at', 'class_arms.status','username']);
         return datatables($data)
-            // ->addColumn('action', function ($data) {
-            //     $html = '
-            //     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#editSubjectModal' . $data->pid . '">
-            //         <i class="bi bi-box-arrow-up" aria-hidden="true"></i>
-            //     </button>
-            //     <div class="modal fade" id="editSubjectModal' . $data->pid . '" tabindex="-1">
-            //         <div class="modal-dialog">
-            //             <div class="modal-content">
-            //                 <div class="modal-header">
-            //                     <h5 class="modal-title">Edit Lite S</h5>
-            //                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            //                 </div>
-            //                 <div class="modal-body">
-            //                     <form action="" method="post" class="" id="createSubjectForm">
-            //                         <p class="text-danger category_pid_error"></p>
-            //                         <input type="text" name="subject" value="' . $data->subject_type . '" class="form-control form-control-sm" placeholder="name of school" required>
-            //                         <p class="text-danger subject_error"></p>
-            //                         <textarea type="text" name="description" class="form-control form-control-sm" placeholder="description" required>' . $data->description . '</textarea>
-            //                         <p class="text-danger description_error"></p>
-            //                     </form>
-            //                 </div>
-            //                 <div class="modal-footer">
-            //                     <button type="button" class="btn btn-primary" id="createSubjectBtn">Submit</button>
-            //                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            //                 </div>
-            //             </div>
-            //         </div>
-            //     </div>
-            //     ';
-            //     return $html;
-            // })
+            ->addColumn('action', function ($data) {
+                return view('school.framework.class.class-arm-action-buttons', ['data' => $data]);
+            })
             ->editColumn('created_at', function ($data) {
-                return date('d F Y', strtotime($data->created_at));
+                return $data->created_at->diffForHumans();
             })
             ->editColumn('status', function ($data) {
-                $html = $data->status == 1 ? '<span class="text-success">Enabled</span>' : '<span class="text-danger">Disabled</span>';
-                return $html;
+                return $data->status == 1 ? '<span class="text-success">Enabled</span>' : '<span class="text-danger">Disabled</span>';
+                // return $html;
             })
             ->rawColumns(['data', 'status'])
             ->make(true);
@@ -300,7 +272,6 @@ class ClassController extends Controller
                 'session_pid'=>$request->session_pid,
                 'sid'=>$request->subject_pid,
                 'arm_pid'=>$request->arm_pid,
-                'pid'=>public_id(),
                 'school_pid'=>getSchoolPid(),
                 'staff_pid'=>getSchoolUserPid(),
             ];
@@ -326,6 +297,7 @@ class ClassController extends Controller
                     // $sid = (array) ;
                     foreach($data['sid'] as $pid){
                         $data['subject_pid'] = $dupParams['subject_pid'] = $pid;
+                        $data['pid']=public_id();
                        $r = ClassArmSubject::updateOrCreate($dupParams, $data);
                     }
                     return $r;
@@ -335,4 +307,21 @@ class ClassController extends Controller
             logError($error);
         }
     }
+
+    public static function GetClassArmSubjectType($class_subject){
+        $subject_type = ClassArmSubject::join('subjects','subjects.pid','class_arm_subjects.subject_pid')
+                            ->where(['subjects.school_pid'=>getSchoolPid(),'class_arm_subjects.pid'=> $class_subject])
+                            ->pluck('subject_type_pid')->first();
+        return $subject_type;
+    }
+    public static function GetClassSubjectAndName($class_subject){
+        $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
+            ->join('subjects', 'subjects.pid', 'subject_pid')
+            ->where(['class_arms.school_pid' => getSchoolPid(), 'class_arm_subjects.pid' => $class_subject])
+            ->first(['arm','subject']); 
+        return $result;
+    }
+    // public function assignClassArmSubjectToTeacher(Request $request){
+
+    // }
 }

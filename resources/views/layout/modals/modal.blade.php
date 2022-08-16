@@ -1,0 +1,169 @@
+<!-- create class subject to teacher modal  -->
+<div class="modal fade" id="createArmSubjectTeacherModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign Class Arm Subject to Teacher</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="createArmSubjectTeacherForm">
+                    @csrf
+                    <label for="category_pid">Category</label>
+                    <select name="category_pid" id="categorySelect2s" placeholder="select" class="categorySelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger category_pid_error"></p>
+                    <label for="session_pid">Session</label>
+                    <select name="session_pid" id="sessionSelect2s" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger session_pid_error"></p>
+                    <label for="class_pid">Class</label>
+                    <select name="class_pid" id="classSelect2s" placeholder="select" class="classSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger class_pid_error"></p>
+                    <label for="term_pid">Term</label>
+                    <select name="term_pid" id="termSelect2s" placeholder="select" class="termSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger term_pid_error"></p>
+                    <label for="arm_pid">Arm</label>
+                    <select name="arm_pid" id="armSelect2s" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger arm_pid_error"></p>
+                    <label for="subject_pid">Subject</label>
+                    <select name="subject_pid[]" id="subjectSelect2s" placeholder="select" multiple="multiple" class="subjectSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger subject_pid_error"></p>
+                    <label for="teacher_pid">Teacher</label>
+                    <select name="teacher_pid" id="teacherSelect2s" style="width: 100%;" class="teacherSelect2 form-control form-control-sm">
+                    </select>
+                    <p class="text-danger teacher_pid_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="createArmSubjectTeacherBtn">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- assign class arm rep modal  -->
+<div class="modal fade" id="assignArmToRepModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Choose Class Arm Rep</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="assignArmToRepModalForm">
+                    @csrf
+
+                    <label for="category_pid">Category</label>
+                    <select name="category_pid" id="categorySelect2s" placeholder="select" class="categorySelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger category_pid_error"></p>
+                    <label for="session_pid">Session</label>
+                    <select name="session_pid" id="sessionSelect2s" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger session_pid_error"></p>
+                    <label for="class_pid">Class</label>
+                    <select name="class_pid" id="classSelect2s" placeholder="select" class="classSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger session_pid_error"></p>
+                    <label for="term_pid">Term</label>
+                    <select name="term_pid" id="termSelect2s" placeholder="select" class="termSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger term_pid_error"></p>
+                    <label for="arm_pid">Arm</label>
+                    <select name="arm_pid" id="armSelect2s" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger session_pid_error"></p>
+                    <label for="subject_pid">Subject</label>
+                    <select name="subject_pid[]" id="subjectSelect2" placeholder="select" multiple="multiple" class="subjectSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger session_pid_error"></p>
+                    <label for="student_pid">Student</label>
+                    <select name="student_pid" id="studentSelect2s" style="width: 100%;" class="studentSelect2s form-control form-control-sm">
+                    </select>
+                    <p class="text-danger teacher_pid_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="assignArmToRepModalBtn">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- assign class to class arm teacher modal  -->
+<div class="modal fade" id="createArmTeacherModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign Class Arm To Teacher</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="createArmTeacherForm">
+                    @csrf
+                    <label for="session_pid">Session</label>
+                    <select name="session_pid" id="sessionSelect24t" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger session_pid_error"></p>
+                    <label for="session_pid">Term</label>
+                    <select name="term_pid" id="termSelect2" placeholder="select" class="termSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger term_pid_error"></p>
+                    <label for="session_pid">Category</label>
+                    <select name="session_pid" id="categorySelect2" placeholder="select" class="categorySelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger session_pid_error"></p>
+                    <label for="session_pid">Class</label>
+                    <select name="session_pid" id="classSelect2" placeholder="select" class="classSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger session_pid_error"></p>
+                    <label for="session_pid">Arm</label>
+                    <select name="session_pid" id="armSelect2" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger session_pid_error"></p>
+                    <label for="teacher_pid">Teacher</label>
+                    <select name="teacher_pid" id="teacherSelect2" style="width: 100%;" class="teacherSelect2 form-control form-control-sm">
+                    </select>
+                    <p class="text-danger teacher_pid_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="createArmSubjectBtn">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- link students to parent modal  -->
+<div class="modal fade" id="linkStudentParentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Link Student to Parent</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="linkStudentParentForm">
+                    @csrf
+                    <label for="parent_pid">Parent/Guardian</label>
+                    <select name="parent_pid" id="parentSelect2" placeholder="select" class="parentSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger parent_pid_error"></p>
+                    <label for="student_pid">Student</label>
+                    <select name="student_pid[]" id="studentSelect2" multiple="multiple" style="width: 100%;" class="studentSelect2 form-control form-control-sm">
+                    </select>
+                    <p class="text-danger student_pid_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="linkStudentParentBtn">Link</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

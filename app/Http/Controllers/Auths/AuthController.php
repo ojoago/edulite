@@ -91,6 +91,11 @@ class AuthController extends Controller
         if (auth()->user()) {
             auth()->logout();
         }
+        self::clearAuthSession();
+    }
+
+    public static function clearAuthSession(): void
+    {
         setSchoolPid();
         setActionablePid();
         setSchoolUserPid();

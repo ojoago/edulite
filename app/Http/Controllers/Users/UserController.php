@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Http\Controllers\Auths\AuthController;
 use Illuminate\Http\Request;
 use App\Models\School\School;
 use App\Http\Controllers\Controller;
@@ -20,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        setSchoolPid();//set school pid to null
+        AuthController::clearAuthSession();
         $data = School::where('user_pid', getUserPid())->get();
         // return view('school.index', );
         return view('users.dashboard', compact('data'));

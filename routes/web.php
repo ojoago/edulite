@@ -2,30 +2,31 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auths\AuthController;
-use App\Http\Controllers\Framework\Select2Controller;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\School\SchoolController;
+use App\Http\Controllers\Framework\Select2Controller;
 use App\Http\Controllers\School\Staff\StaffController;
+use App\Http\Controllers\School\Parent\ParentController;
 use App\Http\Controllers\School\Framework\ClassController;
+use App\Http\Controllers\School\Student\StudentController;
+use App\Http\Controllers\School\Rider\SchoolRiderController;
 use App\Http\Controllers\Organisation\OrganisationController;
 use App\Http\Controllers\Organisation\OrgUserAccessController;
+use App\Http\Controllers\School\Student\StudentScoreController;
 use App\Http\Controllers\Organisation\OrganisationUserController;
 use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
 use App\Http\Controllers\School\Framework\Subject\SubjectController;
 use App\Http\Controllers\School\Framework\Term\SchoolTermController;
+use App\Http\Controllers\School\Framework\Psycho\PsychomotorController;
 use App\Http\Controllers\School\Framework\Subject\SubjectTypeController;
+use App\Http\Controllers\School\Framework\Psycho\PsychoGradeKeyController;
 use App\Http\Controllers\School\Framework\Session\SchoolSessionController;
+use App\Http\Controllers\School\Registration\ParentRegistrationController;
+use App\Http\Controllers\School\Framework\Psycho\EffectiveDomainController;
 use App\Http\Controllers\School\Registration\StudentRegistrationController;
 use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 use App\Http\Controllers\School\Framework\Attendance\AttendanceTypeController;
 use App\Http\Controllers\School\Framework\Assessment\AssessmentTitleController;
-use App\Http\Controllers\School\Framework\Psycho\EffectiveDomainController;
-use App\Http\Controllers\School\Framework\Psycho\PsychoGradeKeyController;
-use App\Http\Controllers\School\Framework\Psycho\PsychomotorController;
-use App\Http\Controllers\School\Parent\ParentController;
-use App\Http\Controllers\School\Registration\ParentRegistrationController;
-use App\Http\Controllers\School\Rider\SchoolRiderController;
-use App\Http\Controllers\School\Student\StudentController;
 
 // port 8400
 Route::view('/','welcome');
@@ -80,7 +81,7 @@ Route::post('lite-user-access', [SchoolUserAccessController::class, 'store'])->n
 // sign up with school link direct 
 // Route::post('school-sign-up/{id}',[OrgUserAccessController::class,'store'])->name('school.sign.up');
 // category and class has the same controller 
-Route::view('lite-class', 'school.framework.class.class_and_category')->name('school.class')->middleware('auth');
+Route::view('lite-class', 'school.framework.class.class-and-category')->name('school.class')->middleware('auth');
 // tab 1 
 Route::get('load-school-category', [ClassController::class, 'loadCategory'])->name('load.school.category');
 // tab 2 
@@ -118,13 +119,16 @@ Route::get('load-active-term',[SchoolTermController::class, 'loaSchoolActiveTerm
 
 
 // Assesment Title
-Route::view('lite-assessment-title', 'school.framework.assessment.assessment_title')->name('school.assessment.title')->middleware('auth');
+Route::view('lite-assessment-title', 'school.framework.assessment.assessment-title')->name('school.assessment.title')->middleware('auth');
 Route::get('load-assessment-title', [AssessmentTitleController::class, 'index'])->name('load.school.assessment.title');
 // submiting form and create assessment title 
 Route::post('lite-assessment-title', [AssessmentTitleController::class, 'createAssessmentTitle'])->name('school.assessment.title');
+//load score settings 
+Route::get('load-score-setting', [ScoreSettingsController::class, 'index'])->name('load.score.setting');
 
 // load dropdon select2
 // load school on dropdon using select2  
+Route::get('load-available-', [Select2Controller::class, 'loadSchoolSession'])->name('load.available.dropdown')->middleware('auth');
 Route::get('load-available-session', [Select2Controller::class, 'loadSchoolSession'])->name('load.available.session')->middleware('auth');
 // load category 
 Route::get('load-available-category', [Select2Controller::class, 'loadAvailableCategory'])->name('load.available.category')->middleware('auth');
@@ -136,10 +140,14 @@ Route::get('load-available-term', [SchooltermController::class, 'loadSchoolTerm'
 Route::post('load-available-class', [Select2Controller::class, 'loadAvailableClass'])->name('load.available.class');
 // load classe arm 
 Route::post('load-available-class-arm', [Select2Controller::class, 'loadAvailableClassArm'])->name('load.available.class.arm');
+// load classe arm subject
+Route::post('load-available-class-arm-subject', [Select2Controller::class, 'loadAvailableClassArmSubject'])->name('load.available.class.arm.subject');
 // load category subject 
 Route::post('load-available-category-subject', [Select2Controller::class, 'loadAvailableSelectedCategorySubject'])->name('load.available.category.subject');
 // load school head of staff 
 Route::get('load-available-school-category-head', [Select2Controller::class, 'loadAvailableCategoryHead'])->name('load.available.school.category.head');
+//load school teachers
+Route::get('load-available-school-teachers', [Select2Controller::class, 'loadAvailableTeacher'])->name('load.available.school.category.head');
 // load subject type 
 Route::get('drop-down-subject-type', [SubjectTypeController::class, 'loadAvailableSubjectType'])->name('load.available.subject.type');
 // score settings 
@@ -242,3 +250,13 @@ Route::get('view-parent-profile', [ParentController::class, 'viewParentProfile']
 // student profile 
 Route::get('rider-profile/{id}', [SchoolRiderController::class, 'riderProfile'])->name('school.rider.profile');
 Route::get('view-rider-profile', [SchoolRiderController::class, 'viewRiderProfile'])->name('view.rider.profile');
+
+
+
+
+
+// student assessment 
+Route::view('student-assessment-form', 'school.student.assessment.assessment-form')->name('student.assessment.form')->middleware('auth');
+Route::post('student-assessment-form', [StudentScoreController::class, 'loadAssessmentRecord']);
+Route::get('student-score-entering', [StudentScoreController::class, 'enterStudentScore'])->name('enter.student.score');
+Route::post('submit-student-ca', [StudentScoreController::class, 'submitCaScore'])->name('submit.student.ca');
