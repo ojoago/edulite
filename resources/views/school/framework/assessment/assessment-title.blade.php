@@ -102,16 +102,16 @@
                         <div class="row">
                             <div class="col-md-7">
                                 @csrf
-                                <select type="text" name="session_pid" id="sessionSelect2" style="width: 100%;" class="form-control form-control-sm">
+                                <select type="text" name="session_pid" id="cssSessionSelect2" style="width: 100%;" class="form-control form-control-sm">
                                 </select>
                                 <p class="text-danger session_pid_error"></p>
-                                <select name="category_pid" id="categorySelect2" style="width: 100%;">
+                                <select name="category_pid" id="cssCategorySelect2" style="width: 100%;">
                                 </select>
                                 <p class="text-danger category_pid_error"></p>
-                                <select type="text" name="class_pid" id="classSelect2" style="width: 100%;" class="form-control form-control-sm">
+                                <select type="text" name="class_pid" id="cssClassSelect2" style="width: 100%;" class="form-control form-control-sm">
                                 </select>
                                 <p class="text-danger class_pid_error"></p>
-                                <select type="text" name="term_pid" id="termSelect2" style="width: 100%;" class="form-control form-control-sm">
+                                <select type="text" name="term_pid" id="cssTermSelect2" style="width: 100%;" class="form-control form-control-sm">
                                 </select>
                                 <p class="text-danger term_pid_error"></p>
                             </div>
@@ -224,7 +224,7 @@
                 {
                     "data": "date"
                 },
-                 
+
             ],
         });
 
@@ -286,12 +286,12 @@
         });
 
         // multiSelect2('categorySelect2', 'createClassArmModal', sbjCategoryselect2Url, 'Select Category');
-        multiSelect2('sessionSelect2', 'createScoreSettingModal', 'session', 'Select Session');
-        multiSelect2('termSelect2', 'createScoreSettingModal', 'term', 'Select Term');
-        multiSelect2('categorySelect2', 'createScoreSettingModal', 'category', 'Select Category');
-        $('#categorySelect2').on('change', function(e) {
+        multiSelect2('#cssSessionSelect2', 'createScoreSettingModal', 'session', 'Select Session');
+        multiSelect2('#cssTermSelect2', 'createScoreSettingModal', 'term', 'Select Term');
+        multiSelect2('#cssCategorySelect2', 'createScoreSettingModal', 'category', 'Select Category');
+        $('#cssCategorySelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('classSelect2', 'createScoreSettingModal', 'class', id, 'Select Class');
+            multiSelect2Post('#cssClassSelect2', 'createScoreSettingModal', 'class', id, 'Select Class');
         });
 
 
@@ -300,7 +300,7 @@
         titleDropDown(pid)
 
         function titleDropDown(id) {
-            var id = 'titleSelect' + id;
+            var id = '#titleSelect' + id;
             multiSelect2(id, 'createScoreSettingModal', 'title', 'Select Title');
         }
         // add more title 

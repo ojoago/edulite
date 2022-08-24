@@ -120,6 +120,23 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $role; 
     }
+
+    function ordinalFormat($num){
+        try {
+            $locale = 'en_US';
+            $nf = new \NumberFormatter($locale, \NumberFormatter::ORDINAL);
+            return $nf->format($num);
+        } catch (\Throwable $e) {
+           $error = $e->getMessage();
+           logError($error);
+           $end = ['th','st','nd','rd','th','th','th','th','th','th'];
+           if(($num % 100) >= 11 && ($num % 100)<=13)
+                $surfix = $num.'th';
+            else
+                $surfix = $num.$end[$num % 10];
+            return $surfix;
+        }
+    }
     function flashMessage(){
     if (Session::has('message')) {
         list($type, $message) = explode('|', Session::get('message'));

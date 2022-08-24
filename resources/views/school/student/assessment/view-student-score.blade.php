@@ -5,35 +5,8 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5 class="card-title">{{$class->arm}} <small>{{$class->subject}}</small></h5>
-                    <p> <i class="bi bi-calendar-event-fill"></i> {{termName(session('term'))}} {{sessionName(session('session'))}}</p>
-                </div>
-                <div class="col-md-6">
-                    <form action="{{route('change.arm.subject')}}" method="post">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-4">
-                                <!-- <label for="arm" class="form-label">Class Arm</label> -->
-                                <select type="text" name="arm" class="form-control" id="formArmSelect2">
-
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <!-- <label for="subject" class="form-label">Class Subject</label> -->
-                                <select type="text" name="subject" class="form-control" id="formArmSubjectSelect2">
-
-                                </select>
-                            </div>
-
-                            <div class="col-md-4">
-                                <button class="btn btn-primary btn-sm" type="submit">Change</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <h5 class="card-title">{{--$class->arm--}} <small>{{$class->subject}}</small></h5>
+            <p> <i class="bi bi-calendar-event-fill"></i> {{--sessionName(session('session'))--}} {{termName(session('term'))}}</p>
             <!-- Primary Color Bordered Table -->
             <table class="table table-bordered border-primary" id="scoreTable">
                 <thead>
@@ -44,7 +17,7 @@
                         </th>
                         <th scope="col">Names</th>
                         @foreach($scoreParams as $row)
-                        <th scope="col">{{$row->title}} max-[{{$row->score}}]</th>
+                        <th scope="col">{{$row->title}} <small>/[{{$row->score}}]</small></th>
                         @endforeach
                         <th scope="col">Total
                             <!--[100]-->
@@ -60,7 +33,7 @@
                         <form>
                             @csrf
                             @foreach($scoreParams as $row)
-                            <td scope="col"><input type="number" step="0.01" class="form-control form-control-sm studentCaScore" id="{{$row->assessment_title_pid}}" value="{{getTitleScore($student->pid,$row->assessment_title_pid)}}" placeholder="max obtainable {{--$row->score--}}"> </td>
+                            <td scope="col">{{getTitleScore($student->pid,$row->assessment_title_pid)}}</td>
                             @endforeach
                             <td scope="col"></td>
                     </tr>
@@ -138,34 +111,6 @@
             });
         });
 
-        var arm = "{{session('arm')}}";
-        if (arm != null) {
-            getArmSubject(arm)
-        }
-        var class_pid = "{{session('class')}}";
-        if (class_pid != null) {
-            getClassArms(class_pid)
-        }
-        // $('#formClassSelect2').on('change', function(e) {
-        //     var id = $(this).val();
-        //     FormMultiSelect2Post('#formArmSelect2', 'class-arm', id, 'Select Class Arm');
-        // });
-        // $('#formArmSelect2').on('change', function(e) {
-        //     var id = $(this).val();
-        //     FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
-        // });
-        $('#formArmSelect2').on('change', function(e) {
-            var id = $(this).val();
-            FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
-        });
-
-        function getClassArms(id) {
-            FormMultiSelect2Post('#formArmSelect2', 'class-arm', id, 'Select Class Arm');
-        }
-
-        function getArmSubject(id) {
-            FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
-        }
     });
 </script>
 @endsection

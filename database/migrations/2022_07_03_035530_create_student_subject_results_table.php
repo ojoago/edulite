@@ -15,18 +15,20 @@ return new class extends Migration
     {
         Schema::create('student_subject_results', function (Blueprint $table) {
             $table->id();
+            $table->string('school_pid')->nullable();
             $table->string('student_pid');
-            $table->string('class_result_pid');
-            $table->string('assessment_pid');
-            $table->string('comment')->nullable();
-            $table->string('position')->nullable();
-            $table->float('total_score')->nullable();
-            $table->float('min_score')->nullable();
-            $table->float('max_score')->nullable();
-            $table->float('avg_score')->nullable();
-            $table->string('subjects')->nullable();
-            $table->text('subject_teacher_comment')->nullable();
-            // $table->text('subject_teacher_comment')->nullable();
+            $table->string('class_param_pid');
+            $table->string('pid')->unique()->nullable();
+            $table->string('subject_type')->comment('subject type pid');
+            $table->float('total')->default(0);
+            $table->string('seated')->default(1);
+            // $table->string('class_result_pid');
+            // $table->string('comment')->nullable();
+            // $table->float('min_score')->nullable();
+            // $table->float('max_score')->nullable();
+            // $table->float('avg_score')->nullable();
+            $table->text('teacher_comment')->nullable();
+            $table->text('subject_teacher')->nullable();
             $table->timestamps();
         });
     }

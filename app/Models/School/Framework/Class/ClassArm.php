@@ -9,10 +9,10 @@ class ClassArm extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'pid','school_pid','arm','class_pid','staff_pid'
+        'pid','school_pid','arm','class_pid','staff_pid', 'arm_number'
     ];
     
     public function setArmAttribute($value){
-        $this->attributes['arm'] = strtoupper($value);
+        $this->attributes['arm'] = strtoupper(trim($value));
     }
 }

@@ -152,12 +152,12 @@
                     <i id="addMoreRow"></i>
                     <div class="row">
                         <div class="col-md-7">
-                            <input type="text" name="class" placeholder="class e.g JSS 1" class="form-control form-control-sm" required>
+                            <input type="text" name="class[]" placeholder="class e.g JSS 1" class="form-control form-control-sm" required>
                             <p class="text-danger class_error"></p>
                         </div>
                         <div class="col-md-5">
                             <div class="input-group mb-3">
-                                <select name="class_number" id="classNumberSelect2" class="form-control form-control-sm">
+                                <select name="class_number[]" id="classNumberSelect" class="form-control form-control-sm">
                                     <option disabled selected>Select Class Number</option>
                                     <option value="1">One</option>
                                     <option value="2">Two</option>
@@ -196,27 +196,51 @@
             <div class="modal-body">
                 <form action="" method="post" class="" id="createClassArmForm">
                     @csrf
-                    <button id="addMoreArm" type="button" class="btn btn-danger btn-sm btn-small mb-1">Add More Row</button><br>
-                    <i id="addMoreArmRow"></i>
                     <div class="row">
-                        <div class="col-md-4">
-                            <select name="category_pid[]" id="categorySelect2" style="width: 100%;">
+                        <div class="col-md-6">
+                            <select name="category_pid" id="ccaCategorySelect2" class="ccaCategorySelect2 form-control form-control-sm" style="width: 100%;">
                             </select>
                             <p class="text-danger category_pid_error"></p>
                         </div>
-                        <div class="col-md-3">
-                            <select name="class_pid[]" id="classSelect2" style="width: 100%;">
+                        <div class="col-md-6">
+                            <select name="class_pid" id="ccaClassSelect2" class="ccaclassSelect2 form-control form-control-sm" style="width: 100%;">
                             </select>
                             <p class="text-danger class_pid_error"></p>
                         </div>
-                        <div class="col-md-5">
-                            <div class="input-group mb-3">
-                                <input type="text" name="arm[]" placeholder="class arm" class="form-control form-control-sm" required>
-                                <i class="bi bi-x-circle-fill text-white m-2 removeRowBtn"></i>
-                            </div>
+                    </div>
+                    <center>
+                        prepend class name to class arm ? <input type="checkbox" name="prepend">
+                        <button id="addMoreArm" type="button" class="btn btn-danger btn-sm btn-small mb-1">Add More Row</button><br>
+                    </center>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="arm">Class Arm Name</label>
+                            <input type="text" name="arm[]" placeholder="class arm" class="form-control form-control-sm" required>
                             <p class="text-danger arm_error"></p>
                         </div>
+                        <div class="col-md-6">
+                            <label for="number">Class Arm Serial Number</label>
+                            <div class="input-group mb-3">
+                                <select name="arm_number[]" id="classNumberSelect" class="form-control form-control-sm">
+                                    <option disabled selected>Select Class Number</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                    <option value="4">Four</option>
+                                    <option value="5">Five</option>
+                                    <option value="6">Six</option>
+                                    <option value="7">Seven</option>
+                                    <option value="8">Eight</option>
+                                    <option value="9">Nine</option>
+                                    <option value="10">Ten</option>
+                                </select>
+                                <i class="bi bi-x-circle-fill text-white m-2 removeRowBtn"></i>
+                            </div>
+                            <p class="text-danger arm_number_error"></p>
+                        </div>
                     </div>
+                    <div id="addMoreArmRow"></div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -238,23 +262,23 @@
                 <form action="" method="post" class="" id="createArmSubjectForm">
                     @csrf
                     <label for="category_pid">Category</label>
-                    <select name="category_pid" id="sbjCategorySelect2" class="categorySelect2" style="width: 100%;">
+                    <select name="category_pid" id="casfCategorySelect2" class="form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger category_pid_error"></p>
                     <label for="session_pid">Session</label>
-                    <select name="session_pid" id="sessionSelect2" placeholder="select" class="sessionSelect2" style="width: 100%;">
+                    <select name="session_pid" id="casfSessionSelect2" placeholder="select" class=" " style="width: 100%;">
                     </select>
                     <p class="text-danger session_pid_error"></p>
                     <label for="class_pid">Cls</label>
-                    <select name="class_pid" id="classSelect24sub" class="classSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="class_pid" id="casfClassSelect2" class="classSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger class_pid_error"></p>
                     <label for="arm_pid">Am</label>
-                    <select name="arm_pid" id="armSelect24sub" style="width: 100%;" class="armSelect2 form-control form-control-sm">
+                    <select name="arm_pid" id="casfArmSelect2" style="width: 100%;" class="form-control form-control-sm">
                     </select>
                     <p class="text-danger arm_pid_error"></p>
                     <label for="subject_pid">sbj</label>
-                    <select name="subject_pid[]" id="subjectSelect2" multiple="multiple" style="width: 100%;" class="subjectSelect2 form-control form-control-sm">
+                    <select name="subject_pid[]" id="casfSubjectSelect2" multiple="multiple" style="width: 100%;" class="form-control form-control-sm">
                     </select>
                     <p class="text-danger subject_pid_error"></p>
                 </form>
@@ -276,12 +300,12 @@
                 `
                  <div class="row addedRow">
                         <div class="col-md-7">
-                            <input type="text" name="class" placeholder="class e.g JSS 1" class="form-control form-control-sm" required>
+                            <input type="text" name="class[]" placeholder="class e.g JSS 1" class="form-control form-control-sm" required>
                             <p class="text-danger class_error"></p>
                         </div>
                         <div class="col-md-5">
                             <div class="input-group mb-3">
-                                <select name="class_number" id="classNumberSelect2" class="form-control form-control-sm">
+                                <select name="class_number[]" id="classNumberSelect" class="form-control form-control-sm">
                                 <option disabled selected>Select Class Number</option>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
@@ -304,29 +328,39 @@
             // init select2 again 
         });
 
-        $(document).on('click', '.addedRow .removeRowBtn', function() {
+        $(document).on('click', '.addedRow .removeRowccaBtn', function() {
             $(this).parent().parent().parent().remove();
         });
+        var psp = 2;
         $('#addMoreArm').click(function() {
-            $('#addMoreArmRow').prepend(
+            psp++;
+            $('#addMoreArmRow').append(
                 `
-                 <div class="row">
-                        <div class="col-md-4">
-                            <select name="category_pid[]" id="categorySelect2" style="width: 100%;">
-                            </select>
-                            <p class="text-danger category_pid_error"></p>
-                        </div>
-                        <div class="col-md-3">
-                            <select name="class_pid[]" id="classSelect2" style="width: 100%;">
-                            </select>
-                            <p class="text-danger class_pid_error"></p>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="input-group mb-3">
-                                <input type="text" name="arm[]" placeholder="class arm" class="form-control form-control-sm" required>
-                                <i class="bi bi-x-circle-fill text-danger m-2 removeRowBtn"></i>
-                            </div>
+                 <div class="row addedRow">
+                        <div class="col-md-6">
+                        <label for="number">Class Arm Name</label>
+                            <input type="text" name="arm[]" placeholder="class arm" class="form-control form-control-sm" required>
                             <p class="text-danger arm_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                        <label for="number">Class Arm Serial Number</label>
+                            <div class="input-group mb-3">
+                                <select name="arm_number[]" id="classNumberSelect2" class="form-control form-control-sm">
+                                    <option disabled selected>Arm serial number</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                    <option value="4">Four</option>
+                                    <option value="5">Five</option>
+                                    <option value="6">Six</option>
+                                    <option value="7">Seven</option>
+                                    <option value="8">Eight</option>
+                                    <option value="9">Nine</option>
+                                    <option value="10">Ten</option>
+                                </select>
+                                <i class="bi bi-x-circle-fill text-danger m-2 removeRowccaBtn pointer"></i>
+                            </div>
+                            <p class="text-danger arm_number_error"></p>
                         </div>
                     </div>
                 `
@@ -476,25 +510,27 @@
         multiSelect2('#sessionSelect24t', 'createArmTeacherModal', 'session', 'Select Session');
         multiSelect2('#sessionSelect2', 'createArmSubjectModal', 'session', 'Select Session');
         multiSelect2('#classCategorySelect2', 'createClassModal', 'category', 'Select Category');
-        multiSelect2('#categorySelect2', 'createClassArmModal', 'category', 'Select Category');
-        $('#categorySelect2').on('change', function(e) {
+        multiSelect2('.ccaCategorySelect2', 'createClassArmModal', 'category', 'Select Category');
+        $('#ccaCategorySelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('#classSelect2', 'createClassArmModal', 'class', id, 'Select Class');
+            multiSelect2Post('#ccaClassSelect2', 'createClassArmModal', 'class', id, 'Select Class');
         });
-        multiSelect2('#sbjCategorySelect2', 'createArmSubjectModal', 'category', 'Select Category');
         // load principal/ head 
         multiSelect2('#staffSelect2', 'createClassCategoryModal', 'school-category-head', 'Select Category Head');
-        $('#sbjCategorySelect2').on('change', function(e) {
+
+        multiSelect2('#casfCategorySelect2', 'createArmSubjectModal', 'category', 'Select Category');
+        multiSelect2('#casfSessionSelect2', 'createArmSubjectModal', 'session', 'Select Category');
+        $('#casfCategorySelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('#classSelect24sub', 'createArmSubjectModal', 'class', id, 'Select Class');
+            multiSelect2Post('#casfClassSelect2', 'createArmSubjectModal', 'class', id, 'Select Class');
         });
-        $('#sbjCategorySelect2').on('change', function(e) {
+        $('#casfCategorySelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('#subjectSelect2', 'createArmSubjectModal', 'category-subject', id, 'Select Subject');
+            multiSelect2Post('#casfSubjectSelect2', 'createArmSubjectModal', 'category-subject', id, 'Select Subject');
         });
-        $('#classSelect24sub').on('change', function(e) {
+        $('#casfClassSelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('#armSelect24sub', 'createArmSubjectModal', 'class-arm', id, 'Select Class Arm');
+            multiSelect2Post('#casfArmSelect2', 'createArmSubjectModal', 'class-arm', id, 'Select Class Arm');
         });
 
 
@@ -589,7 +625,7 @@
                     $('#createClassArmBtn').prop('disabled', true);
                 },
                 success: function(data) {
-                    // console.log(data);
+                    console.log(data);
                     $('#createClassArmBtn').prop('disabled', false);
                     $('.overlay').hide();
                     if (data.status === 0) {
@@ -597,10 +633,12 @@
                         $.each(data.error, function(prefix, val) {
                             $('.' + prefix + '_error').text(val[0]);
                         });
-                    } else {
+                    } else if (data.status === 1) {
                         // alert_toast(data.message, 'success');
                         // $('#createClassArmForm')[0].reset();
                         successClearForm('createClassArmForm', data.message);
+                    } else {
+                        alert_toast(data.message, 'error');
                     }
                 },
                 error: function(data) {

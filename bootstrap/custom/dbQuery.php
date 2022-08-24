@@ -14,7 +14,7 @@ use App\Models\School\Student\Assessment\StudentScoreSheet;
 
     function getTitleScore($student,$pid){
         $score = StudentScoreSheet::join('student_score_params', 'student_score_params.pid',
-                                     'student_score_sheets.assessment_pid')->where([
+                                    'student_score_sheets.score_param_pid')->where([
                                     'student_score_sheets.student_pid'=>$student,
                                     'student_score_sheets.ca_type_pid'=>$pid,
                                     'student_score_params.subject_pid'=>session('subject'),

@@ -96,9 +96,9 @@ class Select2Controller extends Controller
         return response()->json($data);
     }
 
-    public function loadAvailableClassArm()
+    public function loadAvailableClassArm(Request $request)
     {
-        $result = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1])
+        $result = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1,'class_pid'=>$request->pid])
         ->orderBy('arm')->get(['pid', 'arm']); //
         foreach ($result as $row) {
             $data[] = [

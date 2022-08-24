@@ -11,4 +11,8 @@ class Category extends Model
     protected $fillable = [
         'pid', 'school_pid', 'category', 'staff_pid','description','head_pid'
     ];
+
+    public function setCategoryAttribute($value){
+        $this->attributes['category'] = $value;
+    }
 }

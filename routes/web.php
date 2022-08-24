@@ -27,6 +27,8 @@ use App\Http\Controllers\School\Registration\StudentRegistrationController;
 use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 use App\Http\Controllers\School\Framework\Attendance\AttendanceTypeController;
 use App\Http\Controllers\School\Framework\Assessment\AssessmentTitleController;
+use App\Http\Controllers\School\Student\Promotion\PromoteStudentCOntroller;
+use App\Http\Controllers\School\Student\Results\Termly\StudentTermlyResultController;
 
 // port 8400
 Route::view('/','welcome');
@@ -209,7 +211,7 @@ Route::post('lite-staff-subject', [StaffController::class, 'staffSubject'])->nam
 // student 
 Route::view('lite-registration', 'school.registration.index')->name('school.registration');
 // student 
-Route::view('lite-s-registration-form', 'school.registration.student.register_student')->name('school.registration.student.form')->middleware('auth');
+Route::view('lite-s-registration-form', 'school.registration.student.student-registration-form')->name('school.registration.student.form')->middleware('auth');
 Route::post('lite-student-registration', [StudentRegistrationController::class, 'registerStudent'])->name('register.student');
 
 Route::view('lite-parent-registration-form', 'school.registration.parent.register-parent')->name('school.parent.registration.form')->middleware('auth');
@@ -256,7 +258,28 @@ Route::get('view-rider-profile', [SchoolRiderController::class, 'viewRiderProfil
 
 
 // student assessment 
-Route::view('student-assessment-form', 'school.student.assessment.assessment-form')->name('student.assessment.form')->middleware('auth');
-Route::post('student-assessment-form', [StudentScoreController::class, 'loadAssessmentRecord']);
+Route::view('student-subject-score-form', 'school.student.assessment.assessment-form')->name('student.assessment.form')->middleware('auth');
+Route::post('student-subject-score-form', [StudentScoreController::class, 'enterStudentScoreRecord']);
+Route::post('change-arm-subject', [StudentScoreController::class, 'changeSubject'])->name('change.arm.subject');
 Route::get('student-score-entering', [StudentScoreController::class, 'enterStudentScore'])->name('enter.student.score');
 Route::post('submit-student-ca', [StudentScoreController::class, 'submitCaScore'])->name('submit.student.ca');
+Route::post('change-student-ca-student', [StudentScoreController::class, 'changeSubjectResultStatus'])->name('change.student.ca.student');
+// view student subject score 
+Route::view('view-student-subject-score-form', 'school.student.assessment.view-subject-score-form')->name('view.student.subject.score.form')->middleware('auth');
+Route::post('view-student-subject-score-form', [StudentScoreController::class, 'viewStudentScoreRecord']);
+Route::get('view-student-score', [StudentScoreController::class, 'loadStudentScore'])->name('view.student.score');
+
+// psychomotor 
+
+
+
+// view student result 
+Route::view('view-student-termly-result', 'school.student.result.termly-result.view-termly-result-form')->name('view.student.termly.result')->middleware('auth');
+Route::post('view-student-termly-result', [StudentTermlyResultController::class, 'loadStudentResult']);
+Route::get('student-termly-result', [StudentTermlyResultController::class, 'studentResult'])->name('view.student.result');
+// student promotion 
+Route::view('promote-student-form', 'school.student.promotion.promote-student-form')->name('promote.student.form')->middleware('auth');
+Route::post('promote-student-form', [PromoteStudentController::class,'loadStudent'])->name('promote.student.form')->middleware('auth');
+Route::post('promote-student', [PromoteStudentController::class,'promoteStudent'])->name('promote.student');
+
+

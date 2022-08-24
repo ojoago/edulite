@@ -5,11 +5,10 @@ namespace App\Models\School\Student\Result;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StudentClassResult extends Model
+class StudentClassScoreParam extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'school_pid','student_pid','total', 'class_param_pid', 
-        'class_teacher_comment','principal_comment','portal_comment'
+        'school_pid','teacher_pid','session_pid','term_pid','arm_pid','pid'
     ];
 }

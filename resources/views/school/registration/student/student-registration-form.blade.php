@@ -61,32 +61,32 @@
                 </select>
                 <p class="text-danger religion_error"></p>
             </div>
-                <div class="col-md-4">
-                    <label for="state" class="form-label small">State Of Origin</label>
-                    <select id="stateSelect2" value="1" name="state" class="form-control" style="width: 100%;">
+            <div class="col-md-4">
+                <label for="state" class="form-label small">State Of Origin</label>
+                <select id="stateSelect2" value="1" name="state" class="form-control" style="width: 100%;">
+                </select>
+                <p class="text-danger state_error"></p>
+            </div>
+            <div class="col-md-4">
+                <label for="inputCity" class="form-label small">LGA</label>
+                <select id="lgaSelect2" value="1" name="lga" class="form-control" style="width: 100%;">
+                </select>
+                <p class="text-danger lga_error"></p>
+            </div>
+            <div class="col-md-4">
+                <label for="parent_pid" class="form-label small">Parent/Guardian</label>
+                <div class="input-group">
+                    <select id="lgaSelect2" name="parent_pid" class="form-control  form-control-sm">
                     </select>
-                    <p class="text-danger state_error"></p>
+                    <span class="input-group-text pointer" id="basic-addon1"><i class="bi bi-node-plus-fill"></i></span>
                 </div>
-                <div class="col-md-4">
-                    <label for="inputCity" class="form-label small">LGA</label>
-                    <select id="lgaSelect2" value="1" name="lga" class="form-control" style="width: 100%;">
-                    </select>
-                    <p class="text-danger lga_error"></p>
-                </div>
-                <div class="col-md-4">
-                    <label for="parent_pid" class="form-label small">Parent/Guardian</label>
-                    <div class="input-group">
-                        <select id="lgaSelect2" name="parent_pid" class="form-control  form-control-sm">
-                        </select>
-                        <span class="input-group-text pointer" id="basic-addon1"><i class="bi bi-node-plus-fill"></i></span>
-                    </div>
-                    <p class="text-danger parent_pid_error"></p>
-                </div>
-                <div class="col-md-12">
-                    <label for="address" class="form-label">Address</label>
-                    <textarea type="text" class="form-control form-control-sm" id="address" name="address" placeholder="e.g no 51  offeoke"></textarea>
-                    <p class="text-danger address_error"></p>
-                </div>
+                <p class="text-danger parent_pid_error"></p>
+            </div>
+            <div class="col-md-12">
+                <label for="address" class="form-label">Address</label>
+                <textarea type="text" class="form-control form-control-sm" id="address" name="address" placeholder="e.g no 51  offeoke"></textarea>
+                <p class="text-danger address_error"></p>
+            </div>
             <div class="col-md-4">
                 <label for="type" class="form-label">Student Type</label>
                 <select name="type" class="form-control  form-control-sm" required>
@@ -108,13 +108,13 @@
             </div>
             <div class="col-md-4">
                 <label for="term_pid" class="form-label">Term</label>
-                <select name="term_pid" style="width: 100%;" id="termSelect2" required>
+                <select name="term_pid" style="width: 100%;" id="tmSelect2" required>
                 </select>
                 <p class="text-danger term_pid_error"></p>
             </div>
             <div class="col-md-4">
                 <label for="category_pid" class="form-label">Category</label>
-                <select name="category_pid" style="width: 100%;" id="categorySelect2" required>
+                <select name="category_pid" style="width: 100%;" id="cateSelect2" required>
                 </select>
                 <p class="text-danger category_pid_error"></p>
             </div>
@@ -145,85 +145,24 @@
 
         // load dropdown  
         // session select2 
-        $('#sessionSelect2').select2({
-            placeholder: 'Select Session',
-            // dropdownParent: $('#createScoreSettingModal'),
-            ajax: {
-                url: "{{route('load.available.session')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
+        FormMultiSelect2('#sessionSelect2', 'session', 'Select Session')
+
+        FormMultiSelect2('#cateSelect2', 'category', 'Select Category')
+
         // class dropdown 
-        $('#classSelect2').select2({
-            placeholder: 'Select Class',
-            // dropdownParent: $('#createScoreSettingModal'),
-            ajax: {
-                url: "{{route('load.available.class')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
-        // class arm dropdown 
-        $('#armSelect2').select2({
-            placeholder: 'Select Class Arm',
-            // dropdownParent: $('#createScoreSettingModal'),
-            ajax: {
-                url: "{{route('load.available.class.arm')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
-        // term dropdown 
-        $('#termSelect2').select2({
-            placeholder: 'Select Term',
-            // dropdownParent: $('#createScoreSettingModal'),
-            ajax: {
-                url: "{{route('load.available.term')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
-        $('#categorySelect2').select2({
-            placeholder: 'Select Category',
-            // dropdownParent: $('#createClassArmModal'),
-            ajax: {
-                url: "{{route('load.available.category')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
+        $('#cateSelect2').change(function() {
+            var id = $(this).val();
+            FormMultiSelect2Post('#classSelect2', 'class', id, 'Select Class')
         });
 
+        // class arm dropdown 
+        $('#classSelect2').change(function() {
+            var id = $(this).val();
+            FormMultiSelect2Post('#armSelect2', 'class-arm', id, 'Select Class Arm')
+        });
+
+        // term dropdown 
+        FormMultiSelect2('#tmSelect2', 'term', 'Select Term')
 
         // create school category 
         $('#createStudentBtn').click(function() {

@@ -16,15 +16,11 @@ return new class extends Migration
         Schema::create('student_score_params', function (Blueprint $table) {
             $table->id();
             $table->string('school_pid');
-            $table->string('teacher_pid');
+            $table->string('class_param_pid');
             $table->string('subject_pid');
             $table->string('subject_type')->nullable();
-            $table->string('category_pid')->nullable();
-            $table->string('session_pid');
-            $table->string('term_pid');
-            $table->string('class_pid')->nullable();
-            $table->string('arm_pid')->nullable();
-            $table->integer('status')->default(1)->comment('0 locked, 1 open');
+            $table->string('subject_teacher')->nullable();
+            $table->string('staff_pid')->nullable()->comment('recorded by');
             $table->string('pid')->unique();
             $table->timestamps();
         });

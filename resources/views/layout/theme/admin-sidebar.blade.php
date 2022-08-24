@@ -177,8 +177,41 @@
             </a>
         </li>
         <li>
+            <a href="{{route('view.student.subject.score.form')}}">
+                <i class="bi bi-circle"></i><span> VSR</span>
+            </a>
+        </li>
+        <li>
             <a href="tables-data.html">
                 <i class="bi bi-circle"></i><span>Data Tables</span>
+            </a>
+        </li>
+    </ul>
+</li><!-- End Tables Nav -->
+
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#psychomotor-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-layout-text-window-reverse"></i><span>py</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="psychomotor-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="{{route('student.assessment.form')}}">
+                <i class="bi bi-circle"></i><span>PS</span>
+            </a>
+        </li>
+        <li>
+            <a href="tables-general.html">
+                <i class="bi bi-circle"></i><span>AF</span>
+            </a>
+        </li>
+        <li>
+            <a href="tables-general.html">
+                <i class="bi bi-circle"></i><span> VPS</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('view.student.subject.score.form')}}">
+                <i class="bi bi-circle"></i><span> VFS</span>
             </a>
         </li>
     </ul>
@@ -190,7 +223,7 @@
     </a>
     <ul id="result-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-            <a href="charts-chartjs.html">
+            <a href="{{route('view.student.termly.result')}}">
                 <i class="bi bi-circle"></i><span>V STR</span>
             </a>
         </li>
@@ -232,13 +265,13 @@
     </a>
     <ul id="student-promotion-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-            <a href="charts-chartjs.html">
-                <i class="bi bi-circle"></i><span>Chart.js</span>
+            <a href="{{route('promote.student.form')}}">
+                <i class="bi bi-circle"></i><span>Promote class</span>
             </a>
         </li>
         <li>
             <a href="charts-apexcharts.html">
-                <i class="bi bi-circle"></i><span>ApexCharts</span>
+                <i class="bi bi-circle"></i><span>swap student</span>
             </a>
         </li>
         <li>

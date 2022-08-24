@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('status')->default(1)->comment('0 = disabled, 1 = active student, 2 = graduated, 3 = left the school');
             $table->string('admitted_class')->nullable();
             $table->string('current_class')->nullable();
+            $table->string('current_session')->nullable();
             $table->text('student_image_path')->nullable();
             $table->text('address')->nullable();
             $table->string('session_pid');

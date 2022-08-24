@@ -10,6 +10,7 @@
 @endif
 @endauth
 <main id="main" class="main">
+    @include('layout.flash')
     @yield('content')
     @auth
     @include('layout.modals.modal')

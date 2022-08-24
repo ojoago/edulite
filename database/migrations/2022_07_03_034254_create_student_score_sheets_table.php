@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('student_score_sheets', function (Blueprint $table) {
             $table->id();
-            $table->string('assessment_pid'); //this need to be changed
+            $table->string('score_param_pid'); //this need to be changed
             $table->string('student_pid');
             $table->string('ca_type_pid');
             $table->string('score');

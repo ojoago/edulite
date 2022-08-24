@@ -4,7 +4,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Lite Grade</h5>
+        <h5 class="card-title">Lite Subjects</h5>
 
         <!-- Default Tabs -->
         <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
@@ -98,10 +98,10 @@
             <div class="modal-body">
                 <form method="post" class="" id="createSchoolCategortSubjectForm">
                     @csrf
-                    <select name="category_pid" style="width:100%" class="form-control form-control-sm" id="categorySelect2">
+                    <select name="category_pid" style="width:100%" class="form-control form-control-sm" id="createSubjectCategorySelect2">
                     </select>
                     <p class="text-danger category_pid_error"></p>
-                    <select name="subject_type_pid" style="width:100%" class="form-control form-control-sm" id="subjectTypeSelect2">
+                    <select name="subject_type_pid" style="width:100%" class="form-control form-control-sm" id="createSubjectSubjectTypeSelect2">
                     </select>
                     <p class="text-danger subject_type_pid_error"></p>
                     <input type="text" name="subject" class="form-control form-control-sm" placeholder="subject name" required>
@@ -185,7 +185,7 @@
         });
 
         // load dropdown on 
-        $('#subjectTypeSelect2').select2({
+        $('#createSubjectSubjectTypeSelect2').select2({
             placeholder: 'Select Subject Category',
             dropdownParent: $('#createSubjectModal'),
             ajax: {
@@ -201,7 +201,7 @@
                 cache: true
             }
         });
-        $('#categorySelect2').select2({
+        $('#createSubjectCategorySelect2').select2({
             placeholder: 'Select School Category',
             dropdownParent: $('#createSubjectModal'),
             ajax: {

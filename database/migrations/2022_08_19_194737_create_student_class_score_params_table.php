@@ -13,14 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('class_arms', function (Blueprint $table) {
+        Schema::create('student_class_score_params', function (Blueprint $table) {
             $table->id();
             $table->string('school_pid');
-            $table->string('class_pid');
+            $table->string('teacher_pid')->comment('class teacher');
+            // $table->string('category_pid')->nullable();
+            $table->string('session_pid');
+            $table->string('term_pid');
+            // $table->string('class_pid')->nullable();
+            $table->string('arm_pid')->nullable();
+            $table->integer('status')->default(1)->comment('0 locked, 1 open');
             $table->string('pid')->unique();
-            $table->string('arm_number');
-            $table->string('staff_pid')->comment('creator');
-            $table->string('status')->comment('1 enabled, 0 disabled');
             $table->timestamps();
         });
     }
@@ -32,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('class_arms');
+        Schema::dropIfExists('student_class_assessment_params');
     }
 };

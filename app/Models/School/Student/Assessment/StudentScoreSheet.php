@@ -9,6 +9,6 @@ class StudentScoreSheet extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'assessment_pid','student_pid','ca_type_pid','score','school_pid'
+        'score_param_pid','student_pid','ca_type_pid','score','school_pid'
     ];
 }

@@ -141,7 +141,7 @@ class ClassController extends Controller
                     'school_pid' => getSchoolPid(),
                     'staff_pid' => getSchoolUserPid(),
                     'pid' => public_id(),
-                    'category' => strtoupper($request->category),
+                    'category' => $request->category,
                     'head_pid' => $request->head_pid,
                     'description' => $request->description
                 ];
@@ -172,8 +172,8 @@ class ClassController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'category_pid' => 'required',
-            'class' => 'required|string',
-            'class_number' => 'required|int']
+            'class' => 'required|array',
+            'class_number' => 'required|array']
             ,[
             'category_pid.required'=>'select school category',
             'class.required'=>'Enter class Name',
@@ -185,9 +185,8 @@ class ClassController extends Controller
             $data = [
                 'school_pid' => getSchoolPid(),
                 'staff_pid' => getSchoolUserPid(),
-                'pid' => public_id(),
-                'class_number' => $request->class_number,
-                'class' => $request->class,
+                'number' => $request->class_number,
+                'classes' => $request->class,
                 'category_pid' => $request->category_pid,
             ];
             $result = $this->insertOrUpdateClass($data);
@@ -205,7 +204,13 @@ class ClassController extends Controller
 
     private function insertOrUpdateClass($data){
         try {
-            return Classes::updateOrCreate(['school_pid'=>$data['school_pid'],'pid'=>$data['pid']],$data);
+            for ($i=0; $i < count($data['classes']); $i++) { 
+               $data['pid'] = public_id();
+               $data['class'] = $data['classes'][$i];
+               $data['class_number'] = $data['number'][$i];
+               Classes::updateOrCreate(['school_pid'=>$data['school_pid'],'pid'=>$data['pid']],$data);
+            }
+            return true;
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
@@ -214,7 +219,8 @@ class ClassController extends Controller
     public function createClassArm(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'arm' => 'required|min:4|max:25',
+            'arm' => 'required|array|min:1',
+            'arm_number' => 'required|array|min:1',
             'class_pid' => 'required',
         ],[
             'class_pid.required' => 'select school category',
@@ -226,9 +232,10 @@ class ClassController extends Controller
             $data = [
                 'school_pid' => getSchoolPid(),
                 'staff_pid' => getSchoolUserPid(),
-                'pid' => public_id(),
-                'arm' => $request->arm,
+                'arms' => $request->arm,
+                'numbers' => $request->arm_number,
                 'class_pid' => $request->class_pid,
+                'className'=> $request->prepend ? self::getClassNameByPid($request->class_pid).' ' : ' ',
             ];
             $result = $this->insertOrUpdateClassArm($data);
             if ($result) {
@@ -244,12 +251,22 @@ class ClassController extends Controller
     }
 
     private function insertOrUpdateClassArm($data){
-        try {
-            return ClassArm::updateOrCreate(['school_pid'=>$data['school_pid'],'pid'=>$data['pid']],$data);
-        } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
-        }
+        // try {
+            $count = count($data['arms']);
+            for ($i=0; $i < $count; $i++) { 
+                if(empty($data['arms'][$i])){
+                    continue;
+                }
+                $data['pid']=public_id();
+                $data['arm']=$data['className'].$data['arms'][$i];
+                $data['arm_number']=$data['numbers'][$i];
+                ClassArm::updateOrCreate(['school_pid'=>$data['school_pid'],'pid'=>$data['pid']],$data);
+            }
+            return true;
+        // } catch (\Throwable $e) {
+        //     $error = $e->getMessage();
+        //     logError($error);
+        // }
     }
     
     public function createClassArmSubject(Request $request){
@@ -320,6 +337,17 @@ class ClassController extends Controller
             ->where(['class_arms.school_pid' => getSchoolPid(), 'class_arm_subjects.pid' => $class_subject])
             ->first(['arm','subject']); 
         return $result;
+    }
+
+    public static function getClassNameByPid($pid){
+        $class = Classes::where(['school_pid'=>getSchoolPid(),'pid'=>$pid])->pluck('class')->first();
+
+        return $class;
+    }
+    public static function getClassArmNameByPid($pid){
+        $arm = ClassArm::where(['school_pid'=>getSchoolPid(),'pid'=>$pid])->pluck('arm')->first();
+
+        return $arm;
     }
     // public function assignClassArmSubjectToTeacher(Request $request){
 
