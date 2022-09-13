@@ -11,4 +11,9 @@ class SubjectType extends Model
     protected $fillable = [
         'subject_type','description','school_pid','pid','staff_pid'
     ];
+
+    public function setSubjectTypeAttribute($value)
+    {
+        $this->attributes['subject_type'] = strtoupper(trim($value));
+    }
 }

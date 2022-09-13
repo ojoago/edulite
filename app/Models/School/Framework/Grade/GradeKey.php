@@ -12,4 +12,9 @@ class GradeKey extends Model
         'grade_pid','title','grade','grade_point','min_score',
         'max_score','color','pid', 'school_pid','remark'
     ];
+
+    public function setGradeAttribute($value)
+    {
+        $this->attributes['grade'] = strtoupper(trim($value));
+    }
 }

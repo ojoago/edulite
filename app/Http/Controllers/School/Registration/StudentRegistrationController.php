@@ -6,15 +6,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\School\School;
 use App\Http\Controllers\Controller;
-use App\Models\School\Student\Student;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
-use App\Http\Controllers\School\SchoolController;
-use App\Http\Controllers\School\Student\StudentClassController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Models\School\Framework\Class\ClassArm;
-use App\Models\School\Registration\SchoolStudent;
 
 class StudentRegistrationController extends Controller
 {
@@ -40,8 +36,9 @@ class StudentRegistrationController extends Controller
     public function registerStudent(Request $request){
          
         $validator = Validator::make($request->all(),[
-            'firstname'=>'required|string|min:3',
-            'lastname'=>'required|string|min:3',
+            'firstname'=> 'required|string|min:3|regex:/^[a-zA-Z0-9\s]+$/',
+            'lastname'=> 'required|string|min:3|regex:/^[a-zA-Z0-9\s]+$/',
+            'othername'=> 'nullable|string|regex:/^[a-zA-Z0-9\s]+$/',
             'gsm'=>'nullable|unique:users,gsm|min:11|max:11',
             'username'=>'nullable|string|unique:users,username|min:3',
             'email'=>'nullable|string|email|unique:users,email',
@@ -56,7 +53,8 @@ class StudentRegistrationController extends Controller
             'term_pid'=>'required|string',
             'category_pid'=>'required|string', 
             'class_pid'=>'required|string',
-            'arm_pid'=>'required|string'
+            'arm_pid'=>'required|string',
+            'passport'=> 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]
         // ,[
         //     'dob.required'=>'Select Student Date of birth',
@@ -85,7 +83,7 @@ class StudentRegistrationController extends Controller
             $detail = [
                 'firstname' => $request->firstname,
                 'lastname' => $request->lastname,
-                'othername' => $request->lastname,
+                'othername' => $request->othername,
                 'gender' => $request->gender,
                 'dob' => $request->dob,
                 'religion' => $request->religion,
@@ -94,7 +92,7 @@ class StudentRegistrationController extends Controller
                 'address' => $request->address,
             ];
             $student = [
-                'reg_number' => $this->studentUniqueId(),
+                'reg_number' => StudentController::studentUniqueId(),
                 'gender' => $request->gender,
                 'dob' => $request->dob,
                 'religion' => $request->religion,
@@ -106,6 +104,7 @@ class StudentRegistrationController extends Controller
                 'term_pid' => $request->term_pid,
                 'admitted_class' => $request->arm_pid,
                 'current_class' => $request->arm_pid,
+                'current_session_pid' => $request->session_pid,
                 'staff_pid' => getSchoolUserPid(),
                 'school_pid'=>getSchoolPid(),
                 'pid'=>public_id(),
@@ -114,7 +113,7 @@ class StudentRegistrationController extends Controller
 
             $studentClass = [
                 'session_pid' => $request->session_pid,
-                'arm_pid' => $request->term_pid,
+                'arm_pid' => $request->arm_pid,
                 'school_pid' => $student['school_pid'],
                 'staff_pid' => getSchoolUserPid(),
             ];
@@ -130,12 +129,16 @@ class StudentRegistrationController extends Controller
                         $student['fullname'] = $userDetails->fullname;//get student fullname and save along with student info
                         $student['user_pid'] = $user->pid;//get student fullname and save along with student info
                         // and prevent update if student leaves school 
+                        if($request->passport){
+                            $name = $student['reg_number'].'-passport';
+                            $student['passport'] = saveImg(image: $request->file('passport'),name:$name);
+                        }
                         $studentDetails = StudentController::createSchoolStudent($student);// create school student
                         if ($studentDetails) {
                             // student class history  
                             $studentClass['student_pid'] = $studentDetails->pid;
                             
-                            StudentClassController::createStudentClassRecord($studentClass);
+                            StudentController::createStudentClassRecord($studentClass);
                             
                             return response()->json(['status'=>1,'message'=>'Account  created Successfully!!! here is Student Reg. No. '. $studentDetails->reg_number]);
                         }
@@ -155,14 +158,5 @@ class StudentRegistrationController extends Controller
       
     }
 
-    private function studentUniqueId(){
-        $id = self::countStudent() + 1;
-        $id = strlen($id) == 1 ? '0' . $id : $id;
-        return SchoolController::getSchoolHandle().'/'.strtoupper(date('yM')) . $id;// concatenate shool handle with student id
-    }
-    public static function countStudent()
-    {
-        return Student::where(['school_pid' => getSchoolPid()])
-                    ->where('reg_number', 'like', '%' . date('yM') . '%')->count('id');
-    }
+    
 }

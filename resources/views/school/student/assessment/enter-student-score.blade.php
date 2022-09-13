@@ -35,6 +35,7 @@
                 </div>
             </div>
             <!-- Primary Color Bordered Table -->
+            @if(!$scoreParams->isEmpty())
             <table class="table table-bordered border-primary" id="scoreTable">
                 <thead>
                     <tr>
@@ -66,14 +67,17 @@
                     </tr>
                     @endforeach
                 </tbody>
-                <tbody>
+                <tfoot>
                     <td colspan="{{$scoreParams->count()+2}}"></td>
                     <td colspan="2">
                         <button type="button" class="btn btn-primary">Confirm</button>
                     </td>
-                </tbody>
+                </tfoot>
                 </form>
             </table>
+            @else
+            <h3 class="card-title bg-warning text-center">Score Settings for {{termName(session('term'))}} {{sessionName(session('session'))}} Has not been set, Please contact the School Admin...</h3>
+            @endif
             <!-- End Primary Color Bordered Table -->
 
         </div>

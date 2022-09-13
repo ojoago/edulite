@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Assessment\AssessmentTitle;
+use Illuminate\Validation\Rule;
 
 class AssessmentTitleController extends Controller
 {
@@ -49,9 +50,13 @@ class AssessmentTitleController extends Controller
     public function createAssessmentTitle(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'title' => 'required|regex:/^[a-zA-Z0-9\s]+$/',
+            'title' =>['required','regex:/^[a-zA-Z0-9\s]+$/',
+                        Rule::unique('assessment_titles')->where(function($param){
+                        $param->where('school_pid',getSchoolPid());
+                })
+        ],
             'category' => 'required|int',
-        ]);
+        ],['title.regex'=>'only letters and numbers is allowed', 'title.unique'=> $request->title.' already exists']);
         
         if(!$validator->fails()){
             $request['school_pid'] = getSchoolPid();

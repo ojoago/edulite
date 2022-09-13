@@ -3,21 +3,16 @@
         <i class="bi bi-tools"></i>
     </button>
     <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="{{route('school.staff.profile',['id'=>base64Encode($data->pid)])}}">Profile</a></li>
-        <li>
-            
+        <li><a class="dropdown-item" href="{{route('school.parent.profile',['id'=>base64Encode($data->pid)])}}">Profile</a></li>
+        <li><a class="dropdown-item">
             <?php if ($data->status == 1) : ?>
-                <a class="dropdown-item btn btn-danger" href="#">
-                    <button class="btn-sm">Disable</button>
-                </a>
-                <php else: ?>
-                    <a class="dropdown-item btn btn-success" href="#">
-                        <button class=" btn-small">Disable</button>
-                    </a>
+                <button class="btn btn-sm btn-danger toggleParentStatus" pid="{{base64Encode($data->pid)}}">Disable</button>
+                <?php else : ?>
+                    <button class="btn btn-sm btn-success toggleParentStatus" pid="{{base64Encode($data->pid)}}">Enable</button>
                 <?php endif ?>
+            </a>
         </li>
-        <li><a class="dropdown-item" href="#">Class</a></li>
-        <li><a class="dropdown-item" href="#">Subject</a></li>
-        <li><a class="dropdown-item" href="#">Edit Role</a></li>
+        <li><a class="dropdown-item" href="{{route('school.parent.child',['id'=>base64Encode($data->pid)])}}">Parent Wards</a></li>
+        {{--<li><a class="dropdown-item bg-warning" href="{{route('school.parent.edit',['id'=>base64Encode($data->pid)])}}">Edit</a></li>--}}
     </ul>
 </div>

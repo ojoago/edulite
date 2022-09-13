@@ -11,6 +11,7 @@ use App\Models\School\Framework\Grade\GradeKey;
 use App\Models\School\Framework\Session\Session;
 use App\Models\School\Framework\Grade\SchoolGrade;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class GradeKeyController extends Controller
 {
@@ -42,10 +43,24 @@ class GradeKeyController extends Controller
     public function createGradeKey(Request $request)
     {
        $validator = Validator::make($request->all(),[
-            'title'=>'required|string|max:15',
+            'title'=>[
+                    'required', 'string', 'max:15',
+                    Rule::unique('grade_keys')->where(function($param) use ($request){
+                            $param->where([
+                                'term_pid'=>$request->term_pid,
+                                'class_pid'=>$request->class_pid,
+                                'school_pid'=>getSchoolPid()
+                            ])->where('pid','!=',$request->pid);
+            })],
             'min_score'=>'required|numeric|min:0|max:99',
             'max_score'=>'required|numeric|min:1|max:100',
-            'grade'=>'required|string',
+            'grade'=>['required', 'string',Rule::unique('grade_keys')->where(function($param) use ($request){
+                            $param->where([
+                                'term_pid'=>$request->term_pid,
+                                'class_pid'=>$request->class_pid,
+                                'school_pid'=>getSchoolPid()
+                            ])->where('pid','!=',$request->pid);
+                        })],
             'grade_point'=>'required|int',
             'session_pid'=>'required|string',
             'class_pid'=>'required|string',
@@ -63,17 +78,17 @@ class GradeKeyController extends Controller
         ]);
         if(!$validator->fails()){
             $data = [
-                'title'=>strtoupper($request->title),
+                'title'=>$request->title,
                 'min_score'=>$request->min_score,
                 'max_score'=>$request->max_score,
-                'grade'=>strtoupper($request->grade),
-                'grade_point'=>strtoupper($request->grade_point),
+                'grade'=>$request->grade,
+                'grade_point'=>$request->grade_point,
                 'category_pid'=>$request->category_pid,
                 'session_pid'=>$request->session_pid,
                 'class_pid'=>$request->class_pid,
                 'term_pid'=>$request->term_pid,
                 'color'=>$request->color,
-                'remark'=>strtoupper($request->remark),
+                'remark'=>$request->remark,
                 'school_pid'=>getSchoolPid(),
                 'staff_pid'=>getSchoolUserPid(),
             ];

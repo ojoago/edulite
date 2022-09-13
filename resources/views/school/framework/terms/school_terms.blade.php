@@ -108,11 +108,13 @@
                     <select class="form-control select2-container" style="width: 100%;" id="sessionSelect2" name="active_session">
                     </select>
                     <p class="text-danger active_session_error"></p>
-                    <select class="form-control select2-container" style="width: 100%;" id="termSelect2" name="active_term">
+                    <select class="form-control select2-container" style="width: 100%;" id="setTermSelect2" name="active_term">
                     </select>
                     <p class="text-danger active_term_error"></p>
+                    <label for="">Term Begin</label>
                     <input type="date" name="term_begin" autocomplete="off" class="form-control" placeholder="lite term e.g first term" required>
                     <p class="text-danger term_begin_error"></p>
+                    <label for="">Term End</label>
                     <input type="date" name="term_end" autocomplete="off" class="form-control" placeholder="lite term e.g first term" required>
                     <p class="text-danger term_end_error"></p>
                     <textarea type="text" name="note" autocomplete="off" class="form-control" placeholder="lite term description"></textarea>
@@ -169,8 +171,10 @@
         $('#term-dataTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder:{selector:'td:nth-child(2)'},
-            responsive:true,
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            },
+            responsive: true,
             "ajax": "{{route('school.list.term')}}",
             "columns": [{
                     "data": "term"
@@ -208,37 +212,11 @@
         });
 
         // session dropdown 
-        $('#sessionSelect2').select2({
-            placeholder: 'Select Session',
-            dropdownParent: $('#setActiveTermModal'),
-            ajax: {
-                url: "{{route('load.available.session')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
+        multiSelect2('#sessionSelect2', 'setActiveTermModal', 'session', 'Select Session');
+        multiSelect2('#setTermSelect2', 'setActiveTermModal', 'term', 'Select Term');
+
         // term dropdown 
-        $('#termSelect2').select2({
-            placeholder: 'Select Term',
-            dropdownParent: $('#setActiveTermModal'),
-            ajax: {
-                url: "{{route('load.available.term')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
+
 
         // set active session 
         $('#setActiveTermBtn').click(function() {

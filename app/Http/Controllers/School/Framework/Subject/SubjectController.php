@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\School\Framework\Subject\Subject;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class SubjectController extends Controller
 {
@@ -22,51 +23,46 @@ class SubjectController extends Controller
         ->where(['subjects.school_pid' => getSchoolPid()])
             ->get(['subjects.pid','subject', 'subjects.status','subject_type', 'subjects.created_at', 'subjects.description', 'username']);
         return datatables($data)
-            // ->addColumn('action', function ($data) {
-            //     $html = '
-            //     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#editSubjectModal' . $data->pid . '">
-            //         <i class="bi bi-box-arrow-up" aria-hidden="true"></i>
-            //     </button>
-            //     <div class="modal fade" id="editSubjectModal' . $data->pid . '" tabindex="-1">
-            //         <div class="modal-dialog">
-            //             <div class="modal-content">
-            //                 <div class="modal-header">
-            //                     <h5 class="modal-title">Edit Lite S</h5>
-            //                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            //                 </div>
-            //                 <div class="modal-body">
-            //                     <form action="" method="post" class="" id="createSubjectForm">
-            //                         <p class="text-danger category_pid_error"></p>
-            //                         <input type="text" name="subject" value="' . $data->subject_type . '" class="form-control form-control-sm" placeholder="name of school" required>
-            //                         <p class="text-danger subject_error"></p>
-            //                         <textarea type="text" name="description" class="form-control form-control-sm" placeholder="description" required>' . $data->description . '</textarea>
-            //                         <p class="text-danger description_error"></p>
-            //                     </form>
-            //                 </div>
-            //                 <div class="modal-footer">
-            //                     <button type="button" class="btn btn-primary" id="createSubjectBtn">Submit</button>
-            //                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            //                 </div>
-            //             </div>
-            //         </div>
-            //     </div>
-            //     ';
-            //     return $html;
-            // })
+            ->addColumn('action', function ($data) {
+            return '
+                    <button type="button" class="btn btn-primary btn-sm edit-subject" pid="'.$data->pid.'">
+                        <i class="bi bi-tools"></i>
+                    </button>
+            ';
+            })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->diffForHumans();
             })
             ->editColumn('status', function ($data) {
                 return $data->status == 1 ? '<span class = "text-succses"> Enabled</span>' : '<span class = "text-danger">Disabled</span>';
             })
-            ->rawColumns(['data', 'status'])
+            ->rawColumns(['action', 'status'])
             ->make(true);
     }
 
-    public function createSchoolCategorySubject(Request $request)
+    
+    public function loadSubjectById(Request $request)
+    {
+        $data = Subject::where(['pid'=>$request->pid,'school_pid'=>getSchoolPid()])->first();
+        if($data){
+            return response(['data'=>$data,'status'=>1]);        
+        }
+        return response(['data'=>null,'status'=>0]);        
+    }
+
+    
+
+
+    public function createSchoolSubject(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'subject' => 'required|string',
+            'subject' => ['required', 'string',Rule::unique('subjects')->where(function($param) use($request){
+                $param->where([
+                    'school_pid'=>getSchoolPid(),
+                    'category_pid'=>$request->category_pid,
+                    'subject_type_pid'=>$request->subject_type_pid,
+                ])->where('pid','!=',$request->pid);
+            })],
             'subject_type_pid' => 'required|string',
             'category_pid' => 'required|string'
         ],[
@@ -75,21 +71,21 @@ class SubjectController extends Controller
             'category_pid.required'=>'Select School Category',
         ]);
         if(!$validator->fails()){
-            $request['school_pid'] = getSchoolPid();
-            $request['pid'] = public_id();
-            $request['staff_pid'] = getUserPid();
+            // $request['school_pid'] = getSchoolPid();
+            // $request['pid'] = public_id();
+            // $request['staff_pid'] = getUserPid();
             $data = [
                 'school_pid'=>getSchoolPid(),
-                'pid'=>public_id(),
+                'pid'=> $request->pid ?? public_id(),
                 'staff_pid'=>getSchoolUserPid(),
-                'subject'=>strtoupper($request->subject),
+                'subject'=>$request->subject,
                 'subject_type_pid'=>$request->subject_type_pid,
                 'category_pid'=>$request->category_pid,
                 'description'=>$request->description,
             ];
             $result = $this->createOrUpdateSubject($data);
             if ($result) {
-                return response()->json(['status'=>1,'message'=>'Subject Created Successfully']);
+                return response()->json(['status'=>1,'message'=> $request->pid ? 'Subject Updated Successfully': 'Subject Created Successfully']);
             }
             return response()->json(['status'=>'error', 'message' => 'Something Went Wrong']);
         }

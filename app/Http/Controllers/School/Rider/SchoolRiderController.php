@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\School\Rider;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\School\Rider\SchoolRider;
 use Illuminate\Support\Facades\Validator;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Student\StudentController;
+use App\Models\School\Student\Student;
 
 class SchoolRiderController extends Controller
 {
@@ -43,11 +45,11 @@ class SchoolRiderController extends Controller
 
 
     public function submitSchoolRiderForm(Request $request){
-
+        // return response()->json(['status' => 5, 'mr' => $request->all()]);
         $validator = Validator::make($request->all(),[
-            'firstname'=>'required',
-            'lastname'=>'required',
-            // 'othername',
+            'firstname'=> 'required|regex:/^[a-zA-Z0-9\s]+$/',
+            'lastname'=> 'required|regex:/^[a-zA-Z0-9\s]+$/',
+            'othername'=> 'nullable|regex:/^[a-zA-Z0-9\s]+$/',
             'gsm'=>'required|min:11|max:11|unique:users,gsm',
             'username'=>'nullable|unique:users,username',
             'email'=>'nullable|unique:users,email|email',
@@ -58,10 +60,13 @@ class SchoolRiderController extends Controller
             'lga'=>'required',
             // 'student_pid',
             'address'=>'required',
+            'passport' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ],[
             'gsm.required'=>'Enter Phone Number',
             'gsm.min'=>'Phone Number is 11 Digit',
             'gsm.max'=>'Phone Number is 11 Digit',
+            'firstname.regex'=>'Special character is not allowed',
+            'lasttname.regex'=>'Special character is not allowed',
         ]);
 
         if(!$validator->fails()){
@@ -85,44 +90,79 @@ class SchoolRiderController extends Controller
                 'lga' =>$request->lga,
                 'address' =>$request->address,
             ];
-            if($user){
-                $userDetail['user_pid'] = $user->pid;
-                $detail = UserDetailsController::insertUserDetails($userDetail);
-                $schoolRider = [
-                    'school_pid' => $schoolPid,
-                    'user_pid' => $user->pid,
-                    'pid' => public_id(),
-                    'rider_id'=>$this->riderUniqueId(),
-                ];
-                $rider = self::createSchoolRider($schoolRider);
-                if($rider){
-                    if($detail){
-                        return response()->json(['status'=>1,'message'=>'School Rider Pick up Rider Account created Successfully!!!']);
+           try {
+                if ($user) {
+                    $userDetail['user_pid'] = $user->pid;
+                    $detail = UserDetailsController::insertUserDetails($userDetail);
+                    $schoolRider = [
+                        'school_pid' => $schoolPid,
+                        'user_pid' => $user->pid,
+                        'pid' => public_id(),
+                        'rider_id' => self::riderUniqueId(),
+                    ];
+                    if ($request->passport) {
+                        $name = $schoolRider['rider_id'] . '-R-passport';
+                        $schoolRider['passport'] = saveImg($request->file('passport'), name: $name);
                     }
-                    if($request->student_pid){
-                        $data = [
-                            'student_pid'=>$request->student_pid,
-                            'rider_pid'=>$rider->pid,
-                            'school_pid'=>$schoolPid,
-                        ];
-                        StudentController::linkPickUperRiderToStudent($data);
+                    if ($detail) {
+                        $rider = self::createSchoolRider($schoolRider);
+                        if ($rider) {
+                            if ($request->student_pid) {
+                                $data = [
+                                    'school_user_pid' => getSchoolUserPid(),
+                                    'rider_pid' => $rider->pid,
+                                    'school_pid' => $schoolPid,
+                                ];
+                                foreach ($request->student_pid as $pid) {
+                                    $data['student_pid'] = $pid;
+                                    StudentController::linkPickUperRiderToStudent($data);
+                                }
+                                return response()->json(['status' => 1, 'message' => 'Account created Successfully & selected student\'s linked!!!']);
+                            }
+                            return response()->json(['status' => 1, 'message' => 'School Rider Pick up Rider Account created Successfully!!!']);
+                        }
+                        return response()->json(['status' => 1, 'message' => 'User Account Created but not Linked to School, please link using the add menu']);
                     }
-                    return response()->json(['status'=>1,'message'=>'Pick up Rider Account not completed, please update details']);
+                    return response()->json(['status' => 1, 'message' => 'User account created partialy, please edit and add!!!']);
                 }
-                return response()->json(['status'=>1,'message'=>'Pick up Rider Account not Linked to School, link differently']);
-                    
-            }
             
+           } catch (\Throwable $e) {
+                $error = $e->getMessage();
+                logError($error);
+           }
             return response()->json(['status'=>'error','message'=>'Something Went Wrong']);
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
-    
+    public function riderProfile($pid){
+        return view('school.lists.rider.rider-profile',compact('pid'));
+    }
+    public function viewRiderProfile(Request $request){
+        $data = DB::table('school_riders as r')
+                    ->join('users as u','u.pid','r.user_pid')
+                    ->join('user_details as d','d.user_pid','r.user_pid')
+                    ->join('student_pick_up_riders as p','p.rider_pid','r.pid')
+                    ->where(['r.school_pid'=>getSchoolPid(),'r.pid'=>base64Decode($request->pid)])
+                    ->select(DB::raw('COUNT(p.student_pid) as count,gsm,email,username,fullname,address,dob,title,gender,religion,passport'))
+                    ->groupBy('r.pid')->first();
+        echo formatRiderProfile($data);
+    }
+    public function viewRiderStudent(){
+        $data = Student::join('student_pick_up_riders', 'student_pid','students.pid')
+                        ->where(['s.school_pid' => getSchoolPid()])->get('student.*');
+        logError($data);
+        //         $data = DB::table('students as s')
+        //             ->join('student_pick_up_riders as p','p.student_pid','s.pid')
+        //             ->where(['s.school_pid'=>getSchoolPid(),'p.rider_pid'=>base64Decode($request->pid)])
+        //             ->select(DB::raw('gsm,email,username,fullname,address,dob,title,gender,religion,passport'))
+        //             ->orderByDesc('p.id')->get();
+        // echo formatRiderProfile($data);
+    }
     public static function createSchoolRider($data){
         $dupParams = [
           'user_pid'=>$data['user_pid'],    
           'school_pid'=>$data['school_pid'],
-          'pid'=>$data['pid']  
+        //   'pid'=>$data['pid']  
         ];
         try {
             return SchoolRider::updateOrCreate($dupParams,$data);
@@ -132,7 +172,7 @@ class SchoolRiderController extends Controller
         }
     }
 
-    private function riderUniqueId()
+    public static function riderUniqueId()
     {
         $id = self::countRider() + 1;
         $id = strlen($id) == 1 ? '0' . $id : $id;

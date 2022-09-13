@@ -143,11 +143,24 @@ class ScoreSettingsController extends Controller
         }
     }
 
-     function getTotalScore($score){
+    public function getTotalScore($score){
         $sum = 0;
         for ($i=0; $i < count($score); $i++) { 
             $sum+=$score[$i];
         }
         return $sum;
-     }
+    }
+
+    public static function loadClassScoreSettings($term,$session,$arm){
+        $scoreParams = ScoreSettingParam::join('class_arms', 'class_arms.class_pid', 'score_setting_params.class_pid')
+        ->join('score_settings', 'score_data_pid', 'score_setting_params.pid')
+        ->join('assessment_titles', 'assessment_titles.pid', 'score_settings.assessment_title_pid')
+        ->orderBy('order')
+            ->where([
+                'term_pid' => $term,
+                'session_pid' => $session,
+                'class_arms.pid' => $arm
+            ])->get(['title', 'score', 'assessment_title_pid']);
+        return $scoreParams;
+    }
 }

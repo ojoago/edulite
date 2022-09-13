@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\Users\UserDetail;
-use Illuminate\Http\Request;
 
 class UserDetailsController extends Controller
 {

@@ -27,8 +27,8 @@ class ParentRegistrationController extends Controller
     public function registerParent(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'firstname'=> 'required|string|min:3',
-            'lastname'=>'required|string|min:3',
+            'firstname'=> 'required|string|min:3|regex:/^[a-zA-Z0-9\s]+$/',
+            'lastname'=> 'required|string|min:3|regex:/^[a-zA-Z0-9\s]+$/',
             // 'othername'=>'required',
             'gsm'=>'required|min:11|max:11|unique:users,gsm',
             'username'=>'string|nullable|unique:users,username',
@@ -38,6 +38,7 @@ class ParentRegistrationController extends Controller
             // 'religion'=>'required|string|',
             'state'=>'required',
             'lga'=>'required',
+            'passport' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'address'=>'required|string',
         ],[
             'firstname.required'=>'Enter Parent First-Name',
@@ -72,7 +73,6 @@ class ParentRegistrationController extends Controller
                 // 'user_pid'=>$user->pid,
                 'school_pid'=>getSchoolPid(),
                 'pid'=>public_id(),
-                'parent_image_path'=>$request->file,
             ];
             try {
                $user= AuthController::createUser($data);
@@ -80,10 +80,16 @@ class ParentRegistrationController extends Controller
                     $parent['user_pid'] = $userDetail['user_pid'] = $user->pid;
                     $details = UserDetailsController::insertUserDetails($userDetail);
                     if($details){
+                        if ($request->passport) {
+                            $name = $parent['pid'] . '-passport';
+                            $parent['passport'] = saveImg($request->file('passport'), name: $name);
+                        }
                         $parentData = ParentController::createSchoolParent($parent);
                         if($parentData){
                             if($request->student_pid){
-                                StudentController::linkParentToStudent($request->student_pid, $parentData->pid);
+                                foreach($request->student_pid as $pid){
+                                    StudentController::linkParentToStudent($pid, $parentData->pid);
+                                }
                                 return response()->json(['status'=>1,'message'=> 'Parent account created successfully and linked to Student']);
                             }
                             return response()->json(['status'=>1,'message'=> 'Parent account created successfully!!!']);
@@ -95,7 +101,9 @@ class ParentRegistrationController extends Controller
                return response()->json(['status'=>2,'message'=>'user account created but detail not complete, login to update details then link parent to school and student']);
             } catch (\Throwable $e) {
                 $error = $e->getMessage();
+
                 logError($error);
+                return response()->json(['status' => 'error', 'message' => 'contact admin, error has be logged']);
             }
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);

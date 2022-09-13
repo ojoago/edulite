@@ -116,7 +116,11 @@
                                 <p class="text-danger term_pid_error"></p>
                             </div>
                             <div class="col-md-5">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat asperiores dolorem sapiente ipsa atque voluptatem, beatae numquam, assumenda consectetur ad veniam veritatis aspernatur est, esse eos quia. Sunt, sit vitae.
+                                <h4 class="text-warning">Score settings has to be equal to 100</h4>
+                                <p class="text-info">
+                                    Title will appear on student result in the other they are entered.
+                                    I.e if you enter exam first then from left to right exam will appear before other student assessment titles
+                                </p>
                             </div>
                         </div>
                         <div class="text-center">
@@ -134,12 +138,12 @@
                                 <p class="text-danger score_error"></p>
                             </div>
                         </div>
-                        <div id="settingParams"></div>
+
                         <div class="row">
                             <div class="col-md-5">
                                 <select type="text" name="title_pid[]" id="titleSelect2" style="width:100%;" class="titleSelect2 form-control form-control-sm">
                                 </select>
-                                <p class="text-danger title_pid_error_"></p>
+                                <p class="text-danger title_pid_error"></p>
                             </div>
                             <div class="col-md-7">
                                 <div class="input-group mb-3">
@@ -148,9 +152,10 @@
                                     <input class="custom-check m-1" value="2" name="mid[]" type="checkbox" id="gridCheck2">
                                     <i class="bi bi-x-circle-fill text-danger hidden-item m-2"></i>
                                 </div>
-                                <p class="text-danger score_error_"></p>
+                                <p class="text-danger score_error"></p>
                             </div>
                         </div>
+                        <div id="settingParams"></div>
                 </form>
             </div>
         </div>
@@ -306,13 +311,13 @@
         // add more title 
         $('#addMore').click(function() {
             pid++
-            $('#settingParams').prepend(
+            $('#settingParams').append(
                 `
                  <div class="row addedRow">
                             <div class="col-md-5">
                                 <select type="text" name="title_pid[]" id="titleSelect${pid}" style="width:100%;" class="titleSelect2 form-control form-control-sm">
                                 </select>
-                                <p class="text-danger title_pid_error_"></p>
+                                <p class="text-danger title_pid_error"></p>
                             </div>
                             <div class="col-md-7">
                                 <div class="input-group mb-3">
@@ -321,7 +326,7 @@
                                     <input class="custom-check m-1" value="2" name="mid[]" type="checkbox" id="gridCheck2">
                                     <i class="bi bi-x-circle-fill text-danger removeRowBtn pointer m-2"></i>
                                 </div>
-                                <p class="text-danger score_error_"></p>
+                                <p class="text-danger score_error"></p>
                             </div>
                         </div>`
             );

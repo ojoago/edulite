@@ -2,10 +2,20 @@
 
 namespace App\Http\Controllers\School;
 
-use App\Http\Controllers\Controller;
-use App\Models\School\School;
-use App\Models\School\Staff\SchoolStaff;
 use Illuminate\Http\Request;
+use App\Models\School\School;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\School\Parent\ParentController;
+use App\Http\Controllers\School\Rider\SchoolRiderController;
+use App\Models\School\Student\Student;
+use App\Models\School\Staff\SchoolStaff;
+use App\Http\Controllers\Users\UserController;
+use App\Http\Controllers\School\Staff\StaffController;
+use App\Http\Controllers\School\Student\StudentClassController;
+use App\Http\Controllers\School\Student\StudentController;
+use App\Models\School\Registration\SchoolParent;
+use App\Models\School\Rider\SchoolRider;
 
 class SchoolController extends Controller
 {
@@ -114,14 +124,175 @@ class SchoolController extends Controller
         dd($var);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+   
+    public function findExistingUser($key){
+        $key = str_replace('@__@', '/', trim($key));
+       $user = DB::table('users as u')->leftJoin('user_details as d','u.pid','d.user_pid')
+                                ->leftJoin('school_staff as s','u.pid','s.user_pid')
+                                ->where('u.email',$key)
+                                ->orWhere('u.gsm',$key)
+                                ->orWhere('u.username',$key)
+                                ->orWhere('s.staff_id',$key)
+                                ->select(['fullname','dob','address','gender','religion','title','username','gsm','email','u.pid'])->first();
+        // logError($user);
+        return formatStaff($user);
     }
+    
+    // link staff 
+    public function linkExistingUserToSchool(Request $request){
+      
+        $id = SchoolStaff::where([
+            'user_pid' => $request->pid,
+            'school_pid' => getSchoolPid()
+        ])->pluck('staff_id')
+        ->first();
+        if ($id) {
+            return 'staff already exist in ' . getSchoolName() . ' and the staff Id is ' . $id;
+        }
+        $data = [
+            'user_pid' => $request->pid,
+            'role' => $request->role
+        ];
+        $staff = StaffController::registerStaffToSchool($data);
+        return 'Staff added to school and staff Id is '.$staff->staff_id;
+    }
+
+    // find student  
+    public function findExistingStudent($key)
+    {
+        $key = str_replace('@__@','/',trim($key));
+        $user = DB::table('users as u')->leftJoin('user_details as d', 'u.pid', 'd.user_pid')
+        ->leftJoin('students as s', 'u.pid', 's.user_pid')
+        ->where('u.email', $key)
+            ->orWhere('u.gsm', $key)
+            ->orWhere('u.username', $key)
+            ->orWhere('s.reg_number', $key)
+            ->select(['d.fullname', 'd.dob', 'd.address', 'd.gender', 'd.religion', 'reg_number', 'username', 'passport', 'email', 'u.pid'])->first();
+        // logError($user);
+        return formatStudent($user);
+    }
+    // link student 
+    // link staff 
+    public function linkExistingStudentToSchool(Request $request)  {
+
+        $id = Student::where([
+            'user_pid' => $request->pid,
+            'school_pid' => getSchoolPid()
+        ])->pluck('reg_number')
+        ->first();
+        if ($id) {
+            return 'Student already exist in <b class="text-info">' . getSchoolName() . '</b> and the Reg is ' . $id;
+        }
+        $user = UserController::loadUserInfo($request->pid);
+        if($user){
+            $data = [
+                'reg_number' => StudentController::studentUniqueId(),
+                'gender' => $user->gender,
+                'dob' => $user->dob,
+                'religion' => $user->religion,
+                'state' => $user->state,
+                'lga' => $user->lga,
+                'address' => $user->address,
+                'type' => $request->type ?? getSchoolType(),
+                'session_pid' => activeSession(),
+                'term_pid' => activeTerm(),
+                'admitted_class' => $request->arm,
+                'current_class' => $request->arm,
+                'current_session_pid' => activeSession(),
+                'staff_pid' => getSchoolUserPid(),
+                'school_pid'=>getSchoolPid(),
+                'pid'=>public_id(),
+            ];
+            $student = StudentController::createSchoolStudent($data);
+            if($student){
+                $studentClass = [
+                    'session_pid' => $request->session_pid,
+                    'arm_pid' => $request->arm,
+                    'school_pid' => $student->pid,
+                    'staff_pid' => getSchoolUserPid(),
+                ];
+                StudentClassController::createStudentClassRecord($studentClass);
+            }
+            
+        }
+        
+        return 'Student added to school and Reg  is ' . $student->reg_number;
+    }
+    // find parent
+    
+
+    public function findExistingParent($key)
+    {
+        $key = str_replace('@__@','/',trim($key));
+        $user = DB::table('users as u')->leftJoin('user_details as d', 'u.pid', 'd.user_pid')
+        ->leftJoin('school_parents as p', 'u.pid', 'p.user_pid')
+        ->where('u.email', $key)
+            ->orWhere('u.gsm', $key)
+            ->orWhere('u.username', $key)
+            // ->orWhere('s.reg_number', $key)
+            ->select(['d.fullname', 'd.dob', 'd.address', 'd.gender', 'd.religion', 'username', 'passport', 'email', 'u.pid','title'])->first();
+        // logError($user);
+        return formatParent($user);
+    }
+    // link student 
+    // link staff 
+    public function linkExistingParentToSchool(Request $request)  {
+
+        $id = SchoolParent::where([
+            'user_pid' => $request->pid,
+            'school_pid' => getSchoolPid()
+        ])->pluck('pid')
+        ->first();
+        if ($id) {
+            return 'Parent already exist in <b class="text-info">' . getSchoolName() . '</b> ';
+        }
+        $data =['school_pid' => getSchoolPid(), 'user_pid' => $request->pid,'pid'=>public_id()];
+        $std = ParentController::createSchoolParent($data);
+        if($std){
+            return 'Parent added to School';
+        }
+        return 'Failed to link parent to School';
+    }
+
+    // load existing rider 
+    public function findExistingRider($key)
+    {
+        $key = str_replace('@__@','/',trim($key));
+        $user = DB::table('users as u')->leftJoin('user_details as d', 'u.pid', 'd.user_pid')
+        ->leftJoin('school_riders as r', 'u.pid', 'r.user_pid')
+        ->where('u.email', $key)
+            ->orWhere('u.gsm', $key)
+            ->orWhere('u.username', $key)
+            ->orWhere('r.rider_id', $key)
+            ->select(['d.fullname', 'd.dob', 'd.address', 'd.gender', 'd.religion', 'username', 'passport', 'email', 'u.pid','title','rider_id'])->first();
+        // logError($user);
+        return formatRider($user);
+    }
+    // link rider 
+    public function linkExistingRiderToSchool(Request $request)  {
+
+        $id = SchoolRider::where([
+            'user_pid' => $request->pid,
+            'school_pid' => getSchoolPid()
+        ])->pluck('rider_id')
+        ->first();
+        if ($id) {
+            return 'Rider already exist in <b class="text-info">' . getSchoolName() . '</b> & unique id <b class="text-danger">'.$id.'</b>';
+        }
+        $data = [
+            'school_pid' => getSchoolPid(),
+            'user_pid' => $request->pid,
+            'pid' => public_id(),
+            'rider_id' => SchoolRiderController::riderUniqueId(),
+        ];
+        $std = SchoolRiderController::createSchoolRider($data);
+        if($std){
+            return 'Rider added to School, unique Id is '.$std->rider_id;
+        }
+        return 'Failed to link parent to School';
+    }
+
+    
 }
+
+   

@@ -9,6 +9,6 @@ class StudentPickUpRider extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'school_pid','student_pid','rider_pid','note','status','school_user_pid'
+        'school_pid','student_pid','rider_pid','note','status','school_user_pid'//staff_pid
     ];
 }

@@ -12,4 +12,7 @@ class Subject extends Model
         'subject','description','school_pid','pid','subject_type_pid','staff_pid','category_pid'
     ];
 
+    public function setSubjectAttribute($value){
+        $this->attributes['subject'] = strtoupper(trim($value));
+    }
 }

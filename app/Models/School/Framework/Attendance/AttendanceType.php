@@ -13,4 +13,7 @@ class AttendanceType extends Model
         'pid','description','school_pid','staff_pid'
     ];
 
+    public function setTitleAttribute($value){
+        $this->attributes['title'] = strtoupper($value);
+    }
 }

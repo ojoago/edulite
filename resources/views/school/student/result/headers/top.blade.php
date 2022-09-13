@@ -1,0 +1,1 @@
+<h3 class="text-success text-center">{{strtoupper(getSchoolName())}}</h3>

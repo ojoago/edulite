@@ -17,12 +17,12 @@ return new class extends Migration
             $table->id();
             $table->string('student_pid');
             $table->text('note');
-            $table->integer('code')->default(1)->comment('1 = promoted, 0 repeated class');
+            $table->integer('code')->default(1)->comment('1 = promoted, 0 repeated class, 3 left school, 4 suspended');
             $table->string('session')->comment('academic session');
             $table->string('school_category')->comment('category id');
             $table->string('school_class')->comment('');
             $table->string('class_arm')->comment('class arm');
-            $table->string('school_pid')->nullable();
+            $table->string('school_pid');
             $table->timestamps();
         });
     }

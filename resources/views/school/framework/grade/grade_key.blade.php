@@ -91,16 +91,16 @@
 
                     <textarea type="text" name="remark" id="remark" placeholder="remark" maxlength="30" class="form-control form-control-sm" required></textarea>
                     <p class="text-danger remark_error"></p>
-                    <select type="text" name="category_pid" id="categorySelect2" placeholder="" required style="width: 100%;">
+                    <select type="text" name="category_pid" id="gradeCategorySelect2" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger category_pid_error"></p>
-                    <select type="text" name="session_pid" id="sessionSelect2" placeholder="" required style="width: 100%;">
+                    <select type="text" name="session_pid" id="gradeSessionSelect2" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger session_pid_error"></p>
-                    <select type="text" name="class_pid" id="classSelect2" placeholder="" required style="width: 100%;">
+                    <select type="text" name="class_pid" id="gradeClassSelect2" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger class_pid_error"></p>
-                    <select type="text" name="term_pid" id="termSelect2" placeholder="" required style="width: 100%;">
+                    <select type="text" name="term_pid" id="gradeTermSelect2" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger term_pid_error"></p>
 
@@ -156,66 +156,17 @@
         });
 
         // load dropdown on 
-        $('#categorySelect2').select2({
-            placeholder: 'Select Category',
-            dropdownParent: $('#createGradeKeyModal'),
-            ajax: {
-                url: "{{route('load.available.category')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
+
+        // multiSelect2('categorySelect2', 'createClassArmModal', sbjCategoryselect2Url, 'Select Category');
+        multiSelect2('#gradeSessionSelect2', 'createGradeKeyModal', 'session', 'Select Session');
+        multiSelect2('#gradeTermSelect2', 'createGradeKeyModal', 'term', 'Select Term');
+        multiSelect2('#gradeCategorySelect2', 'createGradeKeyModal', 'category', 'Select Category');
+        $('#gradeCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#gradeClassSelect2', 'createGradeKeyModal', 'class', id, 'Select Class');
         });
-        $('#sessionSelect2').select2({
-            placeholder: 'Select Session',
-            dropdownParent: $('#createGradeKeyModal'),
-            ajax: {
-                url: "{{route('load.available.session')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
-        $('#classSelect2').select2({
-            placeholder: 'Select CLass',
-            dropdownParent: $('#createGradeKeyModal'),
-            ajax: {
-                url: "{{route('load.available.class')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
-        $('#termSelect2').select2({
-            placeholder: 'Select Term',
-            dropdownParent: $('#createGradeKeyModal'),
-            ajax: {
-                url: "{{route('load.available.term')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
+
+
 
         $('#createGradeKeyBtn').click(function() {
             $('.overlay').show();

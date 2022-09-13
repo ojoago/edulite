@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('school_pid')->nullable();
             $table->string('record_pid');
             $table->string('student_pid');
-            $table->integer('status')->comment('0 absent,1 present');
-            $table->string('date',20)->nullable();
+            $table->integer('status')->default(1)->comment('1 present');
+            // $table->string('date',20)->nullable();
             $table->string('comment')->nullable();
             $table->timestamps();
         });

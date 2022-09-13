@@ -29,7 +29,7 @@
                             <th>Description</th>
                             <th>Created By</th>
                             <th>Date</th>
-                            <th>Action</th>
+                            <th width="5%">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,6 +50,7 @@
                             <th>Status</th>
                             <th>Date</th>
                             <th>Created By</th>
+                            <th><i class="bi bi-tools"></i></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,20 +68,20 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create Lite S T</h5>
+                <h5 class="modal-title">Create Subject Type</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" class="" id="createSubjectTypeForm">
+                <form method="post" class="createSubjectTypeForm" id="createSubjectTypeForm">
                     @csrf
-                    <input type="text" name="subject" class="form-control form-control-sm" placeholder="name of Subject" required>
-                    <p class="text-danger subject_error"></p>
+                    <input type="text" name="subject_type" class="form-control form-control-sm" placeholder="name of Subject" required>
+                    <p class="text-danger subject_type_error"></p>
                     <input type="text" name="description" class="form-control form-control-sm" placeholder="Subject Description" required>
                     <p class="text-danger description_error"></p>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createSubjectTypeBtn">Submit</button>
+                <button type="button" class="btn btn-primary createSubjectTypeBtn" id="createSubjectTypeForm">Submit</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -98,15 +99,16 @@
             <div class="modal-body">
                 <form method="post" class="" id="createSchoolCategortSubjectForm">
                     @csrf
-                    <select name="category_pid" style="width:100%" class="form-control form-control-sm" id="createSubjectCategorySelect2">
+                    <select name="category_pid" style="width:100%" class="form-control form-control-sm createSubjectCategorySelect2" id="createSubjectCategorySelect2">
                     </select>
                     <p class="text-danger category_pid_error"></p>
-                    <select name="subject_type_pid" style="width:100%" class="form-control form-control-sm" id="createSubjectSubjectTypeSelect2">
+                    <select name="subject_type_pid" style="width:100%" class="form-control form-control-sm createSubjectSubjectTypeSelect2" id="createSubjectSubjectTypeSelect2">
                     </select>
                     <p class="text-danger subject_type_pid_error"></p>
-                    <input type="text" name="subject" class="form-control form-control-sm" placeholder="subject name" required>
+                    <input type="text" name="subject" id="subject" class="form-control form-control-sm" placeholder="subject name" required>
+                    <input type="hidden" name="pid" id="pid">
                     <p class="text-danger subject_error"></p>
-                    <textarea type="text" name="description" class="form-control form-control-sm" placeholder="description" required></textarea>
+                    <textarea type="text" name="description" id="description" class="form-control form-control-sm" placeholder="description" required></textarea>
                     <p class="text-danger description_error"></p>
                 </form>
             </div>
@@ -178,61 +180,75 @@
                     "data": "username"
                 },
 
-                // {
-                //     "data": "action"
-                // },
+                {
+                    "data": "action"
+                },
             ],
         });
 
         // load dropdown on 
-        $('#createSubjectSubjectTypeSelect2').select2({
-            placeholder: 'Select Subject Category',
-            dropdownParent: $('#createSubjectModal'),
-            ajax: {
-                url: "{{ route('load.available.subject.type') }}",
-                'type': 'GET',
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
-        $('#createSubjectCategorySelect2').select2({
-            placeholder: 'Select School Category',
-            dropdownParent: $('#createSubjectModal'),
-            ajax: {
-                url: "{{route('load.available.category')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
+        multiSelect2('#createSubjectSubjectTypeSelect2', 'createSubjectModal', 'subject-type', 'Select Subject Type');
+        multiSelect2('#createSubjectCategorySelect2', 'createSubjectModal', 'category', 'Select Category');
+        $(document).on('click', '.edit-subject', function() {
+            var pid = $(this).attr('pid');
+            var token = "{{csrf_token()}}"
+            $('.modal-title').text('Edit Subject').addClass('text-info');
+            $('#createSubjectBtn').text('Edit').addClass('btn-warning');
 
-        $('#createSubjectTypeBtn').click(function() {
+            $.ajax({
+                url: "{{route('load.subject.by.id')}}",
+                type: "POST",
+                data: {
+                    pid: pid,
+                    _token: token
+                },
+                dataType: "JSON",
+                beforeSend: function() {
+                    $('.overlay').show();
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('.overlay').hide();
+                    if (data.status === 1) {
+                        $('#subject').val(data.data.subject)
+                        $('#description').val(data.data.description)
+                        $('#pid').val(data.data.pid)
+                        multiSelect2('#createSubjectSubjectTypeSelect2', 'createSubjectModal', 'subject-type', 'Select Subject Type', data.data.subject_type_pid);
+                        multiSelect2('#createSubjectCategorySelect2', 'createSubjectModal', 'category', 'Select Category', data.data.category_pid);
+                        $('#createSubjectModal').modal('show')
+                    } else {
+                        alert_toast('failed not load subject', 'warning');
+                        $('.modal-title').text('Create Lite S').removeClass('text-info');
+                        $('#createSubjectBtn').text('Submit').removeClass('btn-warning');
+                    }
+                },
+                error: function(data) {
+                    console.log(data);
+                    $('.overlay').hide();
+                    $('.modal-title').text('Create Subject type').removeClass('text-info');
+                    $('#createSubjectBtn').text('Submit').removeClass('btn-warning');
+                    alert_toast('Something Went Wrong', 'error');
+                }
+            });
+
+        });
+        $(document).on('click', '.createSubjectTypeBtn', function() {
+            let form = $(this).attr('id');
             $('.overlay').show();
             $.ajax({
                 url: "{{route('create.school.subject.type')}}",
                 type: "POST",
-                data: new FormData($('#createSubjectTypeForm')[0]),
+                data: new FormData($('#' + form)[0]),
                 dataType: "JSON",
                 processData: false,
                 contentType: false,
                 beforeSend: function() {
-                    $('#createSubjectTypeForm').find('p.text-danger').text('');
-                    $('#createSubjectTypeBtn').prop('disabled', true);
+                    $('.createSubjectTypeForm').find('p.text-danger').text('');
+                    $('.createSubjectTypeBtn').prop('disabled', true);
                 },
                 success: function(data) {
                     console.log(data);
-                    $('#createSubjectTypeBtn').prop('disabled', false);
+                    $('.createSubjectTypeBtn').prop('disabled', false);
                     $('.overlay').hide();
                     if (data.status === 0) {
                         alert_toast('Fill in form correctly', 'warning');
@@ -241,12 +257,12 @@
                         });
                     } else {
                         alert_toast(data.message, 'success');
-                        $('#createSubjectTypeForm')[0].reset();
+                        $('#' + form)[0].reset();
                     }
                 },
                 error: function(data) {
                     // console.log(data);
-                    $('#createSubjectTypeBtn').prop('disabled', false);
+                    $('.createSubjectTypeBtn').prop('disabled', false);
                     $('.overlay').hide();
                     alert_toast('Something Went Wrong', 'error');
                 }

@@ -44,9 +44,16 @@
 
 <body>
   <!-- spinner  -->
-  <div class="wait overlay">
-    <div class="loader"></div>
+  <div class="overlay">
+    <div class="spiner">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
   </div>
+
+
   <div class="flex-wrapper">
     <!-- logout if seesion expired   -->
     @php signOut() @endphp

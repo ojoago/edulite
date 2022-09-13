@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\School\Staff;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\School\Staff\StaffClass;
 use App\Models\School\Staff\SchoolStaff;
 use App\Models\School\Staff\StaffSubject;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
+use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 
 class StaffController extends Controller
@@ -31,7 +33,7 @@ class StaffController extends Controller
                     ->where(['school_staff.school_pid' => getSchoolPid(), 'school_staff.status'=>1])
                     ->get([
                         'gsm','username','email','staff_id','fullname',
-                        'role_id','school_staff.pid', 'school_staff.created_at'
+                        'role','school_staff.pid', 'school_staff.created_at'
                     ]);
         return $this->useDataTable($data);
     }
@@ -54,21 +56,41 @@ class StaffController extends Controller
             return view('school.lists.staff.action-buttons', ['data' => $data]);
         })->editColumn('created_at', function ($data) {
             return $data->created_at->diffForHumans();
-        })->addIndexColumn()
-        ->editColumn('role_id', function ($data) {
-            return matchStaffRole($data->role_id);
+        })
+        ->addIndexColumn()
+        ->editColumn('role', function ($data) {
+            return matchStaffRole($data->role);
         })
         ->make(true);
     }
-    public function staffProfile($id)
+    public function staffProfile($pid)
     {
-        setActionablePid($id);
-        return redirect()->route('view.staff.profile');
+        return view('school.lists.staff.staff-profile',compact('pid'));
     }
-    public function viewStaffProfile()
-    {
+    
+    public function loadStaffProfile(Request $request){
+        $data = DB::table('users as u')->join('user_details as d','d.user_pid','u.pid')
+                        ->join('school_staff as s','s.user_pid','u.pid')
+                        ->where(['school_pid'=>getSchoolPid(),'s.pid'=>base64Decode($request->pid)])
+                        ->select('gsm','email','username','fullname','address','title','dob','gender','religion','lga','state','role', 'passport','signature','stamp')->first();
+        echo formatStaffProfile($data);
+    }
+
+    public function loadStaffClass(Request $request){
+        $data = DB::table('staff_classes as c')->join('arms as a','a.pid','c.arm_pid')
+                        ->join('terms as t','t.pid','c.term_pid')
+                        ->join('sessions as s','s.pid','session_pid')
+                        ->select('term','session','arm','c.created_at')
+                        ->where(['school_pid'=>getSchoolPid(),'staff_pid'=>$request->pid])->orderBy('arm')->get();
         
-        return view('school.staff.staff-profile');
+    }
+    public function loadStaffSubject(Request $request){
+        $data = DB::table('staff_subjects as sb')->join('subjects as s','s.pid', 'sb.subject_pid')
+                        ->join('terms as t','t.pid', 'sb.term_pid')
+                        ->join('sessions as s','s.pid','session_pid')
+                        ->select('term','session','subject','c.created_at')
+                        ->where(['school_pid'=>getSchoolPid(),'staff_pid'=>$request->pid])->orderBy('arm')->get();
+        
     }
 
     public function createStaff(Request $request){
@@ -82,7 +104,10 @@ class StaffController extends Controller
             'dob'=>'required|date',
             'role'=>'required',
             'address'=>'required|string',
-        ],['gsm.required'=>'Enter Phone Number','dob.required'=>'Enter you date of birth']);
+            'passport'=> 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'signature'=>'nullable|image|mimes:jpeg,png,jpg,gif',
+            'stamp'=>'nullable|image|mimes:jpeg,png,jpg,gif',
+        ],['gsm.required'=>'Enter Phone Number','dob.required'=>'Enter staff date of birth']);
         
         if(!$validator->fails()){
             $data = [
@@ -102,13 +127,27 @@ class StaffController extends Controller
                 'state' => $request->state,
                 'lga' => $request->lga,
                 'address' => $request->address,
+                'title' => $request->title,
             ];
             $user = AuthController::createUser($data);
             if($user){
                 $detail['user_pid'] = $user->pid;
                 $userDetails = UserDetailsController::insertUserDetails($detail);
                 if($userDetails){
-                   $result = $this->registerStaffToSchool(['role'=>$request->role,'user_pid'=>$user->pid]);
+                    $staff = ['role' => $request->role, 'user_pid' => $user->pid, 'staff_id' =>    self::staffUniqueId()];
+                    if($request->passport){
+                        $name = $staff['staff_id'] . '-passport';
+                        $staff['passport'] = saveImg($request->file('passport'),name:$name);
+                    }
+                    if($request->signature){
+                        $name = $staff['staff_id'] . '-signature';
+                        $staff['signature'] = saveImg($request->file('signature'),name:$name);
+                    }
+                    if($request->stamp){
+                        $name = $staff['staff_id'] . '-stamp';
+                        $staff['stamp'] = saveImg($request->file('stamp'),name:$name);
+                    }
+                   $result = self::registerStaffToSchool($staff);
                    if($result){
 
                         return response()->json(['status' => 1, 'message' => 'Staff Registration Successfull, Staff Id '.$result->staff_id.' & username is '.$data['username']]);
@@ -127,27 +166,24 @@ class StaffController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
 
-    private function registerStaffToSchool(array $data){
+
+    public static function registerStaffToSchool(array $data){
         try {
-            $data = [
-                'staff_id' =>    self::staffUniqueId(),
-                'school_pid' =>  getSchoolPid(),
-                'user_pid' =>    $data['user_pid'],
-                'pid' =>         public_id(),
-                'role_id' =>     $data['role'],
-            ];
+            $data['school_pid'] =  getSchoolPid();
+            $data['pid'] =  public_id();
+            $data['staff_id'] = $data['staff_id'] ?? self::staffUniqueId();
             return SchoolStaff::create($data);
-           
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
         }
+        
     }
+
     public static function staffUniqueId(){
         $id = self::countStaff() + 1;
         $id =strlen($id) == 1 ? '0'.$id : $id;
-        return strtoupper(date('yM')).$id;
+        return SchoolController::getSchoolHandle().'/'.strtoupper(date('yM')).$id;
     }
     
     public static function countStaff(){
@@ -220,30 +256,55 @@ class StaffController extends Controller
         }
     }
 
-    public function StaffClass(Request $request){
-        
-        try {
-            $request['school_pid'] = getSchoolPid();
-            $request['pid'] = public_id();
-            $result = StaffClass::create($request->all());
-            if($result){
-                return redirect()->route('school.staff')->with('success', 'class asigned');
+
+
+
+
+
+    public function assignClassToStaff(Request $request){
+        $validator = Validator::make($request->all(),[
+            'arm_pid'=>'required',
+            'term_pid'=>'required',
+            'session_pid'=>'required',
+            'teacher_pid'=>'required',
+            'category_pid'=>'required',
+            'class_pid'=>'required',           
+            ],[
+                'arm_pid.required'=>'Select at least one class Arm from the list',
+                'term_pid.required'=>'Select Term from the list',
+                'session_pid.required'=>'Select Session from the list',
+                'teacher_pid.required'=>'Select Staff',
+                'class_pid.required'=>'Class is Required',
+                'category_pid.required'=> 'Category is Required',
+            ]);
+            if(!$validator->fails()){
+                try {
+                    $dupParams =   $data = [
+                        'school_pid'=>getSchoolPid(),
+                        'term_pid'=>$request->term_pid,
+                        'session_pid'=>$request->session_pid,
+                    ];
+                    $data['teacher_pid']=$request->teacher_pid;
+                        // 'arm_pid'=>'',
+                    foreach($request->arm_pid as $row){
+                        $dupParams['arm_pid'] = $data['arm_pid'] = $row;
+                        $result = StaffClass::updateOrCreate($dupParams,$data);
+                    }
+                    if ($result) {
+                        return response()->json(['status'=>1,'message'=> count($request->arm_pid)." Class(es) Assigned to Staff"]);
+                    }
+                    return response()->json(['status'=>'error','message'=> 'Something Went Wrong']);
+                } catch (\Throwable $e) {
+                    $error = $e->getMessage();
+                    logError($error);
+                   return response()->json(['status'=>'error','message'=> 'Something Went Wrong.. error logged']);
+                }   
             }
-            return redirect()->route('school.staff')->with('error', 'sorry sorry sorry dont cry');
-        } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
-            dd($error);
-        }   
+            return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+        
     }
     public function StaffSubject(Request $request){
-        
-
-
-
-
-
-        $validator = Validator::make($request->all(),[
+            $validator = Validator::make($request->all(),[
             'category_pid'=>'required',
             'class_pid'=> 'required',
             'arm_pid'=> 'required',

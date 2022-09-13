@@ -1,9 +1,9 @@
 @extends('layout.mainlayout')
-@section('title','Parent Lists')
+@section('title','Parent/Guardian Lists')
 @section('content')
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Default Tabs Justified</h5>
+        <h5 class="card-title">Parent/Guardian List</h5>
         <table class="table table-hover table-responsive table-striped table-bordered" id="parentDataTable">
             <thead>
                 <tr>
@@ -12,8 +12,9 @@
                     <th>Phone Number</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Number of Student</th>
+                    <th>Student(s)</th>
                     <th>Date</th>
+                    <!-- <th>Status</th> -->
                     <th>Action</th>
                 </tr>
             </thead>
@@ -58,11 +59,36 @@
                 {
                     "data": "date"
                 },
+                // {
+                //     "data": "status"
+                // },
 
                 {
                     "data": "action"
                 },
             ],
+        });
+
+        $(document).on('click', '.toggleParentStatus', function() {
+            let pid = $(this).attr('pid');
+            let token = "{{csrf_token()}}"
+            $('.overlay').show();
+            $.ajax({
+                url: "{{route('toggle.parent.status')}}",
+                type: "post",
+                data: {
+                    pid: pid,
+                    _token: token
+                },
+                success: function(data) {
+                    alert_toast(data, 'success');
+                    $('.overlay').hide();
+                },
+                error: function() {
+                    alert_toast('Something Went Wrong', 'warning');
+                    $('.overlay').hide();
+                }
+            });
         });
     });
 </script>

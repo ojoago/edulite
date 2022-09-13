@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h5 class="card-title">{{$class}} <small>Result</small></h5>
-                    <p> <i class="bi bi-calendar-event-fill"></i> {{--termName(session('term'))}} {{sessionName(session('session'))--}}</p>
+                    <p> <i class="bi bi-calendar-event-fill"></i> {{termName(session('term'))}} {{sessionName(session('session'))}}</p>
                 </div>
                 <div class="col-md-6">
                     <form action="{{route('change.arm.subject')}}" method="post">
@@ -57,7 +57,7 @@
                     <tr class="studentId">
                         <td>{{$loop->iteration}}</td>
                         <td>{{ordinalFormat($row->position)}}</td>
-                        <td>{{$row->reg_number}}</td>
+                        <td> <a href="{{ route('student.report.card',['param'=>$row->class_param_pid,'pid'=>$row->student_pid])}}" target="_blank" rel="noopener noreferrer">{{$row->reg_number}}</a></td>
                         <td>{{$row->fullname}}</td>
                         <td>{{$row->count}}</td>
                         <td>{{number_format($row->total,2)}}</td>

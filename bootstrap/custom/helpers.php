@@ -1,8 +1,9 @@
 <?php 
-
 use Illuminate\Support\Facades\Log;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Auths\AuthController;
+
 
    function logError($error){
     Log::error($error);
@@ -80,7 +81,7 @@ use App\Http\Controllers\Auths\AuthController;
             session(['schoolType' => $type]); //get  Type
     }
     function getSchoolType(){
-    return session('schoolType'); 
+        return session('schoolType'); 
     }
     function getUserPid(){
         if(auth()->user()){
@@ -104,7 +105,6 @@ use App\Http\Controllers\Auths\AuthController;
 
 
     function matchStaffRole($role){
-          
         $role =  match($role){
                 '200'=> 'Super Admin',
                 '205'=> 'School Admin',
@@ -117,25 +117,72 @@ use App\Http\Controllers\Auths\AuthController;
                 '307'=> 'Portals',
                 '400'=> 'Office Assisstnace',
                 '405'=> 'Security',
+                default=>''
+                };
+       return $role; 
+    }
+    function matchGender($gn){
+        $role =  match($gn){
+                '2'=> 'Female',
+                '1'=> 'Male',
+                default=>''
+                };
+       return $role; 
+    }
+    function matchReligion($lg){
+        $role =  match($lg){
+                '2'=> 'Christian',
+                '1'=> 'Muslim',
+                '3'=> 'Other',
+                default=>''
+                };
+       return $role; 
+    }
+    function matchStudentStatus($sts){
+        $role =  match($sts){
+                '0'=> 'Disabled',
+                '1'=> 'Active Student',
+                '3'=> 'Left School',
+                '4'=> 'Suspended',
+                default=>''
+                };
+       return $role; 
+    }
+    function matchAccountStatus($sts){
+        $role =  match($sts){
+                '0'=> 'Disabled',
+                '1'=> 'Active Account',
+                // '3'=> 'Left School',
+                '2'=> 'Suspended',
+                default=>''
                 };
        return $role; 
     }
 
     function ordinalFormat($num){
         try {
-            $locale = 'en_US';
-            $nf = new \NumberFormatter($locale, \NumberFormatter::ORDINAL);
-            return $nf->format($num);
+            if(class_exists('NumberFormatter')){
+                $locale = 'en_US';
+                $nf = new \NumberFormatter($locale, \NumberFormatter::ORDINAL);
+                return $nf->format($num);
+            }else{
+                return ordinal($num);
+            }
         } catch (\Throwable $e) {
            $error = $e->getMessage();
            logError($error);
-           $end = ['th','st','nd','rd','th','th','th','th','th','th'];
-           if(($num % 100) >= 11 && ($num % 100)<=13)
-                $surfix = $num.'th';
-            else
-                $surfix = $num.$end[$num % 10];
-            return $surfix;
+           return ordinal($num);
         }
+    }
+
+    function ordinal($num)
+    {
+        $end = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'];
+        if (($num % 100) >= 11 && ($num % 100) <= 13)
+            $surfix = $num . 'th';
+        else
+            $surfix = $num . $end[$num % 10];
+        return $surfix;
     }
     function flashMessage(){
     if (Session::has('message')) {
@@ -146,6 +193,7 @@ use App\Http\Controllers\Auths\AuthController;
             'message'=> 'info',
             'info'=> 'info',
             'success'=> 'success',
+            default=> 'warning',
         };
         $alert = $type == 'error' ? 'danger' : 'info';
         return sprintf('<div class="alert alert-%s alert-dismissible">
@@ -155,3 +203,52 @@ use App\Http\Controllers\Auths\AuthController;
     }
     return '';
     }
+
+    function justDate(){
+        return date('Y-m-d');
+    }
+
+
+function saveImg($image,$path='images',$name=null)
+{
+    $percent=0.26;
+    $size = $image->getSize();
+    if($size < 1024 * 1024){
+        $percent = 1;
+    }
+    $destinationPath = public_path('/files'.'/'.$path.'/');
+    if(!$name){
+        $name = getSchoolPid() . '-' . public_id();
+    }
+    $name = str_replace('/','-',$name.'.'. $image->extension());
+    $height = Image::make($image)->height();//get image width
+    $width = Image::make($image)->width();
+    $new_width = $width * $percent;
+    $new_height = $height*($new_width/$width);
+    $img = Image::make($image->getRealPath());
+    $img->resize($new_width, $new_height, function ($constraint) {
+        $constraint->aspectRatio();
+    })->save($destinationPath . $name);
+    return $name;
+}
+
+
+
+
+if (!function_exists('file_path')) {
+    /**
+     * Return the path to public dir.
+     *
+     * @param  null  $path
+     * @return string
+     */
+    function file_path($path = null)
+    {
+        return rtrim(app()->basePath('files/' . $path), '/');
+    }
+}
+
+
+
+
+

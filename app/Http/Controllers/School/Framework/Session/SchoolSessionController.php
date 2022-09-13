@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\School\Framework\Session;
 
-use App\Http\Controllers\Controller;
-use App\Models\School\Framework\Session\ActiveSession;
-use App\Models\School\Framework\Session\Session;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Models\School\Framework\Session\Session;
+use App\Models\School\Framework\Session\ActiveSession;
 
 class SchoolSessionController extends Controller
 {
@@ -48,8 +49,10 @@ class SchoolSessionController extends Controller
     public function createSession(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'session' => 'required'
-        ]);
+            'session' => ['required',Rule::unique('sessions')->where(function($q){
+                $q->where('school_pid',getSchoolPid());
+            })]
+        ],['session.required'=>'Enter session','session.unique'=>$request->session.' already exist']);
         if (!$validator->fails()) {
             $data = [
                 'pid' => public_id(),

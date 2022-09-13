@@ -26,7 +26,7 @@
                     </select>
                     <p class="text-danger term_pid_error"></p>
                     <label for="arm_pid">Arm</label>
-                    <select name="arm_pid" id="armSelect2s" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="arm_pid[]" id="armSelect2s" multiple="multiple" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger arm_pid_error"></p>
                     <label for="subject_pid">Subject</label>
@@ -115,15 +115,15 @@
                     </select>
                     <p class="text-danger term_pid_error"></p>
                     <label for="session_pid">Category</label>
-                    <select name="session_pid" id="categorySelect2" placeholder="select" class="categorySelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="category_pid" id="categorySelect2" placeholder="select" class="categorySelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
-                    <p class="text-danger session_pid_error"></p>
+                    <p class="text-danger category_pid_error"></p>
                     <label for="session_pid">Class</label>
-                    <select name="session_pid" id="classSelect2" placeholder="select" class="classSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="class_pid" id="classSelect2" placeholder="select" class="classSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
-                    <p class="text-danger session_pid_error"></p>
-                    <label for="session_pid">Arm</label>
-                    <select name="session_pid" id="armSelect2" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
+                    <p class="text-danger class_pid_error"></p>
+                    <label for="arm_pid">Arm</label>
+                    <select name="arm_pid[]" id="armSelect2" multiple="multiple" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger session_pid_error"></p>
                     <label for="teacher_pid">Teacher</label>
@@ -151,11 +151,11 @@
                 <form action="" method="post" class="" id="linkStudentParentForm">
                     @csrf
                     <label for="parent_pid">Parent/Guardian</label>
-                    <select name="parent_pid" id="parentSelect2" placeholder="select" class="parentSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="parent_pid" id="studentToParentparentSelect2" placeholder="select" class="parentSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger parent_pid_error"></p>
                     <label for="student_pid">Student</label>
-                    <select name="student_pid[]" id="studentSelect2" multiple="multiple" style="width: 100%;" class="studentSelect2 form-control form-control-sm">
+                    <select name="student_pid[]" id="studentToParentstudentSelect2" multiple="multiple" style="width: 100%;" class="studentSelect2 form-control form-control-sm">
                     </select>
                     <p class="text-danger student_pid_error"></p>
                 </form>
@@ -163,6 +163,129 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="linkStudentParentBtn">Link</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- create parent on student form modal  -->
+<div class="modal fade" id="createParentOnStudentFormMadal" tabindex="-1">
+    <style>
+        .addStudent {
+            display: none;
+        }
+    </style>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Parent/Guardian</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @include('layout.forms.parent-form')
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" id="createParentBtn">Create</button>
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- add nav section  -->
+<!-- add user or staff from another school modal  -->
+<div class="modal fade" id="addStaffModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add staff Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" id="searchExistingStaff" placeholder="phone number, username, former school login email">
+                    <span class="pointer input-group-text" data-bs-toggle="tooltip" title="click here" id="basic-addon1"><i class="bi bi-node-plus-fill"></i></span>
+                </div>
+                <hr>
+                <div class="textcenter" id="staffDetails"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- add existing user or Student from another school modal  -->
+<div class="modal fade" id="addStudentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-info">Add Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" id="searchExistingStudent" placeholder="phone number, username, former school login email">
+                    <span class="pointer input-group-text" data-bs-toggle="tooltip" title="click here" id="basic-addon1"><i class="bi bi-node-plus-fill"></i></span>
+                </div>
+                <hr>
+                <div class="textcenter" id="studentDetails"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- add existing user or parent from another school modal  -->
+<div class="modal fade" id="addParentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Parent</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" id="searchExistingParent" placeholder="phone number, username, former school login email">
+                    <span class="pointer input-group-text" data-bs-toggle="tooltip" title="click here" id="basic-addon1"><i class="bi bi-node-plus-fill"></i></span>
+                </div>
+                <hr>
+                <div class="textcenter" id="parentDetails"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- add existing user or rider from another school modal  -->
+<div class="modal fade" id="addRiderModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Rider</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" id="searchExistingRider" placeholder="phone number, username, former school login email">
+                    <span class="pointer input-group-text" data-bs-toggle="tooltip" title="click here" id="basic-addon1"><i class="bi bi-node-plus-fill"></i></span>
+                </div>
+                <hr>
+                <div class="textcenter" id="riderDetails"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
             </div>
         </div>
     </div>

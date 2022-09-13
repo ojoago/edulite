@@ -43,6 +43,8 @@ class AuthController extends Controller
    
     public static function uniqueUsername($firstname)
     {
+        $rm = ['#',' ','`',"'",'#','^','%','$','','*','(',')',';','"','>','<','/','?','+',',',':',"|",'[',']','{','}','~'];
+        $firstname = str_replace($rm,'',trim($firstname));
        $count = UserDetail::where('firstname' ,$firstname)
                                 ->orWhere(['firstname' => strtolower($firstname)])
                                 ->orWhere(['firstname' => strtoupper($firstname)])

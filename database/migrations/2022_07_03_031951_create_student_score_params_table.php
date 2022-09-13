@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('class_param_pid');
             $table->string('subject_pid');
             $table->string('subject_type')->nullable();
+            $table->string('pid')->unique();
             $table->string('subject_teacher')->nullable();
             $table->string('staff_pid')->nullable()->comment('recorded by');
-            $table->string('pid')->unique();
             $table->timestamps();
         });
     }

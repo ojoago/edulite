@@ -5,6 +5,7 @@ namespace App\Http\Controllers\School\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 use App\Models\School\Student\Student;
 use App\Http\Controllers\School\Staff\StaffController;
 use App\Models\School\Student\Result\StudentClassResult;
@@ -12,8 +13,8 @@ use App\Http\Controllers\School\Framework\ClassController;
 use App\Models\School\Student\Result\StudentSubjectResult;
 use App\Models\School\Student\Assessment\StudentScoreParam;
 use App\Models\School\Student\Assessment\StudentScoreSheet;
-use App\Models\School\Framework\Assessment\ScoreSettingParam;
 use App\Models\School\Student\Result\StudentClassScoreParam;
+use App\Models\School\Student\Results\Cumulative\CumulativeResult;
 
 class StudentScoreController extends Controller
 {
@@ -72,7 +73,7 @@ class StudentScoreController extends Controller
         $scoreParams = $params['scoreParams']; //score header
         $class = $params['class'];//selected class and subject
         if(!$this->createScoreSheetParams()){
-            return redirect()->route('student.assessment.form')->with('error','Subject not Assigned to any teacher');
+            return redirect()->route('student.assessment.form')->with('error', 'Subject not Assigned to any teacher ' . termName(session('term')) . ' ' . sessionName(session('session')));
         }
        
         return view('school.student.assessment.enter-student-score', compact('data', 'scoreParams','class'));
@@ -82,19 +83,12 @@ class StudentScoreController extends Controller
         $session = session('session');
         $term = session('term');
         $arm = session('arm');
-        $scoreParams = ScoreSettingParam::join('class_arms', 'class_arms.class_pid', 'score_setting_params.class_pid')
-        ->join('score_settings', 'score_data_pid', 'score_setting_params.pid')
-        ->join('assessment_titles', 'assessment_titles.pid', 'score_settings.assessment_title_pid')
-        ->orderBy('order')
-            ->where([
-                'term_pid' => $term,
-                'session_pid' => $session,
-                'class_arms.pid' => $arm
-            ])->get(['title', 'score', 'assessment_title_pid']);
-        //  
+        $scoreParams = ScoreSettingsController::loadClassScoreSettings($term,$session,$arm);
+        
         $data = Student::where([
             'current_class' => $arm,
-            'school_pid' => getSchoolPid()
+            'school_pid' => getSchoolPid(),
+            'current_session_pid' => $session
         ])->get([
             'fullname', 'reg_number', 'pid',
             // 'student_score_sheets.ca_type_pid', 'student_score_sheets.score'
@@ -191,12 +185,12 @@ class StudentScoreController extends Controller
         }
         $data = [
             'school_pid' => $schoolPid,
-            'teacher_pid' => $teacher,
+            // 'teacher_pid' => $teacher,
             'session_pid' => $session,
             'term_pid' => $term,
             'arm_pid' => $arm,
         ];
-        $class_pid = $this->createCLassParam($data);
+        $class_pid = ClassController::createCLassParam($data);
         $subject_type = ClassController::GetClassArmSubjectType($subject);
         $pid = StudentScoreParam::where([
                                     'subject_pid'=>$subject, 
@@ -207,8 +201,10 @@ class StudentScoreController extends Controller
             setActionablePid($pid);
             return true;
         }
+        $teacher = StaffController::getSubjectTeacherPid($session, $term, $subject);
+        
         $param = [
-            // 'subject_teacher' => $teacher,
+            'subject_teacher' => $teacher,
             'class_param_pid' => $class_pid,
             'subject_pid' => $subject,
             'pid' => public_id(),
@@ -220,19 +216,8 @@ class StudentScoreController extends Controller
         setActionablePid($result->pid);
         return true;
     }
+   
     
-    private function createCLassParam($data){
-        $teacher = $data['teacher_pid'];
-        unset($data['teacher_pid']);
-        $pid = StudentClassScoreParam::where($data)->pluck('pid')->first();
-        if ($pid) {
-            return $pid;
-        }
-        $data['teacher_pid']= $teacher;
-        $data['pid']= public_id();
-        $result = StudentClassScoreParam::create($data);
-       return $result->pid;
-    }
     public function changeSubjectResultStatus(Request $request){
         $pid = getActionablePid();
         $seated = $request->seated;
@@ -265,10 +250,31 @@ class StudentScoreController extends Controller
         $scoreParams = $params['scoreParams']; //score header
         $class = $params['class'];//selected class and subject
         if (!$this->createScoreSheetParams()) {
-            return redirect()->route('student.assessment.form')->with('error', 'Subject not Assigned to any teacher');
+            return redirect()->route('student.assessment.form')->with('error', 'Subject not Assigned to any teacher '.termName(session('term')). ' ' . sessionName(session('session')));
         }
 
         return view('school.student.assessment.view-student-score', compact('data', 'scoreParams', 'class'));
     }
+
+
+    private function StudentCumulative($data){
+       $pid = CumulativeResult::where([
+            'session_pid' => $data['session_pid'],
+            'arm_pid' => $data['arm_pid'],
+            'student_pid' => $data['student_pid'],
+            'school_pid' => getSchoolPid()
+        ])->pluck('pid')->first();
+        if($pid){
+            return;
+        }
+      CumulativeResult::create([
+          'session_pid'=>$data['session_pid'],
+          'arm_pid'=> $data['arm_pid'],
+          'student_pid'=> $data['student_pid'],
+          'pid'=>public_id(),
+          'school_pid'=>getSchoolPid()
+      ]);
+    }
+    
 }
 

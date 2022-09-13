@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\School\Framework\Subject\SubjectType;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class SubjectTypeController extends Controller
 {
@@ -25,84 +26,54 @@ class SubjectTypeController extends Controller
                             ->get(['subject_types.pid','subject_type', 'subject_types.created_at', 'subject_types.description','username']);
         return datatables($data)
             ->addColumn('action', function ($data) {
-                $html = '
-                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#editSubjectModal' . $data->pid . '">
-                    <i class="bi bi-box-arrow-up" aria-hidden="true"></i>
-                </button>
-                <div class="modal fade" id="editSubjectModal' . $data->pid . '" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Edit Lite S</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="" method="post" class="" id="createSubjectForm">
-                                    <p class="text-danger category_pid_error"></p>
-                                    <input type="text" name="subject" value="' . $data->subject_type . '" class="form-control form-control-sm" placeholder="name of school" required>
-                                    <p class="text-danger subject_error"></p>
-                                    <textarea type="text" name="description" class="form-control form-control-sm" placeholder="description" required>' . $data->description . '</textarea>
-                                    <p class="text-danger description_error"></p>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" id="createSubjectBtn">Submit</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                ';
-                return $html;
+                return view('school.framework.subject.subject-type-action-buttons', ['data' => $data]);
             })
             ->editColumn('created_at', function ($data) {
-                return date('d F Y', strtotime($data->created_at));
+                return $data->created_at->diffForHumans();
             })
             ->rawColumns(['data', 'action'])
             ->make(true);
     }
 
-    public function loadAvailableSubjectType(){
 
-        $result = SubjectType::where(['school_pid' => getSchoolPid()])
-            ->orderBy('subject_type')->limit(20)->get(['pid', 'subject_type']); //
-        foreach ($result as $row) {
-            $data[] = [
-                'id' => $row->pid,
-                'text' => $row->subject_type,
-            ];
-        }
-        return response()->json($data);
-
-    }
 
     public function createSubjectType(Request $request)
     {
+       
         $validator = Validator::make($request->all(),[
-            'subject'=> 'required|string|min:3|max:22|regex:/^[a-zA-Z0-9\s]+$/',
+            'subject_type'=> [
+                        'required', 
+                        'string', 
+                        'min:3', 
+                        'max:22', 
+                        'regex:/^[a-zA-Z0-9\s]+$/', 
+                        Rule::unique('subject_types')->where(function($param) use ($request){
+                            $param->where('school_pid', getSchoolPid())->where('pid','!=',$request->pid);
+                     })],
             // Rule::unique()
             
         ],[
-            'subject.required'=>'Enter Subject Type',
-            'subject.max'=>'Subject Type should not be more than 22 character',
-            'subject.max'=>'Maximum of 22 characters',
-            'subject.min'=>'Minimum of 3 characters',
-            'subject.regex'=>'Special Character not allowed e.g #$%^*. etc',
+            'subject_type.required'=>'Enter Subject Type',
+            'subject_type.unique'=> $request->subject_type.' already exists',
+            'subject_type.max'=>'Subject Type should not be more than 22 character',
+            'subject_type.max'=>'Maximum of 22 characters',
+            'subject_type.min'=>'Minimum of 3 characters',
+            'subject_type.regex'=>'Special Character not allowed e.g #$%^*. etc',
         ]);
         if(!$validator->fails()){
 
             $data = [
                 'school_pid'=> getSchoolPid(),
-                'pid'=> public_id(),
+                'pid'=> $request->pid ?? public_id(),
                 'staff_pid'=> getSchoolUserPid(),
-                'subject_type'=>strtoupper($request->subject),
+                'subject_type'=>$request->subject_type,
                 'description'=>$request->description
             ];
 
             $result = $this->createOrUpdateSubjectType($data);
             
             if ($result) {
-                return response()->json(['status'=>1,'message'=>'Subject Type Created']);
+                return response()->json(['status'=>1,'message'=> $request->pid ? 'Subject Type Updated' : 'Subject Type Created']);
             }
             return response()->json(['status'=>2,'message'=>'Something Went Wrong']);
         }
@@ -118,54 +89,10 @@ class SubjectTypeController extends Controller
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
+           
         }
     }
 
 
     
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

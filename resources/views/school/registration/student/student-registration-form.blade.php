@@ -63,22 +63,22 @@
             </div>
             <div class="col-md-4">
                 <label for="state" class="form-label small">State Of Origin</label>
-                <select id="stateSelect2" value="1" name="state" class="form-control" style="width: 100%;">
+                <select id="stateSelect2" value="1" name="state" class="form-control form-control-sm" style="width: 100%;">
                 </select>
                 <p class="text-danger state_error"></p>
             </div>
             <div class="col-md-4">
                 <label for="inputCity" class="form-label small">LGA</label>
-                <select id="lgaSelect2" value="1" name="lga" class="form-control" style="width: 100%;">
+                <select id="lgaSelect2" value="1" name="lga" class="form-control form-control-sm select2" style="width: 100%;">
                 </select>
                 <p class="text-danger lga_error"></p>
             </div>
             <div class="col-md-4">
                 <label for="parent_pid" class="form-label small">Parent/Guardian</label>
                 <div class="input-group">
-                    <select id="lgaSelect2" name="parent_pid" class="form-control  form-control-sm">
+                    <select id="parentSelect2" name="parent_pid" class="form-select form-select-sm" width="90%">
                     </select>
-                    <span class="input-group-text pointer" id="basic-addon1"><i class="bi bi-node-plus-fill"></i></span>
+                    <span class="input-group-text pointer" data-bs-toggle="modal" data-bs-target="#createParentOnStudentFormMadal" id="basic-addon1"><i class="bi bi-node-plus-fill" title="Create Parent/Guardian" data-bs-toggle="tooltip"></i></span>
                 </div>
                 <p class="text-danger parent_pid_error"></p>
             </div>
@@ -112,29 +112,36 @@
                 </select>
                 <p class="text-danger term_pid_error"></p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="category_pid" class="form-label">Category</label>
                 <select name="category_pid" style="width: 100%;" id="cateSelect2" required>
                 </select>
                 <p class="text-danger category_pid_error"></p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="class_pid" class="form-label">Class</label>
-                <select name="class_pid" style="width: 100%;" id="classSelect2" required>
+                <select name="class_pid" style="width: 100%;" class="form-select form-select-sm" id="classSelect2" required>
                 </select>
                 <p class="text-danger class_pid_error"></p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="arm_pid" class="form-label">Class Arm</label>
-                <select name="arm_pid" class="form-select" style="width: 100%;" id="armSelect2" required>
+                <select name="arm_pid" class="form-select form-select-sm" style="width: 100%;" id="armSelect2" required>
                 </select>
                 <p class="text-danger arm_pid_error"></p>
+            </div>
+            <div class="col-md-3">
+                <label for="passport" class="form-label">Passport</label>
+                <input name="passport" class="form-control form-control-sm" id="passport" type="file" accept="image/*">
+                <p class="text-danger passport_error"></p>
+                <img src="" id="studentPassport" class="previewImg" alt="">
             </div>
             <div class="text-center">
                 <button type="button" class="btn btn-primary" id="createStudentBtn">Create</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
             </div>
-        </form><!-- End Multi Columns Form -->
+        </form>
+        <!-- End Multi Columns Form -->
 
     </div>
 </div>
@@ -143,9 +150,14 @@
 <script>
     $(document).ready(function() {
 
+        $('#passport').change(function() {
+            previewImg(this, '#studentPassport');
+        });
         // load dropdown  
         // session select2 
         FormMultiSelect2('#sessionSelect2', 'session', 'Select Session')
+        FormMultiSelect2('#stateSelect2', 'state', 'Select State of Origin')
+        FormMultiSelect2('#parentSelect2', 'parent', 'Select Parent/Guardian')
 
         FormMultiSelect2('#cateSelect2', 'category', 'Select Category')
 
@@ -153,6 +165,11 @@
         $('#cateSelect2').change(function() {
             var id = $(this).val();
             FormMultiSelect2Post('#classSelect2', 'class', id, 'Select Class')
+        });
+        $('#stateSelect2').change(function() {
+            var id = $(this).val();
+
+            FormMultiSelect2Post('#lgaSelect2', 'state-lga', id, 'Select Lga of Origin')
         });
 
         // class arm dropdown 

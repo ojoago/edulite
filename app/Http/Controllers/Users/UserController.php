@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Http\Controllers\Auths\AuthController;
 use Illuminate\Http\Request;
 use App\Models\School\School;
+use App\Models\Users\UserDetail;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Auths\AuthController;
 
 class UserController extends Controller
 {
@@ -27,6 +28,11 @@ class UserController extends Controller
         return view('users.dashboard', compact('data'));
     }
 
+    public static function loadUserInfo($id)
+    {
+        $user = UserDetail::where('pid', $id)->first(['gender', 'dob', 'religion', 'state', 'lga', 'address']);
+        return $user;
+    }
     /**
      * Store a newly created resource in storage.
      *

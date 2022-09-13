@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\School\Framework\Term;
 
-use App\Http\Controllers\Controller;
-use App\Models\School\Framework\Term\ActiveTerm;
-use App\Models\School\Framework\Term\Term;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Models\School\Framework\Term\Term;
+use App\Models\School\Framework\Term\ActiveTerm;
 
 class SchoolTermController extends Controller
 {
@@ -30,13 +31,16 @@ class SchoolTermController extends Controller
     public function createSchoolTerm(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'term' => 'required',
-        ]);
+            'term' => ['required', Rule::unique('terms')->where(function ($query) {
+                $query->where('school_pid', '=', getSchoolPid());
+            })]
+        ],['term.required'=>'Enter Term name','term.unique'=>$request->term.' alredy exist']);
+   
         if(!$validator->fails()){
             $data = [
                 'pid'=>public_id(),
                 'school_pid'=>getSchoolPid(),
-                'term'=>ucwords($request->term),
+                'term'=>$request->term,
                 'description'=>$request->description,
             ];
             $result = $this->createOrUpdateTerm($data);
@@ -57,7 +61,7 @@ class SchoolTermController extends Controller
     private function createOrUpdateTerm($data)
     {
         try {
-            return  Term::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
+            return  Term::updateOrCreate(['term' => $data['term'], 'school_pid' => $data['school_pid']], $data);
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
@@ -101,7 +105,7 @@ class SchoolTermController extends Controller
             $result = $this->updateOrCreateActiveTerm($data);
             if($result){
 
-                return response()->json(['status'=>1,'message'=>'active term Set']);
+                return response()->json(['status'=>1,'message'=>'active Term Set']);
             }
             return response()->json(['status'=>2,'message'=>'failed to submit']);
         }

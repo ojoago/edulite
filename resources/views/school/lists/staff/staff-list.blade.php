@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','Result COnfig')
+@section('title','School Staff List')
 @section('content')
 <div class="card">
     <div class="card-body">
@@ -96,7 +96,7 @@
                     "data": "email"
                 },
                 {
-                    "data": "role_id"
+                    "data": "role"
                 },
 
                 {

@@ -64,31 +64,32 @@
             </div>
             <div class="col-md-4">
                 <label for="state" class="form-label small">State Of Origin</label>
-                <select id="stateSelect2" name="state" class="form-control" style="width: 100%;">
-                    <option value="1">kogi</option>
+                <select id="stateSelect2" name="state" class="form-control form-control-sm" style="width: 100%;">
                 </select>
                 <p class="text-danger state_error"></p>
             </div>
             <div class="col-md-4">
                 <label for="inputCity" class="form-label small">LGA</label>
-                <select id="lgaSelect2" name="lga" class="form-control" style="width: 100%;">
-                    <option value="1">anpka</option>
+                <select id="lgaSelect2" name="lga" class="form-control form-control-sm" style="width: 100%;">
                 </select>
                 <p class="text-danger lga_error"></p>
             </div>
             <div class="col-md-4">
-                <label for="parent_pid" class="form-label small">Wards</label>
-                <div class="input-group">
-                    <select id="lgaSelect2" name="student_pid" class="form-control  form-control-sm">
+                <label for="student_pid" class="form-label small">Wards</label>
+                    <select id="studentSelect2" name="student_pid[]" multiple="multiple" class="form-control  form-control-sm">
                     </select>
-                    <span class="input-group-text pointer" id="basic-addon1"><i class="bi bi-node-plus-fill"></i></span>
-                </div>
-                <p class="text-danger parent_pid_error"></p>
+                <p class="text-danger student_pid_error"></p>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <label for="address" class="form-label">Address</label>
                 <textarea type="text" class="form-control form-control-sm" id="address" name="address" placeholder="e.g no 51  offeoke"></textarea>
                 <p class="text-danger address_error"></p>
+            </div>
+            <div class="col-md-4">
+                <label for="passport" class="form-label">Image</label>
+                <input type="file" accept="image/*" class="form-control form-control-sm" id="passport" name="passport">
+                <p class="text-danger passport_error"></p>
+                <img src="" id="riderPassport" class="previewImg" alt="">
             </div>
 
             <div class="text-center">
@@ -105,24 +106,20 @@
     $(document).ready(function() {
 
         // load dropdown  
-        // session select2 
-        $('#stateSelect2').select2({
-            placeholder: 'Select Session',
-            // dropdownParent: $('#createScoreSettingModal'),
-            ajax: {
-                url: "{{route('load.available.session')}}",
-                dataType: 'json',
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
+        // state select2 
+        FormMultiSelect2('#stateSelect2', 'state', 'Select State of Origin')
+        FormMultiSelect2('#studentSelect2', 'student', 'Select student')
+        $('#stateSelect2').change(function() {
+            var id = $(this).val();
+
+            FormMultiSelect2Post('#lgaSelect2', 'state-lga', id, 'Select Lga of Origin')
         });
 
 
+        // load page content  
+        $('#passport').change(function() {
+            previewImg(this, '#riderPassport');
+        });
         // create school category 
         $('#createRiderBtn').click(function() {
             $('.overlay').show();

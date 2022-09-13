@@ -9,6 +9,7 @@ use App\Models\School\Framework\Class\Classes;
 use App\Models\School\Framework\Class\Category;
 use App\Models\School\Framework\Class\ClassArm;
 use App\Models\School\Framework\Class\ClassArmSubject;
+use App\Models\School\Student\Result\StudentClassScoreParam;
 
 class ClassController extends Controller
 {
@@ -348,6 +349,24 @@ class ClassController extends Controller
         $arm = ClassArm::where(['school_pid'=>getSchoolPid(),'pid'=>$pid])->pluck('arm')->first();
 
         return $arm;
+    }
+
+
+    public static function createCLassParam($data)
+    {
+        // $teacher = $data['teacher_pid'];
+        // unset($data['teacher_pid']);
+        $pid = StudentClassScoreParam::where($data)->pluck('pid')->first();
+        if ($pid) {
+            return $pid;
+        }
+        $data['teacher_pid'] = self::getClassTeacherPid($data['session_pid'], $data['term_pid'], $data['arm_pid']);
+        $data['pid'] = public_id();
+        $result = StudentClassScoreParam::create($data);
+        return $result->pid;
+    }
+    public static function getClassTeacherPid($arm,$session,$term){
+        return 'Hassan';
     }
     // public function assignClassArmSubjectToTeacher(Request $request){
 

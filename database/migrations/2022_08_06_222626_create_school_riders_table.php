@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('pid')->unique();
             $table->string('status')->default('1');
             $table->string('rider_id');
+            $table->string('passport')->nullable();
             $table->timestamps();
         });
     }

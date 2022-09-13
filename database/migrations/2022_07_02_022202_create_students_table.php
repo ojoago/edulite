@@ -22,11 +22,13 @@ return new class extends Migration
             $table->string('parent_pid')->nullable();
             $table->integer('type')->default(1)->comment('1 day, 2 boarding');
             $table->string('school_pid');
-            $table->string('status')->default(1)->comment('0 = disabled, 1 = active student, 2 = graduated, 3 = left the school');
+            $table->string('status')->default(1)->comment('0 = disabled, 1 = active student, 2 = graduated, 3 = left the school, 4 = suspended');
+            $table->string('admitted_session_pid')->nullable();
             $table->string('admitted_class')->nullable();
-            $table->string('current_class')->nullable();
-            $table->string('current_session')->nullable();
-            $table->text('student_image_path')->nullable();
+            $table->string('admitted_term')->nullable();
+            $table->string('current_class_pid')->nullable();
+            $table->string('current_session_pid')->nullable();
+            $table->text('passport')->nullable();
             $table->text('address')->nullable();
             $table->string('session_pid');
             $table->string('religion')->nullable();

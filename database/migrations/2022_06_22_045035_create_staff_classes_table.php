@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('staff_classes', function (Blueprint $table) {
             $table->id();
-            $table->string('staff_pid');
+            $table->string('teacher_pid');
             $table->string('arm_pid');
             $table->string('session_pid');
             $table->string('term_pid');
             // $table->string('date', 20);
-            $table->string('pid')->unique();
+            $table->string('pid')->nullable();
             $table->string('school_pid');
             $table->timestamps();
         });
