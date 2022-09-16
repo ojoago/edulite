@@ -13,6 +13,6 @@ class Category extends Model
     ];
 
     public function setCategoryAttribute($value){
-        $this->attributes['category'] = $value;
+        $this->attributes['category'] = strtoupper(trim($value));
     }
 }

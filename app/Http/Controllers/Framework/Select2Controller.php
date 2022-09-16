@@ -88,7 +88,7 @@ class Select2Controller extends Controller
         $data = null;
         $result = SchoolStaff::join('user_details', 'user_details.user_pid','school_staff.user_pid')
                             ->where(['school_staff.school_pid' => getSchoolPid(), 'school_staff.status' => 1])
-                            ->WhereIn('role_id',[500,505])
+                            ->WhereIn('role',[500,505])
             ->orderBy('fullname')->get(['school_staff.pid', 'user_details.fullname']); //
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);

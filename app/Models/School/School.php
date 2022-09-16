@@ -9,7 +9,11 @@ class School extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'state_id','lga_id','school_name','school_contact','school_address',
-        'school_moto','school_handle','pid','user_pid','role_id'
+        'state','lga','school_name','school_contact','school_address', 'school_logo',
+        'school_moto','school_handle','pid','user_pid', 'school_email','type'
     ];
+    
+    public function setSchoolNameAttribute($vaule){
+        $this->attributes['school_name'] = ucwords(strtolower($vaule));
+    }
 }

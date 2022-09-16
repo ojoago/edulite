@@ -27,6 +27,11 @@ body{
     visibility: hidden !important;
 }
 
+#schoolName{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 /* spinner  */
 .overlay {

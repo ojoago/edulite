@@ -1,21 +1,21 @@
 @extends('layout.mainlayout')
-@section('title','lite G S')
+@section('title','School Grade Key')
 @section('content')
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Lite Grade</h5>
+        <h5 class="card-title">Grade Key</h5>
 
         <!-- Default Tabs -->
         <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab" aria-controls="home" aria-selected="true">Grae</button>
             </li>
-            <li class="nav-item flex-fill" role="presentation">
+            <!-- <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab" aria-controls="profile" aria-selected="false">Cho</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-justified" type="button" role="tab" aria-controls="contact" aria-selected="false">Ef</button>
-            </li>
+            </li> -->
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
@@ -33,7 +33,7 @@
                             <th>Min Score</th>
                             <th>Max Score</th>
                             <th>Date</th>
-                            <th>Action</th>
+                            <!-- <th>Action</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -56,7 +56,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create Lite Grade</h5>
+                <h5 class="modal-title">Create School Grade </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -94,13 +94,13 @@
                     <select type="text" name="category_pid" id="gradeCategorySelect2" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger category_pid_error"></p>
-                    <select type="text" name="session_pid" id="gradeSessionSelect2" placeholder="" required style="width: 100%;">
+                    <select type="text" name="session_pid" id="gradeSessionSelect2" class="form-control form-control-sm" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger session_pid_error"></p>
-                    <select type="text" name="class_pid" id="gradeClassSelect2" placeholder="" required style="width: 100%;">
+                    <select type="text" name="class_pid" id="gradeClassSelect2" class="form-control form-control-sm" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger class_pid_error"></p>
-                    <select type="text" name="term_pid" id="gradeTermSelect2" placeholder="" required style="width: 100%;">
+                    <select type="text" name="term_pid" id="gradeTermSelect2" class="form-control form-control-sm" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger term_pid_error"></p>
 
@@ -149,9 +149,9 @@
                 {
                     "data": "created_at"
                 },
-                {
-                    "data": "action"
-                },
+                // {
+                //     "data": "action"
+                // },
             ],
         });
 

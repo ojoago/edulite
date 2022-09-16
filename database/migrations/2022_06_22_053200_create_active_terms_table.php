@@ -15,11 +15,8 @@ return new class extends Migration
     {
         Schema::create('active_terms', function (Blueprint $table) {
             $table->id();
-            $table->string('school_pid')->nullable();
+            $table->string('school_pid');
             $table->string('term_pid');
-            $table->string('begin', 20)->nullable();
-            $table->string('end', 20)->nullable();
-            $table->string('note')->nullable();
             $table->timestamps();
         });
     }

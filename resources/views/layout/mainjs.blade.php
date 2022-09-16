@@ -10,6 +10,11 @@
             previewImg(this, '#parentPassport');
         });
 
+        // update password 
+        $('#updatePwdBtn').click(function() {
+            var route = "{{route('update.password')}}";
+            submitFormAjax('updatePwdForm', 'updatePwdBtn', route);
+        });
         // link student to parent 
         // load students 
         multiSelect2('#studentToParentstudentSelect2', 'linkStudentParentModal', 'student', 'Select student');
@@ -526,7 +531,7 @@
                     $('#' + formId)[0].reset();
 
                 } else {
-                    alert_toast(data.message, 'warning');
+                    alert_toast(data.message, 'error');
                 }
             },
             error: function(data) {

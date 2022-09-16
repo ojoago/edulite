@@ -8,7 +8,7 @@ use App\Models\School\Framework\Term\Term;
 use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
 use App\Models\School\Student\Assessment\Psychomotor\PsychomotorRecord;
 use App\Models\School\Student\Assessment\StudentScoreSheet;
-
+use App\Models\Users\UserDetail;
 
     function activeSession()
     {
@@ -21,6 +21,9 @@ use App\Models\School\Student\Assessment\StudentScoreSheet;
         return $term;
     }
 
+    function authUsername(){
+        return UserDetail::where('user_pid',getUserPid())->pluck('fullname')->first();
+    }
 
     function uniqueNess($tbl,$key,$val){
         $query = DB::select("SELECT {$key} FROM {$tbl} WHERE {$key} = '$val' ");

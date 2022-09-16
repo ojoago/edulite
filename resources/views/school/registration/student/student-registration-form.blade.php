@@ -96,6 +96,7 @@
                     <option disabled selected>Select Type</option>
                     <option value="2">Boarding</option>
                     <option value="1">Day</option>
+                    <!-- <option value="3">Boarding & Day</option> -->
                     @endif
                 </select>
                 <p class="text-danger type_error"></p>

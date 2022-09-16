@@ -3,7 +3,7 @@ use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Auths\AuthController;
-
+    
 
    function logError($error){
     Log::error($error);
@@ -63,6 +63,13 @@ use App\Http\Controllers\Auths\AuthController;
     function getSchoolName(){ // get school name
         return session('schoolName');
     }
+     function setSchoolLogo($logo=null){ //set school logo
+        session(['schoolLogo'=>$logo]); 
+    }
+     function getSchoolLogo(){ //set school logo
+        $path = session('schoolLogo') ? '/files/logo/'. session('schoolLogo') : '/themes/img/logo.png';
+        return $path; 
+    }
     function getSchoolUserPid(){ //set pid key of the table to be acted upone 
         return base64Decode(session('schoolUserPid')); //get user pid
     }
@@ -78,11 +85,19 @@ use App\Http\Controllers\Auths\AuthController;
         return base64Decode(session('userActiveRole')); 
     }
     function setSchoolType($type=1){
-            session(['schoolType' => $type]); //get  Type
+        session(['schoolType' => $type]); //get  Type
     }
-    function getSchoolType(){
+     function getSchoolType(){
         return session('schoolType'); 
     }
+
+    function setAuthFullname($name=null){
+        session(['authFullname' => $name]); //get  Type
+    }
+    function getAuthFullname(){
+       return session('authFullname'); //get  Type
+    }
+     
     function getUserPid(){
         if(auth()->user()){
             return auth()->user()['pid'];

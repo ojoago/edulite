@@ -19,7 +19,7 @@ class AffectiveDomainController extends Controller
             'arm_pid' => $request->arm,
             'school_pid' => getSchoolPid()
         ];
-        $class_pid = ClassController::createCLassParam($data);
+        $class_pid = ClassController::createClassParam($data);
         $arm = ClassController::getClassArmNameByPid($request->arm);
         $params = ['param' => $class_pid, 'arm' => $arm, 'term' => $request->term, 'session' => $request->session];
         $domain = AffectiveDomain::where(['school_pid' => getSchoolPid(), 'status' => 1])

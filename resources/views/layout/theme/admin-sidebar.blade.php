@@ -1,5 +1,5 @@
 <li class="nav-item">
-    <a class="nav-link " href="index.html">
+    <a class="nav-link " href="{{route('my.school.dashboard')}}">
         <i class="bi bi-grid"></i>
         <span>Dashboard</span>
     </a>
@@ -25,11 +25,11 @@
                 <i class="bi bi-circle"></i><span>Assessment</span>
             </a>
         </li>
-        <li>
+        <!-- <li>
             <a href="{{route('school.attendance.setting')}}">
                 <i class="bi bi-circle"></i><span>Attendance</span>
             </a>
-        </li>
+        </li> -->
         <li>
             <a href="{{route('school.grade.key')}}">
                 <i class="bi bi-circle"></i><span>Grade</span>
@@ -53,8 +53,8 @@
         <li>
             <a href="{{route('school.psychomotor.config')}}">
                 <i class="bi bi-circle"></i><span>
-                    <!-- Psychomotor -->
-                    cycomfrence
+                    Psychomotor
+                    <!-- cycomfrence -->
                 </span>
             </a>
         </li>
@@ -94,22 +94,22 @@
     </a>
     <ul id="uploads-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-            <a href="{{ route('upload.staff.form') }}">
+            <a href="{{ route('upload.staff') }}">
                 <i class="bi bi-circle"></i><span>Staff</span>
             </a>
         </li>
         <li>
-            <a href="{{route('upload.student.form')}}">
+            <a href="{{route('upload.student')}}">
                 <i class="bi bi-circle"></i><span>Students</span>
             </a>
         </li>
         <li>
-            <a href="{{route('upload.parent.form')}}">
+            <a href="{{route('upload.parent')}}">
                 <i class="bi bi-circle"></i><span>Parents</span>
             </a>
         </li>
         <li>
-            <a href="{{route('upload.rider.form')}}">
+            <a href="{{route('upload.rider')}}">
                 <i class="bi bi-circle"></i><span> PickUps Rider</span>
             </a>
         </li>
@@ -243,7 +243,7 @@
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-layout-text-window-reverse"></i><span>AssLe</span><i class="bi bi-chevron-down ms-auto"></i>
+        <i class="bi bi-layout-text-window-reverse"></i><span>Assessment</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
@@ -276,7 +276,7 @@
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#psychomotor-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-layout-text-window-reverse"></i><span>py</span><i class="bi bi-chevron-down ms-auto"></i>
+        <i class="bi bi-layout-text-window-reverse"></i><span>Psychomotor</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="psychomotor-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
@@ -304,7 +304,7 @@
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#result-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-bar-chart"></i><span>S R</span><i class="bi bi-chevron-down ms-auto"></i>
+        <i class="bi bi-bar-chart"></i><span>Student Result</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="result-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
@@ -328,7 +328,7 @@
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-bar-chart"></i><span>@endn</span><i class="bi bi-chevron-down ms-auto"></i>
+        <i class="bi bi-bar-chart"></i><span>Attendance</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
@@ -397,7 +397,7 @@
 <!-- End Charts Nav -->
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#student-admission-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-bar-chart"></i><span>Admin-s</span><i class="bi bi-chevron-down ms-auto"></i>
+        <i class="bi bi-bar-chart"></i><span>Admission</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="student-admission-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
@@ -461,8 +461,10 @@
         </li>
     </ul>
 </li><!-- End Charts Nav -->
+
 <li class="nav-item">
-    <a href="{{route('principal.comment.termly.result')}}">
-        <i class="bi bi-circle"></i><span>My Wards </span>
+    <a class="nav-link" href="{{route('principal.comment.termly.result')}}">
+        <i class="bi bi-bar-chart"></i><span>My Wards </span>
     </a>
+
 </li><!-- End Charts Nav -->

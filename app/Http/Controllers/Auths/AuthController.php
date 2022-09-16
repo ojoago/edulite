@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Users\UserDetail;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -13,7 +15,7 @@ class AuthController extends Controller
         $request->validate([
             'email'=>'required|email|unique:users,email',
             'username'=>'required|unique:users,username',
-            'password'=>'required|min:6|confirmed'
+            'password'=>'required|min:4|confirmed'
         ]);
         $data = [
             'email'=>$request->email,
@@ -22,6 +24,12 @@ class AuthController extends Controller
         ];
         // dd($request->all());
         $user = self::createUser($data);
+        // send email
+        if($user){
+
+            return back()->with('success','Account Created successfully, Verification link sent to your mail');
+        } 
+        return back()->with('error','failed to created account');
         $token = $user->createToken('traqToken')->plainTextToken;
         $response = [
             'user' => $user,
@@ -35,9 +43,8 @@ class AuthController extends Controller
         $data['pid']  = public_id();
            return User::create($data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
+            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
             logError($error);
-            dd($error);
         }
     }
    
@@ -68,8 +75,31 @@ class AuthController extends Controller
         session(['pid' => $id]);
         return view('auths.reset');
     }
-    public function resetPassword(Request $request){
-
+    public function resetPassword(Request $request)
+    {
+    }
+    public function updatePassword(Request $request){
+        $validator = Validator::make($request->all(),[
+            'password'=> 'required|min:6|confirmed',
+            'opwd'=>'required',
+        ],['password.required'=>'Enter New Password', 'password.min' => 'Password is minimum of 6 characters',
+            'opwd.required'=>'Old Password is required',
+            ]);
+        if(!$validator->fails()){
+            try {
+                $user = User::find(auth()->user()->id);
+                if (Hash::check($request->opwd, $user->password)) {
+                    $user->password = $request->password;
+                    $user->save();
+                    return response()->json(['status' => 1, 'message' => 'Password updated.']);
+                }
+                return response()->json(['status' => '2', 'message' => 'old password is incorrect.']);
+            } catch (\Throwable $e) {
+                $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+                logError($error);
+            }
+        }
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
     public function login(Request $request){
         $request->validate([
@@ -80,6 +110,9 @@ class AuthController extends Controller
         //                 ->orwhere('gsm', $request->email)
         //                 ->orwhere('username', $request->email)->pluck('pid')->first();
         if (auth()->attempt($request->only('email', 'password'))) {
+            $name = authUsername();
+            setAuthFullname($name);
+            self::clearAuthSession();
             return redirect()->route('users.dashboard');
         }
         return back()->with('message', "error|Invalid login details");
@@ -89,19 +122,29 @@ class AuthController extends Controller
         self::logUserout();
         return redirect()->route('login');
     }
+    public function logoutSchool(){
+        self::clearSchoolSession();
+        return redirect()->route('users.dashboard');
+    }
     public static function logUserout(){
         if (auth()->user()) {
             auth()->logout();
         }
         self::clearAuthSession();
     }
-
     public static function clearAuthSession(): void
     {
-        setSchoolPid();
         setActionablePid();
+        setAuthFullname();
+        self::clearSchoolSession();
+    }
+    public static function clearSchoolSession(): void
+    {
+        setSchoolPid();
+        setSchoolType();
         setSchoolUserPid();
-        setUserActiveRole();
         setSchoolName();
+        setSchoolLogo();
+        setUserActiveRole();
     }
 }

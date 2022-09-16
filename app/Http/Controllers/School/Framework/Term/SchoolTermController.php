@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Term\Term;
 use App\Models\School\Framework\Term\ActiveTerm;
+use App\Models\School\Framework\Term\ActiveTermDetail;
 
 class SchoolTermController extends Controller
 {
@@ -30,11 +31,13 @@ class SchoolTermController extends Controller
     }
     public function createSchoolTerm(Request $request)
     {
+        $in = $request['term'];
+        $request['term'] = strtoupper($request['term']); 
         $validator = Validator::make($request->all(),[
             'term' => ['required', Rule::unique('terms')->where(function ($query) {
                 $query->where('school_pid', '=', getSchoolPid());
             })]
-        ],['term.required'=>'Enter Term name','term.unique'=>$request->term.' alredy exist']);
+        ],['term.required'=>'Enter Term name','term.unique'=>$in.' already exists']);
    
         if(!$validator->fails()){
             $data = [
@@ -46,7 +49,7 @@ class SchoolTermController extends Controller
             $result = $this->createOrUpdateTerm($data);
             if ($result) {
 
-                return response()->json(['status'=>1,'message'=>'term created']);
+                return response()->json(['status'=>1,'message'=>'Term Created']);
 
             }
 
@@ -65,7 +68,6 @@ class SchoolTermController extends Controller
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
         }
     }
 
@@ -102,10 +104,17 @@ class SchoolTermController extends Controller
                 'end'=>$request->term_end,
                 'note'=>$request->note,
             ];
-            $result = $this->updateOrCreateActiveTerm($data);
+            $term = [
+                'school_pid' => getSchoolPid(),
+                'term_pid' => $request->active_term,
+            ];
+            $result = $this->updateOrCreateActiveTerm($term);
+            if($result){
+                $this->updateOrCreateActiveTermDetail($data);
+            }
             if($result){
 
-                return response()->json(['status'=>1,'message'=>'active Term Set']);
+                return response()->json(['status'=>1,'message'=>'Active Term Set']);
             }
             return response()->json(['status'=>2,'message'=>'failed to submit']);
         }
@@ -113,72 +122,47 @@ class SchoolTermController extends Controller
         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
     }
 
-    private function updateOrCreateActiveTerm($data){
+    private function updateOrCreateActiveTerm(array $data){
         try {
-            $request['school_pid'] = getSchoolPid();
-            $result = ActiveTerm::updateOrCreate(['term_pid' => $data['term_pid'], 'school_pid' => $data['school_pid']], $data);
-            if ($result) {
-                return redirect()->route('school.term')->with('success', 'active term set');
-            }
-            return redirect()->back()->with('error', 'failed to set active term');
+            return ActiveTerm::updateOrCreate(['school_pid' => $data['school_pid']], $data);
+            
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
+        }
+    }
+    private function updateOrCreateActiveTermDetail(array $data){
+        try {
+            return ActiveTermDetail::updateOrCreate([
+                                            'school_pid' => $data['school_pid'],
+                                            'session_pid' => $data['session_pid'],
+                                            'term_pid' => $data['term_pid'],
+                                        ], $data);
+            
+        } catch (\Throwable $e) {
+            $error = $e->getMessage();
+            logError($error);
         }
     }
 
-    public function loaSchoolActiveTerm(){
+    public function loaSchoolActiveTerm()
+    {
 
         $data = Term::join('active_terms', 'terms.pid', 'active_terms.term_pid')
         ->where(['terms.school_pid' => getSchoolPid()])
-            ->select(['terms.term', 'active_terms.begin','active_terms.end',
-                    'active_terms.note']);
+            ->select(['term', 'active_terms.updated_at'])->get();
+        return datatables($data)->editColumn('date',function($data){
+            return date('d F Y', strtotime($data->updated_at));
+        })->make(true);
+    }
+    public function loaSchoolActiveTermDetails(){
+
+        $data = Term::join('active_term_details', 'terms.pid', 'active_term_details.term_pid')
+                        ->join('sessions','sessions.pid', 'active_term_details.session_pid')
+        ->where(['terms.school_pid' => getSchoolPid()])
+            ->select(['term', 'begin','end','note','session'])->orderByDesc('active_term_details.id')->get();
         return datatables($data)->make(true);
 
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+     
 }

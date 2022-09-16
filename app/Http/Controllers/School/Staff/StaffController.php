@@ -169,7 +169,7 @@ class StaffController extends Controller
 
     public static function registerStaffToSchool(array $data){
         try {
-            $data['school_pid'] =  getSchoolPid();
+            $data['school_pid'] = $data['school_pid'] ?? getSchoolPid();
             $data['pid'] =  public_id();
             $data['staff_id'] = $data['staff_id'] ?? self::staffUniqueId();
             return SchoolStaff::create($data);

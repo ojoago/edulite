@@ -51,7 +51,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Choose Class Arm Rep</h5>
+                <h5 class="modal-title">Choose Class Arm Rep</h5>ccar
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -59,31 +59,28 @@
                     @csrf
 
                     <label for="category_pid">Category</label>
-                    <select name="category_pid" id="categorySelect2s" placeholder="select" class="categorySelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="category_pid" id="ccarcategorySelect2s" placeholder="select" class="categorySelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger category_pid_error"></p>
                     <label for="session_pid">Session</label>
-                    <select name="session_pid" id="sessionSelect2s" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="session_pid" id="ccarsessionSelect2s" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger session_pid_error"></p>
                     <label for="class_pid">Class</label>
-                    <select name="class_pid" id="classSelect2s" placeholder="select" class="classSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="class_pid" id="ccarclassSelect2s" placeholder="select" class="classSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger session_pid_error"></p>
                     <label for="term_pid">Term</label>
-                    <select name="term_pid" id="termSelect2s" placeholder="select" class="termSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="term_pid" id="ccartermSelect2s" placeholder="select" class="termSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger term_pid_error"></p>
                     <label for="arm_pid">Arm</label>
-                    <select name="arm_pid" id="armSelect2s" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="arm_pid" id="ccararmSelect2s" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger session_pid_error"></p>
-                    <label for="subject_pid">Subject</label>
-                    <select name="subject_pid[]" id="subjectSelect2" placeholder="select" multiple="multiple" class="subjectSelect2 form-control form-control-sm" style="width: 100%;">
-                    </select>
-                    <p class="text-danger session_pid_error"></p>
+
                     <label for="student_pid">Student</label>
-                    <select name="student_pid" id="studentSelect2s" style="width: 100%;" class="studentSelect2s form-control form-control-sm">
+                    <select name="student_pid" id="ccarstudentSelect2s" style="width: 100%;" class="studentSelect2s form-control form-control-sm">
                     </select>
                     <p class="text-danger teacher_pid_error"></p>
                 </form>
@@ -285,6 +282,53 @@
             <div class="modal-footer">
                 <div class="text-center">
                     <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updatePwd" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-uppercase text-info">Update Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" id="updatePwdForm">
+                    @csrf
+                    <div class="col-12">
+                        <label for="yourPassword" class="form-label">Old Password</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text bi bi-shield-lock-fill" id="inputGroupPrepend"></span>
+                            <input type="password" class="form-control" name="opwd" id="password" placeholder="Old Password">
+                        </div>
+                        <p class="text-danger opwd_error"></p>
+                    </div>
+                    <div class="col-12">
+                        <label for="yourPassword" class="form-label">New Password</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text bi bi-lock-fill" id="inputGroupPrepend"></span>
+                            <input type="password" class="form-control" name="password" id="password" placeholder="New Password">
+                        </div>
+                        <p class="text-danger password_error"></p>
+                    </div>
+                    <div class="col-12">
+                        <label for="yourPassword" class="form-label">Confirm New Password</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text bi bi-unlock-fill" id="inputGroupPrepend"></span>
+                            <input type="password" class="form-control" name="password_confirmation" id="password" placeholder="Confirm New Password">
+                        </div>
+                        <p class="text-danger password_confirmation_error"></p>
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button class="btn btn-primary w-100" type="button" id="updatePwdBtn">Update</button>
+                    <!-- <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button> -->
                 </div>
             </div>
         </div>

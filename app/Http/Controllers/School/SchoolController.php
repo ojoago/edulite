@@ -6,16 +6,16 @@ use Illuminate\Http\Request;
 use App\Models\School\School;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\School\Parent\ParentController;
-use App\Http\Controllers\School\Rider\SchoolRiderController;
 use App\Models\School\Student\Student;
-use App\Models\School\Staff\SchoolStaff;
-use App\Http\Controllers\Users\UserController;
-use App\Http\Controllers\School\Staff\StaffController;
-use App\Http\Controllers\School\Student\StudentClassController;
-use App\Http\Controllers\School\Student\StudentController;
-use App\Models\School\Registration\SchoolParent;
 use App\Models\School\Rider\SchoolRider;
+use App\Models\School\Staff\SchoolStaff;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Users\UserController;
+use App\Models\School\Registration\SchoolParent;
+use App\Http\Controllers\School\Staff\StaffController;
+use App\Http\Controllers\School\Parent\ParentController;
+use App\Http\Controllers\School\Student\StudentController;
+use App\Http\Controllers\School\Rider\SchoolRiderController;
 
 class SchoolController extends Controller
 {
@@ -39,7 +39,8 @@ class SchoolController extends Controller
     {
         $id=base64Decode($id);
         $schoolUser = SchoolStaff::join('schools','schools.pid','school_staff.school_pid')
-                        ->where(['school_pid'=>$id, 'school_staff.user_pid'=>getUserPid()])->first(['school_staff.pid', 'school_name']);
+                        ->where(['school_pid'=>$id, 'school_staff.user_pid'=>getUserPid()])
+                        ->first(['school_staff.pid', 'school_name', 'school_logo']);
         if(!$schoolUser){
             return redirect()->back()->with('error','you are doing it wrong');
         }
@@ -47,6 +48,7 @@ class SchoolController extends Controller
         setSchoolType();
         setSchoolUserPid($schoolUser->pid);
         setSchoolName($schoolUser->school_name);
+        setSchoolLogo($schoolUser->school_logo);
         return redirect()->route('my.school.dashboard');
     }
     public function mySchoolDashboard(){
@@ -55,36 +57,65 @@ class SchoolController extends Controller
         return view('school.dashboard.admin-dashboard', compact('data'));
     }
     public function createSchool(Request $request){
-        $request->validate([
-            "state_id" =>"required|int",
-            "lga_id" => "required|int",
-            "school_name" => "required",
+        $validator = Validator::make($request->all(),[
+            "state" => "required",
+            "type" => "required",
+            "lga" => "required",
+            "school_email" => "nullable|email|unique:schools",
+            "school_name" => "required|unique:schools",
             "school_contact" => "required",
-            "school_address" => "required",
+            "school_address" => "required|string",
             "school_moto" => "required",
-            "school_handle" => "required",
+            "school_handle" => "nullable|unique:schools",
+            "school_logo" => "nullable|image|mimes:jpeg,png,jpg,gif",
         ]);
-        try {
+
+        if(!$validator->fails()){
             $data = [
-                "state_id" => $request->state_id,
-                "lga_id" => $request->lga_id,
+                "state" => $request->state,
+                "type" => $request->type,
+                "lga" => $request->lga,
                 "school_name" => $request->school_name,
+                "school_email" => $request->school_email,
                 "school_contact" => $request->school_contact,
                 "school_address" => $request->school_address,
                 "school_moto" => $request->school_moto,
-                "school_handle" => $request->school_handle,
                 "pid" => public_id(),
                 "user_pid" => getUserPid(),
-                'school_handle'=>$this->schoolHandle(),
+                'school_handle' => $request->school_handle ?? $this->schoolHandle(),
             ];
-            $request['pid'] = public_id();
-            $request['user_pid'] = getUserPid();
-            School::create($data);
-        } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
-            dd($error);
+
+            if ($request->school_logo) {
+                $name = $data['school_name'] . '-logo';
+                $data['school_logo'] = saveImg($request->file('school_logo'), name: $name, path: 'logo');
+            }
+            try {
+               $result =  School::create($data);
+               if($result){
+                    // set school pid 
+                    setSchoolPid($result->pid);
+                   $data = [
+                       'school_pid'=>$result->pid,
+                       'user_pid'=>getUserPid(),
+                       'role'=> 205,//school admin
+                    ];
+                    // $user=
+                    StaffController::registerStaffToSchool($data);
+                    setSchoolPid();
+                    // if($user){
+                    //     return response()->json(['status' => 1, 'message' => 'School Created Successfully']);
+                    // }
+                    return response()->json(['status' => 1, 'message' => 'School Created Successfully']);
+                    }
+                } catch (\Throwable $e) {
+                    $error = $e->getMessage();
+                    logError($error);
+                    return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
+            }
+
         }
+
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
        
     }
 
@@ -211,7 +242,7 @@ class SchoolController extends Controller
                     'school_pid' => $student->pid,
                     'staff_pid' => getSchoolUserPid(),
                 ];
-                StudentClassController::createStudentClassRecord($studentClass);
+                StudentController::createStudentClassRecord($studentClass);
             }
             
         }

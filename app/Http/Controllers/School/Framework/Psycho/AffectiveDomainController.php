@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\School\Framework\Psycho;
 
-use App\Http\Controllers\Controller;
-use App\Models\School\Framework\Psycho\EffectiveDomain;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Models\School\Framework\Psycho\AffectiveDomain;
 
-class EffectiveDomainController extends Controller
+class AffectiveDomainController extends Controller
 {
     public function __construct()
     {
@@ -20,10 +20,10 @@ class EffectiveDomainController extends Controller
      */
     public function index()
     { {
-            $data = EffectiveDomain::join('school_staff', 'school_staff.pid', 'effective_domains.staff_pid')
+            $data = AffectiveDomain::join('school_staff', 'school_staff.pid', 'affective_domains.staff_pid')
             ->join('users', 'users.pid', 'school_staff.user_pid')
-            ->where(['effective_domains.school_pid' => getSchoolPid()])
-                ->get(['effective_domains.pid', 'title', 'effective_domains.created_at', 'effective_domains.max_score', 'effective_domains.status', 'username']);
+            ->where(['affective_domains.school_pid' => getSchoolPid()])
+                ->get(['affective_domains.pid', 'title', 'affective_domains.created_at', 'affective_domains.max_score', 'affective_domains.status', 'username']);
             return datatables($data)
                 // ->addColumn('action', function ($data) {
                 //     $html = '
@@ -106,7 +106,7 @@ class EffectiveDomainController extends Controller
     private function createOrUpdateEffectiveDomain($data)
     {
         try {
-            return  EffectiveDomain::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
+            return  AffectiveDomain::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);

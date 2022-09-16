@@ -10,6 +10,8 @@ use App\Models\School\Framework\Class\Category;
 use App\Models\School\Framework\Class\ClassArm;
 use App\Models\School\Framework\Class\ClassArmSubject;
 use App\Models\School\Student\Result\StudentClassScoreParam;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class ClassController extends Controller
 {
@@ -57,7 +59,7 @@ class ClassController extends Controller
             //     return $html;
             // })
             ->editColumn('created_at', function ($data) {
-                return date('d F Y', strtotime($data->created_at));
+                return $data->created_at->diffForHumans();
             })
             // ->rawColumns(['data', 'action'])
             ->make(true);
@@ -107,15 +109,23 @@ class ClassController extends Controller
             ->rawColumns(['data', 'status'])
             ->make(true);
     }
-    public function loadClassArmSubject()
+    public function loadClassArmSubject(Request $request)
     {
+        if(isset($request->param)){
+            $where =['class_arm_subjects.school_pid' => getSchoolPid(), 'arm_pid' => $request->param];
+        }else{
+            $where = ['class_arm_subjects.school_pid' => getSchoolPid()];
+        }
         $data = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
         ->join('subjects', 'subjects.pid', 'subject_pid')
         ->join('sessions', 'sessions.pid', 'session_pid')
         ->join('school_staff', 'school_staff.pid', 'class_arm_subjects.staff_pid')
-        ->join('user_details', 'user_details.user_pid', 'school_staff.user_pid')
-        ->where(['class_arm_subjects.school_pid' => getSchoolPid()])
-            ->get(['class_arm_subjects.pid', 'session','arm','subject', 'class_arm_subjects.created_at', 'class_arm_subjects.status', 'user_details.fullname']);
+        ->leftjoin('user_details', 'user_details.user_pid', 'school_staff.user_pid')
+        ->where($where)
+            ->get([
+                    'class_arm_subjects.pid', 'session','arm','subject', 
+                    'class_arm_subjects.created_at', 'class_arm_subjects.status',
+                     'user_details.fullname']);
         return datatables($data)
             ->addColumn('action', function ($data) {
                 return view('school.framework.class.class-subject-action-buttons',['data'=>$data]);
@@ -134,21 +144,26 @@ class ClassController extends Controller
     public function createCategory(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'category' => 'required',
+            'category' => ['required',Rule::unique('categories')->where(function($param)use ($request){
+                $param->where('school_pid','=',getSchoolPid())->where('pid','!=',$request->pid);
+            })],
             'head_pid'=>'required'
-        ],['head_pid.required'=>'Select Category Head or Principal']);
+        ],[
+            'head_pid.required'=>'Select Category Head or Principal',
+            'category.unique'=>$request->category. ' Category Already exists',
+        ]);
         if(!$validator->fails()){
             $data = [
                     'school_pid' => getSchoolPid(),
                     'staff_pid' => getSchoolUserPid(),
-                    'pid' => public_id(),
+                    'pid' => $request->pid ?? public_id(),
                     'category' => $request->category,
                     'head_pid' => $request->head_pid,
                     'description' => $request->description
                 ];
             $result = $this->insertOrUpdateCategory($data);
             if ($result) {
-                $msg = 'New School category created successfully';
+                $msg = 'New School Category created successfully';
                 if(isset($request->pid)){
                     $msg = 'School category update successfully';
                 }
@@ -163,7 +178,8 @@ class ClassController extends Controller
         try {
             return Category::updateOrCreate(['school_pid'=>$data['school_pid'],'pid'=>$data['pid']],$data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
+            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+
             logError($error);
            
         }
@@ -213,7 +229,7 @@ class ClassController extends Controller
             }
             return true;
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
+            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
             logError($error);
         }
     }
@@ -252,7 +268,7 @@ class ClassController extends Controller
     }
 
     private function insertOrUpdateClassArm($data){
-        // try {
+        try {
             $count = count($data['arms']);
             for ($i=0; $i < $count; $i++) { 
                 if(empty($data['arms'][$i])){
@@ -264,10 +280,11 @@ class ClassController extends Controller
                 ClassArm::updateOrCreate(['school_pid'=>$data['school_pid'],'pid'=>$data['pid']],$data);
             }
             return true;
-        // } catch (\Throwable $e) {
-        //     $error = $e->getMessage();
-        //     logError($error);
-        // }
+        } catch (\Throwable $e) {
+            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+
+            logError($error);
+        }
     }
     
     public function createClassArmSubject(Request $request){
@@ -280,7 +297,7 @@ class ClassController extends Controller
        ],[
             'category_pid.required'=>'Select Category',
             'class_pid.required'=>'Select Class',
-            'arm_pid.required'=>'Select Class Arm',
+            'arm_pid.required'=>'Select Class Arm at least',
             'subject_pid.required'=>'Select one subject at least',
             'session_pid.required'=>'Select Session',
         ]);
@@ -289,11 +306,14 @@ class ClassController extends Controller
             $data = [
                 'session_pid'=>$request->session_pid,
                 'sid'=>$request->subject_pid,
-                'arm_pid'=>$request->arm_pid,
+                // 'arm_pid'=>$request->arm_pid,
                 'school_pid'=>getSchoolPid(),
                 'staff_pid'=>getSchoolUserPid(),
             ];
-            $result = $this->updateOrcreateArmSubject($data);
+            foreach($request->arm_pid as $arm){
+                $data['arm_pid'] = $arm;
+                $result = $this->updateOrcreateArmSubject($data);
+            }
             if($result){
                 return response()->json(['status'=>1,'message'=>'Class Subject Created successfully!!!']);
             }
@@ -305,23 +325,28 @@ class ClassController extends Controller
 
     private function updateOrcreateArmSubject($data){
         try {
-            $r = false;
-            $dupParams = 
-            ['school_pid' => $data['school_pid'],
-                        // 'subject_pid' => $data['subject_pid'],
-                        'session_pid' => $data['session_pid'],
-                        'arm_pid' => $data['arm_pid'],
-                    ];
-                    // $sid = (array) ;
+
+                    $dupParams = $data ;
+                    unset($dupParams['sid']);
+                    $dataArray = $dupParams;
+                   unset($dupParams['staff_pid']);
+        // $sid = (array) ;
+                    $datas = [];
                     foreach($data['sid'] as $pid){
-                        $data['subject_pid'] = $dupParams['subject_pid'] = $pid;
-                        $data['pid']=public_id();
-                       $r = ClassArmSubject::updateOrCreate($dupParams, $data);
+                       $dupParams['subject_pid'] = $pid;
+                        $id = ClassArmSubject::where($dupParams)->first('id');
+                        if(!$id){
+                            $dataArray['pid']=public_id();
+                            $dataArray['subject_pid'] =  $pid;//
+                            $dataArray['updated_at'] = $dataArray['created_at'] = date('Y-m-d H:i:s');
+                            $datas[] = $dataArray;
+                        }
                     }
-                    return $r;
+                    
+                return ClassArmSubject::insert($datas);
 
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
+            $error = ['message'=> $e->getMessage(),'file'=> __FILE__,'line'=> __LINE__,'code'=>$e->getCode()];
             logError($error);
         }
     }

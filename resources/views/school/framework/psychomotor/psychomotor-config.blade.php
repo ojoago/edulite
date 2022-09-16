@@ -1,26 +1,26 @@
 @extends('layout.mainlayout')
-@section('title','Result COnfig')
+@section('title','Psychomotor & Affective Domain')
 @section('content')
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">CY EF GD</h5>
+        <h5 class="card-title">Psychomotor & Affective Domain</h5>
 
         <!-- Default Tabs -->
         <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#psychomotor" type="button" role="tab" aria-controls="home" aria-selected="true">CY</button>
+                <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#psychomotor" type="button" role="tab" aria-controls="home" aria-selected="true">Psychomotor</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#effectiveDomain" type="button" role="tab" aria-controls="profile" aria-selected="false">EF</button>
+                <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#effectiveDomain" type="button" role="tab" aria-controls="profile" aria-selected="false">Affective</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#psychoGrade" type="button" role="tab" aria-controls="contact" aria-selected="false">GD</button>
+                <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#psychoGrade" type="button" role="tab" aria-controls="contact" aria-selected="false">Grade Key</button>
             </li>
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="psychomotor" role="tabpanel" aria-labelledby="home-tab">
                 <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createPsychomotorModal">
-                    Create CY
+                    Create Psychomotor
                 </button>
                 <table class="table table-hover table-striped" id="psychomotorDataTable" width="100%">
                     <thead>
@@ -36,7 +36,7 @@
             </div>
             <div class="tab-pane fade" id="effectiveDomain" role="tabpanel" aria-labelledby="profile-tab">
                 <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createEffectiveDomainModal">
-                    Create EF
+                    Create Affective
                 </button>
                 <table class="table table-hover table-striped" id="affectiveDomainDataTable" width="100%">
                     <thead>
@@ -280,7 +280,7 @@
                     $('#createPsychomotorBtn').prop('disabled', false);
                     $('.overlay').hide();
                     if (data.status === 0) {
-                        alert_toast('Fill in form correctly', 'warning');
+                        alert_toast('Fill in form correctly, Note (Specail Character is not allowed)', 'warning');
                         $.each(data.error, function(prefix, val) {
                             $('.' + prefix + '_error').text(val[0]);
                         });
@@ -318,7 +318,7 @@
                     $('#createEffectiveDomainBtn').prop('disabled', false);
                     $('.overlay').hide();
                     if (data.status === 0) {
-                        alert_toast('Fill in form correctly', 'warning');
+                        alert_toast('Fill in form correctly Note (Specail Character is not allowed)', 'warning');
                         $.each(data.error, function(prefix, val) {
                             $('.' + prefix + '_error').text(val[0]);
                         });
@@ -384,7 +384,7 @@
                     $('#createPyschoGradeBtn').prop('disabled', false);
                     $('.overlay').hide();
                     if (data.status === 0) {
-                        alert_toast('Fill in form correctly', 'warning');
+                        alert_toast('Fill in form correctly Note (Specail Character is not allowed)', 'warning');
                         $.each(data.error, function(prefix, val) {
                             $('.' + prefix + '_error').text(val[0]);
                         });

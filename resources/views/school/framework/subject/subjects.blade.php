@@ -19,7 +19,7 @@
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createSubjectTypeModal">
-                    Create S T
+                    Create Subject Type
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="SubjectTypeTable">
@@ -38,7 +38,7 @@
             </div>
             <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
                 <button type="button" class="btn btn-primary mb-3 ms-auto" data-bs-toggle="modal" data-bs-target="#createSubjectModal">
-                    Create S
+                    Create Subject
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="SubjectTable">
@@ -93,7 +93,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create Lite S</h5>
+                <h5 class="modal-title">Create Subject</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

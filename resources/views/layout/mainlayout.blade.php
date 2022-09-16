@@ -1,21 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
 @include('layout.theme.head')
+@guest
+@include('layout.theme.guest.guest-header')
+@include('layout.flash')
+@yield('content')
+@include('layout.theme.guest.guest-footer')
+@endguest
+
 @auth
-@if(getSchoolPid())
-@include('layout.theme.school-header')
-@include('layout.theme.sidebar')
-@else
-@include('layout.theme.header')
-@endif
-@endauth
-<main id="main" class="main">
+    @if(getSchoolPid())
+        @include('layout.theme.school-header')
+        @include('layout.theme.sidebar')
+    @else
+    @include('layout.theme.header')
+    @endif
     @include('layout.flash')
     @yield('content')
-    @auth
     @include('layout.modals.modal')
-    @include('layout.theme.footer')
     @include('layout.mainjs')
+    @include('layout.theme.footer')
 </main>
 <!-- include('layout.partials.modals') -->
 @endauth

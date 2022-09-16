@@ -29,14 +29,9 @@ class GradeKeyController extends Controller
        
         $data = GradeKey::where('school_pid', getSchoolPid())->get(['title','grade','grade_point','remark','min_score','max_score','created_at','pid']);
         return datatables($data)
-            ->addColumn('action', function ($data) {
-                $html = '<a href="/reminders/' . $data->pid . '/done"><button class="btn btn-primary" type="submit" data-toggle="tooltip" title="Edit Session"><i class="bi bi-box-arrow-up" aria-hidden="true"></i></button></a>';
-                return $html;
-            })
             ->editColumn('created_at', function ($data) {
-                return date('d F Y', strtotime($data->created_at));
+                return $data->created_at->diffForHumans();
             })
-            ->rawColumns(['data', 'action'])
             ->make(true);
       
     }
@@ -103,9 +98,8 @@ class GradeKeyController extends Controller
                 }
                 return response()->json(['status'=>2, 'message'=>'Something Went Wrong']);
             } catch (\Throwable $e) {
-                $error = $e->getMessage();
+                $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
                 logError($error);
-                dd($error);
             }
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
@@ -117,53 +111,8 @@ class GradeKeyController extends Controller
             $data = SchoolGrade::create($data);
             return $data->pid;
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
+            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
             logError($error);
-            dd($error);
         }
-    }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
