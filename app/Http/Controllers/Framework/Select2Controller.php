@@ -128,7 +128,7 @@ class Select2Controller extends Controller
         return response()->json($data);
     }
     
-    // load parents 
+    // load school student 
     public function loadStudents(Request $request){
         $data = null;
         if ($request->has('q'))
@@ -140,6 +140,36 @@ class Select2Controller extends Controller
                                     ['school_pid', getSchoolPid()],
                                     ['status', 1],
                                     ['reg_number', 'like', '%' . $request->q . '%']])
+                                    ->limit($request->page_limit)
+            ->orderBy('id', 'DESC')->get(['pid', 'fullname', 'reg_number']); //
+        else
+        $result = Student::where('school_pid',getSchoolPid())
+                            ->limit(10)
+                            ->orderBy('id', 'DESC')->get(['pid', 'fullname','reg_number']);
+        if (!$result) {
+            return response()->json(['id' => null, 'text' => null]);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->fullname.' - '. $row->reg_number,
+            ];
+        }
+        return response()->json($data);
+    }
+    // load school student 
+    public function loadClassArmStudents(Request $request){
+        $data = null;
+        if ($request->has('q'))
+        $result = Student::where([['school_pid',getSchoolPid()],
+                                    ['status', 1],
+                                    ['fullname', 'like', '%' . $request->q . '%'],
+                                    ['current_class',$request->pid]
+                                    ])
+                                ->orwhere([
+                                    ['school_pid', getSchoolPid()],
+                                    ['status', 1],
+                                    ['current_class',$request->pid]])
                                     ->limit($request->page_limit)
             ->orderBy('id', 'DESC')->get(['pid', 'fullname', 'reg_number']); //
         else

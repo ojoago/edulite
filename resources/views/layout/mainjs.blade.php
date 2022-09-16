@@ -67,25 +67,33 @@
         });
         multiSelect2('#teacherSelect2s', 'createArmSubjectTeacherModal', 'school-teachers', 'Select Class Teacher');
         // assign class to staff
-        multiSelect2('.sessionSelect2s', 'assignArmToRepModal', 'session', 'Select Session');
-        multiSelect2('.termSelect2s', 'assignArmToRepModal', 'term', 'Select Term');
-        multiSelect2('.categorySelect2s', 'assignArmToRepModal', 'category', 'Select Category');
-        $('.categorySelect2s').on('change', function(e) {
+        // choose class rep  
+        multiSelect2('#ccarSessionSelect2', 'assignArmToRepModal', 'session', 'Select Session');
+        multiSelect2('#ccarTermSelect2', 'assignArmToRepModal', 'term', 'Select Term');
+        multiSelect2('#ccarCategorySelect2', 'assignArmToRepModal', 'category', 'Select Category');
+        $('#ccarCategorySelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('.classSelect2s', 'assignArmToRepModal', 'class', id, 'Select Class');
+            multiSelect2Post('#ccarClassSelect2', 'assignArmToRepModal', 'class', id, 'Select Class');
         });
-        $('.classSelect2s').on('change', function(e) {
+        $('#ccarClassSelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('.armSelect2s', 'assignArmToRepModal', 'class-arm', id, 'Select Class Arm');
+            multiSelect2Post('#ccarArmSelect2', 'assignArmToRepModal', 'class-arm', id, 'Select Class Arm');
         });
-        $('armSelect2s').on('change', function(e) {
+        $('#ccarArmSelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2('#studentSelect2s', 'assignArmToRepModal', 'class-arm-student', 'Select Class Student');
+            multiSelect2Post('#ccarStudentSelect2', 'assignArmToRepModal', 'class-arm-student', id, 'Select Class Student');
         });
+
+
 
         // createArmTeacherModal
         // 
         // 
+        //  class arm rep 
+        $('#assignArmToRepBtn').click(function() {
+            var route = "{{route('assign.class.arm.rep')}}";
+            submitFormAjax('assignArmToRepForm', 'assignArmToRepBtn', route);
+        });
         // subject class arm subject teacher 
         $('#createArmSubjectBtn').click(function() {
             var route = "{{route('school.staff.class')}}";

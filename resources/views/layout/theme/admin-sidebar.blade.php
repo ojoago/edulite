@@ -37,12 +37,12 @@
         </li>
         <li>
             <a href="{{route('school.subject.type')}}">
-                <i class="bi bi-circle"></i><span>Subject</span>
+                <i class="bi bi-circle"></i><span>Subjects</span>
             </a>
         </li>
         <li>
             <a href="{{route('school.result.config')}}">
-                <i class="bi bi-circle"></i><span>Result</span>
+                <i class="bi bi-circle"></i><span>Results</span>
             </a>
         </li>
         <li>
@@ -54,6 +54,14 @@
             <a href="{{route('school.psychomotor.config')}}">
                 <i class="bi bi-circle"></i><span>
                     Psychomotor
+                    <!-- cycomfrence -->
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('school.hostels.config')}}">
+                <i class="bi bi-circle"></i><span>
+                    Hostels
                     <!-- cycomfrence -->
                 </span>
             </a>
@@ -228,13 +236,13 @@
         </li>
 
         <li>
-            <a class="pointer" data-bs-target="#assignArmToPortalModal" data-bs-toggle="modal">
+            <a class="pointer" data-bs-target="#assignHostelToPortalModal" data-bs-toggle="modal">
                 <i class="bi bi-circle"></i><span>Portal</span>
             </a>
         </li>
 
         <li>
-            <a class="pointer" data-bs-target="#assignStudentRiderModal" data-bs-toggle="modal">
+            <a class="pointer" data-bs-target="#assignStudentToRiderModal" data-bs-toggle="modal">
                 <i class="bi bi-circle"></i><span>Rider</span>
             </a>
         </li>

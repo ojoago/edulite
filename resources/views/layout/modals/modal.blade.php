@@ -55,38 +55,38 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" class="" id="assignArmToRepModalForm">
+                <form action="" method="post" class="" id="assignArmToRepForm">
                     @csrf
 
                     <label for="category_pid">Category</label>
-                    <select name="category_pid" id="ccarcategorySelect2s" placeholder="select" class="categorySelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="category_pid" id="ccarCategorySelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger category_pid_error"></p>
                     <label for="session_pid">Session</label>
-                    <select name="session_pid" id="ccarsessionSelect2s" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="session_pid" id="ccarSessionSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger session_pid_error"></p>
                     <label for="class_pid">Class</label>
-                    <select name="class_pid" id="ccarclassSelect2s" placeholder="select" class="classSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="class_pid" id="ccarClassSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>
-                    <p class="text-danger session_pid_error"></p>
+                    <p class="text-danger class_pid_error"></p>
                     <label for="term_pid">Term</label>
-                    <select name="term_pid" id="ccartermSelect2s" placeholder="select" class="termSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="term_pid" id="ccarTermSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger term_pid_error"></p>
                     <label for="arm_pid">Arm</label>
-                    <select name="arm_pid" id="ccararmSelect2s" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="arm_pid" id="ccarArmSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>
-                    <p class="text-danger session_pid_error"></p>
+                    <p class="text-danger arm_pid_error"></p>
 
                     <label for="student_pid">Student</label>
-                    <select name="student_pid" id="ccarstudentSelect2s" style="width: 100%;" class="studentSelect2s form-control form-control-sm">
+                    <select name="student_pid" id="ccarStudentSelect2" style="width: 100%;" class="form-control form-control-sm">
                     </select>
-                    <p class="text-danger teacher_pid_error"></p>
+                    <p class="text-danger student_pid_error"></p>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="assignArmToRepModalBtn">Submit</button>
+                <button type="button" class="btn btn-primary" id="assignArmToRepBtn">Submit</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -301,7 +301,7 @@
                         <label for="yourPassword" class="form-label">Old Password</label>
                         <div class="input-group has-validation">
                             <span class="input-group-text bi bi-shield-lock-fill" id="inputGroupPrepend"></span>
-                            <input type="password" class="form-control" name="opwd" id="password" placeholder="Old Password">
+                            <input type="password" class="form-control" name="opwd" placeholder="Old Password">
                         </div>
                         <p class="text-danger opwd_error"></p>
                     </div>
@@ -309,7 +309,7 @@
                         <label for="yourPassword" class="form-label">New Password</label>
                         <div class="input-group has-validation">
                             <span class="input-group-text bi bi-lock-fill" id="inputGroupPrepend"></span>
-                            <input type="password" class="form-control" name="password" id="password" placeholder="New Password">
+                            <input type="password" class="form-control" name="password" placeholder="New Password">
                         </div>
                         <p class="text-danger password_error"></p>
                     </div>
@@ -317,7 +317,7 @@
                         <label for="yourPassword" class="form-label">Confirm New Password</label>
                         <div class="input-group has-validation">
                             <span class="input-group-text bi bi-unlock-fill" id="inputGroupPrepend"></span>
-                            <input type="password" class="form-control" name="password_confirmation" id="password" placeholder="Confirm New Password">
+                            <input type="password" class="form-control" name="password_confirmation" placeholder="Confirm New Password">
                         </div>
                         <p class="text-danger password_confirmation_error"></p>
                     </div>

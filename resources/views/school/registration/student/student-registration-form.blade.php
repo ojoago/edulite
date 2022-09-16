@@ -4,7 +4,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Multi Columns Form</h5>
+        <h5 class="card-title">Register Student</h5>
 
         <!-- Multi Columns Form -->
         <form class="row g-3" id="createStudentForm">
@@ -48,7 +48,7 @@
             </div>
             <div class="col-md-4">
                 <label for="dob" class="form-label">Date Of Birth</label>
-                <input type="date" class="form-control form-control-sm" id="dob" name="dob" required>
+                <input type="date" class="form-control form-control-sm" id="dob" onkeydown="return false" name="dob" required>
                 <p class="text-danger dob_error"></p>
             </div>
             <div class="col-md-4">

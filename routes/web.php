@@ -12,6 +12,7 @@ use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\School\Rider\SchoolRiderController;
 use App\Http\Controllers\Organisation\OrganisationController;
 use App\Http\Controllers\Organisation\OrgUserAccessController;
+use App\Http\Controllers\School\Student\StudentClassController;
 use App\Http\Controllers\School\Student\StudentScoreController;
 use App\Http\Controllers\Organisation\OrganisationUserController;
 use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
@@ -29,6 +30,7 @@ use App\Http\Controllers\School\Student\Promotion\PromoteStudentController;
 use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 use App\Http\Controllers\School\Framework\Attendance\AttendanceTypeController;
 use App\Http\Controllers\School\Framework\Assessment\AssessmentTitleController;
+use App\Http\Controllers\School\Framework\Hostel\HostelController;
 use App\Http\Controllers\School\Student\Attendance\StudentAttendanceController;
 use App\Http\Controllers\School\Student\Result\Comments\CommentResultController;
 use App\Http\Controllers\School\Student\Results\Termly\StudentTermlyResultController;
@@ -110,6 +112,8 @@ Route::post('lite-class', [ClassController::class, 'createClass'])->name('create
 Route::post('lite-arm', [ClassController::class, 'createClassArm'])->name('create.school.class.arm');
 // create class arm 
 Route::post('create-class-arm-subject', [ClassController::class, 'createClassArmSubject'])->name('create.school.class.arm.subject');
+// create class arm rep 
+Route::post('assign-class-arm-rep', [StudentClassController::class, 'assignClassRep'])->name('assign.class.arm.rep');
 // academic session
 Route::view('lite-session', 'school.framework.session.school-session')->name('school.session')->middleware('auth');
 // load session on tab with datatable server  
@@ -162,8 +166,10 @@ Route::post('load-available-category-subject', [Select2Controller::class, 'loadA
 Route::post('load-available-school-category-head', [Select2Controller::class, 'loadAvailableCategoryHead'])->name('load.available.school.category.head');
 //load school teachers
 Route::post('load-available-school-teachers', [Select2Controller::class, 'loadAvailableTeacher'])->name('load.available.school.category.head');
-//load school teachers
+//load school student
 Route::post('load-available-student', [Select2Controller::class, 'loadStudents'])->name('load.available.school.student');
+//load school student
+Route::post('load-available-class-arm-student', [Select2Controller::class, 'loadClassArmStudents'])->name('load.available.school.student');
 //load school parents
 Route::post('load-available-parent', [Select2Controller::class, 'loadSchoolParent'])->name('load.available.parent');
 //load states
@@ -203,6 +209,12 @@ Route::post('lite-class-attendance',[AttendanceTypeController::class, 'createCla
 // Psychomotor, effective domain and grade key 
 // Psychomotor 
 Route::view('lite-confrence', 'school.framework.psychomotor.psychomotor-config')->name('school.psychomotor.config')->middleware('auth');
+// Psychomotor, effective domain and grade key 
+// hostels  
+Route::view('hostels-config', 'school.framework.hostels.hostels-config')->name('school.hostels.config')->middleware('auth');
+//   
+Route::post('create-hostel', [HostelController::class,'createHostel'])->name('create.hostel');
+Route::get('load-hostels', [HostelController::class, 'loadHostel'])->name('load.hostels');
 
 Route::get('load-psychomotor',[PsychomotorController::class,'index'])->name('load.psychomotor');
 // create psychomotor

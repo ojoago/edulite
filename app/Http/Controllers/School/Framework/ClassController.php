@@ -10,7 +10,6 @@ use App\Models\School\Framework\Class\Category;
 use App\Models\School\Framework\Class\ClassArm;
 use App\Models\School\Framework\Class\ClassArmSubject;
 use App\Models\School\Student\Result\StudentClassScoreParam;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class ClassController extends Controller
@@ -393,6 +392,8 @@ class ClassController extends Controller
     public static function getClassTeacherPid($arm,$session,$term){
         return 'Hassan';
     }
+
+    
     // public function assignClassArmSubjectToTeacher(Request $request){
 
     // }
