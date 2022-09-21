@@ -16,6 +16,8 @@ use App\Models\School\Framework\Subject\Subject;
 use App\Models\School\Registration\SchoolParent;
 use App\Models\School\Framework\Subject\SubjectType;
 use App\Models\School\Framework\Class\ClassArmSubject;
+use App\Models\School\Framework\Hostel\Hostel;
+use App\Models\School\Rider\SchoolRider;
 
 class Select2Controller extends Controller
 {
@@ -221,6 +223,69 @@ class Select2Controller extends Controller
         }
         return response()->json($data);
     }
+    // load parents 
+    public function loadSchoolRider(Request $request){
+        $data = null;
+        if ($request->has('q')){
+            $param = [
+                ['school_riders.school_pid', getSchoolPid()],
+                ['school_riders.status', 1],
+                ['user_details.fullname', 'like', '%' . $request->q . '%']
+            ];
+            $limit = $request->page_limit;
+        }
+        else{
+            $param = [
+                ['school_riders.school_pid', getSchoolPid()],
+                ['school_riders.status', 1]
+            ];
+            $limit = 5;
+        }
+            
+        $result = SchoolRider::join('user_details', 'user_details.user_pid', 'school_riders.user_pid')
+                            ->join('users','users.pid', 'user_details.user_pid')
+                            ->where($param)
+                            ->limit($limit)
+                            ->orderBy('school_riders.id', 'DESC')
+                            ->get(['school_riders.pid', 'user_details.fullname','users.gsm']);
+        if (!$result) {
+            return response()->json(['id' => null, 'text' => null]);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->fullname.' - '. $row->gsm,
+            ];
+        }
+        return response()->json($data);
+    }
+
+    public function loadAvailablePortals(Request $request)
+    {
+        $data = null;
+        if ($request->has('q'))
+        $result = SchoolStaff::join('user_details', 'user_details.user_pid', 'school_staff.user_pid')
+        ->where(['school_staff.school_pid' => getSchoolPid(), 'school_staff.status' => 1])
+        ->where('user_details.fullname', 'like', '%' . $request->q . '%')
+            // ->limit($request->page_limit)
+            ->Where('role',307)
+            ->orderBy('school_staff.id', 'DESC')->limit(5)->get(['school_staff.pid', 'user_details.fullname', 'role']); //
+        else
+        $result = SchoolStaff::join('user_details', 'user_details.user_pid', 'school_staff.user_pid')
+        ->where(['school_staff.school_pid' => getSchoolPid(), 'school_staff.status' => 1])
+        ->Where('role', 307)
+            ->orderBy('school_staff.id', 'DESC')->limit(10)->get(['school_staff.pid', 'user_details.fullname', 'role']); //
+        if (!$result) {
+            return response()->json(['id' => null, 'text' => null]);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->fullname . ' - Role - ' . matchStaffRole($row->role),
+            ];
+        }
+        return response()->json($data);
+    }
     // load class 
     // select 2 
     public function loadAvailableClass(Request $request)
@@ -380,6 +445,27 @@ class Select2Controller extends Controller
         return response()->json($data);
     }
 
+    public function loadAvailableHostels(Request $request){
+        $data = null;
+        if ($request->has('q'))
+            $result = Hostel::where(['school_pid' => getSchoolPid()])->where('name', 'like', '%' . $request->q . '%')
+                ->orderBy('name')->limit($request->page_limit)->get(['pid', 'name']); //
+        else
+            $result = Hostel::where(['school_pid' => getSchoolPid()])
+                ->orderBy('name')->limit(10)->get(['pid', 'name']); //
+        if (!$result) {
+            $data[] = ['id' => null, 'text' => null];
+            return response()->json($data);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->name,
+            ];
+        }
+        return response()->json($data);
+    }
+    
     public function userTitle(){
 
     }

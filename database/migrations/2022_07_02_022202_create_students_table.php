@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('session_pid');
             $table->string('religion')->nullable();
             $table->string('title')->nullable()->default('student');
+            $table->string('role')->nullable()->default(600);
             $table->timestamps();
         });
     }

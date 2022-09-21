@@ -141,7 +141,8 @@ class StudentController extends Controller
             //log 
             return $student;
        } catch (\Throwable $e) {
-            $error = $e->getMessage();
+            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+
             logError($error);
        }
     }
@@ -152,7 +153,8 @@ class StudentController extends Controller
             unset($dupParams['rider_pid']);
             return StudentPickUpRider::updateOrCreate($dupParams,$data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
+            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+
             logError($error);
         }
     }

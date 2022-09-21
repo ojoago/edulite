@@ -173,8 +173,8 @@ function formatStaffProfile($row)
         return '
              <div class="row p-4">
                         <div class="col-md-6">
-                            <div class="text-center">
-                                <img src="'. $imgUrl. '" class="img img-responsive" alt="' . $row->fullname . ' passport">
+                            <div class="text-center" style="max-height:200px !important;">
+                                <img src="'. $imgUrl. '" class="img img-responsive rounded-circle" style="width:auto;max-height:200px;" alt="' . $row->fullname . ' passport">
                             </div>
                         </div>
                         <div class="col-md-6">

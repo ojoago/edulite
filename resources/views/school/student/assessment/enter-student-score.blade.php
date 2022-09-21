@@ -61,7 +61,9 @@
                         <form>
                             @csrf
                             @foreach($scoreParams as $row)
-                            <td scope="col"><input type="number" step="0.01" class="form-control form-control-sm studentCaScore" id="{{$row->assessment_title_pid}}" value="{{getTitleScore($student->pid,$row->assessment_title_pid)}}" placeholder="max obtainable {{--$row->score--}}"> </td>
+                            <td scope="col">
+                                <input type="number" step="0.01" class="form-control form-control-sm studentCaScore" id="{{$row->assessment_title_pid}}" value="{{getTitleScore($student->pid,$row->assessment_title_pid)}}" max_score="{{$row->score}}" placeholder="max obtainable {{--$row->score--}}">
+                            </td>
                             @endforeach
                             <td scope="col"></td>
                     </tr>
@@ -95,25 +97,36 @@
         });
         $('.studentCaScore').change(function() {
             var score = $(this).val(); //CA score
-            var title = $(this).attr('id'); // title pid
-            var spid = $(this).closest('tr').attr('id'); // student pid 
-            var token = $("input[name='_token']").val();
-            $.ajax({
-                url: "{{route('submit.student.ca')}}",
-                type: "POST",
-                data: {
-                    score: score,
-                    titlePid: title,
-                    student_pid: spid,
-                    _token: token,
-                },
-                success: function(data) {
-                    showTipMessage(data)
-                },
-                error: function(data) {
-                    showTipMessage('Last Score not saved!!!');
+
+            var max = $(this).attr('max_score'); // obtainable score
+            if (score <= max) {
+                var title = $(this).attr('id'); // title pid
+                var spid = $(this).closest('tr').attr('id'); // student pid 
+                var token = $("input[name='_token']").val();
+                $.ajax({
+                    url: "{{route('submit.student.ca')}}",
+                    type: "POST",
+                    data: {
+                        score: score,
+                        titlePid: title,
+                        student_pid: spid,
+                        _token: token,
+                    },
+                    success: function(data) {
+                        showTipMessage(data)
+                    },
+                    error: function(data) {
+                        showTipMessage('Last Score not saved!!!');
+                    }
+                });
+
+            } else {
+                if (score > max) {
+                    showTipMessage('Obtainable Score is ' + max);
                 }
-            });
+                $(this).val('');
+                return false;
+            }
         });
 
         $('.examStatus').click(function() {

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('rider_pid');
             $table->string('status')->default(1);
             $table->string('note')->nullable();
-            $table->string('school_user_pid')->nullable();
+            $table->string('staff_pid')->nullable();
             $table->timestamps();
         });
     }

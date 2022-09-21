@@ -1,5 +1,5 @@
 <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#{{$data->pid}}">
-    Create Hostel
+    <i class="bi bi-tools"></i>
 </button>
 <div class="modal fade" id="{{$data->pid}}" tabindex="-1">
     <div class="modal-dialog">
@@ -26,4 +26,4 @@
             </div>
         </div>
     </div>
-</div><!-- End Psychomotro Modal-->
+</div>

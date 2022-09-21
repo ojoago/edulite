@@ -4,7 +4,8 @@
         <span>Dashboard</span>
     </a>
 </li><!-- End Dashboard Nav -->
-
+<!-- school admin section  -->
+@if(getUserActiveRole() =="200" || getUserActiveRole()=="205" || hasRole())
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#framework" data-bs-toggle="collapse" href="#">
         <i class="bi bi-menu-button-wide"></i><span>Framework</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -163,6 +164,11 @@
             </a>
         </li>
         <li>
+            <a href="{{ route('school.staff.list') }}">
+                <i class="bi bi-circle"></i><span>Staff Class</span>
+            </a>
+        </li>
+        <li>
             <a href="{{route('school.student.list')}}">
                 <i class="bi bi-circle"></i><span>Students</span>
             </a>
@@ -191,6 +197,7 @@
                 <i class="bi bi-circle"></i><span>Staff</span>
             </a>
         </li>
+
         <li>
             <a href="{{route('school.student.list')}}">
                 <i class="bi bi-circle"></i><span>Students</span>
@@ -240,15 +247,23 @@
                 <i class="bi bi-circle"></i><span>Portal</span>
             </a>
         </li>
+        <li>
+            <a class="pointer" data-bs-target="#assignStudentToHostelModal" data-bs-toggle="modal">
+                <i class="bi bi-circle"></i><span>Link Student to Hostels</span>
+            </a>
+        </li>
 
         <li>
-            <a class="pointer" data-bs-target="#assignStudentToRiderModal" data-bs-toggle="modal">
-                <i class="bi bi-circle"></i><span>Rider</span>
+            <a class="pointer" data-bs-target="#linkStudentToRiderModal" data-bs-toggle="modal">
+                <i class="bi bi-circle"></i><span>Care/Rider</span>
             </a>
         </li>
     </ul>
 </li><!-- End Forms Nav -->
 
+@endif
+<!-- student assessment -->
+@if(getUserActiveRole() =="301" || getUserActiveRole()=="300" || hasRole())
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-layout-text-window-reverse"></i><span>Assessment</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -309,7 +324,9 @@
         </li>
     </ul>
 </li><!-- End Tables Nav -->
-
+@endif
+<!-- view student result  -->
+@if(getUserActiveRole() == "301" || getUserActiveRole() == "500" || getUserActiveRole() == "200" || getUserActiveRole() == "205" || hasRole())
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#result-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>Student Result</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -333,25 +350,21 @@
 
     </ul>
 </li><!-- End Charts Nav -->
-
+@endif
+@if(getUserActiveRole() == "301" || hasRole())
 <li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-bar-chart"></i><span>Attendance</span><i class="bi bi-chevron-down ms-auto"></i>
+    <a class="nav-link collapsed" data-bs-target="#attendance-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bar-chart"></i><span>My Student</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
-    <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+    <ul id="attendance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
             <a href="charts-chartjs.html">
-                <i class="bi bi-circle"></i><span>Staff</span>
+                <i class="bi bi-circle"></i><span>Student Class</span>
             </a>
         </li>
         <li>
             <a href="{{route('student.attendance.form')}}">
                 <i class="bi bi-circle"></i><span>Std</span>
-            </a>
-        </li>
-        <li>
-            <a href="charts-echarts.html">
-                <i class="bi bi-circle"></i><span>ECharts</span>
             </a>
         </li>
     </ul>
@@ -372,14 +385,11 @@
                 <i class="bi bi-circle"></i><span>swap student</span>
             </a>
         </li>
-        <li>
-            <a href="charts-echarts.html">
-                <i class="bi bi-circle"></i><span>ECharts</span>
-            </a>
-        </li>
     </ul>
 </li><!-- End Charts Nav -->
-
+@endif
+<!-- admission and payment section form clark n secretary  -->
+@if(getUserActiveRole() == "303" || getUserActiveRole() == "305" || getUserActiveRole() == "500" || hasRole())
 <!-- <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>Activities</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -447,32 +457,93 @@
         </li>
     </ul>
 </li><!-- End Charts Nav -->
+@endif
+@if(getUserActiveRole() == "303" || getUserActiveRole() == "305" || getUserActiveRole() == "500" || hasRole())
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#comment-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>Cmmt</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="comment-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        @if(getUserActiveRole() == "500" || hasRole())
         <li>
             <a href="{{route('principal.comment.termly.result')}}">
                 <i class="bi bi-circle"></i><span>Principal </span>
             </a>
         </li>
+        @endif
+        @if(getUserActiveRole() == "301" || hasRole())
         <li>
             <a href="{{route('teacher.comment.termly.result')}}">
                 <i class="bi bi-circle"></i><span>Teacher</span>
             </a>
         </li>
+        @endif
+        @if(getUserActiveRole() == "307" || hasRole())
         <li>
             <a href="{{route('portal.comment.termly.result')}}">
                 <i class="bi bi-circle"></i><span>Portals</span>
             </a>
         </li>
+        @endif
     </ul>
 </li><!-- End Charts Nav -->
-
+@endif
+<!-- parent  -->
+@if(getUserActiveRole() == "605" || hasRole())
 <li class="nav-item">
-    <a class="nav-link" href="{{route('principal.comment.termly.result')}}">
-        <i class="bi bi-bar-chart"></i><span>My Wards </span>
+    <a class="nav-link collapsed" data-bs-target="#guardian-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
-
-</li><!-- End Charts Nav -->
+    <ul id="guardian-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="#">
+                <i class="bi bi-circle"></i><span>Dashboard </span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="bi bi-circle"></i><span>My Wards</span>
+            </a>
+        </li>
+    </ul>
+</li>
+@endif
+<!-- rider  -->
+@if(getUserActiveRole() == "610" || hasRole())
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#guardian-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="guardian-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="#">
+                <i class="bi bi-circle"></i><span>Dashboard </span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="bi bi-circle"></i><span>My Wards</span>
+            </a>
+        </li>
+    </ul>
+</li>
+@endif
+@if(getUserActiveRole() == "600" || hasRole())
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#guardian-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="guardian-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="#">
+                <i class="bi bi-circle"></i><span>Dashboard </span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="bi bi-circle"></i><span>My Wards</span>
+            </a>
+        </li>
+    </ul>
+</li>
+@endif

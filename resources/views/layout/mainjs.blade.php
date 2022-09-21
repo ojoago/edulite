@@ -15,6 +15,19 @@
             var route = "{{route('update.password')}}";
             submitFormAjax('updatePwdForm', 'updatePwdBtn', route);
         });
+
+
+        // link portal to hostel 
+        multiSelect2('#ahtpSessionSelect2', 'assignHostelToPortalModal', 'session', 'Select Session');
+        multiSelect2('#ahtpTermSelect2', 'assignHostelToPortalModal', 'term', 'Select Term');
+        multiSelect2('#ahtpPortalSelect2', 'assignHostelToPortalModal', 'portals', 'Select Portals');
+        multiSelect2('#ahtpHostelSelect2', 'assignHostelToPortalModal', 'hostels', 'Select Hostels');
+
+        $('#assignHostelToPortalBtn').click(function() {
+            var route = "{{route('assign.hostel.to.portal')}}";
+            submitFormAjax('assignHostelToPortalForm', 'assignHostelToPortalBtn', route);
+        });
+
         // link student to parent 
         // load students 
         multiSelect2('#studentToParentstudentSelect2', 'linkStudentParentModal', 'student', 'Select student');
@@ -84,11 +97,15 @@
             multiSelect2Post('#ccarStudentSelect2', 'assignArmToRepModal', 'class-arm-student', id, 'Select Class Student');
         });
 
-
-
+        // link rider to student  
+        multiSelect2('#lstcrStudentSelect2', 'linkStudentToRiderModal', 'student', 'Select Student');
+        multiSelect2('#lstcrRiderSelect2', 'linkStudentToRiderModal', 'rider', 'Select Care/Rider');
+        //link rider to student
+        $('#linkStudentToRiderBtn').click(function() {
+            var route = "{{route('link.student.to.rider')}}";
+            submitFormAjax('linkStudentToRiderForm', 'linkStudentToRiderBtn', route);
+        });
         // createArmTeacherModal
-        // 
-        // 
         //  class arm rep 
         $('#assignArmToRepBtn').click(function() {
             var route = "{{route('assign.class.arm.rep')}}";

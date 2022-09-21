@@ -49,7 +49,7 @@
             </div>
             <div class="col-md-4">
                 <label for="dob" class="form-label">Date Of Birth</label>
-                <input type="date" class="form-control form-control-sm" id="dob" name="dob" required>
+                <input type="date" class="form-control form-control-sm" onkeydown="return false" id="dob" name="dob" required>
                 <p class="text-danger dob_error"></p>
             </div>
             <div class="col-md-4">
@@ -75,7 +75,7 @@
                 <p class="text-danger lga_error"></p>
             </div>
             <div class="col-md-4">
-                <label for="student_pid" class="form-label small">Wards</label>
+                <label for="student_pid" class="form-label small">Students</label>
                     <select id="studentSelect2" name="student_pid[]" multiple="multiple" class="form-control  form-control-sm">
                     </select>
                 <p class="text-danger student_pid_error"></p>

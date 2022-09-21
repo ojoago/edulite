@@ -486,7 +486,8 @@
                     selector: 'td:nth-child(2)'
                 },
                 responsive: true,
-                type: "post",
+                destroy:true,
+                // type: "post",
                 "ajax": {
                     url: "{{route('load.school.class.arm.subject')}}",
                     data: {
@@ -534,7 +535,9 @@
         });
         $('#classArmSubjectSelect2').on('change', function(e) {
             var id = $(this).val();
-            loadSubject(id);
+            if(id != null){
+                loadSubject(id);
+            }
         });
         // createArmTeacherModal
         multiSelect2('#termSelect24t', 'createArmTeacherModal', 'term', 'Select Term');

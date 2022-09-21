@@ -78,10 +78,10 @@
                 <label for="state" class="form-label">Primary Role</label>
                 <select id="roleSelect2" name="role" class="form-select form-select-sm " required>
                     <option disabled selected>Select Role</option>
-                    <option value="200">Super Admin</option>
+                    <!-- <option value="200">Super Admin</option> -->
                     <option value="205">School Admin</option>
-                    <option value="500">Pincipal</option>
-                    <option value="505">Head Teacher</option>
+                    <option value="500">Pincipal/Head Teacher</option>
+                    <!-- <option value="505">Head Teacher</option> -->
                     <option value="301">Form/Class Teacher</option>
                     <option value="300">Teacher</option>
                     <option value="303">Clerk</option>

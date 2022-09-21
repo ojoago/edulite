@@ -40,20 +40,31 @@ class SchoolController extends Controller
         $id=base64Decode($id);
         $schoolUser = SchoolStaff::join('schools','schools.pid','school_staff.school_pid')
                         ->where(['school_pid'=>$id, 'school_staff.user_pid'=>getUserPid()])
-                        ->first(['school_staff.pid', 'school_name', 'school_logo']);
+                        ->first(['school_staff.pid', 'school_name', 'school_logo', 'type','role']);
         if(!$schoolUser){
             return redirect()->back()->with('error','you are doing it wrong');
         }
         setSchoolPid($id);
-        setSchoolType();
+        setSchoolType($schoolUser->type);
         setSchoolUserPid($schoolUser->pid);
         setSchoolName($schoolUser->school_name);
         setSchoolLogo($schoolUser->school_logo);
+        setDefaultLanding(true);
+        setUserActiveRole($schoolUser->role);
+        // dd(getUserActiveRole());
+        // check user role and redirect to a corresponding dashboard
         return redirect()->route('my.school.dashboard');
     }
     public function mySchoolDashboard(){
        
-        $data = School::where('pid', getSchoolPid())->get();
+        // $data = School::where('pid', getSchoolPid())->get()->dd();
+        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $students = Student::where(['school_pid'=>getSchoolPid(),'status'=>1])->count();
+        $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $parents = DB::table('school_parents as p')
+                        ->join('students as s','s.parent_pid','p.pid')
+                        ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->count('p.id');
+        $data = ['staff'=>$staff, 'students'=> $students, 'riders'=> $riders, 'parents'=> $parents];
         return view('school.dashboard.admin-dashboard', compact('data'));
     }
     public function createSchool(Request $request){

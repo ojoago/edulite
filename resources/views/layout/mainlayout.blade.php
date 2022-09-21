@@ -1,9 +1,9 @@
 @include('layout.theme.head')
 @guest
-@include('layout.theme.guest.guest-header')
-@include('layout.flash')
-@yield('content')
-@include('layout.theme.guest.guest-footer')
+    @include('layout.theme.guest.guest-header')
+    @include('layout.flash')
+    @yield('content')
+    @include('layout.theme.guest.guest-footer')
 @endguest
 
 @auth

@@ -67,22 +67,24 @@ use App\Http\Controllers\Auths\AuthController;
         session(['schoolLogo'=>$logo]); 
     }
      function getSchoolLogo(){ //set school logo
-        $path = session('schoolLogo') ? '/files/logo/'. session('schoolLogo') : '/themes/img/logo.png';
+        $path = session('schoolLogo') ? '/files/logo/'. session('schoolLogo') : '/themes/img/logo.png'; //'files/edulite/edulite logo.png'
         return $path; 
     }
     function getSchoolUserPid(){ //set pid key of the table to be acted upone 
         return base64Decode(session('schoolUserPid')); //get user pid
     }
     function setUserActiveRole($code=null){
-        if($code){
-            session(['userActiveRole'=>$code]); //get user pid
-        }else{
-            session(['userActiveRole'=>null]); //get user pid
-        }
+        session(['userActiveRole'=>$code]); //user role
     }
+   
     function getUserActiveRole(){
-        return 200;
-        return base64Decode(session('userActiveRole')); 
+        return session('userActiveRole'); 
+    }
+    function hasRole($role=false){
+        return $role;
+    }
+    function deniedAccess($role=false){
+        return $role;
     }
     function setSchoolType($type=1){
         session(['schoolType' => $type]); //get  Type
@@ -91,13 +93,18 @@ use App\Http\Controllers\Auths\AuthController;
         return session('schoolType'); 
     }
 
-    function setAuthFullname($name=null){
-        session(['authFullname' => $name]); //get  Type
+    function setAuthFullName($name=null){
+        session(['authFullname' => $name]); 
     }
     function getAuthFullname(){
-       return session('authFullname'); //get  Type
+       return session('authFullname'); 
     }
-     
+    function setDefaultLanding($l=false){
+        session(['defaultLanding' => $l]); 
+    }
+    function getDefaultLanding(){
+       return session('defaultLanding'); 
+    }
     function getUserPid(){
         if(auth()->user()){
             return auth()->user()['pid'];
@@ -118,13 +125,11 @@ use App\Http\Controllers\Auths\AuthController;
         return redirect()->route('login')->with('danger', 'Your Session has expired');
     }
 
-
+   
     function matchStaffRole($role){
         $role =  match($role){
-                '200'=> 'Super Admin',
+                '200'=> 'School Super Admin',
                 '205'=> 'School Admin',
-                '500'=> 'Pincipal',
-                '505'=> 'Head Teacher',
                 '301'=> 'Form/Class Teacher',
                 '300'=> 'Teacher',
                 '303'=> 'Clerk',
@@ -132,6 +137,13 @@ use App\Http\Controllers\Auths\AuthController;
                 '307'=> 'Portals',
                 '400'=> 'Office Assisstnace',
                 '405'=> 'Security',
+                '500'=> 'Pincipal/Head Teacher',
+                // '505'=> 'Head Teacher',
+                '600'=> 'Student',
+                '605'=> 'Parent/Guardian',
+                '610'=> 'Rider',
+                '700'=> 'Agent/Referer',
+                '710'=> 'Partners',
                 default=>''
                 };
        return $role; 
@@ -235,7 +247,7 @@ function saveImg($image,$path='images',$name=null)
     if(!$name){
         $name = getSchoolPid() . '-' . public_id();
     }
-    $name = str_replace('/','-',$name.'.'. $image->extension());
+    $name = str_replace('/','-',$name.' edulite.'. $image->extension());
     $height = Image::make($image)->height();//get image width
     $width = Image::make($image)->width();
     $new_width = $width * $percent;

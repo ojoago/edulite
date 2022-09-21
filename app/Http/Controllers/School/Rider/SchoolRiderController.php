@@ -109,7 +109,7 @@ class SchoolRiderController extends Controller
                         if ($rider) {
                             if ($request->student_pid) {
                                 $data = [
-                                    'school_user_pid' => getSchoolUserPid(),
+                                    'staff_pid' => getSchoolUserPid(),
                                     'rider_pid' => $rider->pid,
                                     'school_pid' => $schoolPid,
                                 ];
@@ -158,6 +158,8 @@ class SchoolRiderController extends Controller
         //             ->orderByDesc('p.id')->get();
         // echo formatRiderProfile($data);
     }
+
+
     public static function createSchoolRider($data){
         $dupParams = [
           'user_pid'=>$data['user_pid'],    
@@ -167,11 +169,36 @@ class SchoolRiderController extends Controller
         try {
             return SchoolRider::updateOrCreate($dupParams,$data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
+            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+
             logError($error);
         }
     }
 
+    public function linkStudentToRider(Request $request){
+        $validator = Validator::make($request->all(),[
+            'rider_pid'=>'required',
+            'student_pid'=>'required',
+        ],['rider_pid.required'=>'Select Care/Rider', 'student_pid.required'=>'Select 1 Student at least']);
+
+        if(!$validator->fails()){
+            $data = [
+                'staff_pid' => getSchoolUserPid(),
+                'rider_pid' => $request->rider_pid,
+                'school_pid' => getSchoolPid(),
+            ];
+            foreach($request->student_pid as $std) {
+                $data['student_pid'] = $std;
+                $result = StudentController::linkPickUperRiderToStudent($data);
+            }
+            if($result){
+                
+                return response()->json(['status'=>1,'message'=>'Student Linked to Care/Rider']);
+            }
+            return response()->json(['status'=>'error','message'=>'Something Went Wrong... error logged']);
+        }
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+    }
     public static function riderUniqueId()
     {
         $id = self::countRider() + 1;

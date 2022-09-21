@@ -15,12 +15,17 @@ class SubjectController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        if (isset($request->param)) {
+            $where = ['subjects.school_pid' => getSchoolPid(), 'subjects.category_pid' => $request->param];
+        } else {
+            $where = ['subjects.school_pid' => getSchoolPid()];
+        }
         $data = Subject::join('school_staff', 'school_staff.pid', 'subjects.staff_pid')
         ->join('subject_types', 'subject_types.pid', 'subjects.subject_type_pid')
         ->join('users', 'users.pid', 'school_staff.user_pid')
-        ->where(['subjects.school_pid' => getSchoolPid()])
+        ->where($where)
             ->get(['subjects.pid','subject', 'subjects.status','subject_type', 'subjects.created_at', 'subjects.description', 'username']);
         return datatables($data)
             ->addColumn('action', function ($data) {

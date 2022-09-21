@@ -5,13 +5,13 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>{{env('APP_NAME', 'EduLite')}} - @yield('title')</title>
+  <title>{{env('APP_NAME', 'EuLite')}} - @yield('title')</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="{{asset('themes/img/favicon.png')}}" rel="icon">
-  <link href="{{asset('themes/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
+  <link href="{{asset('files/edulite/edulite favicon.png')}}" rel="icon">
+  <link href="{{asset('files/edulite/edulite favicon.png')}}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">

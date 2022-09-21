@@ -106,13 +106,13 @@ class AuthController extends Controller
             'email' => 'required',
             'password' => 'required',
         ]);
-        // $pid = User::where('email',$request->email)
-        //                 ->orwhere('gsm', $request->email)
-        //                 ->orwhere('username', $request->email)->pluck('pid')->first();
-        if (auth()->attempt($request->only('email', 'password'))) {
+        $username = User::where('email',$request->email)
+                        ->orwhere('gsm', $request->email)
+                        ->orwhere('username', $request->email)->pluck('username')->first();
+        if (auth()->attempt(['username'=>$username, 'password'=>$request->password,/*$request->only('email', 'password')*/])) {
             $name = authUsername();
-            setAuthFullname($name);
             self::clearAuthSession();
+            setAuthFullName($name);
             return redirect()->route('users.dashboard');
         }
         return back()->with('message', "error|Invalid login details");
@@ -120,6 +120,7 @@ class AuthController extends Controller
 
     public function logout(Request $request){
         self::logUserout();
+        setAuthFullName();
         return redirect()->route('login');
     }
     public function logoutSchool(){
@@ -135,7 +136,7 @@ class AuthController extends Controller
     public static function clearAuthSession(): void
     {
         setActionablePid();
-        setAuthFullname();
+        setDefaultLanding();
         self::clearSchoolSession();
     }
     public static function clearSchoolSession(): void

@@ -71,7 +71,24 @@ use App\Models\Users\UserDetail;
         $session = Session::where(['school_pid'=>getSchoolPid(),'pid'=>$pid])->pluck('session')->first();
         return $session;
     }
+function activeSessionName()
+{
+    $session = DB::table('active_sessions as a')
+            ->join('sessions as s','s.pid','a.session_pid')
+            ->where('a.school_pid',getSchoolPid())->orderBy('a.id', 'DESC')
+            ->pluck('session')->first();
+    return $session;
+}
 
+function activeTermName()
+{
+    $term = DB::table('active_terms as a')
+            ->join('terms as t','t.pid','a.term_pid')
+            ->where('a.school_pid', getSchoolPid())
+            ->orderBy('a.id', 'DESC')->pluck('term')->first();
+    // $term = ActiveTerm::where('school_pid', getSchoolPid())->orderBy('id', 'DESC')->pluck('term_pid')->first();
+    return $term;
+}
     // psychomoter 
 
     function getPsychoKeyScore($student,$param,$key){

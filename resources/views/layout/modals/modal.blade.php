@@ -287,6 +287,75 @@
         </div>
     </div>
 </div>
+<!-- link portal to hostel -->
+<div class="modal fade" id="assignHostelToPortalModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign Hostel to Portal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" class="" id="assignHostelToPortalForm">
+                    @csrf
+                    <label for="session_pid">Session</label>
+                    <select name="session_pid" id="ahtpSessionSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger session_pid_error"></p>
+                    <label for="term_pid">Term</label>
+                    <select name="term_pid" id="ahtpTermSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger term_pid_error"></p>
+                    <label for="portal_pid">Portals</label>
+                    <select name="portal_pid" id="ahtpPortalSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger portal_pid_error"></p>
+                    <label for="hostel_pid">Hostels</label>
+                    <select name="hostel_pid[]" id="ahtpHostelSelect2" multiple="multiple" style="width: 100%;" class="form-control form-control-sm">
+                    </select>
+                    <p class="text-danger hostel_pid_error"></p>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button class="btn btn-primary" type="button" id="assignHostelToPortalBtn">Submit</button>
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="linkStudentToRiderModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Link Student To Care/Rider</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" class="" id="linkStudentToRiderForm">
+                    @csrf
+                    <label for="rider_pid">Care/Rider</label>
+                    <select name="rider_pid" id="lstcrRiderSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger rider_pid_error"></p>
+                    <label for="student_pid">Students</label>
+                    <select name="student_pid[]" id="lstcrStudentSelect2" multiple="multiple" style="width: 100%;" class="form-control form-control-sm">
+                    </select>
+                    <p class="text-danger student_pid_error"></p>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button class="btn btn-primary" type="button" id="linkStudentToRiderBtn">Submit</button>
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="updatePwd" tabindex="-1">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">

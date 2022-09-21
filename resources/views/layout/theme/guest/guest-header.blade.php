@@ -1,11 +1,21 @@
 <div class="container">
-    <section class="section register min-vh-50 d-flex flex-column align-items-center justify-content-center py-4">
-        <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+    <div class="d-flex justify-content-center py-4">
+        <a href="{{url('/')}}" class="logo d-flex align-items-center w-auto">
+            <img src="{{asset('files/edulite/edulite logo.png')}}" alt="EduLite" style="height:auto;">
+            <span class="d-none d-lg-block">{{env('APP_NAME', 'EduLite')}}</span>
+        </a>
+    </div>
+    <style>
+        #user-main {
+            margin-top: 60px !important;
+            padding: 20px 30px;
+            transition: all 0.3s;
+        }
 
-                <div class="d-flex justify-content-center py-4">
-                    <a href="{{url('/')}}" class="logo d-flex align-items-center w-auto">
-                        <img src="{{asset(getSchoolLogo())}}" alt="">
-                        <span class="d-none d-lg-block">{{env('APP_NAME', 'EduLite')}}</span>
-                    </a>
-                </div><!-- End Logo -->
+        #footer {
+            margin: 0 !important;
+        }
+    </style>
+
+
+    <!-- End Logo -->

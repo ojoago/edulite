@@ -5,12 +5,12 @@
              @if(getSchoolPid())
              <a href="{{route('my.school.dashboard')}}" class="logo d-flex align-items-center">
                  <img src="{{asset(getSchoolLogo())}}" alt="logo">
-                 <span class="d-none d-lg-block" id="schoolName">{{getSchoolName()}}</span>
+                 <span class="d-none d-lg-block ellipsis-text" id="schoolName">{{getSchoolName()}}</span>
              </a>
              @else
              <a href="{{route('users.dashboard')}}" class="logo d-flex align-items-center">
                  <img src="{{asset(getSchoolLogo())}}" alt="">
-                 <span class="d-none d-lg-block" id="schoolName">{{env('APP_NAME', 'EduLite')}}</span>
+                 <span class="d-none d-lg-block ellipsis-text" id="appName">{{env('APP_NAME', 'EuLite')}}</span>
              </a>
              @endif
              <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -183,7 +183,7 @@
 
                      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                          <li class="dropdown-header">
-                             <h6>{{getAuthFullname()}}</h6>
+                             <h6 class="ellipsis-text">{{getAuthFullname()}}</h6>
                              <!-- <span>Web Designer</span> -->
                          </li>
                          <li>
