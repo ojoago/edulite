@@ -24,7 +24,6 @@ use App\Http\Controllers\School\Framework\Psycho\PsychoGradeKeyController;
 use App\Http\Controllers\School\Framework\Session\SchoolSessionController;
 use App\Http\Controllers\School\Registration\ParentRegistrationController;
 use App\Http\Controllers\School\Framework\Psycho\AffectiveDomainController;
-use App\Http\Controllers\School\Framework\Psycho\EffectiveDomainController;
 use App\Http\Controllers\School\Registration\StudentRegistrationController;
 use App\Http\Controllers\School\Student\Promotion\PromoteStudentController;
 use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
@@ -81,6 +80,11 @@ Route::post('base-user-access',[OrgUserAccessController::class,'store'])->name('
 Route::view('create-school', 'school.create-school')->name('create.school');
 Route::post('create-school', [SchoolController::class, 'createSchool']);
 Route::get('lite-sign-in/{id}', [SchoolController::class, 'schoolLogin'])->name('login.school');
+//load states
+Route::post('load-available-state', [Select2Controller::class, 'loadStates'])->name('load.available.state');
+//load school states
+Route::post('load-available-state-lga', [Select2Controller::class, 'loadStatesLga'])->name('load.available.state.lga');
+    
 Route::middleware('schoolAuth')->group(function(){
     // user create school 
     Route::get('lite-dashboard', [SchoolController::class, 'mySchoolDashboard'])->name('my.school.dashboard');
@@ -168,18 +172,16 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-available-school-category-head', [Select2Controller::class, 'loadAvailableCategoryHead'])->name('load.available.school.category.head');
     //load school teachers
     Route::post('load-available-school-teachers', [Select2Controller::class, 'loadAvailableTeacher'])->name('load.available.school.teacher');
-    //load school student
+    //load all school student
     Route::post('load-available-student', [Select2Controller::class, 'loadStudents'])->name('load.available.school.student');
+    //load boarding school student
+    Route::post('load-available-boarding-student', [Select2Controller::class, 'loadBoardingStudents'])->name('load.available.boarding.student');
     //load school student
     Route::post('load-available-class-arm-student', [Select2Controller::class, 'loadClassArmStudents'])->name('load.available.school.arm.student');
     //load school parents
     Route::post('load-available-parent', [Select2Controller::class, 'loadSchoolParent'])->name('load.available.parent');
 
     Route::post('load-available-rider', [Select2Controller::class, 'loadSchoolRider'])->name('load.available.rider');
-    //load states
-    Route::post('load-available-state', [Select2Controller::class, 'loadStates'])->name('load.available.state');
-    //load school states
-    Route::post('load-available-state-lga', [Select2Controller::class, 'loadStatesLga'])->name('load.available.state.lga');
     // load subject type 
     Route::post('load-available-subject-type', [Select2Controller::class, 'loadAvailableSubjectType'])->name('load.available.subject.type');
     // score settings 
@@ -217,17 +219,23 @@ Route::middleware('schoolAuth')->group(function(){
     // Psychomotor, effective domain and grade key 
     // Psychomotor 
     Route::view('lite-confrence', 'school.framework.psychomotor.psychomotor-config')->name('school.psychomotor.config');
+
+    Route::view('timetable-config', 'school.framework.timetable.timetable-config')->name('timetable.config');
     // Psychomotor, effective domain and grade key 
     // hostels  
-    Route::view('hostels-config', 'school.framework.hostels.hostels-config')->name('school.hostels.config');
     //   
-    Route::post('create-hostel', [HostelController::class, 'createHostel'])->name('create.hostel');
-    Route::get('load-hostels', [HostelController::class, 'loadHostel'])->name('load.hostels');
-    // load portals hostels 
-    Route::get('load-hostel-portal', [HostelController::class, 'loadHostelPortal'])->name('load.hostel.portals');
-    
-    Route::Post('assign-hostel-to-portal', [HostelController::class, 'assignHostelToPortal'])->name('assign.hostel.to.portal');
+    Route::middleware('boardingSchool')->group(function(){
+        Route::view('hostels-config', 'school.framework.hostels.hostels-config')->name('school.hostels.config');
+        Route::post('create-hostel', [HostelController::class, 'createHostel'])->name('create.hostel');
+        Route::get('load-hostels', [HostelController::class, 'loadHostel'])->name('load.hostels');
+        // load portals hostels 
+        Route::get('load-hostel-portal', [HostelController::class, 'loadHostelPortal'])->name('load.hostel.portals');
+        Route::post('load-hostel-student', [HostelController::class, 'loadHostelStudent'])->name('load.hostel.students');
 
+        Route::Post('assign-hostel-to-portal', [HostelController::class, 'assignHostelToPortal'])->name('assign.hostel.to.portal');
+        // assign hostel to student 
+        Route::Post('assign-hostel-to-student', [HostelController::class, 'assignHostelToStudent'])->name('assign.hostel.to.student');
+    });
     Route::get('load-psychomotor', [PsychomotorController::class, 'index'])->name('load.psychomotor');
     // create psychomotor
     Route::post('create-psychomotor', [PsychomotorController::class, 'createPsychomotor'])->name('create.psychomotor');
@@ -247,20 +255,30 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('lite-create-staff', 'school.registration.staff.create-staff')->name('create.staff.form');
     Route::view('lite-staff-list', 'school.staff.staff-list')->name('school.staff.list');
     Route::post('lite-staff', [StaffController::class, 'createStaff'])->name('create.school.staff');
-    Route::post('lite-staff-role/{id}', [StaffController::class, 'staffRole'])->name('school.staff.role');
+    Route::get('edit-staff/{id}', [StaffController::class, 'find'])->name('edit.staff');
+    // load staff details for editing 
+    Route::post('load-staff-detal-by-id', [StaffController::class, 'loadStaffDetailsById'])->name('load.staff.detail.by.id');
+    // Route::post('lite-staff-role/{id}', [StaffController::class, 'staffRole'])->name('school.staff.role');
     Route::post('lite-staff-access/{id}', [StaffController::class, 'staffAccessRight'])->name('school.staff.access');
     Route::post('school-staff-class', [StaffController::class, 'assignClassToStaff'])->name('school.staff.class');
     Route::post('lite-staff-subject', [StaffController::class, 'staffSubject'])->name('school.staff.subject');
-
+    // update staff images 
+    Route::post('update-staff-images', [StaffController::class, 'updateStaffImages'])->name('update.staff.image');
+    // update role 
+    Route::post('update-staff-role', [StaffController::class, 'updateStaffRole'])->name('update.staff.role');
+    // update status 
+    Route::get('update-staff-status/{id}', [StaffController::class, 'updateStaffStatus'])->name('update.staff.status');
 
     // student 
     // Route::view('lite-registration', 'school.registration.index')->name('school.registration');
     // student 
-    Route::view('lite-s-registration-form', 'school.registration.student.student-registration-form')->name('school.registration.student.form');
-    Route::post('lite-student-registration', [StudentRegistrationController::class, 'registerStudent'])->name('register.student');
+    Route::view('register-s', 'school.registration.student.register-student')->name('school.registration.student.form');
+    Route::post('register-student', [StudentRegistrationController::class, 'registerStudent'])->name('register.student');
+    // edit student 
+
     Route::post('link-student-parent', [StudentController::class, 'linkStudentToParent'])->name('link.student.parent');
 
-    Route::view('lite-parent-registration-form', 'school.registration.parent.register-parent')->name('school.parent.registration.form');
+    Route::view('register-p', 'school.registration.parent.register-parent')->name('school.parent.registration.form');
 
     Route::post('school-parent-registration', [ParentRegistrationController::class, 'registerParent'])->name('school.register.parent');
 
@@ -277,13 +295,13 @@ Route::middleware('schoolAuth')->group(function(){
 
     // uploads 
     // upload staff 
-    Route::view('upload-staff', ['school.uploads.staff.staff-upload'])->name('upload.staff');
+    Route::view('upload-staff', ['school.uploads.staff.upload-staff'])->name('upload.staff');
     // upload student 
-    Route::view('upload-student', ['school.uploads.student.student-upload'])->name('upload.student');
+    Route::view('upload-student', ['school.uploads.student.upload-student'])->name('upload.student');
     // upload parent 
-    Route::view('upload-parent', ['school.uploads.parent.parent-upload'])->name('upload.parent');
+    Route::view('upload-parent', ['school.uploads.parent.upload-parent'])->name('upload.parent');
     // upload rider 
-    Route::view('upload-rider', ['school.uploads.rider.rider-upload'])->name('upload.rider');
+    Route::view('upload-rider', ['school.uploads.rider.upload-rider'])->name('upload.rider');
 
 
     // link Activities 
@@ -307,31 +325,52 @@ Route::middleware('schoolAuth')->group(function(){
     // list 
     // list school staff 
     Route::view('lite-staff-list', 'school.lists.staff.staff-list')->name('school.staff.list');
+
     // load staff 
     // load active staff 
     Route::get('load-staff-list', [StaffController::class, 'index'])->name('load.staff.list');
     Route::get('in-active-staff-list', [StaffController::class, 'inActiveStaff'])->name('load.inactive.staff.list');
+    // all staff class 
+    Route::view('all-staff-classes', 'school.lists.staff.staff-classes')->name('school.staff.classes');
+    // load all staff classes goes here 
+    Route::post('load-all-staff-classes', [StaffController::class, 'loadAllStaffClasses'])->name('load.all.staff.classes');
+    // all staff subjects goes here view 
+    Route::view('all-staff-subjects', 'school.lists.staff.staff-subjects')->name('all.staff.subjects');
+    // load all staff subjects goes here 
+    Route::post('load-all-staff-subjects', [StaffController::class, 'loadAllStaffSubjects'])->name('load.all.staff.subjects');
 
     // profile 
     // staff profile 
     Route::get('staff-profile/{id}', [StaffController::class, 'staffProfile'])->name('school.staff.profile');
-    Route::post('loadstaff-profile', [StaffController::class, 'loadStaffProfile'])->name('load.staff.profile');
+    Route::post('load-staff-profile', [StaffController::class, 'loadStaffProfile'])->name('load.staff.profile');
+    Route::post('load-staff-classes', [StaffController::class, 'loadStaffClasses'])->name('load.staff.classes');
+    Route::post('load-staff-subjects', [StaffController::class, 'loadStaffSubject'])->name('load.staff.subjects');
 
 
     // student list 
     Route::view('lite-s-list', 'school.lists.student.student-list')->name('school.student.list');
-    Route::get('load-student-list', [StudentController::class, 'index'])->name('load.school.student.list');
+    // load active student 
+    Route::get('load-active-student', [StudentController::class, 'index'])->name('load.active.student.list');
+    // load diabled student 
+    Route::get('load-in-active-student', [StudentController::class, 'inActiveStudent'])->name('load.in.active.student');
+    Route::get('load-ex-student', [StudentController::class, 'exStudent'])->name('load.ex.student');
+    Route::get('update-student-status/{id}', [StudentController::class, 'updateStudentStatus'])->name('update.student.status');
     // student list 
-    Route::view('lite-p-list', 'school.lists.parent.parent-list')->name('school.parent.list');
+    Route::view('p-list', 'school.lists.parent.parent-list')->name('school.parent.list');
     Route::get('load-parent-list', [ParentController::class, 'index'])->name('load.school.parent.list');
     // student list 
     Route::view('lite-rider-list', 'school.lists.rider.rider-list')->name('school.rider.list');
     Route::get('load-rider-list', [SchoolRiderController::class, 'index'])->name('load.school.rider.list');
 
     // student profile 
-    Route::get('student-profile/{id}', [StudentController::class, 'studentProfile'])->name('school.student.profile');
+    Route::get('student-profile/{id}', [StudentController::class, 'studentProfile'])->name('student.profile');
+    // load student info for editing 
+    Route::get('edit-student/{id}', [StudentController::class, 'find'])->name('edit.student.info');
+    Route::post('load-student-detail-by-id', [StudentController::class, 'loadStudentDetailsById'])->name('load.student.details.by.id');
     Route::post('view-student-profile', [StudentController::class, 'viewStudentProfile'])->name('load.student.profile');
     Route::post('view-student-class-history', [StudentController::class, 'viewStudentClassHistroy'])->name('load.student.class');
+    
+    Route::post('load-student-riders', [StudentController::class, 'loadStudentRiders'])->name('load.student.riders');
     Route::post('view-student-results', [StudentController::class, 'viewStudentResult'])->name('load.student.result');
     // student profile 
     Route::get('parent-profile/{id}', [ParentController::class, 'parentProfile']);
@@ -339,7 +378,7 @@ Route::middleware('schoolAuth')->group(function(){
     // student profile 
     Route::get('rider-profile/{id}', [SchoolRiderController::class, 'riderProfile'])->name('school.rider.profile');
     Route::post('view-rider-profile', [SchoolRiderController::class, 'viewRiderProfile'])->name('view.rider.profile');
-    Route::get('load-rider-student', [SchoolRiderCntroller::class, 'viewRiderStudent'])->name('load.rider.student');
+    Route::post('load-rider-student', [SchoolRiderController::class, 'viewRiderStudent'])->name('load.rider.student');
 
 
 

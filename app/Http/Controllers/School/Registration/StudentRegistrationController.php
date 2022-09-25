@@ -5,12 +5,13 @@ namespace App\Http\Controllers\School\Registration;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\School\School;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
-use App\Http\Controllers\School\Student\StudentController;
-use App\Http\Controllers\Users\UserDetailsController;
 use App\Models\School\Framework\Class\ClassArm;
+use App\Http\Controllers\Users\UserDetailsController;
+use App\Http\Controllers\School\Student\StudentController;
 
 class StudentRegistrationController extends Controller
 {
@@ -39,38 +40,50 @@ class StudentRegistrationController extends Controller
             'firstname'=> 'required|string|min:3|regex:/^[a-zA-Z0-9\s]+$/',
             'lastname'=> 'required|string|min:3|regex:/^[a-zA-Z0-9\s]+$/',
             'othername'=> 'nullable|string|regex:/^[a-zA-Z0-9\s]+$/',
-            'gsm'=>'nullable|unique:users,gsm|min:11|max:11',
-            'username'=>'nullable|string|unique:users,username|min:3',
-            'email'=>'nullable|string|email|unique:users,email',
+            'gsm'=>['nullable','digits:11',
+                                Rule::unique('users')->where(function($param) use ($request){
+                                    $param->where('pid', '!=', $request->pid);
+                                })],
+            'username'=>['nullable', 'string', 'min:3', 
+                                Rule::unique('users')->where(function ($param) use ($request) {
+                                        $param->where('pid','!=', $request->pid);
+                                    })],
+            'email'=>['nullable', 'string', 'email', 
+                                Rule::unique('users')->where(function ($param) use ($request) {
+                                        $param->where('pid', '!=', $request->pid);
+                                    })],//|||unique:users,email
             'gender'=>'required|int',
             'dob'=>'required|date',
             'religion'=>'required',
-            // 'state'=>'required',
-            // 'lga'=>'required',
             'address'=>'required',
             'type'=>'required',
-            'session_pid'=>'required|string',
-            'term_pid'=>'required|string',
-            'category_pid'=>'required|string', 
-            'class_pid'=>'required|string',
-            'arm_pid'=>'required|string',
+            'session_pid'=> 'required_without:pid|string',
+            'term_pid'=>'required_without:pid|string',
+            'category_pid'=>'required_without:pid|string', 
+            'class_pid'=>'required_without:pid|string',
+            'arm_pid'=>'required_without:pid|string',
             'passport'=> 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]
-        // ,[
-        //     'dob.required'=>'Select Student Date of birth',
-        //     'firstname.required'=>'Enter Student First-Name',
-        //     'lastname.required'=>'Enter Student Lasst-Name',
-        //     'religion.required'=>'Select Student Religion',
-        //     // 'state.required'=>'Select Student State of Origin',
-        //     // 'lga.required'=>'Select LGA of Origin',
-        //     'address.required'=>'Enter Student Residence Address',
-        //     'type.required'=>'Select Student Type',
-        //     'session_pid.required'=>'Select Session for Student',
-        //     'term_pid.required'=>'Select Term for Student',
-        //     'category_pid.required'=>'Select Category for Student',
-        //     'class_pid.required'=>'Select Class for Student',
-        //     'arm_pid.required'=>'Select Class Arm for Student',
-        // ]
+        ,[
+            'dob.required'=>'Student Date of Birth is required',
+            'firstname.required'=>'Enter Student First-Name',
+            'lastname.required'=>'Enter Student Lasst-Name',
+            'religion.required'=>'Select Student Religion',
+            // 'state.required'=>'Select Student State of Origin',
+            // 'lga.required'=>'Select LGA of Origin',
+            'address.required'=>'Enter Student Residence Address',
+            'type.required'=>'Select Student Type',
+            'session_pid.required_without'=>'Select Session for Student',
+            'term_pid.required_without'=>'Select Term for Student',
+            'category_pid.required_without'=>'Select Category for Student',
+            'class_pid.required_without'=>'Select Class for Student',
+            'arm_pid.required_without'=>'Select Class Arm for Student',
+            'gsm.digits'=> 'phone number should be empty 11 digits',
+            'lastname.regex'=> 'Special character is not allowed',
+            'lastname.regex'=> 'Special character is not allowed',
+            'othername.regex'=> 'Special character is not allowed',
+        ]
+
     );
         if(!$validator->fails()){
             $data = [
@@ -79,6 +92,7 @@ class StudentRegistrationController extends Controller
                 'username' => $request->username ?? AuthController::uniqueUsername($request->firstname),
                 'email' => $request->email,
                 'gsm' => $request->gsm,
+                'pid' => $request->user_pid,
             ];
             $detail = [
                 'firstname' => $request->firstname,
@@ -92,7 +106,6 @@ class StudentRegistrationController extends Controller
                 'address' => $request->address,
             ];
             $student = [
-                'reg_number' => StudentController::studentUniqueId(),
                 'gender' => $request->gender,
                 'dob' => $request->dob,
                 'religion' => $request->religion,
@@ -100,16 +113,18 @@ class StudentRegistrationController extends Controller
                 'lga' => $request->lga,
                 'address' => $request->address,
                 'type' => $request->type,
-                'session_pid' => $request->session_pid,
-                'term_pid' => $request->term_pid,
-                'admitted_class' => $request->arm_pid,
-                'current_class' => $request->arm_pid,
-                'current_session_pid' => $request->session_pid,
+                'pid' => $request->pid ?? public_id(),
                 'staff_pid' => getSchoolUserPid(),
-                'school_pid'=>getSchoolPid(),
-                'pid'=>public_id(),
+                'school_pid' => getSchoolPid(),
             ];
-            
+            if(!$request->pid){
+                $student['reg_number'] =  StudentController::studentUniqueId();
+                $student['session_pid'] =  $request->session_pid;
+                $student['term_pid'] =  $request->term_pid;
+                $student['admitted_class'] =  $request->arm_pid;
+                $student['current_class'] =  $request->arm_pid;
+                $student['current_session_pid'] =  $request->session_pid;
+            }
 
             $studentClass = [
                 'session_pid' => $request->session_pid,
@@ -121,26 +136,31 @@ class StudentRegistrationController extends Controller
                 // create user 
                 $user = AuthController::createUser($data);
                 if ($user) {
-                    $detail['user_pid'] = $user->pid;// grt user pid and foreign key
+                    $detail['user_pid'] = $request->user_pid ?? $user->pid;// grt user pid and foreign key
                     // create user detail 
                     $userDetails = UserDetailsController::insertUserDetails($detail);
                     
                     if ($userDetails) {
-                        $student['fullname'] = $userDetails->fullname;//get student fullname and save along with student info
-                        $student['user_pid'] = $user->pid;//get student fullname and save along with student info
+                        $student['fullname'] = $userDetails->fullname ?? UserDetailsController::getFullname($request->pid);//get student fullname and save along with student info
+                        $student['user_pid'] = $request->user_pid ?? $user->pid;//get student user pid and save along with student info
                         // and prevent update if student leaves school 
                         if($request->passport){
-                            $name = $student['reg_number'].'-passport';
+                            $name = ($request->reg_number ?? $student['reg_number']).'-passport';
                             $student['passport'] = saveImg(image: $request->file('passport'),name:$name);
                         }
                         $studentDetails = StudentController::createSchoolStudent($student);// create school student
                         if ($studentDetails) {
+                            if($request->parent_pid){
+                                $student_pid =  $studentDetails->pid ?? $request->pid;
+                                StudentController::linkParentToStudent(parentPid: $request->parent_pid,studentPid: $student_pid);
+                            }
                             // student class history  
-                            $studentClass['student_pid'] = $studentDetails->pid;
-                            
-                            StudentController::createStudentClassRecord($studentClass);
-                            
-                            return response()->json(['status'=>1,'message'=>'Account  created Successfully!!! here is Student Reg. No. '. $studentDetails->reg_number]);
+                            if(!$request->pid){
+                                $studentClass['student_pid'] = $studentDetails->pid;
+                                StudentController::createStudentClassRecord($studentClass);
+                                return response()->json(['status'=>1,'message'=>'Account  created Successfully!!! here is Student Reg. No. '. $studentDetails->reg_number]);
+                            }
+                            return response()->json(['status'=>1,'message'=>'Student Account Updated Successfully!!']);
                         }
                         return response()->json(['status'=>1,'message'=>'account completely  created but student class details not taken, so please use '. $studentDetails->reg_number.' to take create history']);
                     }

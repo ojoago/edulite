@@ -89,9 +89,11 @@
             </div>
             <div class="col-md-4">
                 <label for="type" class="form-label">Student Type</label>
-                <select name="type" class="form-control  form-control-sm" required>
+                <select name="type" class="form-control  form-control-sm" id="studentType" required>
                     @if(getSchoolType()==1)
                     <option value="1" selected>Day</option>
+                    @elseif(getSchoolType()==2)
+                    <option value="2" selected>Boarding</option>
                     @else
                     <option disabled selected>Select Type</option>
                     <option value="2">Boarding</option>
@@ -103,31 +105,34 @@
             </div>
             <div class="col-md-4">
                 <label for="state" class="form-label">Session </label>
-                <select name="session_pid" style="width: 100%;" id="sessionSelect2" required>
+                <select name="session_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="sessionSelect2" required>
                 </select>
                 <p class="text-danger session_pid_error"></p>
             </div>
             <div class="col-md-4">
                 <label for="term_pid" class="form-label">Term</label>
-                <select name="term_pid" style="width: 100%;" id="tmSelect2" required>
+                <select name="term_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="tmSelect2" required>
                 </select>
                 <p class="text-danger term_pid_error"></p>
             </div>
             <div class="col-md-3">
                 <label for="category_pid" class="form-label">Category</label>
-                <select name="category_pid" style="width: 100%;" id="cateSelect2" required>
+                <select name="category_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="cateSelect2" required>
                 </select>
                 <p class="text-danger category_pid_error"></p>
             </div>
             <div class="col-md-3">
                 <label for="class_pid" class="form-label">Class</label>
-                <select name="class_pid" style="width: 100%;" class="form-select form-select-sm" id="classSelect2" required>
+                <select name="class_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="classSelect2" required>
                 </select>
+                <input name="pid" id="pid" type="hidden">
+                <input name="reg_number" id="reg_number" type="hidden">
+                <input name="user_pid" id="user_pid" type="hidden">
                 <p class="text-danger class_pid_error"></p>
             </div>
             <div class="col-md-3">
                 <label for="arm_pid" class="form-label">Class Arm</label>
-                <select name="arm_pid" class="form-select form-select-sm" style="width: 100%;" id="armSelect2" required>
+                <select name="arm_pid" class="form-select form-select-sm readOnlyProp" style="width: 100%;" id="armSelect2" required>
                 </select>
                 <p class="text-danger arm_pid_error"></p>
             </div>
@@ -220,7 +225,47 @@
                 }
             });
         });
-        // create school class 
+        let pid = "<?php echo $pid ?? '' ?>"
+        if (pid != '') {
+            $('#createStudentBtn').text('Update')
+            Swal.fire({
+                icon: 'info',
+                title: '',
+                text: 'Please note that update will not affect student class details',
+                footer: '<b class="text-danger">So, Skip that Part<b>'
+            })
+            $('.readOnlyProp').attr('readonly', true);
+            $.ajax({
+                url: "{{route('load.student.details.by.id')}}",
+                dataType: "JSON",
+                data: {
+                    pid: pid,
+                    _token: $("input[name='_token']").val()
+                },
+                // cache: true,
+                type: "post",
+                success: function(data) {
+                    // console.log(data);
+                    $('#firstname').val(data.firstname);
+                    $('#lastname').val(data.lastname);
+                    $('#othername').val(data.othername);
+                    $('#gsm').val(data.gsm);
+                    $('#username').val(data.username) //.attr('disabled', true);
+                    $('#email').val(data.email);
+                    $('#dob').val(data.dob);
+                    $('#address').val(data.address);
+                    $('#user_pid').val(data.user_pid);
+                    $('#pid').val(data.pid);
+                    $('#reg_number').val(data.reg_number);
+                    $('#gender').val(data.gender).trigger('change');
+                    // $('#titleSelect2').val(data.title).trigger('change');
+                    $('#religion').val(data.religion).trigger('change');
+                    $('#studentType').val(data.type).trigger('change');
+                    $('#stateSelect2').val(data.state).trigger('change');
+                    $('#lgaSelect2').val(data.lga).trigger('change');
+                }
+            });
+        }
     });
 </script>
 @endsection

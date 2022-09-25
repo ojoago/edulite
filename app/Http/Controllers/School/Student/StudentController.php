@@ -11,71 +11,139 @@ use App\Models\School\Student\StudentClass;
 use App\Models\School\Registration\SchoolParent;
 use App\Http\Controllers\School\SchoolController;
 use App\Models\School\Student\StudentPickUpRider;
-use App\Http\Controllers\School\Parent\ParentController;
 
 class StudentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     public function index(){
        try {
-            $data = Student::join('class_arms', 'class_arms.pid', 'students.current_class')
-            ->where(['students.school_pid' => getSchoolPid(), 'students.status' => 1])
-            ->get(['arm', 'students.fullname', 'reg_number', 'students.created_at','parent_pid','students.pid']);
-            return datatables($data)
-                ->addColumn('parent',function($data){
-                return ParentController::getParentFullname($data->parent_pid);
-            })
-            ->editColumn('created_at',function($data){
-                return $data->created_at->diffForHumans();
-            })->addIndexColumn()
-            ->addColumn('action',function($data){
-                return view('school.lists.student.student-action-buttons',['data'=>$data]);
-            })
-            ->make(true);
+            $data = DB::table('students as s')->join('class_arms as a', 'a.pid', 's.current_class')
+                ->leftJoin('school_parents as p', 'p.pid', 's.parent_pid')
+                ->leftjoin('user_details as d', 'd.user_pid', 'p.user_pid')
+                ->where(['s.school_pid' => getSchoolPid(),'s.status'=>1])//active student
+                ->select('arm', 's.fullname', 'reg_number', 's.created_at', 'd.fullname as parent', 's.pid', 's.status')->orderByDesc('s.id')->get();
+            return $this->addDataTable($data);
        } catch (\Throwable $e) {
         $error = $e->getMessage();
         logError($error);
         }
     }
+    // in active student 
+    public function inActiveStudent()
+    {
+        try {
+            $data = DB::table('students as s')->join('class_arms as a','a.pid','s.current_class')
+                            ->leftJoin('school_parents as p','p.pid','s.parent_pid')
+                            ->join('user_details as d','d.user_pid','p.user_pid')
+                            ->where(['s.school_pid'=>getSchoolPid()])->whereIn('s.status',[0,4])//suspended/disabled
+                            ->select('arm', 's.fullname', 'reg_number', 's.created_at', 'd.fullname as parent', 's.pid', 's.status')->get();
+         
+            return $this->addDataTable($data);
+            
+        } catch (\Throwable $e) {
+            $error = $e->getMessage();
+            logError($error);
+        }
+    }
+    // in active student 
+    public function exStudent()
+    {
+        try {
+            $data = DB::table('students as s')->join('class_arms as a', 'a.pid', 's.current_class')
+                ->leftJoin('school_parents as p', 'p.pid', 's.parent_pid')
+                ->join('user_details as d', 'd.user_pid', 'p.user_pid')
+                ->where(['s.school_pid' => getSchoolPid()])->whereIn('s.status', [2, 3])//graduated/left school
+                ->select('arm', 's.fullname', 'reg_number', 's.created_at', 'd.fullname as parent', 's.pid', 's.status')->get();
+            return $this->addDataTable($data);
+        } catch (\Throwable $e) {
+            $error = $e->getMessage();
+            logError($error);
+        }
+    }
 
+    private function addDataTable($data){
+        return datatables($data)
+            ->editColumn('created_at', function ($data) {
+                return date('d F Y', strtotime($data->created_at));
+            })->addIndexColumn()
+            ->addColumn('action', function ($data) {
+                return view('school.lists.student.student-action-buttons', ['data' => $data]);
+            })
+            ->make(true);
+    }
     public function studentProfile($pid){
         return view('school.lists.student.student-profile',compact('pid'));
-
+    }
+    public function find($pid){
+        return view('school.registration.student.register-student',compact('pid'));
+    }
+    public function loadStudentDetailsById(Request $request){
+        $data = DB::table('students as s')->leftjoin('users as u', 'u.pid', 's.user_pid')
+            ->leftjoin('user_details as d', 'd.user_pid', 's.user_pid')
+            ->select('s.*', 'u.email', 'u.username', 'u.gsm', 'd.*')
+            ->where(['s.pid' => base64Decode($request->pid), 's.school_pid' => getSchoolPid()])->first();
+        return response()->json($data);
     }
     public function viewStudentProfile(Request $request){
         $data = DB::table('users as u')->join('user_details as d', 'd.user_pid', 'u.pid')
             ->join('students as s', 's.user_pid', 'u.pid')
-            ->where(['school_pid' => getSchoolPid(), 's.pid' => base64Decode($request->pid)])
-            ->select('gsm', 'email', 'username', 's.fullname','reg_number', 's.address', 'dob', 'gender', 's.religion', 's.passport')->first();
-        echo formatStudentProfile($data);
+            ->join('class_arms as a', 's.current_class', 'a.pid')
+            ->where(['s.school_pid' => getSchoolPid(), 's.pid' => base64Decode($request->pid)])
+            ->select('gsm', 'email', 'username', 's.fullname','reg_number', 's.address', 'dob', 'gender', 's.religion', 's.passport','s.status','a.arm')->first();
+         return response()->json(formatStudentProfile($data));
     }
+
+
     public function viewStudentclassHistroy(Request $request){
-       
         $data = StudentClass::where([
                     'student_classes.school_pid' => getSchoolPid(),
-                     'student_classes.student_pid' => base64Decode($request->pid)])
-                     ->join('class_arms', 'class_arms.pid', 'student_classes.arm_pid')
+                     'student_classes.student_pid' => base64Decode($request->pid)
+                     ])
+                     ->leftjoin('class_arms', 'class_arms.pid', 'student_classes.arm_pid')
                      ->join('sessions', 'sessions.pid', 'student_classes.session_pid')
-                     ->get(['session,arm,student_classes.created_at AS date']);
-    
-        // $data = DB::table('student_classes as r')->join('class_arms as a', 'a.pid', 'r.arm_pid')
-        // ->join('sessions as s', 's.pid', 'r.session_pid')
-        // ->where(['r.school_pid' => getSchoolPid(), 'r.student_pid' => base64Decode($request->pid)])
-        //     ->get(DB::raw('session,arm,r.created_at AS date'));
+                     ->get(['session','arm','student_classes.updated_at']);
+            // logError($data);
         return datatables($data)
-            // ->editColumn('date',function($data){
-            //     return $data->date->diffForHumnas();
-            // })
+            ->editColumn('date',function($data){
+                return $data->updated_at->diffForHumans();
+            })
             ->make(true);
     }
 
-    public static function createSchoolStudent($data){
+    // load student riders/cares 
+    public function loadStudentRiders(Request $request){
+        $data = DB::table('student_pick_up_riders as p')
+                    // ->join('student_pick_up_riders as p','s.pid','p.student_pid')
+                    ->join('school_riders as r','r.pid','p.rider_pid')
+                    ->join('user_details as d','d.user_pid','r.user_pid')
+                    ->join('users as u','u.pid','d.user_pid')
+                    ->select('gsm','d.fullname','d.address','username','r.status','r.pid','p.updated_at')
+                    ->where(['p.student_pid'=>base64Decode($request->pid),'p.school_pid'=>getSchoolPid()])
+                    ->get();
+        logError($data);
+        return datatables($data)
+            ->editColumn('date', function ($data) {
+                return date('d F Y',strtotime($data->updated_at));
+            })
+            ->editColumn('status', function ($data) {
+                return $data->status == 1 ? '<button class="btn btn-success btn-sm toggleStudentRider" data-bs-toggle="tooltip" title="Disable Rider/Care" pid ="' . $data->pid . '">Enabled</button>' : '<button class="btn btn-danger toggleStudentRider" pid ="' . $data->pid . '"  data-bs-toggle="tooltip" title="Enable Rider/Care">Disabled</button>';
 
+            })
+            ->addIndexColumn()
+                ->rawColumns(['data', 'status'])
+            ->make(true);
+    }
+    public static function createSchoolStudent($data){
         try {
+            $dup = Student::where(['school_pid' => $data['school_pid'], 'user_pid' => $data['user_pid']])->first();
+            if ($dup) {
+                $dup->fill($data);
+                return $dup->save();
+            }
             return Student::create($data);
         } catch (\Throwable $e) {
             $error = $e->getMessage();
@@ -95,6 +163,23 @@ class StudentController extends Controller
             return StudentClass::updateOrCreate($dupParams, $data);
         } catch (\Throwable $e) {
             $error = $e->getMessage();
+            logError($error);
+        }
+    }
+
+    public function updateStudentStatus($pid)
+    {
+        try {
+            $student = Student::where(['school_pid' => getSchoolPid(), 'pid' => base64Decode($pid)])->first(['id', 'status']);
+            if ($student) {
+                $student->status = $student->status == 1 ? 0 : 1;
+                // send notification mail 
+                $student->save();
+                return 'Student Account Updated';
+            }
+            return 'Something Went Wrong';
+        } catch (\Throwable $e) {
+            $error =  $e->getMessage();
             logError($error);
         }
     }

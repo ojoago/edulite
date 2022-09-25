@@ -26,7 +26,8 @@
                         <tr>
                             <!-- <th>S/N</th> -->
                             <th>Names</th>
-                            <th>Phone Number</th>
+                            <th>Reg Number</th>
+                            <!-- <th>Phone Number</th> -->
                             <!-- <th>Username</th>
                             <th>Email</th> -->
                             <th>Address</th>
@@ -71,25 +72,25 @@
                         selector: 'td:nth-child(2)'
                     },
                     responsive: true,
-                    "ajax": 
-                    // {
-                    //     url:
-                         "{{route('load.rider.student')}}",
-                        // type: "post",
-                        // data: {pid:pid,_token:"{{csrf_token()}}",},
-                    // },
-                    "columns": [{
-                            data: 'DT_RowIndex',
-                            name: 'DT_RowIndex',
-                            // orderable: false,
-                            // searchable: false
-                        },
+                    destroy:true,
+                    "ajax": {
+                        url: "{{route('load.rider.student')}}",
+                        type: "post",
+                        data: {pid:pid,_token:"{{csrf_token()}}",},
+                    },
+                    "columns": [
+                        // {
+                        //     data: 'DT_RowIndex',
+                        //     name: 'DT_RowIndex',
+                        //     // orderable: false,
+                        //     // searchable: false
+                        // },
                         {
                             "data": "fullname"
                         },
-                        // {
-                        //     "data": "gsm"
-                        // },
+                        {
+                            "data": "reg_number"
+                        },
                         // {
                         //     "data": "username"
                         // },
@@ -101,9 +102,9 @@
                         },
 
 
-                        {
-                            "data": "created_at"
-                        },
+                        // {
+                        //     "data": "date"
+                        // },
 
 
                     ],

@@ -168,43 +168,72 @@ function formatRider($row)
 function formatStaffProfile($row)
 {
     if ($row) {
-        $email = $row->email ? ' <hr><p>Email: ' .  $row->email  . '</p>' : '';
-        $imgUrl = asset("/files/images/".$row->passport);
-        return '
-             <div class="row p-4">
-                        <div class="col-md-6">
-                            <div class="text-center" style="max-height:200px !important;">
-                                <img src="'. $imgUrl. '" class="img img-responsive rounded-circle" style="width:auto;max-height:200px;" alt="' . $row->fullname . ' passport">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="">
-                                Name: <span> ' . $row->title . ' </span> ' . $row->fullname . '
-                                <hr>
-                                Username: ' . $row->username . '
-                                <hr>
-                                Date of Birth: ' . $row->dob . '
-                                <hr>
-                                Gender: ' . matchGender($row->gender) . '
-                                <hr>
-                                Religion: ' . matchReligion($row->religion) . '
-                                <hr>
-                                Address: ' . $row->address . '
+        $imgUrl = $row->passport ? asset("/files/images/".$row->passport) :'';
+        $image = '<div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+        <div class="text-center" style="max-height:200px !important;max-width:200px">
+             <img src="' . $imgUrl . '" alt="Profile" class="rounded-circle"  style="max-height:200px !important;max-width:200px">
+        </div>
+                <h1 class="ellipsis-text h6"><span> ' . $row->title . ' </span> ' . $row->fullname . '</h1>
+                <h4>'. matchStaffRole($row->role). '</h4>
+                <div class="social-links mt-2">
+                    <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>';
+        $info = '
+             <h5 class="card-title">About</h5>
+                  <p class="small fst-italic">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</p>
+                  <h5 class="card-title">Profile Details</h5>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Full Name</div>
+                    <div class="col-lg-9 col-md-8">' . $row->title . ' </span> ' . $row->fullname . '</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Username</div>
+                    <div class="col-lg-9 col-md-8">' . $row->username . '</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Staff ID</div>
+                    <div class="col-lg-9 col-md-8">' . $row->staff_id . '</div>
+                  </div>
 
-                                ' . $email . '
-                            </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Job</div>
+                    <div class="col-lg-9 col-md-8">' . matchStaffRole($row->role) . '</div>
+                  </div>
 
-                        </div>
-                    </div>
-        ';
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Country</div>
+                    <div class="col-lg-9 col-md-8">Nigeria</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Address</div>
+                    <div class="col-lg-9 col-md-8">' . $row->address . '</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Phone</div>
+                    <div class="col-lg-9 col-md-8">' . $row->gsm . '</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Email</div>
+                    <div class="col-lg-9 col-md-8">' . $row->email . '</div>
+                  </div>';
     } else {
-        return '<h2 class="text-danger p-3">Empty Result Set</h2>';
+        $info = '<h2 class="text-danger p-3">Empty Result Set</h2>'; 
+        $image = '';
     }
+
+    return ['image'=>$image,'info'=>$info];
 }
 function formatRiderProfile($row)
 {
     if ($row) {
-        $imgUrl = asset("/files/images/".$row->passport);
+        $imgUrl = $row->passport ?  asset("/files/images/".$row->passport) : '';
         return '
              <div class="row p-4">
                         <div class="col-md-6">
@@ -243,40 +272,46 @@ function formatRiderProfile($row)
 function formatStudentProfile($row)
 {
     if ($row) {
-        $email = $row->email ? ' <hr><p>Email: ' .  $row->email  . '</p>' : '';
-        $imgUrl = asset("/files/images/".$row->passport);
-        return '
+        $imgUrl = $row->passport ? asset("/files/images/".$row->passport) :'';
+        $image = '<div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+        <div class="text-center" style="max-height:200px !important;max-width:200px">
+             <img src="' . $imgUrl . '" alt="Profile" class="rounded-circle"  style="max-height:200px !important;max-width:200px">
+        </div>
+                <h1 class="ellipsis-text h6">' . $row->fullname . '</h1>
+                <h5>'. $row->arm. '</h5>
+                <h5>'. matchStudentStatus($row->status). '</h5>';
+            //     <div class="social-links mt-2">
+            //         <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+            //         <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+            //         <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+            //         <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+            //     </div>
+            // </div>';
+        
+        $info = '
              <div class="row p-4">
-                        <div class="col-md-6">
-                            <div class="text-center" >
-                                <img src="'. $imgUrl. '" class="img img-responsive" alt="' . $row->fullname . ' image"  img-circle" style="width:100%;height:auto">
-                            </div>
-                        </div>
-                        <div class="col-md-6 pt-4">
-                            <div class=" shadow p-3">
-                                Name: ' . $row->fullname . '
-                                <hr>
-                                Username: ' . $row->reg_number . '
-                                <hr>
-                                Username: ' . $row->username . '
-                                <hr>
-                                Date of Birth: ' . $row->dob . '
-                                <hr>
-                                Gender: ' . matchGender($row->gender) . '
-                                <hr>
-                                Religion: ' . matchReligion($row->religion) . '
-                                <hr>
-                                Address: ' . $row->address . '
+                <div class=" shadow p-3">
+                    Username: ' . $row->reg_number . '
+                    <hr>
+                    Username: ' . $row->username . '
+                    <hr>
+                    Date of Birth: ' . $row->dob . '
+                    <hr>
+                    Gender: ' . matchGender($row->gender) . '
+                    <hr>
+                    Religion: ' . matchReligion($row->religion) . '
+                    <hr>
+                    Address: ' . $row->address . '
 
-                                ' . $email . '
-                            </div>
-
-                        </div>
-                    </div>
+                   <hr><p>Email: ' .  $row->email  . '</p>
+                </div>
         ';
     } else {
-        return '<h2 class="text-danger p-3">Empty Result Set</h2>';
+        $info = '<h2 class="text-danger p-3">Empty Result Set</h2>';
+        $image = '';
     }
+
+    return ['image' => $image, 'info' => $info];
 }
 
 

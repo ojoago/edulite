@@ -9,7 +9,95 @@
         $('.passport').change(function() {
             previewImg(this, '#parentPassport');
         });
+        $('#accessSelect2').select2({
+            placeholder: 'plh',
+            dropdownParent: $('.accessModal'),
+            width: "100%",
+            allowClear: true,
+        });
+        // update images from modal 
+        // $(document).on('change', '.previewImg',function() {
+        //     let id = $(this).attr('id');
+        //     alert(id)
+        //     previewImg(this, '#' + id);
+        // });
 
+        // update images  from modal 
+        $(document).on('click', '.updateStaffImage', function() {
+            let id = $(this).attr('id');
+            var route = "{{route('update.staff.image')}}";
+            submitFormAjax('form' + id, 'id', route);
+        });
+        // update staff role  
+        $(document).on('click', '.updateStaffRole', function() {
+            let id = $(this).attr('id');
+            var route = "{{route('update.staff.role')}}";
+            submitFormAjax('roleform' + id, 'id', route);
+        });
+        // update status account status
+        $(document).on('click', '.toggleStaffStatus', function() {
+            let pid = $(this).attr('pid');
+            var url = "update-staff-status/" + pid;
+            $('.overlay').show();
+            $.ajax({
+                url: url, //"{{route('create.school.score.settings')}}",
+                success: function(data) {
+                    console.log(data);
+                    $('.overlay').hide();
+                    if (data == 'staff Account updated') {
+                        alert_toast(data, 'success');
+                    } else {
+                        alert_toast(data, 'error');
+                    }
+                },
+                error: function() {
+                    $('.overlay').hide();
+                    alert_toast('Something Went Wrong', 'error');
+                }
+            });
+        });
+        // update staff role 
+        $(document).on('change', '#roleSelect2', function() {
+            let role = $(this).val();
+            if (role == 200) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Super Admin',
+                    text: 'Super Admin Role is the only person that can edit school details like name, logo etc & and they can only be one super admin',
+                    footer: '<b class="text-danger">So whoever you choose overrides, the existing 1<b>'
+                })
+            } else if (role == 205) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'School Admin',
+                    text: 'School Admin Role is the person that control the activities of other staff/users of the school',
+                    footer: '<b class="text-danger">Like creating accounts and setting standard<b>'
+                })
+            }
+        });
+
+        // update student status 
+        $(document).on('click', '.toggleStudentStatus', function() {
+            let pid = $(this).attr('pid');
+            var url = "update-student-status/" + pid;
+            $('.overlay').show();
+            $.ajax({
+                url: url, //"{{route('create.school.score.settings')}}",
+                success: function(data) {
+                    console.log(data);
+                    $('.overlay').hide();
+                    if (data == 'Student Account Updated') {
+                        alert_toast(data, 'success');
+                    } else {
+                        alert_toast(data, 'error');
+                    }
+                },
+                error: function() {
+                    $('.overlay').hide();
+                    alert_toast('Something Went Wrong', 'error');
+                }
+            });
+        });
         // update password 
         $('#updatePwdBtn').click(function() {
             var route = "{{route('update.password')}}";
@@ -17,18 +105,53 @@
         });
 
 
+
         // link portal to hostel 
         multiSelect2('#ahtpSessionSelect2', 'assignHostelToPortalModal', 'session', 'Select Session');
         multiSelect2('#ahtpTermSelect2', 'assignHostelToPortalModal', 'term', 'Select Term');
         multiSelect2('#ahtpPortalSelect2', 'assignHostelToPortalModal', 'portals', 'Select Portals');
         multiSelect2('#ahtpHostelSelect2', 'assignHostelToPortalModal', 'hostels', 'Select Hostels');
+        // assign student portal 
+        multiSelect2('#ahtsStudentSelect2', 'assignHostelToStudentModal', 'boarding-student', 'Select Student');
+        multiSelect2('#ahtsHostelSelect2', 'assignHostelToStudentModal', 'hostels', 'Select Hostels');
 
         $('#assignHostelToPortalBtn').click(function() {
             var route = "{{route('assign.hostel.to.portal')}}";
             submitFormAjax('assignHostelToPortalForm', 'assignHostelToPortalBtn', route);
         });
 
+        // assign student hostel 
+        $('#assignHostelToStudentBtn').click(function() {
+            var route = "{{route('assign.hostel.to.student')}}";
+            submitFormAjax('assignHostelToStudentForm', 'assignHostelToStudentBtn', route);
+        });
+
+        // link stunden from parent dynamic 
+        multiSelect2('#lmToParentstudentSelect2', 'linkMyWardsModal', 'student', 'Select student');
+        $(document).on('click', '.linkMyWards', function() {
+            let pid = $(this).attr('pid')
+            $('#linkMyWardsPid').val(pid);
+            $('#linkMyWardsModal').modal('show');
+        })
         // link student to parent 
+        $('#linkStudentParentDynamicBtn').click(function() {
+            var route = "{{route('link.student.parent')}}";
+            submitFormAjax('linkStudentParentDynamicForm', 'linkStudentParentDynamicBtn', route);
+        });
+        // from student side 
+        // link parent from student dynamic 
+        multiSelect2('#lpToParentparentSelect2', 'linkMyParentModal', 'parent', 'Select Parent');
+        $(document).on('click', '.linkMyParent', function() {
+            let pid = $(this).attr('pid')
+            $('#lpStudentpid').val(pid);
+            $('#linkMyParentModal').modal('show');
+        })
+
+        $('#linkParentDynamicBtn').click(function() {
+            var route = "{{route('link.student.parent')}}";
+            submitFormAjax('linkParentDynamicForm', 'linkParentDynamicBtn', route);
+        });
+
         // load students 
         multiSelect2('#studentToParentstudentSelect2', 'linkStudentParentModal', 'student', 'Select student');
         // load students 
@@ -36,11 +159,11 @@
 
         // linkStudentParentForm
         // linkStudentParentBtn
-        // subject class arm subject teacher 
         $('#linkStudentParentBtn').click(function() {
             var route = "{{route('link.student.parent')}}";
             submitFormAjax('linkStudentParentForm', 'linkStudentParentBtn', route);
         });
+
         // assign class to staff 
         multiSelect2('.sessionSelect2', 'createArmTeacherModal', 'session', 'Select Session');
         // load state on modal 
@@ -581,7 +704,7 @@
             var reader = new FileReader();
 
             reader.onload = function(e) {
-                $('' + baseId).attr('src', e.target.result);
+                $(baseId).attr('src', e.target.result);
             }
 
             reader.readAsDataURL(input.files[0]);

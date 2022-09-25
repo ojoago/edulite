@@ -93,7 +93,8 @@ class SchoolController extends Controller
                 "school_moto" => $request->school_moto,
                 "pid" => public_id(),
                 "user_pid" => getUserPid(),
-                'school_handle' => $request->school_handle ?? $this->schoolHandle(),
+                'school_handle' => $this->schoolHandle(),
+                'school_code' => $request->school_handle,
             ];
 
             if ($request->school_logo) {

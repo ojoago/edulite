@@ -15,7 +15,7 @@ class SchoolTermController extends Controller
     public function __construct()
     {
         // school member auth 
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.

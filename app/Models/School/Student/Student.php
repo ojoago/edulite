@@ -15,5 +15,4 @@ class Student extends Model
         'current_session_pid', 'admitted_term'
     ];
 
-
 }

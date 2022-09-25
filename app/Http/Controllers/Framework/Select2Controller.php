@@ -159,7 +159,38 @@ class Select2Controller extends Controller
         }
         return response()->json($data);
     }
-    // load school student 
+    // load boarding student 
+    public function loadBoardingStudents(Request $request){
+        $data = null;
+        if ($request->has('q'))
+        $result = Student::where([['school_pid',getSchoolPid()],
+                                    ['status', 1],
+                                    ['type', 2],
+                                    ['fullname', 'like', '%' . $request->q . '%']
+                                    ])
+                                ->orwhere([
+                                    ['school_pid', getSchoolPid()],
+                                    ['status', 1],
+                                    ['type', 2],
+                                    ['reg_number', 'like', '%' . $request->q . '%']])
+                                    ->limit($request->page_limit)
+            ->orderBy('id', 'DESC')->get(['pid', 'fullname', 'reg_number']); //
+        else
+        $result = Student::where(['school_pid'=>getSchoolPid(),'status'=>1,'type'=>2])
+                            ->limit(10)
+                            ->orderBy('id', 'DESC')->get(['pid', 'fullname','reg_number']);
+        if (!$result) {
+            return response()->json(['id' => null, 'text' => null]);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->fullname.' - '. $row->reg_number,
+            ];
+        }
+        return response()->json($data);
+    }
+    // load class arm student 
     public function loadClassArmStudents(Request $request){
         $data = null;
         if ($request->has('q'))

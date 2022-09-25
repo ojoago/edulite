@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('state_id')->nullable();
             $table->integer('lga_id')->nullable();
             $table->string('school_handle')->nullable()->unique();
+            $table->string('school_code')->nullable()->unique();
             $table->timestamps();
         });
     }

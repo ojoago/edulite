@@ -18,6 +18,7 @@ class SchoolMiddleware
 
     public function handle(Request $request, Closure $next)
     {
+        // $this->middleware('boardingSchool');
         if(Auth::check()){
             // dd(getSchoolPid());
             if(getSchoolPid()){
@@ -25,7 +26,7 @@ class SchoolMiddleware
             }
             return redirect()->route('users.dashboard')->with('error',"You're Cought Up For Now, follow the right channel");
         }
-        return redirect()->route('login')->with('error','Loging in is the first for now');
+        return redirect()->route('login')->with('error','Loging in is the first step for now');
        
     }
 }

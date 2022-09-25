@@ -36,7 +36,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="in-active-staff" role="tabpanel" aria-labelledby="in-active-staff-tab">
-                <table class="table table-hover table-responsive table-striped table-bordered" id="active-dataTable">
+                <table class="table table-hover table-responsive table-striped table-bordered" id="activedataTable">
                     <thead>
                         <tr>
                             <th>S/N</th>
@@ -107,45 +107,48 @@
                 },
             ],
         });
-        $('#active-dataTable').DataTable({
-            "processing": true,
-            "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
-            responsive: true,
-            "ajax": "{{route('load.inactive.staff.list')}}",
-            "columns": [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    // orderable: false,
-                    // searchable: false
+        $('#in-active-staff-tab').click(function() {
+            $('#activedataTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
                 },
-                {
-                    "data": "fullname"
-                },
-                {
-                    "data": "username"
-                },
-                {
-                    "data": "gsm"
-                },
+                responsive: true,
+                "ajax": "{{route('load.inactive.staff.list')}}",
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        // orderable: false,
+                        // searchable: false
+                    },
+                    {
+                        "data": "fullname"
+                    },
+                    {
+                        "data": "username"
+                    },
+                    {
+                        "data": "gsm"
+                    },
 
-                {
-                    "data": "email"
-                },
-                {
-                    "data": "role_id"
-                },
+                    {
+                        "data": "email"
+                    },
+                    {
+                        "data": "role"
+                    },
 
-                {
-                    "data": "created_at"
-                },
-                {
-                    "data": "action"
-                },
-            ],
+                    {
+                        "data": "created_at"
+                    },
+                    {
+                        "data": "action"
+                    },
+                ],
+            });
         });
+
     });
 </script>
 @endsection

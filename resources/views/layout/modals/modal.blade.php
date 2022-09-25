@@ -137,6 +137,56 @@
     </div>
 </div>
 <!-- link students to parent modal  -->
+<div class="modal fade" id="linkMyWardsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Link Student to Parent</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="linkStudentParentDynamicForm">
+                    @csrf
+                    <input name="parent_pid" id="linkMyWardsPid" type="hidden">
+                    <label for="student_pid">Students</label>
+                    <select name="student_pid[]" id="lmToParentstudentSelect2" multiple="multiple" style="width: 100%;" class="studentToParentstudentSelect2 form-control form-control-sm">
+                    </select>
+                    <p class="text-danger student_pid_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="linkStudentParentDynamicBtn">Link</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- link students to parent modal  -->
+<div class="modal fade" id="linkMyParentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Link Student to Parent</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="linkParentDynamicForm">
+                    @csrf
+                    <label for="parent_pid">Parent/Guardian</label>
+                    <select name="parent_pid" id="lpToParentparentSelect2" placeholder="select" class="parentSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger parent_pid_error"></p>
+                    <input name="student_pid[]" id="lpStudentpid" type="hidden">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="linkParentDynamicBtn">Link</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- link students to parent modal  -->
 <div class="modal fade" id="linkStudentParentModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -151,8 +201,8 @@
                     <select name="parent_pid" id="studentToParentparentSelect2" placeholder="select" class="parentSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger parent_pid_error"></p>
-                    <label for="student_pid">Student</label>
-                    <select name="student_pid[]" id="studentToParentstudentSelect2" multiple="multiple" style="width: 100%;" class="studentSelect2 form-control form-control-sm">
+                    <label for="student_pid">Students</label>
+                    <select name="student_pid[]" id="studentToParentstudentSelect2" multiple="multiple" style="width: 100%;" class="studentToParentstudentSelect2 form-control form-control-sm">
                     </select>
                     <p class="text-danger student_pid_error"></p>
                 </form>
@@ -326,6 +376,39 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="assignHostelToStudentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign Hostel to Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" class="" id="assignHostelToStudentForm">
+                    @csrf
+                    <label for="hostel_pid">Hostels</label>
+                    <select name="hostel_pid" id="ahtsHostelSelect2" class="form-control form-control-sm">
+                    </select>
+                    <p class="text-danger hostel_pid_error"></p>
+                    <label for="student_pid">Student</label>
+                    <select name="student_pid[]" id="ahtsStudentSelect2" multiple="multiple" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger student_pid_error"></p>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button class="btn btn-primary" type="button" id="assignHostelToStudentBtn">Submit</button>
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="linkStudentToRiderModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -356,6 +439,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="updatePwd" tabindex="-1">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">

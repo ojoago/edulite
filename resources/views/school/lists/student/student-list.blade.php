@@ -11,10 +11,10 @@
                 <button class="nav-link w-100 active" id="activeStudent-tab" data-bs-toggle="tab" data-bs-target="#activeStudent" type="button" role="tab" aria-controls="activeStudent" aria-selected="true">Active</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="nonActiveStudent-tab" data-bs-toggle="tab" data-bs-target="#nonActiveStudent" type="button" role="tab" aria-controls="nonActiveStudent" aria-selected="false">Non-active</button>
+                <button class="nav-link w-100" id="inActiveStudent-tab" data-bs-toggle="tab" data-bs-target="#inActiveStudent" type="button" role="tab" aria-controls="nonActiveStudent" aria-selected="false">Non-active</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="graduatedStudent-tab" data-bs-toggle="tab" data-bs-target="#graduatedStudent" type="button" role="tab" aria-controls="graduatedStudent" aria-selected="false">Grad</button>
+                <button class="nav-link w-100" id="graduatedStudent-tab" data-bs-toggle="tab" data-bs-target="#graduatedStudent" type="button" role="tab">Ex Student</button>
             </li>
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
@@ -34,11 +34,37 @@
                     <tbody></tbody>
                 </table>
             </div>
-            <div class="tab-pane fade" id="nonActiveStudent" role="tabpanel" aria-labelledby="nonActiveStudent-tab">
-                Ex
+            <div class="tab-pane fade" id="inActiveStudent" role="tabpanel" aria-labelledby="nonActiveStudent-tab">
+                <table class="table table-hover table-responsive table-striped table-bordered" id="inActiveStudentDataTable">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Names</th>
+                            <th>Reg No.</th>
+                            <th>Current Class</th>
+                            <th>Date</th>
+                            <th>Parent/Guardian</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
             <div class="tab-pane fade" id="graduatedStudent" role="tabpanel" aria-labelledby="graduatedStudent-tab">
-                Alumni
+                <table class="table table-hover table-responsive table-striped table-bordered" id="exStudentDataTable">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Names</th>
+                            <th>Reg No.</th>
+                            <th>Current Class</th>
+                            <th>Date</th>
+                            <th>Parent/Guardian</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div><!-- End Default Tabs -->
 
@@ -57,9 +83,8 @@
                 selector: 'td:nth-child(2)'
             },
             responsive: true,
-            "ajax": "{{route('load.school.student.list')}}",
-            "columns": [
-                {
+            "ajax": "{{route('load.active.student.list')}}",
+            "columns": [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
                     // orderable: false,
@@ -82,51 +107,94 @@
                     "data": "parent"
                 },
 
-                
+
                 {
                     "data": "action"
                 },
             ],
         });
-        $('#active-dataTable').DataTable({
-            "processing": true,
-            "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
-            responsive: true,
-            "ajax": "{{route('load.inactive.staff.list')}}",
-            "columns": [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    // orderable: false,
-                    // searchable: false
+        $('#inActiveStudent-tab').click(function() {
+            $('#inActiveStudentDataTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
                 },
-                {
-                    "data": "fullname"
-                },
-                {
-                    "data": "username"
-                },
-                {
-                    "data": "gsm"
-                },
+                responsive: true,
+                destroy: true,
+                "ajax": "{{route('load.in.active.student')}}",
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        // orderable: false,
+                        // searchable: false
+                    },
+                    {
+                        "data": "fullname"
+                    },
+                    {
+                        "data": "reg_number"
+                    },
+                    {
+                        "data": "arm"
+                    },
 
-                {
-                    "data": "email"
-                },
-                {
-                    "data": "role_id"
-                },
+                    {
+                        "data": "created_at"
+                    },
+                    {
+                        "data": "parent"
+                    },
 
-                {
-                    "data": "created_at"
-                },
-                {
-                    "data": "action"
-                },
-            ],
+
+                    {
+                        "data": "action"
+                    },
+                ],
+            });
         });
+        $('#graduatedStudent-tab').click(function() {
+            $('#exStudentDataTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                destroy: true,
+                "ajax": "{{route('load.ex.student')}}",
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        // orderable: false,
+                        // searchable: false
+                    },
+                    {
+                        "data": "fullname"
+                    },
+                    {
+                        "data": "reg_number"
+                    },
+                    {
+                        "data": "arm"
+                    },
+
+                    {
+                        "data": "created_at"
+                    },
+                    {
+                        "data": "parent"
+                    },
+
+
+                    {
+                        "data": "action"
+                    },
+                ],
+            });
+        });
+
+
     });
 </script>
 @endsection

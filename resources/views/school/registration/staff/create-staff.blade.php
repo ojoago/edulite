@@ -4,7 +4,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Multi Columns Form</h5>
+        <h5 class="card-title">Staff Account </h5>
 
         <!-- Multi Columns Form -->
         <form class="row g-3" id="createStaffForm" enctype='multipart/form-data'>
@@ -77,18 +77,7 @@
             <div class="col-md-4">
                 <label for="state" class="form-label">Primary Role</label>
                 <select id="roleSelect2" name="role" class="form-select form-select-sm " required>
-                    <option disabled selected>Select Role</option>
-                    <!-- <option value="200">Super Admin</option> -->
-                    <option value="205">School Admin</option>
-                    <option value="500">Pincipal/Head Teacher</option>
-                    <!-- <option value="505">Head Teacher</option> -->
-                    <option value="301">Form/Class Teacher</option>
-                    <option value="300">Teacher</option>
-                    <option value="303">Clerk</option>
-                    <option value="305">Secretary</option>
-                    <option value="307">Portals</option>
-                    <option value="400">Office Assisstnace</option>
-                    <option value="405">Security</option>
+                    {{staffRoleOptions()}}
                 </select>
                 <p class="text-danger role_error"></p>
             </div>
@@ -129,6 +118,8 @@
             <div class="text-center">
                 <button type="button" class="btn btn-primary" id="createStaffBtn">Create</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
+                <input type="hidden" id="pid" name="pid">
+                <input type="hidden" id="staff_id" name="staff_id">
             </div>
         </form><!-- End Multi Columns Form -->
 
@@ -150,15 +141,24 @@
         $('#stamp').change(function() {
             previewImg(this, '#staffStamp');
         });
-        FormMultiSelect2('#stateSelect2', 'state', 'Select State of Origin')
+
+        state();
+
+        function state(id = null) {
+            FormMultiSelect2('#stateSelect2', 'state', 'Select State of Origin', id)
+        }
+
+        function lga(id, pid = null) {
+            FormMultiSelect2Post('#lgaSelect2', 'state-lga', id, 'Select Lga of Origin', pid)
+        }
+
         $('#stateSelect2').change(function() {
             var id = $(this).val();
 
-            FormMultiSelect2Post('#lgaSelect2', 'state-lga', id, 'Select Lga of Origin')
+            lga(id);
         });
         // create school category 
         $('#createStaffBtn').click(function() {
-
             $.ajax({
                 url: "{{route('create.school.staff')}}",
                 type: "POST",
@@ -174,7 +174,6 @@
                     $('#createStaffBtn').prop('disabled', true);
                 },
                 success: function(data) {
-                    console.log(data);
                     $('#createStaffBtn').prop('disabled', false);
                     $('.overlay').hide();
                     if (data.status === 0) {
@@ -185,7 +184,7 @@
                     } else if (data.status === 1) {
                         alert_toast(data.message, 'success');
                         $('#createStaffForm')[0].reset();
-                        $('.previewImg').val('');
+                        $('.previewImg').removeAttr('src');
                     } else {
                         alert_toast(data.message, 'warning');
                     }
@@ -198,6 +197,37 @@
                 }
             });
         });
+        let pid = "<?php echo $pid ?? '' ?>"
+        if (pid != '') {
+            $.ajax({
+                url: "{{route('load.staff.detail.by.id')}}",
+                dataType: "JSON",
+                data: {
+                    pid: pid,
+                    _token: $("input[name='_token']").val()
+                },
+                // cache: true,
+                type: "post",
+                success: function(data) {
+                    $('#firstname').val(data.firstname);
+                    $('#lastname').val(data.lastname);
+                    $('#othername').val(data.othername);
+                    $('#gsm').val(data.gsm);
+                    $('#username').val(data.username) //.attr('disabled', true);
+                    $('#email').val(data.email);
+                    $('#dob').val(data.dob);
+                    $('#address').val(data.address);
+                    $('#pid').val(data.user_pid);
+                    $('#staff_id').val(data.staff_id);
+                    $('#gender').val(data.gender).trigger('change');
+                    $('#titleSelect2').val(data.title).trigger('change');
+                    $('#religion').val(data.religion).trigger('change');
+                    $('#roleSelect2').val(data.role).trigger('change');
+                    $('#stateSelect2').val(data.state).trigger('change');
+                    $('#lgaSelect2').val(data.lga).trigger('change');
+                }
+            });
+        }
         // create school class 
     });
 </script>

@@ -40,8 +40,8 @@ class AuthController extends Controller
 
     public static function createUser($data){
         try {
-        $data['pid']  = public_id();
-           return User::create($data);
+        $data['pid']  = $data['pid'] ?? public_id();
+           return User::updateOrCreate(['pid'=>$data['pid']],$data);
         } catch (\Throwable $e) {
             $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
             logError($error);

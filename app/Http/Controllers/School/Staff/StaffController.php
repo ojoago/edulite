@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
+use App\Models\School\School;
+use Illuminate\Validation\Rule;
 
 class StaffController extends Controller
 {
@@ -32,7 +34,7 @@ class StaffController extends Controller
                     ->join('user_details','users.pid','user_details.user_pid')
                     ->where(['school_staff.school_pid' => getSchoolPid(), 'school_staff.status'=>1])
                     ->get([
-                        'gsm','username','email','staff_id','fullname',
+                        'gsm','username','email','staff_id','fullname','school_staff.status',
                         'role','school_staff.pid', 'school_staff.created_at'
                     ]);
         return $this->useDataTable($data);
@@ -46,7 +48,7 @@ class StaffController extends Controller
                     ->where('school_staff.status','<>',1)
                     ->get([
                         'gsm','username','email','staff_id','fullname',
-                        'role_id','school_staff.pid', 'school_staff.created_at'
+                        'role','school_staff.pid', 'school_staff.created_at'
                     ]);
         return $this->useDataTable($data);
     }
@@ -72,34 +74,185 @@ class StaffController extends Controller
         $data = DB::table('users as u')->join('user_details as d','d.user_pid','u.pid')
                         ->join('school_staff as s','s.user_pid','u.pid')
                         ->where(['school_pid'=>getSchoolPid(),'s.pid'=>base64Decode($request->pid)])
-                        ->select('gsm','email','username','fullname','address','title','dob','gender','religion','lga','state','role', 'passport','signature','stamp')->first();
-        echo formatStaffProfile($data);
+                        ->select('gsm','email','username','fullname','address','title','dob','gender','religion','lga','state','role', 'passport','signature','stamp','staff_id')->first();
+        return response()->json(formatStaffProfile($data));
     }
 
-    public function loadStaffClass(Request $request){
-        $data = DB::table('staff_classes as c')->join('arms as a','a.pid','c.arm_pid')
-                        ->join('terms as t','t.pid','c.term_pid')
-                        ->join('sessions as s','s.pid','session_pid')
-                        ->select('term','session','arm','c.created_at')
-                        ->where(['school_pid'=>getSchoolPid(),'staff_pid'=>$request->pid])->orderBy('arm')->get();
+    public function loadStaffClasses(Request $request){
+       
+        if(isset($request->session) && isset($request->term)){
+            $data = DB::table('staff_classes as c')->join('class_arms as a', 'a.pid', 'c.arm_pid')
+                ->join('terms as t', 't.pid', 'c.term_pid')
+                ->join('sessions as s', 's.pid', 'session_pid')
+                ->select('term', 'session', 'arm', 'c.updated_at')
+                ->where([
+                    'c.school_pid' => getSchoolPid(), 
+                    'c.teacher_pid' => base64Decode($request->pid),
+                    'c.term_pid'=>$request->term,
+                    'c.session_pid'=>$request->session,
+                    ])
+                ->orderBy('arm')->get();
+        }elseif(isset($request->session) || isset($request->term)){
+            $data = DB::table('staff_classes as c')->join('class_arms as a', 'a.pid', 'c.arm_pid')
+                ->join('terms as t', 't.pid', 'c.term_pid')
+                ->join('sessions as s', 's.pid', 'session_pid')
+                ->select('term', 'session', 'arm', 'c.updated_at')
+                ->where(['c.school_pid' => getSchoolPid(), 'c.teacher_pid' => base64Decode($request->pid),'term_pid'=>$request->term])
+                ->orWhere(['c.school_pid' => getSchoolPid(), 'c.teacher_pid' => base64Decode($request->pid),'session_pid'=>$request->session])
+                ->orderBy('arm')->get();
+        }else{
+            $data = DB::table('staff_classes as c')->join('class_arms as a', 'a.pid', 'c.arm_pid')
+                ->join('terms as t', 't.pid', 'c.term_pid')
+                ->join('sessions as s', 's.pid', 'session_pid')
+                ->select('term', 'session', 'arm', 'c.updated_at')
+                ->where([
+                    'c.school_pid' => getSchoolPid(), 'c.teacher_pid' => base64Decode($request->pid),
+                    'c.term_pid' => activeTerm(),
+                    'c.session_pid' => activeSession(),
+                    ])
+                ->orderBy('arm')->get();
+        }
+        return datatables($data)
+                ->editColumn('date', function ($data) {
+                    return date('d F Y',strtotime($data->updated_at));
+                })
+                ->addIndexColumn()
+                ->make(true);
         
     }
     public function loadStaffSubject(Request $request){
-        $data = DB::table('staff_subjects as sb')->join('subjects as s','s.pid', 'sb.subject_pid')
+        $data = DB::table('staff_subjects as sb')->join('class_arm_subjects as as','as.pid', 'sb.arm_subject_pid')
+                        ->join('subjects as j','j.pid', 'as.subject_pid')
+                        ->join('class_arms as a','a.pid', 'as.arm_pid')
                         ->join('terms as t','t.pid', 'sb.term_pid')
-                        ->join('sessions as s','s.pid','session_pid')
-                        ->select('term','session','subject','c.created_at')
-                        ->where(['school_pid'=>getSchoolPid(),'staff_pid'=>$request->pid])->orderBy('arm')->get();
-        
+                        ->join('sessions as s','s.pid','sb.session_pid')
+                        ->select('term','session','j.subject','sb.updated_at','a.arm')
+                        ->where(['sb.school_pid'=>getSchoolPid(),'sb.staff_pid'=>base64Decode($request->pid)])
+                        ->orderBy('arm')->get();
+        return datatables($data)
+            ->editColumn('date', function ($data) {
+                return date('d F Y', strtotime($data->updated_at));
+            })
+            ->editColumn('staff_subject', function ($data) {
+                return $data->arm.' '.$data->subject;
+            })
+            ->addIndexColumn()
+            ->make(true);
     }
 
+    // all staff classs 
+    public function loadAllStaffClasses(Request $request){
+        if (isset($request->session) && isset($request->term)) {
+            $data = DB::table('staff_classes as c')->join('class_arms as a', 'a.pid', 'c.arm_pid')
+                ->join('terms as t', 't.pid', 'c.term_pid')
+                ->join('sessions as s', 's.pid', 'session_pid')
+                ->join('school_staff as st', 'st.pid', 'teacher_pid')
+                ->join('user_details as d', 'd.user_pid', 'st.user_pid')
+                ->select('term', 'session', 'arm', 'c.updated_at', 'fullname')
+                ->where([
+                    'c.school_pid' => getSchoolPid(),
+                    'c.term_pid' => $request->term,
+                    'c.session_pid' => $request->session,
+                ])
+                ->orderBy('arm')->get();
+        } elseif (isset($request->session) || isset($request->term)) {
+            $data = DB::table('staff_classes as c')->join('class_arms as a', 'a.pid', 'c.arm_pid')
+                ->join('terms as t', 't.pid', 'c.term_pid')
+                ->join('sessions as s', 's.pid', 'session_pid')
+                ->join('school_staff as st', 'st.pid', 'teacher_pid')
+                ->join('user_details as d', 'd.user_pid', 'st.user_pid')
+                ->select('term', 'session', 'arm', 'c.updated_at', 'fullname')
+                ->where(['c.school_pid' => getSchoolPid(), 'term_pid' => $request->term])
+                ->orWhere(['c.school_pid' => getSchoolPid(), 'session_pid' => $request->session])
+                ->orderBy('arm')->get();
+        } else {
+            $data = DB::table('staff_classes as c')->join('class_arms as a', 'a.pid', 'c.arm_pid')
+                ->join('terms as t', 't.pid', 'c.term_pid')
+                ->join('sessions as s', 's.pid', 'session_pid')
+                ->join('school_staff as st', 'st.pid', 'teacher_pid')
+                ->join('user_details as d', 'd.user_pid', 'st.user_pid')
+                ->select('term', 'session', 'arm', 'c.updated_at','fullname')
+                ->where(['c.school_pid' => getSchoolPid()])
+                ->orderBy('arm')->get();
+        }
+        return datatables($data)
+            ->editColumn('date', function ($data) {
+                return date('d F Y', strtotime($data->updated_at));
+            })
+            ->addIndexColumn()
+            ->make(true);
+    }
+
+    // all staff subjects 
+    public function loadAllStaffSubjects(Request $request)
+    {   
+        if(isset($request->session) && isset($request->term)){
+            $data = DB::table('staff_subjects as sb')->join('class_arm_subjects as as', 'as.pid', 'sb.arm_subject_pid')
+                ->join('subjects as j', 'j.pid', 'as.subject_pid')
+                ->join('class_arms as a', 'a.pid', 'as.arm_pid')
+                ->join('terms as t', 't.pid', 'sb.term_pid')
+                ->join('sessions as s', 's.pid', 'sb.session_pid')
+                ->join('school_staff as st', 'st.pid', 'sb.staff_pid')
+                ->join('user_details as d', 'd.user_pid', 'st.user_pid')
+                ->select('term', 'session', 'j.subject', 'sb.updated_at', 'a.arm', 'fullname')
+                ->where(['sb.school_pid' => getSchoolPid(),
+                        'sb.term_pid'=>$request->term,
+                        'sb.session_pid'=>$request->session
+                        ])
+                ->orderBy('arm')->get();
+        }elseif(isset($request->session) || isset($request->term)){
+            $data = DB::table('staff_subjects as sb')->join('class_arm_subjects as as', 'as.pid', 'sb.arm_subject_pid')
+                ->join('subjects as j', 'j.pid', 'as.subject_pid')
+                ->join('class_arms as a', 'a.pid', 'as.arm_pid')
+                ->join('terms as t', 't.pid', 'sb.term_pid')
+                ->join('sessions as s', 's.pid', 'sb.session_pid')
+                ->join('school_staff as st', 'st.pid', 'sb.staff_pid')
+                ->join('user_details as d', 'd.user_pid', 'st.user_pid')
+                ->select('term', 'session', 'j.subject', 'sb.updated_at', 'a.arm', 'fullname')
+                ->where(['sb.school_pid' => getSchoolPid(), 'sb.term_pid' => $request->term])
+                ->orWhere(['sb.school_pid' => getSchoolPid(), 'sb.term_pid' => $request->session])
+                ->orderBy('arm')->get();
+        }else{
+            $data = DB::table('staff_subjects as sb')->join('class_arm_subjects as as', 'as.pid', 'sb.arm_subject_pid')
+                    ->join('subjects as j', 'j.pid', 'as.subject_pid')
+                    ->join('class_arms as a', 'a.pid', 'as.arm_pid')
+                    ->join('terms as t', 't.pid', 'sb.term_pid')
+                    ->join('sessions as s', 's.pid', 'sb.session_pid')
+                    ->join('school_staff as st', 'st.pid', 'sb.staff_pid')
+                    ->join('user_details as d', 'd.user_pid', 'st.user_pid')
+                    ->select('term', 'session', 'j.subject', 'sb.updated_at', 'a.arm', 'fullname')
+                    ->where(['sb.school_pid' => getSchoolPid()])
+            ->orderBy('arm')->get();
+        }
+        
+        return datatables($data)
+            ->editColumn('date',
+                function ($data) {
+                    return date('d F Y', strtotime($data->updated_at));
+                }
+            )
+            ->editColumn('staff_subject', function ($data) {
+                return $data->arm . ' ' . $data->subject;
+            })
+            ->addIndexColumn()
+            ->make(true);
+    }
     public function createStaff(Request $request){
         $validator = Validator::make($request->all(),[
             'firstname'=>'required|string|min:3|max:25',
             'lastname'=> 'required|string|min:3|max:25',
-            'gsm'=> 'required|min:11|max:11|unique:users,gsm',
-            'username'=> 'nullable|unique:users,username',
-            'email'=> 'nullable|email|unique:users,email',
+            'gsm'=> ['required','digits:11', 
+                                Rule::unique('users')->where(function ($param) use ($request) {
+                                    $param->where('pid', '!=', $request->pid);
+                                })],
+            'username'=> ['nullable',
+                                    Rule::unique('users')->where(function($param)use($request){
+                                        $param->where('pid','!=',$request->pid);
+                                    })],
+            'email'=> ['nullable','email',
+                                Rule::unique('users')->where(function ($param) use ($request) {
+                                    $param->where('pid', '!=', $request->pid);
+                                })],
             'gender'=>'required',
             'dob'=>'required|date',
             'role'=>'required',
@@ -110,71 +263,136 @@ class StaffController extends Controller
         ],['gsm.required'=>'Enter Phone Number','dob.required'=>'Enter staff date of birth']);
         
         if(!$validator->fails()){
-            $data = [
-                'gsm' => $request->gsm,
-                'email'=> $request->email,
-                'account_status' =>1,
-                'password'=>$this->pwd,
-                'username'=> $request->username ?? AuthController::uniqueUsername($request->firstname)
-            ];
-            $detail = [
-                'firstname' => $request->firstname,
-                'lastname' => $request->lastname,
-                'othername' => $request->othername,
-                'gender' => $request->gender,
-                'dob' => $request->dob,
-                'religion' => $request->religion,
-                'state' => $request->state,
-                'lga' => $request->lga,
-                'address' => $request->address,
-                'title' => $request->title,
-            ];
-            $user = AuthController::createUser($data);
-            if($user){
-                $detail['user_pid'] = $user->pid;
-                $userDetails = UserDetailsController::insertUserDetails($detail);
-                if($userDetails){
-                    $staff = ['role' => $request->role, 'user_pid' => $user->pid, 'staff_id' =>    self::staffUniqueId()];
-                    if($request->passport){
-                        $name = $staff['staff_id'] . '-passport';
-                        $staff['passport'] = saveImg($request->file('passport'),name:$name);
-                    }
-                    if($request->signature){
-                        $name = $staff['staff_id'] . '-signature';
-                        $staff['signature'] = saveImg($request->file('signature'),name:$name);
-                    }
-                    if($request->stamp){
-                        $name = $staff['staff_id'] . '-stamp';
-                        $staff['stamp'] = saveImg($request->file('stamp'),name:$name);
-                    }
-                   $result = self::registerStaffToSchool($staff);
-                   if($result){
+            try {
+                $data = [
+                    'gsm' => $request->gsm,
+                    'email' => $request->email,
+                    'account_status' => 1,
+                    'password' => $this->pwd,
+                    'username' => $request->username ?? AuthController::uniqueUsername($request->firstname),
+                    'pid' => $request->pid
+                ];
+                $detail = [
+                    'firstname' => $request->firstname,
+                    'lastname' => $request->lastname,
+                    'othername' => $request->othername,
+                    'gender' => $request->gender,
+                    'dob' => $request->dob,
+                    'religion' => $request->religion,
+                    'state' => $request->state,
+                    'lga' => $request->lga,
+                    'address' => $request->address,
+                    'title' => $request->title,
+                    'pid' => $request->pid
+                ];
+                $user = AuthController::createUser($data);
+                if ($user) {
+                    $detail['user_pid'] = $data['pid'] ?? $user->pid;
+                    $userDetails = UserDetailsController::insertUserDetails($detail);
+                    if ($userDetails) {
+                        $staff = ['role' => $request->role, 'user_pid' => $data['pid'] ?? $user->pid,];
+                        if (!$request->staff_id) {//skip generating id when updating
+                            $staff['staff_id'] = self::staffUniqueId();
+                        }
+                        if ($request->passport) {
+                            $name = ($staff['staff_id'] ?? $request->staff_id) . '-passport';
+                            $staff['passport'] = saveImg($request->file('passport'), name: $name);
+                        }
+                        if ($request->signature) {
+                            $name = ($staff['staff_id'] ?? $request->staff_id) . '-signature';
+                            $staff['signature'] = saveImg($request->file('signature'), name: $name);
+                        }
+                        if ($request->stamp) {
+                            $name = ($staff['staff_id'] ?? $request->staff_id) . '-stamp';
+                            $staff['stamp'] = saveImg($request->file('stamp'), name: $name);
+                        }
+                        $result = self::registerStaffToSchool($staff);
+                        if ($result) {
+                            if($request->pid){
+                                
+                                return response()->json(['status' => 1, 'message' => 'Staff Detail updated  Successfully & username is ' . $data['username']]);
+                            }
+                            
+                            return response()->json(['status' => 1, 'message' => 'Staff Registration Successful, Staff Id ' . $staff['staff_id']  . ' & username is ' . $data['username']]);
+                        }
 
-                        return response()->json(['status' => 1, 'message' => 'Staff Registration Successfull, Staff Id '.$result->staff_id.' & username is '.$data['username']]);
-
+                        return response()->json(['status' => 1, 'message' => 'user account created, but not linked to school!! use ' . $data['gsm'] . ' or ' . $data['username'] . ' to link to school']);
                     }
-
-                    return response()->json(['status' => 1, 'message' => 'user account created, but not linked to school!! use '.$data['gsm'].' or '.$data['username'].' to link to school']);
-                
                 }
+
+                return response()->json(['status' => 1, 'message' => 'user account not completed, and not linked to school!! use ' . $data['gsm'] . ' or ' . $data['username'] . ' to link to school, and then update account details']);
+
+            } catch (\Throwable $e) {
+                $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+                logError($error);
+                return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
             }
-
-            return response()->json(['status' => 1, 'message' => 'user account not completed, and not linked to school!! use '.$data['gsm']. ' or ' . $data['username'] . ' to link to school, while the use link to update details']);
-
         }
 
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+    }
+
+    public function updateStaffImages(Request $request){
+        $validator = Validator::make($request->all(),[
+            'passport'=> 'required_without_all:signature,stamp|image|mimes:jpeg,png,jpg,gif',
+            'signature'=> 'required_without_all:passport,stamp|image|mimes:jpeg,png,jpg,gif',
+            'stamp'=> 'required_without_all:signature,passport|image|mimes:jpeg,png,jpg,gif',
+            'pid'=> 'required',
+        ],['pid.required'=>'please do the right thing']);
+        if(!$validator->fails()){
+            try {
+                $staff = SchoolStaff::where(['pid'=>$request->pid,'school_pid'=>getSchoolPid()])->first();
+                if ($request->passport) {
+                    $name = $staff['staff_id'] . '-passport';
+                    $staff['passport'] = saveImg($request->file('passport'), name: $name);
+                }
+                if ($request->signature) {
+                    $name = $staff['staff_id'] . '-signature';
+                    $staff['signature'] = saveImg($request->file('signature'), name: $name);
+                }
+                if ($request->stamp) {
+                    $name = $staff['staff_id'] . '-stamp';
+                    $staff['stamp'] = saveImg($request->file('stamp'), name: $name);
+                }
+                $sts = $staff->save();
+                if($sts){
+
+                    return response()->json(['status'=>1,'message'=>'Update successfull!!!']);
+                }
+                return response()->json(['status'=>'error','message'=>'Something Went Wrong']);
+            } catch (\Throwable $e) {
+                $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+                logError($error);
+            }
+        }
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+    }
+    public function find($pid){
+        return view('school.registration.staff.create-staff',compact('pid'));
+    }
+    // load staff details on for editing 
+    public function loadStaffDetailsById(Request $request){
+        $data = DB::table('school_staff as t')->join('users as u','u.pid','t.user_pid')
+                    ->leftJoin('user_details as d','d.user_pid','t.user_pid')
+                    ->select('t.user_pid', 't.pid as t_pid', 'role', 'u.email','u.username', 'u.gsm', 'u.pid as u_pid','d.*','staff_id')
+                    ->where(['t.pid'=>base64Decode($request->pid),'t.school_pid'=>getSchoolPid()])->first();
+        return response()->json($data);
     }
 
 
     public static function registerStaffToSchool(array $data){
         try {
             $data['school_pid'] = $data['school_pid'] ?? getSchoolPid();
+            $dup = SchoolStaff::where(['school_pid' => $data['school_pid'], 'user_pid' => $data['user_pid']])->first();
+            if ($dup) {
+                $dup->fill($data);
+                return $dup->save();
+            }
             $data['pid'] =  public_id();
             $data['staff_id'] = $data['staff_id'] ?? self::staffUniqueId();
             return SchoolStaff::create($data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
+            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
             logError($error);
         }
         
@@ -190,54 +408,49 @@ class StaffController extends Controller
        return SchoolStaff::where(['school_pid'=>getSchoolPid()])->where('staff_id','like','%'.date('yM').'%')->count('id');
     }
     
-    public function activateStaffAccount($pid){
-        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(),'pid' => $pid])->first(['id','status']);
+    public function updateStaffStatus($pid){
         try {
+            $staff = SchoolStaff::where(['school_pid' => getSchoolPid(),'pid' => base64Decode($pid)])->first(['id','status']);
             if ($staff) {
-                $staff->status = 1;
+                $staff->status = $staff->status == 1 ? 0 : 1;
                 // send notification mail 
                 $staff->save();
                 return 'staff Account updated';
             }
-            return 'Wrong Id provided, make sure your session is still active';
+            return 'Something Went Wrong';
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
+            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
             logError($error);
-            dd($error);
         }
     }
-    public function deactivateStaffAccount($pid){
-        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->first(['id', 'status']);
-        try {
-            if ($staff) {
-                $staff->status = 0;
-                // send notification mail 
-                $staff->save();
-                return 'staff Account updated';
-            }
-            return 'Wrong Id provided, make sure your session is still active';
-        } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
-            dd($error);
-        }
-    }
+   
 
-    public function staffRole($pid){
-        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->first(['id', 'status']);
-        try {
-            if ($staff) {
-                $staff->status = 0;
-                // send notification mail 
-                $staff->save();
-                return 'staff Account updated';
+    public function updateStaffRole(Request $request){
+        $validator = Validator::make($request->all(),[
+            'role'=>'required',
+            'pid'=>'required',
+        ]);
+        if(!$validator->fails()){
+            try {
+                $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'pid' => $request->pid])->first();
+                $staff['role'] = $request->role;
+                $sts = $staff->save();
+                if($sts){
+                    if($request->role==200){
+                        $school = School::where('pid',getSchoolPid())->first();
+                        $school['user_pid'] = $staff->user_pid;
+                        $sts = $school->save();
+
+                    }
+                    return response()->json(['status'=>1,'message'=>'staff role updated!!!']);
+                }
+            } catch (\Throwable $e) {
+                $error = $e->getMessage();
+                logError($error);
             }
-            return 'Wrong Id provided, make sure your session is still active';
-        } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
-            dd($error);
         }
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+        
     }
     public function staffAccessRight($pid){
         $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->first(['id', 'status']);
@@ -255,10 +468,6 @@ class StaffController extends Controller
             dd($error);
         }
     }
-
-
-
-
 
 
     public function assignClassToStaff(Request $request){

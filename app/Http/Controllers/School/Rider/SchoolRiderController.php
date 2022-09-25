@@ -147,16 +147,19 @@ class SchoolRiderController extends Controller
                     ->groupBy('r.pid')->first();
         echo formatRiderProfile($data);
     }
-    public function viewRiderStudent(){
-        $data = Student::join('student_pick_up_riders', 'student_pid','students.pid')
-                        ->where(['s.school_pid' => getSchoolPid()])->get('student.*');
-        logError($data);
-        //         $data = DB::table('students as s')
-        //             ->join('student_pick_up_riders as p','p.student_pid','s.pid')
-        //             ->where(['s.school_pid'=>getSchoolPid(),'p.rider_pid'=>base64Decode($request->pid)])
-        //             ->select(DB::raw('gsm,email,username,fullname,address,dob,title,gender,religion,passport'))
-        //             ->orderByDesc('p.id')->get();
-        // echo formatRiderProfile($data);
+    public function viewRiderStudent(Request $request){
+        // $data = Student::join('student_pick_up_riders', 'student_pid','students.pid')
+        //                 ->where(['s.school_pid' => getSchoolPid()])->get('students.*');
+                        $data = DB::table('students as s')
+                        ->join('student_pick_up_riders as p','p.student_pid','s.pid')
+                        ->where(['s.school_pid'=>getSchoolPid(),'p.rider_pid'=>base64Decode($request->pid)])
+                        ->select('s.fullname','s.reg_number','p.updated_at','s.address')
+                        ->orderByDesc('s.fullname')->get();
+                        logError($data);
+            return datatables($data)->editColumn('date',function($data){
+                return date('d F Y',strtotime($data->updated_at));
+            })
+            ->make(true);
     }
 
 

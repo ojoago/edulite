@@ -25,4 +25,7 @@ class UserDetailsController extends Controller
         $names =  $data['lastname'] . ' ' . $data['firstname'] . ' ' . $data['othername'];
         return ucwords(trim($names));
     }
+    public static function getFullname($pid){
+        return UserDetail::where('pid',$pid)->pluck('fullname')->first();
+    }
 }

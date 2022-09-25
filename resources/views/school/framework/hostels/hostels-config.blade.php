@@ -56,23 +56,22 @@
                         <select name="session_pid" id="hostelStudentSessionSelect2" placeholder="select" class="form-control form-control-sm">
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <select name="term_pid" id="hostelStudentTermSelect2" placeholder="select" class="form-control form-control-sm">
-                        </select>
-                    </div>
+
                     <div class="col-md-4">
                         <select name="hostel_pid" id="hostelStudentHostelSelect2" class="form-control form-control-sm">
                         </select>
                     </div>
                 </div>
-                <table class="table table-hover table-striped" id="ex-studentDataTable" width="100%">
+                <table class="table table-hover table-striped table-bordered" id="studentDataTable" width="100%">
                     <thead>
                         <tr>
-                            <th>Hostel</th>
                             <th>Fullname</th>
-                            <th>Reg</th>
+                            <th>Reg. No</th>
                             <th>Class</th>
-                            <th>Portal</th>
+                            <th>Session</th>
+                            <th>Hostel</th>
+                            <th>Assigned Date</th>
+                            <th>Assigned By</th>
                         </tr>
                     </thead>
 
@@ -177,15 +176,65 @@
 
             ],
         });
+        loadHostelStudent();
 
+        function loadHostelStudent(session = null, hostel = null) {
+            $('#studentDataTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                destroy: true,
+                "ajax": {
+                    url: "{{route('load.hostel.students')}}",
+                    type: "post",
+                    data: {
+                        session: session,
+                        hostel: hostel,
+                        _token: "{{csrf_token()}}",
+                    }
+                },
+                "columns": [{
+                        "data": "fullname"
+                    },
+                    {
+                        "data": "reg_number"
+                    },
+                    {
+                        "data": "arm"
+                    },
+                    {
+                        "data": "session"
+                    },
+                    {
+                        "data": "name"
+                    },
+                    {
+                        "data": "date"
+                    },
+                    {
+                        "data": "creator"
+                    },
+                ],
+            });
 
-
-
+        }
         FormMultiSelect2('#hostelStudentSessionSelect2', 'session', 'Select Session');
-        FormMultiSelect2('#hostelStudentTermSelect2', 'term', 'Select Term');
         FormMultiSelect2('#hostelStudentHostelSelect2', 'hostels', 'Select Hostel');
+        $('#hostelStudentSessionSelect2').change(function() {
+            let session = $(this).val();
+            let hostel = $('#hostelStudentHostelSelect2').val();
+            loadHostelStudent(session, hostel)
+        });
+        $('#hostelStudentHostelSelect2').change(function() {
+            let hostel = $(this).val();
+            let session = $('#hostelStudentSessionSelect2').val();
+            loadHostelStudent(session, hostel)
+        });
 
-       
+
 
     });
 </script>

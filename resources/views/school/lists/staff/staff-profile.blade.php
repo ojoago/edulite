@@ -5,26 +5,16 @@
     <h1>Profile</h1>
     <nav>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item"><a href="">Home</a></li>
             <li class="breadcrumb-item">Users</li>
             <li class="breadcrumb-item active">Profile</li>
         </ol>
     </nav>
 </div><!-- End Page Title -->
 <div class="row">
-    <div class="col-xl-4">
+    <div class="col-md-4">
         <div class="card">
-            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-                <h2>Kevin Anderson</h2>
-                <h3>Web Designer</h3>
-                <div class="social-links mt-2">
-                    <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-                    <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
-                </div>
-            </div>
+            <div id="profileImage"></div>
         </div>
     </div>
     <div class="col-md-8">
@@ -65,28 +55,48 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
-
-                        </div>
+                        <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="staffClassTable">
+                            <thead>
+                                <tr>
+                                    <th width="5%">S/N</th>
+                                    <th>Class</th>
+                                    <th>Session</th>
+                                    <th>Term</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="tab-pane fade" id="subject" role="tabpanel" aria-labelledby="subject">
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="session" class="form-label">Session</label>
-                                <select type="text" name="session" class="form-control" id="formSessionSelect2">
+                                <select type="text" name="session" class="form-control" id="formSubjectSessionSelect2">
                                 </select>
                             </div>
 
                             <div class="col-md-4">
                                 <label for="term" class="form-label">Term</label>
-                                <select type="text" name="term" class="form-control" id="formTermSelect2">
+                                <select type="text" name="term" class="form-control" id="formSubjectTermSelect2">
 
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
-
-                        </div>
+                        <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="staffSubjectTable">
+                            <thead>
+                                <tr>
+                                    <th width="5%">S/N</th>
+                                    <th>Class Subject</th>
+                                    <th>Session</th>
+                                    <th>Term</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="tab-pane fade" id="role">
                         R
@@ -102,8 +112,10 @@
     $(document).ready(function() {
         let term = "{{activeTerm()}}"
         let session = "{{activeSession()}}"
+        // class 
         FormMultiSelect2('#formTermSelect2', 'term', 'Select Term', term)
         FormMultiSelect2('#formSessionSelect2', 'session', 'Select Session', session)
+
 
         let pid = "{{$pid}}"
         loadProfile(pid)
@@ -119,13 +131,119 @@
                     _token: token
                 },
                 success: function(data) {
-                    $('#profileDetail').html(data)
+                    $('#profileImage').html(data.image)
+                    $('#profileDetail').html(data.info)
                     $('.overlay').hide();
                 },
                 error: function() {
                     $('#profileDetail').html('')
                     $('.overlay').hide();
                 }
+            });
+        }
+
+        loadClasses(pid)
+        // on change term 
+        $('#formTermSelect2').change(function() {
+            let term = $(this).val();
+            let session = $('#formSessionSelect2').val();
+            loadClasses(pid, session, term)
+        });
+        //  on change session 
+        $('#formSessionSelect2').change(function() {
+            let session = $(this).val();
+            let term = $('#formTermSelect2').val();
+            loadClasses(pid, session, term)
+        });
+
+        function loadClasses(pid = null, session = null, term = null) { //cls class
+            $('#staffClassTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                destroy: true,
+                "ajax": {
+                    url: "{{route('load.staff.classes')}}",
+                    data: {
+                        pid: pid,
+                        session: session,
+                        term: term,
+                        _token: "{{csrf_token()}}",
+                    },
+                    type: "post",
+                },
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        // orderable: false,
+                        // searchable: false
+                    },
+                    {
+                        "data": "arm"
+                    },
+                    {
+                        "data": "session"
+                    },
+                    {
+                        "data": "term"
+                    },
+                    {
+                        "data": "date"
+                    },
+
+                ],
+            });
+        }
+
+
+        FormMultiSelect2('#formSubjectTermSelect2', 'term', 'Select Term', term)
+        FormMultiSelect2('#formSubjectSessionSelect2', 'session', 'Select Session', session)
+
+        // load staff subject 
+        loadStaffSubject(pid)
+        // staff subjects 
+        function loadStaffSubject(pid = null, session = null, term = null) { //cls class
+            $('#staffSubjectTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                destroy: true,
+                "ajax": {
+                    url: "{{route('load.staff.subjects')}}",
+                    data: {
+                        pid: pid,
+                        session: session,
+                        term: term,
+                        _token: "{{csrf_token()}}",
+                    },
+                    type: "post",
+                },
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        // orderable: false,
+                        // searchable: false
+                    },
+                    {
+                        "data": "staff_subject"
+                    },
+                    {
+                        "data": "session"
+                    },
+                    {
+                        "data": "term"
+                    },
+                    {
+                        "data": "date"
+                    },
+
+                ],
             });
         }
 

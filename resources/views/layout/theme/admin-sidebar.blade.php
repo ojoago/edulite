@@ -60,6 +60,14 @@
             </a>
         </li>
         <li>
+            <a href="{{route('timetable.config')}}">
+                <i class="bi bi-circle"></i><span>
+                    Timetable
+                </span>
+            </a>
+        </li>
+        @if(getSchoolType() == 2 || getSchoolType() == 3)
+        <li>
             <a href="{{route('school.hostels.config')}}">
                 <i class="bi bi-circle"></i><span>
                     Hostels
@@ -67,9 +75,12 @@
                 </span>
             </a>
         </li>
+        @endif
     </ul>
-</li><!-- End Components Nav -->
+</li>
+<!-- End Framework -->
 
+<!-- create account nav  -->
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#account-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-people-fill"></i><span>Account</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -96,7 +107,9 @@
             </a>
         </li>
     </ul>
-</li><!-- End Forms Nav -->
+</li>
+<!-- End create account nav -->
+<!-- uploads  -->
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#uploads-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-people-fill"></i><span>Uploads</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -123,7 +136,9 @@
             </a>
         </li>
     </ul>
-</li><!-- End Forms Nav -->
+</li>
+<!-- end of uploads -->
+<!-- add/link users   -->
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#add-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-file-spreadsheet-fill"></i><span>Add</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -152,7 +167,8 @@
         </li>
     </ul>
 </li>
-<!-- End Forms Nav -->
+<!-- End add/link users -->
+<!-- user list  -->
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#users-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-file-spreadsheet-fill"></i><span>Users</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -164,11 +180,16 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('school.staff.list') }}">
+            <a href="{{ route('school.staff.classes') }}">
                 <i class="bi bi-circle"></i><span>Staff Class</span>
             </a>
         </li>
         <li>
+            <a href="{{ route('all.staff.subjects') }}">
+                <i class="bi bi-circle"></i><span>Staff Subjects</span>
+            </a>
+        </li>
+        <li>
             <a href="{{route('school.student.list')}}">
                 <i class="bi bi-circle"></i><span>Students</span>
             </a>
@@ -186,36 +207,6 @@
     </ul>
 </li>
 <!-- End Forms Nav -->
-<!-- End Forms Nav -->
-<li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#edit-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-file-spreadsheet-fill"></i><span>Edit</span><i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="edit-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="{{ route('school.staff.list') }}">
-                <i class="bi bi-circle"></i><span>Staff</span>
-            </a>
-        </li>
-
-        <li>
-            <a href="{{route('school.student.list')}}">
-                <i class="bi bi-circle"></i><span>Students</span>
-            </a>
-        </li>
-        <li>
-            <a href="{{route('school.parent.list')}}">
-                <i class="bi bi-circle"></i><span>Parents</span>
-            </a>
-        </li>
-
-        <li>
-            <a href="{{route('school.rider.list')}}">
-                <i class="bi bi-circle"></i><span>Rider List</span>
-            </a>
-        </li>
-    </ul>
-</li>
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#assign-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-file-spreadsheet-fill"></i><span>Assign/Link</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -241,18 +232,18 @@
                 <i class="bi bi-circle"></i><span>Class Rep</span>
             </a>
         </li>
-
+        @if(getSchoolType() == 2 || getSchoolType() == 3)
         <li>
             <a class="pointer" data-bs-target="#assignHostelToPortalModal" data-bs-toggle="modal">
                 <i class="bi bi-circle"></i><span>Portal</span>
             </a>
         </li>
         <li>
-            <a class="pointer" data-bs-target="#assignStudentToHostelModal" data-bs-toggle="modal">
+            <a class="pointer" data-bs-target="#assignHostelToStudentModal" data-bs-toggle="modal">
                 <i class="bi bi-circle"></i><span>Link Student to Hostels</span>
             </a>
         </li>
-
+        @endif
         <li>
             <a class="pointer" data-bs-target="#linkStudentToRiderModal" data-bs-toggle="modal">
                 <i class="bi bi-circle"></i><span>Care/Rider</span>

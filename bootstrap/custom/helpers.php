@@ -6,7 +6,7 @@ use App\Http\Controllers\Auths\AuthController;
     
 
    function logError($error){
-    Log::error($error);
+    Log::error(json_encode($error));
    }
    function public_id(){
      return strtoupper(str_shuffle(date('YMDHism').time()));

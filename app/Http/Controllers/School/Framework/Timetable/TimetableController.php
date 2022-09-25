@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\School\Registration;
+namespace App\Http\Controllers\School\Framework\Timetable;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class StaffRegistrationController extends Controller
+class TimetableController extends Controller
 {
     /**
      * Display a listing of the resource.

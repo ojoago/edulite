@@ -39,16 +39,16 @@
             <table class="table table-bordered border-primary" id="scoreTable">
                 <thead>
                     <tr>
-                        <th scope="col">S/N</th>
+                        <th scope="col" width="5%">S/N</th>
                         <th scope="col">
-                            <!-- Reg-Number -->
+                            Reg-Number
                         </th>
                         <th scope="col">Names</th>
                         @foreach($scoreParams as $row)
-                        <th scope="col">{{$row->title}} max-[{{$row->score}}]</th>
+                        <th scope="col">{{$row->title}} [{{$row->score}}]</th>
                         @endforeach
-                        <th scope="col">Total
-                            <!--[100]-->
+                        <th scope="col" width="5%">Total
+                            [100]
                         </th>
                     </tr>
                 </thead>
@@ -56,16 +56,21 @@
                     @foreach($data as $student)
                     <tr class="studentId" id="{{$student->pid}}">
                         <td>{{$loop->iteration}}</td>
-                        <td>{{--$student->reg_number--}}</td>
+                        <td>{{$student->reg_number}}</td>
                         <td> <input type="checkbox" name="{{$student->pid}}" class="examStatus" id="{{$student->pid}}" checked> {{ $student->fullname }}</td>
                         <form>
                             @csrf
+                            @php $total = 0;@endphp
                             @foreach($scoreParams as $row)
                             <td scope="col">
-                                <input type="number" step="0.01" class="form-control form-control-sm studentCaScore" id="{{$row->assessment_title_pid}}" value="{{getTitleScore($student->pid,$row->assessment_title_pid)}}" max_score="{{$row->score}}" placeholder="max obtainable {{--$row->score--}}">
+                                @php
+                                $score = getTitleScore($student->pid,$row->assessment_title_pid);
+                                $total += $score;
+                                @endphp
+                                <input type="number" step="0.01" class="form-control form-control-sm studentCaScore" id="{{$row->assessment_title_pid}}" value="{{$score}}" max_score="{{$row->score}}" placeholder="max obtainable {{--$row->score--}}">
                             </td>
                             @endforeach
-                            <td scope="col"></td>
+                            <td scope="col" class="studentTotal" id="{{$student->pid}}Total">{{$total}}</td>
                     </tr>
                     @endforeach
                 </tbody>
