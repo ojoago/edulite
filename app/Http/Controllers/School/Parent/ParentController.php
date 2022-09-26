@@ -4,7 +4,6 @@ namespace App\Http\Controllers\School\Parent;
 
 use App\Http\Controllers\Controller;
 use App\Models\School\Registration\SchoolParent;
-use App\Models\School\Student\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

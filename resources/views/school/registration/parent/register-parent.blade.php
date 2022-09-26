@@ -54,6 +54,8 @@
                 dataType: "JSON",
                 processData: false,
                 contentType: false,
+                enctype: 'multipart/form-data',
+                cache: false,
                 beforeSend: function() {
                     $('#createStudentForm').find('p.text-danger').text('');
                     $('#createStudentBtn').prop('disabled', true);

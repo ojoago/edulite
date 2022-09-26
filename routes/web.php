@@ -37,6 +37,10 @@ use App\Http\Controllers\School\Student\Result\Comments\PortalCommentResultContr
 use App\Http\Controllers\School\Student\Result\Comments\TeacherCommentResultController;
 use App\Http\Controllers\School\Student\Results\Cumulative\ViewCumulativeResultController;
 use App\Http\Controllers\School\Student\Assessment\Psychomotor\RecordPsychomotorController;
+use App\Http\Controllers\School\Upload\UploadParentController;
+use App\Http\Controllers\School\Upload\UploadRiderController;
+use App\Http\Controllers\School\Upload\UploadStaffController;
+use App\Http\Controllers\School\Upload\UploadStudentController;
 
 // port 8400
 Route::view('/','welcome')->middleware('guest');
@@ -252,7 +256,7 @@ Route::middleware('schoolAuth')->group(function(){
     // result config 
     Route::view('lite-result-config', 'school.framework.result.result_config')->name('school.result.config');
 
-    Route::view('lite-create-staff', 'school.registration.staff.create-staff')->name('create.staff.form');
+    Route::view('register-staff', 'school.registration.staff.register-staff')->name('create.staff.form');
     Route::view('lite-staff-list', 'school.staff.staff-list')->name('school.staff.list');
     Route::post('lite-staff', [StaffController::class, 'createStaff'])->name('create.school.staff');
     Route::get('edit-staff/{id}', [StaffController::class, 'find'])->name('edit.staff');
@@ -295,13 +299,18 @@ Route::middleware('schoolAuth')->group(function(){
 
     // uploads 
     // upload staff 
-    Route::view('upload-staff', ['school.uploads.staff.upload-staff'])->name('upload.staff');
+    Route::view('upload-s', 'school.uploads.staff.upload-staff')->name('upload.staff');
+    Route::post('upload-s', [UploadStaffController::class,'importStaff']);
+
     // upload student 
-    Route::view('upload-student', ['school.uploads.student.upload-student'])->name('upload.student');
+    Route::view('upload-std', 'school.uploads.student.upload-student')->name('upload.student');
+    Route::post('upload-std', [UploadStudentController::class,'importStudent']);
     // upload parent 
-    Route::view('upload-parent', ['school.uploads.parent.upload-parent'])->name('upload.parent');
+    Route::view('upload-p', 'school.uploads.parent.upload-parent')->name('upload.parent');
+    Route::post('upload-p', [UploadParentController::class,'importParent']);
     // upload rider 
-    Route::view('upload-rider', ['school.uploads.rider.upload-rider'])->name('upload.rider');
+    Route::view('upload-r', 'school.uploads.rider.upload-rider')->name('upload.rider');
+    Route::post('upload-r', [UploadRiderController::class,'importRider']);
 
 
     // link Activities 

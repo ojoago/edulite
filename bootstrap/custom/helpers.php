@@ -1,7 +1,9 @@
 <?php 
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Session;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Http\Controllers\Auths\AuthController;
     
 
@@ -259,7 +261,28 @@ function saveImg($image,$path='images',$name=null)
     return $name;
 }
 
+function phpWay($path)
+{
+    move_uploaded_file($path, $path);
+    $file_type = IOFactory::identify($path);
+    $reader = IOFactory::createReader($file_type);
+    $spreadsheet = $reader->load($path);
+    unlink($path);
+    $data = $spreadsheet->getSheet(0)->toArray(); //get the first sheet instead of getActiveSheet()
+    $header =  $data[0];
+    unset($data[0]);
+    return ['header' => $header, 'data' => $data];
+}
 
+function maatWay($model, $path)
+{
+    // $collection = Excel::toCollection(new SchoolStaff, $path);
+    $data = Excel::toArray($model, $path);//array way 
+    $header =  $data[0][0];
+    unset($data[0][0]);
+    $data = $data[0];
+    return ['header' => $header, 'data' => $data];
+}
 
 
 if (!function_exists('file_path')) {

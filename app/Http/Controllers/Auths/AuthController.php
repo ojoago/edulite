@@ -48,18 +48,29 @@ class AuthController extends Controller
         }
     }
    
-    public static function uniqueUsername($firstname)
+    public static function uniqueUsername(string $firstname)
     {
+        if(empty($firstname)){
+            return ;
+        }
         $rm = ['#',' ','`',"'",'#','^','%','$','','*','(',')',';','"','>','<','/','?','+',',',':',"|",'[',']','{','}','~'];
         $firstname = str_replace($rm,'',trim($firstname));
-       $count = UserDetail::where('firstname' ,$firstname)
-                                ->orWhere(['firstname' => strtolower($firstname)])
-                                ->orWhere(['firstname' => strtoupper($firstname)])
+       $count = User::where('username','like' ,'%'. $firstname.'%')
+                                // ->orWhere(['firstname' => strtolower($firstname)])
+                                // ->orWhere(['firstname' => strtoupper($firstname)])
                                 ->count('id');
         if ($count == 0) {
             return $firstname;
         }
         return $firstname.date('ym') . $count;
+    }
+
+    public static function findEmail($email){
+        return User::where('email', $email)->first();
+    }
+    public static function findGsm($gsm){
+        
+        return User::where('gsm', $gsm)->first();
     }
     public function verifyAccount($id){
         $user= User::where('pid',$id)->first(['id','account_status','email_verified_at']);
