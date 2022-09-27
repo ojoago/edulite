@@ -11,15 +11,21 @@ use App\Http\Controllers\School\Framework\ClassController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\School\Rider\SchoolRiderController;
 use App\Http\Controllers\Organisation\OrganisationController;
+use App\Http\Controllers\School\Upload\UploadRiderController;
+use App\Http\Controllers\School\Upload\UploadStaffController;
 use App\Http\Controllers\Organisation\OrgUserAccessController;
+use App\Http\Controllers\School\Upload\UploadParentController;
 use App\Http\Controllers\School\Student\StudentClassController;
 use App\Http\Controllers\School\Student\StudentScoreController;
+use App\Http\Controllers\School\Upload\UploadStudentController;
 use App\Http\Controllers\Organisation\OrganisationUserController;
+use App\Http\Controllers\School\Framework\Hostel\HostelController;
 use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
 use App\Http\Controllers\School\Framework\Subject\SubjectController;
 use App\Http\Controllers\School\Framework\Term\SchoolTermController;
 use App\Http\Controllers\School\Framework\Psycho\PsychomotorController;
 use App\Http\Controllers\School\Framework\Subject\SubjectTypeController;
+use App\Http\Controllers\School\Framework\Timetable\TimetableController;
 use App\Http\Controllers\School\Framework\Psycho\PsychoGradeKeyController;
 use App\Http\Controllers\School\Framework\Session\SchoolSessionController;
 use App\Http\Controllers\School\Registration\ParentRegistrationController;
@@ -29,18 +35,13 @@ use App\Http\Controllers\School\Student\Promotion\PromoteStudentController;
 use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 use App\Http\Controllers\School\Framework\Attendance\AttendanceTypeController;
 use App\Http\Controllers\School\Framework\Assessment\AssessmentTitleController;
-use App\Http\Controllers\School\Framework\Hostel\HostelController;
 use App\Http\Controllers\School\Student\Attendance\StudentAttendanceController;
-use App\Http\Controllers\School\Student\Result\Comments\CommentResultController;
+use App\Http\Controllers\School\Student\Results\Comments\CommentResultController;
 use App\Http\Controllers\School\Student\Results\Termly\StudentTermlyResultController;
 use App\Http\Controllers\School\Student\Result\Comments\PortalCommentResultController;
 use App\Http\Controllers\School\Student\Result\Comments\TeacherCommentResultController;
 use App\Http\Controllers\School\Student\Results\Cumulative\ViewCumulativeResultController;
 use App\Http\Controllers\School\Student\Assessment\Psychomotor\RecordPsychomotorController;
-use App\Http\Controllers\School\Upload\UploadParentController;
-use App\Http\Controllers\School\Upload\UploadRiderController;
-use App\Http\Controllers\School\Upload\UploadStaffController;
-use App\Http\Controllers\School\Upload\UploadStudentController;
 
 // port 8400
 Route::view('/','welcome')->middleware('guest');
@@ -120,6 +121,9 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('lite-arm', [ClassController::class, 'createClassArm'])->name('create.school.class.arm');
     // create class arm 
     Route::post('create-class-arm-subject', [ClassController::class, 'createClassArmSubject'])->name('create.school.class.arm.subject');
+    // create class arm 
+    Route::post('create-class-timetable', [TimetableController::class, 'createClassTimetable'])->name('create.school.timetable');
+    Route::post('load-class-timetable', [TimetableController::class, 'index'])->name('load.school.timetable');
     // create class arm rep 
     Route::post('assign-class-arm-rep', [StudentClassController::class, 'assignClassRep'])->name('assign.class.arm.rep');
     // academic session
@@ -168,8 +172,10 @@ Route::middleware('schoolAuth')->group(function(){
     // load classe arm 
     Route::post('load-available-class-arm', [Select2Controller::class, 'loadAvailableClassArm'])->name('load.available.class.arm');
     Route::post('load-available-all-class-arm', [Select2Controller::class, 'loadAllClassArm'])->name('load.all.class.arm');
-    // load classe arm subject
+    // load class arm subject
     Route::post('load-available-class-arm-subject', [Select2Controller::class, 'loadAvailableClassArmSubject'])->name('load.available.class.arm.subject');
+    // load subjects of all arms under class
+    Route::post('load-available-all-arms-subject', [Select2Controller::class, 'loadAvailableClassAllArmsSubject']);
     // load category subject 
     Route::post('load-available-category-subject', [Select2Controller::class, 'loadAvailableSelectedCategorySubject'])->name('load.available.category.subject');
     // load school head of staff 
@@ -438,7 +444,7 @@ Route::middleware('schoolAuth')->group(function(){
 
     // comments 
     // principal comment 
-    Route::view('principal-comment-termly-result', 'school.student.result.comments..principal.principal-comment-form')->name('principal.comment.termly.result');
+    Route::view('principal-comment-termly-result', 'school.student.result.comments.principal.principal-comment-form')->name('principal.comment.termly.result');
     // the view // princal-comment.blade.php
     Route::post('principal-comment-termly-result', [CommentResultController::class, 'loadStudentResult']);
     // pricinpal commenting 

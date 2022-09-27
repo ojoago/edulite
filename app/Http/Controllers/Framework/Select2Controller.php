@@ -409,6 +409,32 @@ class Select2Controller extends Controller
         }
         return response()->json($data);
     }
+    public function loadAvailableClassAllArmsSubject(Request $request)
+    {
+        $data = null;
+        if ($request->has('q'))
+            $result = ClassArmSubject::join('class_arms','class_arms.pid','arm_pid')
+                                   ->join('subjects','subjects.pid', 'subject_pid')
+                                   ->where(['class_arms.school_pid' => getSchoolPid(), 'class_pid' =>$request->pid])
+                                   ->where('subject', 'like', '%' . $request->q . '%')
+                                    ->limit($request->page_limit)->orderBy('arm')
+                                    ->get(['class_arm_subjects.pid', 'arm','subject']); //
+        else 
+            $result = ClassArmSubject::join('class_arms','class_arms.pid','arm_pid')
+                                   ->join('subjects','subjects.pid', 'subject_pid')
+                                   ->where(['class_arms.school_pid' => getSchoolPid(), 'class_pid' =>$request->pid])
+                                   ->limit(10)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm','subject']); //
+        if (!$result) {
+            return response()->json(['id' => null, 'text' => null]);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row-> subject . ' - ' . $row->arm,
+            ];
+        }
+        return response()->json($data);
+    }
 
     // states and local govt 
     public function loadStates(Request $request){

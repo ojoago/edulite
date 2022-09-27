@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h5 class="card-title">Comment {{$class}} <small>Result</small></h5>
-                    <p> <i class="bi bi-calendar-event-fill"></i> {{--termName(session('term'))}} {{sessionName(session('session'))--}}</p>
+                    <p> <i class="bi bi-calendar-event-fill"></i> {{termName(session('term'))}} {{sessionName(session('session'))}}</p>
                 </div>
                 <div class="col-md-6">
                     <form action="{{route('change.arm.subject')}}" method="post">

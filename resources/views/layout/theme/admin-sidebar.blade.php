@@ -253,8 +253,76 @@
 </li><!-- End Forms Nav -->
 
 @endif
+@if(schoolTeacher())
+
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#activity-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-layout-text-window-reverse"></i><span>Activities</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="activity-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="{{route('student.assessment.form')}}">
+                <i class="bi bi-circle"></i><span>My Profile</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('student.assessment.form')}}">
+                <i class="bi bi-circle"></i><span>My classes</span>
+            </a>
+        </li>
+        <li>
+            <a href="tables-general.html">
+                <i class="bi bi-circle"></i><span>My Subjects</span>
+            </a>
+        </li>
+
+    </ul>
+</li>
+@if(classTeacher())
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#attendance-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bar-chart"></i><span>My Student</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="attendance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="charts-chartjs.html">
+                <i class="bi bi-circle"></i><span>Student Class</span>
+            </a>
+        </li>
+        <li>
+            <a href="charts-chartjs.html">
+                <i class="bi bi-circle"></i><span>Student Subject</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('student.attendance.form')}}">
+                <i class="bi bi-circle"></i><span>Student Attendance</span>
+            </a>
+        </li>
+    </ul>
+</li>
+<!-- End Charts Nav -->
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#student-promotion-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bar-chart"></i><span>Promotion</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="student-promotion-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+            <a href="{{route('promote.student.form')}}">
+                <i class="bi bi-circle"></i><span>Promote class</span>
+            </a>
+        </li>
+        <li>
+            <a href="charts-apexcharts.html">
+                <i class="bi bi-circle"></i><span>swap student</span>
+            </a>
+        </li>
+    </ul>
+</li><!-- End Charts Nav -->
+@endif
+
 <!-- student assessment -->
-@if(getUserActiveRole() =="301" || getUserActiveRole()=="300" || hasRole())
+
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-layout-text-window-reverse"></i><span>Assessment</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -265,28 +333,20 @@
                 <i class="bi bi-circle"></i><span>TML</span>
             </a>
         </li>
-        <li>
-            <a href="tables-general.html">
-                <i class="bi bi-circle"></i><span>Dly</span>
-            </a>
-        </li>
-        <li>
-            <a href="tables-general.html">
-                <i class="bi bi-circle"></i><span> 2</span>
-            </a>
-        </li>
+
         <li>
             <a href="{{route('view.student.subject.score.form')}}">
                 <i class="bi bi-circle"></i><span> VSR</span>
             </a>
         </li>
-        <li>
-            <a href="tables-data.html">
-                <i class="bi bi-circle"></i><span>Data Tables</span>
-            </a>
-        </li>
+
     </ul>
-</li><!-- End Tables Nav -->
+</li>
+<!-- staff class and subject -->
+@endif
+
+
+@if(getUserActiveRole() =="301" || hasRole())
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#psychomotor-nav" data-bs-toggle="collapse" href="#">
@@ -342,43 +402,7 @@
     </ul>
 </li><!-- End Charts Nav -->
 @endif
-@if(getUserActiveRole() == "301" || hasRole())
-<li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#attendance-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-bar-chart"></i><span>My Student</span><i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="attendance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="charts-chartjs.html">
-                <i class="bi bi-circle"></i><span>Student Class</span>
-            </a>
-        </li>
-        <li>
-            <a href="{{route('student.attendance.form')}}">
-                <i class="bi bi-circle"></i><span>Std</span>
-            </a>
-        </li>
-    </ul>
-</li>
-<!-- End Charts Nav -->
-<li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#student-promotion-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-bar-chart"></i><span>Promotion</span><i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="student-promotion-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="{{route('promote.student.form')}}">
-                <i class="bi bi-circle"></i><span>Promote class</span>
-            </a>
-        </li>
-        <li>
-            <a href="charts-apexcharts.html">
-                <i class="bi bi-circle"></i><span>swap student</span>
-            </a>
-        </li>
-    </ul>
-</li><!-- End Charts Nav -->
-@endif
+
 <!-- admission and payment section form clark n secretary  -->
 @if(getUserActiveRole() == "303" || getUserActiveRole() == "305" || getUserActiveRole() == "500" || hasRole())
 <!-- <li class="nav-item">
@@ -411,7 +435,7 @@
     <ul id="student-admission-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
             <a href="charts-chartjs.html">
-                <i class="bi bi-circle"></i><span>Chart.js</span>
+                <i class="bi bi-circle"></i><span>Admission List</span>
             </a>
         </li>
         <li>
@@ -449,7 +473,7 @@
     </ul>
 </li><!-- End Charts Nav -->
 @endif
-@if(getUserActiveRole() == "303" || getUserActiveRole() == "305" || getUserActiveRole() == "500" || hasRole())
+@if(canComment())
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#comment-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>Cmmt</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -461,6 +485,11 @@
                 <i class="bi bi-circle"></i><span>Principal </span>
             </a>
         </li>
+        <li>
+            <a href="{{route('principal.comment.termly.result')}}">
+                <i class="bi bi-circle"></i><span>Automated Comment </span>
+            </a>
+        </li>
         @endif
         @if(getUserActiveRole() == "301" || hasRole())
         <li>
@@ -468,11 +497,21 @@
                 <i class="bi bi-circle"></i><span>Teacher</span>
             </a>
         </li>
+        <li>
+            <a href="{{route('principal.comment.termly.result')}}">
+                <i class="bi bi-circle"></i><span>Automated Comment </span>
+            </a>
+        </li>
         @endif
         @if(getUserActiveRole() == "307" || hasRole())
         <li>
             <a href="{{route('portal.comment.termly.result')}}">
                 <i class="bi bi-circle"></i><span>Portals</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('principal.comment.termly.result')}}">
+                <i class="bi bi-circle"></i><span>Automated Comment </span>
             </a>
         </li>
         @endif

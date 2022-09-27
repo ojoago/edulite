@@ -24,13 +24,14 @@
     <script src="{{asset('plugins/jquery-validation/jquery.validate.js')}}"></script>
     <script src="{{asset('plugins/sweetalert/sweetalert2.min.js')}}"></script>
     <script src="{{asset('plugins/DataTables/datatables.min.js')}}"></script>
+    <script src="{{asset('plugins/DataTables/FixedHeader-3.2.4/js/dataTables.fixedHeader.min.js')}}"></script>
+    <script src="{{asset('plugins/DataTables/FixedHeader-3.2.4/js/dataTables.fixedHeader.bootstrap5.min.js')}}"></script>
     <script src="{{asset('plugins/select2/js/select2.min.js')}}"></script>
     <script src="{{asset('themes/vendor/chart.js/chart.min.js')}}"></script>
     <script src="{{asset('themes/vendor/echarts/echarts.min.js')}}"></script>
     <script src="{{asset('themes/vendor/quill/quill.min.js')}}"></script>
     <script src="{{asset('themes/vendor/simple-datatables/simple-datatables.js')}}"></script>
     <script src="{{asset('themes/vendor/tinymce/tinymce.min.js')}}"></script>
-    <script src="{{asset('themes/vendor/php-email-form/validate.js')}}"></script>
 
     <!-- Template Main JS File -->
     <script src="{{asset('themes/js/main.js')}}"></script>

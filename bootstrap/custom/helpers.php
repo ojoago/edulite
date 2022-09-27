@@ -85,6 +85,17 @@ use App\Http\Controllers\Auths\AuthController;
     function hasRole($role=false){
         return $role;
     }
+    function schoolTeacher(){
+        $cn =['200','205','301','300','303','305','307','500'];
+        return (in_array(getUserActiveRole(),$cn)|| hasRole());
+    }
+    function classTeacher(){
+        return (getUserActiveRole() == 301 || hasRole());
+    }
+    function canComment(){
+        $cn =['301','307','500'];
+        return (in_array(getUserActiveRole(), $cn) || hasRole());
+    }
     function deniedAccess($role=false){
         return $role;
     }
@@ -139,7 +150,7 @@ use App\Http\Controllers\Auths\AuthController;
                 '307'=> 'Portals',
                 '400'=> 'Office Assisstnace',
                 '405'=> 'Security',
-                '500'=> 'Pincipal/Head Teacher',
+                '500'=> 'Principal/Head Teacher',
                 // '505'=> 'Head Teacher',
                 '600'=> 'Student',
                 '605'=> 'Parent/Guardian',
@@ -273,6 +284,7 @@ function phpWay($path)
     unset($data[0]);
     return ['header' => $header, 'data' => $data];
 }
+
 
 function maatWay($model, $path)
 {

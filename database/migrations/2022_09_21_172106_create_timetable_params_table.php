@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('timetable_params', function (Blueprint $table) {
             $table->id();
+            $table->string('arm_pid');
+            $table->string('pid')->unique();
+            $table->string('term_pid');
+            $table->string('school_pid');
+            $table->string('session_pid');
             $table->timestamps();
         });
     }

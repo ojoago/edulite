@@ -673,6 +673,10 @@
                     $.each(data.error, function(prefix, val) {
                         $('.' + prefix + '_error').text(val[0]);
                     });
+                    $.each(data.error, function(prefix, val) {
+                        let prfx = prefix.replace(".", "");
+                        $('.' + prfx + '_error').text(val[0]);
+                    });
                 } else if (data.status === 1) {
                     successClearForm(formId, data.message)
                     alert_toast(data.message, 'success');

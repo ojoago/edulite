@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('timetables', function (Blueprint $table) {
             $table->id();
+            $table->string('school_pid');
+            $table->string('param_pid');
+            $table->string('subject_pid');
+            $table->string('exam_date');
+            $table->string('exam_time');
             $table->timestamps();
         });
     }
