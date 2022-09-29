@@ -5,8 +5,11 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Http\Controllers\Auths\AuthController;
-    
+use App\Mail\AuthMail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
+    define('APP_NAME','EuLite');
    function logError($error){
     Log::error(json_encode($error));
    }
@@ -248,7 +251,9 @@ use App\Http\Controllers\Auths\AuthController;
         return date('Y-m-d');
     }
 
-
+    function sendMail($param){
+       return Mail::to($param['email'])->send(new AuthMail($param));
+    }
 function saveImg($image,$path='images',$name=null)
 {
     $percent=0.26;

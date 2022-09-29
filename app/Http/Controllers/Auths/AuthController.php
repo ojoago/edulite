@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auths;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Users\UserDetail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -26,7 +25,12 @@ class AuthController extends Controller
         $user = self::createUser($data);
         // send email
         if($user){
-
+            $data = [
+                    'email'=>$request->email,
+                    'url'=> 'verify/'. base64Encode($user->pid),
+                    'subject'=> 'Account Verification Link'
+            ];
+            sendMail($data);
             return back()->with('success','Account Created successfully, Verification link sent to your mail');
         } 
         return back()->with('error','failed to created account');
@@ -73,21 +77,65 @@ class AuthController extends Controller
         return User::where('gsm', $gsm)->first();
     }
     public function verifyAccount($id){
-        $user= User::where('pid',$id)->first(['id','account_status','email_verified_at']);
+        $user= User::where('pid',base64Decode($id))->first(['id','account_status','email_verified_at']);
+        if($user->account_status==1){
+
+            return redirect()->route('login')->with('success','account already Verified, you can now login');
+        }
+        if($user->account_status != 0 ){
+            
+            return redirect()->route('login')->with('success','Contact your school or admin to short out your issue');
+        }
         $user->account_status = 1;
         $user->email_verified_at = date('Y-m-d H:i:s');
         $user = $user->save();
         return redirect()->route('login')->with('success','account verification successfull, you can now login');
     }
+
+    // send forget password link 
     public function forgetPassword(Request $request){
+        $validator = Validator::make($request->all(),[
+            'email'=>'required|email']);
+            
+        if(!$validator->fails()){
+            $user = User::where('email',$request->email)->first(['pid','email','reset_token','id']);
+            if($user){
+                $data = [
+                    'email' => $request->email,
+                    'url' => 'reset/' . base64Encode($user->pid),
+                    'subject' => 'Password reset Link'
+                ];
+                if(sendMail($data)){
+                    $user->reset_token = strtotime(now());
+                    $user->save();
+                    return response()->json(['status'=>1,'message'=>'Password Reset link sent to your mail']);
+                }
+                return response()->json(['status'=>'error','message'=>'Something Went Wrong, try again or contact care@edulite.ng']);
+            }
+            return response()->json(['status'=>'error','message'=>'The email you provide is not registered']);
+        }
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
 
     }
+    // open forget password when user click on link 
     public function resetPasswordForm($id){
         session(['pid' => $id]);
         return view('auths.reset');
     }
+
+    // reseting password when user submit b=form 
     public function resetPassword(Request $request)
     {
+        $request->validate(['password' => 'required|confirmed|min:6']);
+        $user = User::where('pid', base64Decode(session('pid')))->first();// load user detail
+        $diff = strtotime(now()) - $user->reset_token; //compare token
+        if (abs($diff / 86400) > 1) {
+            return redirect()->back()->with('warning', 'error|Reset Token has expired!');
+        }
+        $user->password = $request->password;
+        $user->reset_token = null;
+        $user->save();
+        return redirect()->route('login')->with('message', 'success|Password reset successfull!!!.');
     }
     public function updatePassword(Request $request){
         $validator = Validator::make($request->all(),[

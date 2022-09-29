@@ -6,7 +6,7 @@
     <div class="card-body">
         <div class="pt-4 pb-2">
             <h5 class="card-title text-center pb-0 fs-4">Qiuck Sign Up</h5>
-            <p class="text-center small">Enter your username & password to login</p>
+            <p class="text-center small">Enter your email, username & password to sign up</p>
         </div>
         <form class="row g-3 needs-validation" method="post">
             {!! (flashMessage())!!}
@@ -43,11 +43,10 @@
                 Register
             </button>
             <div class="col-12">
-                <p class="small mb-0">Already have an account? <a href="{{route('login')}}">Create an account</a></p>
+                <p class="small mb-0">Already have an account? <a href="{{route('login')}}"> Login</a></p>
             </div>
         </form>
 
     </div>
 </div>
 @endsection
-@EuLite We celebrate champion

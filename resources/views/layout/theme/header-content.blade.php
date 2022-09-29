@@ -109,7 +109,7 @@
                  </li> -->
 
 
-<!-- 
+                 <!-- 
                  <li class="nav-item dropdown">
 
                      <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
@@ -191,9 +191,9 @@
                          <li>
                              <hr class="dropdown-divider">
                          </li>
-
+                         @if(getSchoolUserPid())
                          <li>
-                             <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                             <a class="dropdown-item d-flex align-items-center" href="{{route('school.staff.profile',['id'=>base64Encode(getSchoolUserPid())])}}">
                                  <i class="bi bi-person"></i>
                                  <span>My Profile</span>
                              </a>
@@ -201,7 +201,7 @@
                          <li>
                              <hr class="dropdown-divider">
                          </li>
-
+                        @endif
                          <li>
                              <a class="dropdown-item d-flex align-items-center pointer" data-bs-toggle="modal" data-bs-target="#updatePwd">
                                  <i class="bi bi-lock-fill"></i>

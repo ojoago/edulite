@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('account_status')->default(0);
             $table->string('password');
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('reset_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

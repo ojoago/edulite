@@ -40,7 +40,10 @@ class SchoolController extends Controller
         $id=base64Decode($id);
         $schoolUser = SchoolStaff::join('schools','schools.pid','school_staff.school_pid')
                         ->where(['school_pid'=>$id, 'school_staff.user_pid'=>getUserPid()])
-                        ->first(['school_staff.pid', 'school_name', 'school_logo', 'type','role']);
+                        ->first(['school_staff.pid', 'school_name', 'school_logo', 'type','role','school_staff.status']);
+        if($schoolUser && $schoolUser->status !=1){
+            return redirect()->back()->with('warning','you Have been denied access, contact the school.');
+        }
         if(!$schoolUser){
             return redirect()->back()->with('error','you are doing it wrong');
         }
@@ -72,7 +75,7 @@ class SchoolController extends Controller
             "state" => "required",
             "type" => "required",
             "lga" => "required",
-            "school_email" => "nullable|email|unique:schools",
+            "school_email" => "nullable|email",
             "school_name" => "required|unique:schools",
             "school_contact" => "required",
             "school_address" => "required|string",

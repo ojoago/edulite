@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\Users\UserController;
@@ -42,11 +43,17 @@ use App\Http\Controllers\School\Student\Result\Comments\PortalCommentResultContr
 use App\Http\Controllers\School\Student\Result\Comments\TeacherCommentResultController;
 use App\Http\Controllers\School\Student\Results\Cumulative\ViewCumulativeResultController;
 use App\Http\Controllers\School\Student\Assessment\Psychomotor\RecordPsychomotorController;
+use App\Mail\AuthMail;
 
 // port 8400
 Route::view('/','welcome')->middleware('guest');
 // authentication 
 // sign up 
+Route::get('/mail',function(){
+    // Mail::to('ojoago247@gmail.com')->send(new AuthMail());
+    // Mail::to('ojoago@edulite.ng')->send(new AuthMail());
+    return view('mails.auth-mail');
+});
 // sign up form 
 Route::view('sign-up', 'auths.sign-up')->name('sign.up')->middleware('guest');
 // signing up 
@@ -58,7 +65,10 @@ Route::view('login', 'auths.login')->name('login')->middleware('guest');
 // login in 
 Route::post('login', [AuthController::class, 'login']);
 // reset password 
-Route::post('reset', [AuthController::class, 'resetPassword'])->name('reset')->middleware('guest');
+Route::get('reset/{id}', [AuthController::class, 'resetPasswordForm'])->name('reset')->middleware('guest');
+
+Route::post('reset', [AuthController::class, 'resetPassword'])->name('reset.password')->middleware('guest');
+Route::post('forget-password', [AuthController::class, 'forgetPassword'])->name('forget')->middleware('guest');
 // update password 
 Route::post('update-password', [AuthController::class, 'updatePassword'])->name('update.password')->middleware('auth');
 // Logout
@@ -447,20 +457,36 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('principal-comment-termly-result', 'school.student.result.comments.principal.principal-comment-form')->name('principal.comment.termly.result');
     // the view // princal-comment.blade.php
     Route::post('principal-comment-termly-result', [CommentResultController::class, 'loadStudentResult']);
-    // pricinpal commenting 
-    Route::post('principal-commenting-termly-result', [CommentResultController::class, 'principalCommentStudentTermlyResult'])->name('comment.principal.student.termly.result');
+     // pricinpal commenting 
+     Route::post('principal-commenting-termly-result', [CommentResultController::class, 'principalCommentStudentTermlyResult'])->name('comment.principal.student.termly.result');
+    // principal automated comment
+    Route::view('principal-automated-comment', 'school.student.result.comments.principal.principal-automated-comment-form')->name('principal.automated.comments');
+    // the view // princal-comment.blade.php
+    Route::post('principal-automated-comment', [CommentResultController::class, 'principalAutomatedComment']);
     // class teacher comment
     Route::view('teacher-comment-termly-result', 'school.student.result.comments.teacher.teacher-comment-form')->name('teacher.comment.termly.result');
     // load student result
     Route::post('teacher-comment-termly-result', [TeacherCommentResultController::class, 'loadStudentResult']);
     // commenting student result
     Route::post('teacher-commenting-termly-result', [TeacherCommentResultController::class, 'teacherCommentStudentTermlyResult'])->name('comment.teacher.student.termly.result');
+    
+    // load student result
+    Route::view('teacher-automated-comment', 'school.student.result.comments.teacher.teacher-automated-comment-form')->name('teacher.automated.comments');
+    // load student result
+    Route::post('teacher-automated-comment', [TeacherCommentResultController::class, 'loadStudentResult']);
+    
     // class portal comment
     Route::view('portals-comment-termly-result', 'school.student.result.comments.portals.portals-comment-form')->name('portal.comment.termly.result');
 
     Route::post('portals-comment-termly-result', [PortalCommentResultController::class, 'loadStudentResult']);
     // class portal comment
     Route::post('portals-commenting-termly-result', [PortalCommentResultController::class, 'portalsCommentStudentTermlyResult'])->name('comment.portals.student.termly.result');
+
+    // class portal comment
+    Route::view('portals-automated-comment', 'school.student.result.comments.portals.portals-automated-comment-form')->name('portal.automated.comments');
+
+    Route::post('portals-automated-comment', [PortalCommentResultController::class, 'loadStudentResult']);
+    
     // class subject teacher comment
     Route::view('subject-comment-termly-result', 'school.student.result.comments.principal-comment-form')->name('subject.comment.termly.result');
     // student promotion 

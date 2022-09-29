@@ -253,31 +253,7 @@
 </li><!-- End Forms Nav -->
 
 @endif
-@if(schoolTeacher())
 
-<li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#activity-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-layout-text-window-reverse"></i><span>Activities</span><i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="activity-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="{{route('student.assessment.form')}}">
-                <i class="bi bi-circle"></i><span>My Profile</span>
-            </a>
-        </li>
-        <li>
-            <a href="{{route('student.assessment.form')}}">
-                <i class="bi bi-circle"></i><span>My classes</span>
-            </a>
-        </li>
-        <li>
-            <a href="tables-general.html">
-                <i class="bi bi-circle"></i><span>My Subjects</span>
-            </a>
-        </li>
-
-    </ul>
-</li>
 @if(classTeacher())
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#attendance-nav" data-bs-toggle="collapse" href="#">
@@ -322,6 +298,7 @@
 @endif
 
 <!-- student assessment -->
+@if(schoolTeacher())
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
@@ -486,7 +463,7 @@
             </a>
         </li>
         <li>
-            <a href="{{route('principal.comment.termly.result')}}">
+            <a href="{{route('principal.automated.comments')}}">
                 <i class="bi bi-circle"></i><span>Automated Comment </span>
             </a>
         </li>
@@ -498,7 +475,7 @@
             </a>
         </li>
         <li>
-            <a href="{{route('principal.comment.termly.result')}}">
+            <a href="{{route('teacher.automated.comments')}}">
                 <i class="bi bi-circle"></i><span>Automated Comment </span>
             </a>
         </li>
@@ -510,7 +487,7 @@
             </a>
         </li>
         <li>
-            <a href="{{route('principal.comment.termly.result')}}">
+            <a href="{{route('portal.automated.comments')}}">
                 <i class="bi bi-circle"></i><span>Automated Comment </span>
             </a>
         </li>

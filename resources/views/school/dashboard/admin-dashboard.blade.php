@@ -16,9 +16,9 @@
     <!-- Sales Card -->
     <div class="col-md-3">
         <div class="card info-card sales-card">
-            <a href="#" data-bs-toggle="tooltip" title="View Details">
+            <a href="{{ route('school.staff.list') }}" data-bs-toggle="tooltip" title="View Staff Details">
                 <div class="card-body">
-                    <h5 class="card-title">Active <span>| Today</span></h5>
+                    <h5 class="card-title">Active <span>| Staff</span></h5>
 
                     <div class="d-flex align-items-center">
                         <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -39,9 +39,9 @@
     <!-- Revenue Card -->
     <div class="col-md-3">
         <div class="card info-card">
-            <a href="#" data-bs-toggle="tooltip" title="View Details">
+            <a href="{{route('school.student.list')}}" data-bs-toggle="tooltip" title="View Student Details">
                 <div class="card-body">
-                    <h5 class="card-title">Active <span>| This Month</span></h5>
+                    <h5 class="card-title">Active <span>Student</span></h5>
 
                     <div class="d-flex align-items-center">
                         <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -62,9 +62,9 @@
     <!-- Customers Card -->
     <div class="col-md-3">
         <div class="card info-card">
-            <a href="#" data-bs-toggle="tooltip" title="View Details">
+            <a href="{{route('school.parent.list')}}" data-bs-toggle="tooltip" title="View Parent Details">
                 <div class="card-body">
-                    <h5 class="card-title">Active <span>| This Year</span></h5>
+                    <h5 class="card-title">Active <span>| Parent</span></h5>
                     <div class="d-flex align-items-center">
                         <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                             <i class="bi bi-person-circle"></i>
@@ -83,9 +83,9 @@
     </div>
     <div class="col-md-3">
         <div class="card info-card">
-            <a href="#" data-bs-toggle="tooltip" title="View Details">
+            <a href="{{route('school.rider.list')}}" data-bs-toggle="tooltip" title="View Details">
                 <div class="card-body">
-                    <h5 class="card-title">Active <span>| This Year</span></h5>
+                    <h5 class="card-title">Active <span>| Care/Rider</span></h5>
                     <div class="d-flex align-items-center">
                         <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                             <i class="bi bi-bicycle"></i>
@@ -106,6 +106,7 @@
 
 
 </div>
+<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 @endsection
 

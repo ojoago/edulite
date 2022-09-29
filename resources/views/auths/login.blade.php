@@ -70,10 +70,11 @@
                                 <div class="form-group mb-2">
                                     @csrf
                                     <input type="email" name="email" placeholder="Enter Registered Email address" class="form-control input-sm" id='pwd' required>
+                                    <p class="text-danger email_error"></p>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary pull-left btn-sm" id="resetPwdBtn"><i class="fa fa-envelope"></i> Submit</button>
+                                <button type="button" class="btn btn-primary pull-left btn-sm" id="resetPwdBtn"><i class="fa fa-envelope"></i> Submit</button>
                                 <button type="button" class="btn btn-danger btn-xs btn-sm" data-bs-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                             </div>
                         </form>
@@ -81,43 +82,56 @@
                     </div>
                 </div>
             </div>
+            <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
+
             <script>
                 $(document).ready(function() {
                     $('#resetPwdBtn').click(function() {
                         $('.overlay').show();
                         $.ajax({
-                            url: "{{route('reset')}}",
+                            url: "{{route('forget')}}",
                             type: "POST",
                             data: new FormData($('#forgetPwdForm')[0]),
                             dataType: "JSON",
                             processData: false,
                             contentType: false,
                             beforeSend: function() {
-                                $('#' + formId).find('p.text-danger').text('');
-                                $('#' + btnId).prop('disabled', true);
+                                $('#forgetPwdForm').find('p.text-danger').text('');
+                                $('#resetPwdBtn').prop('disabled', true);
                             },
                             success: function(data) {
-                                console.log(data);
-                                $('#' + btnId).prop('disabled', false);
+                                $('#resetPwdBtn').prop('disabled', false);
                                 $('.overlay').hide();
                                 if (data.status === 0) {
-                                    alert_toast('Fill in form correctly', 'warning');
+                                    Swal.fire({
+                                        text: 'Fill in form correctly',
+                                        icon: 'warning'
+                                    });
                                     $.each(data.error, function(prefix, val) {
                                         $('.' + prefix + '_error').text(val[0]);
                                     });
                                 } else if (data.status === 1) {
-                                    successClearForm(formId, data.message)
-                                    alert_toast(data.message, 'success');
-                                    $('#' + formId)[0].reset();
+                                    Swal.fire({
+                                        text: data.message,
+                                        icon: 'success'
+                                    });
+                                    $('#forgetPwdForm')[0].reset();
 
                                 } else {
-                                    alert_toast(data.message, 'error');
+                                    Swal.fire({
+                                        text: data.message,
+                                        icon: 'error'
+                                    });
                                 }
                             },
                             error: function(data) {
-                                $('#' + btnId).prop('disabled', false);
+                                console.log(data);
+                                $('#resetPwdBtn').prop('disabled', false);
                                 $('.overlay').hide();
-                                alert_toast('Something Went Wrong', 'error');
+                                Swal.fire({
+                                    text: 'Something Went Wrong',
+                                    icon: 'error'
+                                });
                             }
                         });
 
