@@ -5,6 +5,7 @@ namespace App\Http\Controllers\School\Registration;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\School\Parent\ParentController;
+use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\Users\UserDetailsController;
 use Illuminate\Http\Request;
@@ -84,7 +85,7 @@ class ParentRegistrationController extends Controller
                             $name = $parent['pid'] . '-passport';
                             $parent['passport'] = saveImg($request->file('passport'), name: $name);
                         }
-                        $parentData = ParentController::createSchoolParent($parent);
+                        $parentData = SchoolController::createSchoolParent($parent);
                         if($parentData){
                             if($request->student_pid){
                                 foreach($request->student_pid as $pid){

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Parent\ParentController;
+use App\Http\Controllers\School\SchoolController;
 
 class UploadParentController extends Controller
 {
@@ -62,7 +63,7 @@ class UploadParentController extends Controller
                                     ];
                                     $dtl = UserDetailsController::insertUserDetails($userDetail);
                                     if($dtl){
-                                        $sts = ParentController::createSchoolParent($parent);
+                                        $sts = SchoolController::createSchoolParent($parent);
                                         if (!$sts) {
                                             $errors[] = 'Parent on row ' . $k . ' not linked to school';
                                         }

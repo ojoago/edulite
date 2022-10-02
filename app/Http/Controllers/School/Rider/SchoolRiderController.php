@@ -105,7 +105,7 @@ class SchoolRiderController extends Controller
                         $schoolRider['passport'] = saveImg($request->file('passport'), name: $name);
                     }
                     if ($detail) {
-                        $rider = self::createSchoolRider($schoolRider);
+                        $rider = SchoolController::createSchoolRider($schoolRider);
                         if ($rider) {
                             if ($request->student_pid) {
                                 $data = [
@@ -163,20 +163,6 @@ class SchoolRiderController extends Controller
     }
 
 
-    public static function createSchoolRider($data){
-        $dupParams = [
-          'user_pid'=>$data['user_pid'],    
-          'school_pid'=>$data['school_pid'],
-        //   'pid'=>$data['pid']  
-        ];
-        try {
-            return SchoolRider::updateOrCreate($dupParams,$data);
-        } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
-
-            logError($error);
-        }
-    }
 
     public function linkStudentToRider(Request $request){
         $validator = Validator::make($request->all(),[

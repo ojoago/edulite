@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
+use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\Users\UserDetailsController;
 
@@ -100,7 +101,7 @@ class UploadStudentController extends Controller
                                         'school_pid' => $student['school_pid'],
                                         'staff_pid' => getSchoolUserPid(),
                                     ];
-                                    $studentDetails = StudentController::createSchoolStudent($student);
+                                    $studentDetails = SchoolController::createSchoolStudent($student);
                                     if (!$studentDetails) {
                                         $studentClass['student_pid'] = $studentDetails->pid;
                                         StudentController::createStudentClassRecord($studentClass);

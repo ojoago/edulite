@@ -10,7 +10,6 @@ use App\Http\Controllers\School\Framework\ClassController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
 use App\Models\School\Student\Assessment\Psychomotor\PsychomotorRecord;
-use App\Models\School\Student\Assessment\StudentScoreParam;
 use App\Models\School\Student\Result\StudentClassScoreParam;
 
 class StudentTermlyResultController extends Controller

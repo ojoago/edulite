@@ -1,6 +1,7 @@
 @extends('layout.mainlayout')
 @section('title','Student List')
 @section('content')
+<link href="{{asset('plugins/fullcalendar/fullcalendar.min.css')}}" rel="stylesheet">
 <div class="row">
     <div class="col-md-4">
         <div class="card">
@@ -35,7 +36,9 @@
                         <div id="profileDetail"></div>
                     </div>
                     <div class="tab-pane fade" id="attendance" role="tabpanel">
-                        <input type="date" name="" class="form-control form-control-sm" onkeydown="return false" id="">
+                        <h4>Attendance Record</h4>
+                        <div class="response"></div>
+                        <div id='calendar'></div>
                     </div>
                     <div class="tab-pane fade" id="class" role="tabpanel">
                         <table class="table table-hover table-striped table-bordered" id="classDataTable">
@@ -92,15 +95,16 @@
 
 
 <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
+
+<script src="{{asset('plugins/fullcalendar/lib/moment.min.js')}}"></script>
+<script src="{{asset('plugins/fullcalendar/fullcalendar.min.js')}}"></script>
 <script>
     $(document).ready(function() {
-
 
         let term = "{{activeTerm()}}"
         let session = "{{activeSession()}}"
         FormMultiSelect2('#formTermSelect2', 'term', 'Select Term', term)
         FormMultiSelect2('#formSessionSelect2', 'session', 'Select Session', session)
-
         loadProfile()
 
         function loadProfile() {
@@ -178,8 +182,7 @@
                     },
                 },
 
-                "columns": [
-                    {
+                "columns": [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                     },
@@ -204,6 +207,87 @@
                 ],
             });
         });
+
+    });
+</script>
+
+<script>
+    var calendar = $('#calendar').fullCalendar({
+        editable: true,
+        events: {
+            url: "{{route('student.attendance')}}",
+            type: "post",
+            data: {
+                pid: "{{$pid}}",
+                _token: "{{csrf_token()}}"
+            },
+        },
+        displayEventTime: false,
+        eventRender: function(event, element, view) {
+            if (event.allDay === 'true') {
+                event.allDay = true;
+            } else {
+                event.allDay = false;
+            }
+        },
+        selectable: true,
+        selectHelper: true,
+        select: function(start, end, allDay) {
+            var title = prompt('Event Title:');
+
+            if (title) {
+                var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+                var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+
+                $.ajax({
+                    url: 'add-event.php',
+                    data: 'title=' + title + '&start=' + start + '&end=' + end,
+                    type: "POST",
+                    success: function(data) {
+                        displayMessage("Added Successfully");
+                    }
+                });
+                calendar.fullCalendar('renderEvent', {
+                        title: title,
+                        start: start,
+                        end: end,
+                        allDay: allDay
+                    },
+                    true
+                );
+            }
+            calendar.fullCalendar('unselect');
+        },
+
+        editable: true,
+        eventDrop: function(event, delta) {
+            var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+            var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+            $.ajax({
+                url: 'edit-event.php',
+                data: 'title=' + event.title + '&start=' + start + '&end=' + end + '&id=' + event.id,
+                type: "POST",
+                success: function(response) {
+                    displayMessage("Updated Successfully");
+                }
+            });
+        },
+        eventClick: function(event) {
+            var deleteMsg = confirm("Do you really want to delete?");
+            if (deleteMsg) {
+                $.ajax({
+                    type: "POST",
+                    url: "delete-event.php",
+                    data: "&id=" + event.id,
+                    success: function(response) {
+                        if (parseInt(response) > 0) {
+                            $('#calendar').fullCalendar('removeEvents', event.id);
+                            displayMessage("Deleted Successfully");
+                        }
+                    }
+                });
+            }
+        }
 
     });
 </script>

@@ -57,7 +57,8 @@
                                     <td>{{$loop->iteration}}</td>
                                     <td>{{$row->reg_number}}</td>
                                     <td>{{$row->fullname}}</td>
-                                    <td> <input type="checkbox" class="checkAll" name="check[]" value="{{$row->pid}}"></td>
+                                     <input type="hidden" name="student[]" value="{{$row->pid}}">
+                                    <td> <input type="checkbox" class="checkAll" name="check[]"></td>
                                 </tr>
                                 @endforeach
                             </tbody>

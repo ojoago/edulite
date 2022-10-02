@@ -36,18 +36,7 @@ class ParentController extends Controller
     }
 
 
-    public static function createSchoolParent($data){
-        $dupParams = [
-            'school_pid'=>$data['school_pid'],
-            'pid'=>$data['pid'],
-        ];
-        try {
-            return SchoolParent::updateOrCreate($dupParams,$data);
-        } catch (\Throwable $e) {
-           $error = $e->getMessage();
-           logError($error);
-        }
-    }
+  
     public static function parentProfile ($id){
         $data = DB::table('school_parents as p')->join('users as u','u.pid','p.user_pid')
                         ->join('user_details as d','d.user_pid','p.user_pid')

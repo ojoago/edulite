@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\Users\UserController;
@@ -43,15 +42,13 @@ use App\Http\Controllers\School\Student\Result\Comments\PortalCommentResultContr
 use App\Http\Controllers\School\Student\Result\Comments\TeacherCommentResultController;
 use App\Http\Controllers\School\Student\Results\Cumulative\ViewCumulativeResultController;
 use App\Http\Controllers\School\Student\Assessment\Psychomotor\RecordPsychomotorController;
-use App\Mail\AuthMail;
 
 // port 8400
 Route::view('/','welcome')->middleware('guest');
 // authentication 
 // sign up 
 Route::get('/mail',function(){
-    // Mail::to('ojoago247@gmail.com')->send(new AuthMail());
-    // Mail::to('ojoago@edulite.ng')->send(new AuthMail());
+    
     return view('mails.auth-mail');
 });
 // sign up form 
@@ -412,6 +409,12 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('std-a-f', [StudentAttendanceController::class, 'loadArmStudent']);
     Route::post('std-a-f', [StudentAttendanceController::class, 'loadArmStudent'])->name('attendance.change.class');
     Route::post('submit-student-attendance', [StudentAttendanceController::class, 'submitStudentAttendance'])->name('submit.student.attendance');
+    // student attendance 
+    Route::post('student-attendance', [StudentAttendanceController::class, 'studentAttendance'])->name('student.attendance');
+    Route::view('std-a-history', 'school.student.attendance.student-attendance-history')->name('student.attendance.history');
+    Route::post('load-student-attendance-history', [StudentAttendanceController::class, 'loadStudentAttendanceHistory'])->name('load.student.attendance.history');
+    Route::view('std-a-count', 'school.student.attendance.student-attendance-count')->name('student.attendance.count');
+    Route::post('load-student-attendance-count', [StudentAttendanceController::class, 'loadStudentAttendanceCount'])->name('load.student.attendance.count');
 
     // student assessment 
     Route::view('student-subject-score-form', 'school.student.assessment.assessment-form')->name('student.assessment.form');
@@ -420,6 +423,9 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('student-score-entering', [StudentScoreController::class, 'enterStudentScore'])->name('enter.student.score');
     Route::post('submit-student-ca', [StudentScoreController::class, 'submitCaScore'])->name('submit.student.ca');
     Route::post('change-student-ca-student', [StudentScoreController::class, 'changeSubjectResultStatus'])->name('change.student.ca.student');
+    // export student list 
+    Route::get('export-student-list', [StudentScoreController::class, 'exportStudentList'])->name('export.student.list');
+    Route::post('import-student-score', [StudentScoreController::class, 'importStudentScore'])->name('import.student.score');
     // view student subject score 
     Route::view('view-student-subject-score-form', 'school.student.assessment.view-subject-score-form')->name('view.student.subject.score.form');
     Route::post('view-student-subject-score-form', [StudentScoreController::class, 'viewStudentScoreRecord']);

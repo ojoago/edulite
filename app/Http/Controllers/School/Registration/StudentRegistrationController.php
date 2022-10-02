@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
+use App\Http\Controllers\School\SchoolController;
 use App\Models\School\Framework\Class\ClassArm;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Student\StudentController;
@@ -148,7 +149,7 @@ class StudentRegistrationController extends Controller
                             $name = ($request->reg_number ?? $student['reg_number']).'-passport';
                             $student['passport'] = saveImg(image: $request->file('passport'),name:$name);
                         }
-                        $studentDetails = StudentController::createSchoolStudent($student);// create school student
+                        $studentDetails = SchoolController::createSchoolStudent($student);// create school student
                         if ($studentDetails) {
                             if($request->parent_pid){
                                 $student_pid =  $studentDetails->pid ?? $request->pid;

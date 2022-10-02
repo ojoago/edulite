@@ -29,6 +29,9 @@ class AuthMail extends Mailable
      */
     public function build()
     {
-        return $this->subject($this->param['subject'])->view('mails.auth-mail');
+        if($this->param['blade']=='auth')
+            return $this->subject($this->param['subject'])->view('mails.auth-mail');
+        elseif($this->param['blade'] == 'reset')
+            return $this->subject($this->param['subject'])->view('mails.reset-mail');
     }
 }

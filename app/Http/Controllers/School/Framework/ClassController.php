@@ -9,6 +9,7 @@ use App\Models\School\Framework\Class\Classes;
 use App\Models\School\Framework\Class\Category;
 use App\Models\School\Framework\Class\ClassArm;
 use App\Models\School\Framework\Class\ClassArmSubject;
+use App\Models\School\Staff\StaffClass;
 use App\Models\School\Student\Result\StudentClassScoreParam;
 use Illuminate\Validation\Rule;
 
@@ -376,7 +377,7 @@ class ClassController extends Controller
     }
 
 
-    public static function createCLassParam($data)
+    public static function createClassParam($data)
     {
         // $teacher = $data['teacher_pid'];
         // unset($data['teacher_pid']);
@@ -390,7 +391,12 @@ class ClassController extends Controller
         return $result->pid;
     }
     public static function getClassTeacherPid($arm,$session,$term){
-        return 'Hassan';
+        return StaffClass::where([
+                            'arm_pid'=>$arm,
+                            'session_pid'=>$session,
+                            'term_pid'=>$term,
+                            'school_pid'=>getSchoolPid()
+                            ])->pluck('teacher_pid')->first();
     }
 
     

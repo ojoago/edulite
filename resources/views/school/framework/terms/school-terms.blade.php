@@ -29,7 +29,7 @@
                     New Term
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3" id="term-dataTable">
+                <table class="table display table-bordered table-striped table-hover mt-3" id="term-dataTable">
                     <thead>
                         <tr>
                             <!-- <th>SN</th> -->

@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('school_users', function (Blueprint $table) {//this table is use for login into school purpose
             $table->id();
-            $table->string('school_pid');
-            $table->string('user_pid');
-            $table->string('pid')->unique();
-            $table->string('role');
+            $table->string('school_pid',62);
+            $table->string('user_pid',50);
+            $table->string('pid',50)->unique();
+            $table->string('role',10);
+            $table->string('status',10);
             $table->timestamps();
         });
     }

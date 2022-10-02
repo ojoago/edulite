@@ -16,6 +16,7 @@ use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Parent\ParentController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\School\Rider\SchoolRiderController;
+use App\Models\SchoolUser;
 
 class SchoolController extends Controller
 {
@@ -38,14 +39,18 @@ class SchoolController extends Controller
     public function schoolLogin($id)
     {
         $id=base64Decode($id);
-        $schoolUser = SchoolStaff::join('schools','schools.pid','school_staff.school_pid')
-                        ->where(['school_pid'=>$id, 'school_staff.user_pid'=>getUserPid()])
-                        ->first(['school_staff.pid', 'school_name', 'school_logo', 'type','role','school_staff.status']);
-        if($schoolUser && $schoolUser->status !=1){
-            return redirect()->back()->with('warning','you Have been denied access, contact the school.');
-        }
+        $schoolUser = DB::table('school_users as u')->join('schools as s','s.pid','u.school_pid')
+                        ->where(['u.school_pid' => $id, 'u.user_pid' => getUserPid()])
+                        ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'u.status']);
+        // $schoolUser = SchoolStaff::join('schools','schools.pid','school_staff.school_pid')
+        //                 ->where(['school_pid'=>$id, 'school_staff.user_pid'=>getUserPid()])
+        //                 ->first(['school_staff.pid', 'school_name', 'school_logo', 'type','role','school_staff.status']);
+       
         if(!$schoolUser){
             return redirect()->back()->with('error','you are doing it wrong');
+        }
+        if ($schoolUser && $schoolUser->status != 1) {
+            return redirect()->back()->with('warning', 'you Have been denied access, contact the school.');
         }
         setSchoolPid($id);
         setSchoolType($schoolUser->type);
@@ -61,14 +66,34 @@ class SchoolController extends Controller
     public function mySchoolDashboard(){
        
         // $data = School::where('pid', getSchoolPid())->get()->dd();
-        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
-        $students = Student::where(['school_pid'=>getSchoolPid(),'status'=>1])->count();
-        $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
-        $parents = DB::table('school_parents as p')
-                        ->join('students as s','s.parent_pid','p.pid')
-                        ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->count('p.id');
-        $data = ['staff'=>$staff, 'students'=> $students, 'riders'=> $riders, 'parents'=> $parents];
-        return view('school.dashboard.admin-dashboard', compact('data'));
+        // here show dashboard and load params based on role
+        switch (getUserActiveRole()) {
+            case schoolTeacher():
+                $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+                $students = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+                $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+                $parents = DB::table('school_parents as p')
+                    ->join('students as s', 's.parent_pid', 'p.pid')
+                    ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->count('p.id');
+                $data = ['staff' => $staff, 'students' => $students, 'riders' => $riders, 'parents' => $parents];
+                return view('school.dashboard.admin-dashboard', compact('data'));
+                break;
+            case parentRole():
+                # code...
+                break;
+            case studentRole():
+                # code...
+                break;
+            
+            case parentRider():
+                # code...
+                break;
+            
+            default:
+                return redirect()->route('login.school', [base64Encode(getSchoolPid())])->with('waring','who are you!!!');
+                break;
+        } 
+        
     }
     public function createSchool(Request $request){
         $validator = Validator::make($request->all(),[
@@ -115,7 +140,7 @@ class SchoolController extends Controller
                        'role'=> 205,//school admin
                     ];
                     // $user=
-                    StaffController::registerStaffToSchool($data);
+                    self::createSchoolStaff($data);
                     setSchoolPid();
                     // if($user){
                     //     return response()->json(['status' => 1, 'message' => 'School Created Successfully']);
@@ -132,6 +157,73 @@ class SchoolController extends Controller
 
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
        
+    }
+
+    public static function createSchoolUser(string $userId, string $pid, string $role){
+        $data = $dupParam = ['user_pid'=>$userId,'pid'=>$pid,'school_pid'=>getSchoolPid()];
+        $data['role']= $role;
+       return SchoolUser::updateOrCreate($dupParam,$data);
+    }
+
+    public static function createSchoolStaff($data){
+        try {
+            self::createSchoolUser(userId: $data['user_pid'], pid: $data['pid'], role: $data['role']);
+            $data['school_pid'] = $data['school_pid'] ?? getSchoolPid();
+            $dup = SchoolStaff::where(['school_pid' => $data['school_pid'], 'user_pid' => $data['user_pid']])->first();
+            if ($dup) {
+                $dup->fill($data);
+                return $dup->save();
+            }
+            $data['pid'] =  public_id();
+            $data['staff_id'] = $data['staff_id'] ?? StaffController::staffUniqueId();
+            return SchoolStaff::create($data);
+        } catch (\Throwable $e) {
+            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+            logError($error);
+        }
+    }
+    public static function createSchoolStudent($data){
+        try {
+            self::createSchoolUser(userId: $data['user_pid'], pid: $data['pid'], role: '600');
+            $dup = Student::where(['school_pid' => $data['school_pid'], 'user_pid' => $data['user_pid']])->first();
+            if ($dup) {
+                $dup->fill($data);
+                return $dup->save();
+            }
+            return Student::create($data);
+        } catch (\Throwable $e) {
+            $error = $e->getMessage();
+            logError($error);
+        }
+    }
+    public static function createSchoolParent($data){
+        
+        try {
+            self::createSchoolUser(userId: $data['user_pid'], pid: $data['pid'], role: '605');
+            $dupParams = [
+                'school_pid' => $data['school_pid'],
+                'pid' => $data['pid'],
+            ];
+            return SchoolParent::updateOrCreate($dupParams, $data);
+        } catch (\Throwable $e) {
+            $error = $e->getMessage();
+            logError($error);
+        }
+    }
+    public static function createSchoolRider($data){
+        
+        try {
+            self::createSchoolUser(userId: $data['user_pid'], pid: $data['pid'], role: '610');
+            $dupParams = [
+                'user_pid' => $data['user_pid'],
+                'school_pid' => $data['school_pid'],
+            ];
+            return SchoolRider::updateOrCreate($dupParams, $data);
+        } catch (\Throwable $e) {
+            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+
+            logError($error);
+        }
     }
 
     public function schoolHandle()
@@ -199,7 +291,7 @@ class SchoolController extends Controller
             'user_pid' => $request->pid,
             'role' => $request->role
         ];
-        $staff = StaffController::registerStaffToSchool($data);
+        $staff = self::createSchoolStaff($data);
         return 'Staff added to school and staff Id is '.$staff->staff_id;
     }
 
@@ -220,7 +312,6 @@ class SchoolController extends Controller
     // link student 
     // link staff 
     public function linkExistingStudentToSchool(Request $request)  {
-
         $id = Student::where([
             'user_pid' => $request->pid,
             'school_pid' => getSchoolPid()
@@ -249,7 +340,7 @@ class SchoolController extends Controller
                 'school_pid'=>getSchoolPid(),
                 'pid'=>public_id(),
             ];
-            $student = StudentController::createSchoolStudent($data);
+            $student = self::createSchoolStudent($data);
             if($student){
                 $studentClass = [
                     'session_pid' => $request->session_pid,
@@ -293,7 +384,7 @@ class SchoolController extends Controller
             return 'Parent already exist in <b class="text-info">' . getSchoolName() . '</b> ';
         }
         $data =['school_pid' => getSchoolPid(), 'user_pid' => $request->pid,'pid'=>public_id()];
-        $std = ParentController::createSchoolParent($data);
+        $std = self::createSchoolParent($data);
         if($std){
             return 'Parent added to School';
         }
@@ -331,7 +422,7 @@ class SchoolController extends Controller
             'pid' => public_id(),
             'rider_id' => SchoolRiderController::riderUniqueId(),
         ];
-        $std = SchoolRiderController::createSchoolRider($data);
+        $std = self::createSchoolRider($data);
         if($std){
             return 'Rider added to School, unique Id is '.$std->rider_id;
         }

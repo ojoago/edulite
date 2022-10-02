@@ -12,16 +12,7 @@ use App\Models\School\Framework\Term\ActiveTermDetail;
 
 class SchoolTermController extends Controller
 {
-    public function __construct()
-    {
-        // school member auth 
-        // $this->middleware('auth');
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function index()
     {
         $data = Term::where('school_pid',getSchoolPid())->get(['pid','term','description','created_at']);

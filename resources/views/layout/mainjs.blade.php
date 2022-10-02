@@ -1,6 +1,29 @@
 <script>
     $(document).ready(function() {
 
+        // switch from table to card 
+        if ($(window).width() < 760) {
+            let tableId = $('.table').attr('id');
+            if ($(".table").hasClass("card-able")) {
+                $(".colHeader").remove();
+            } else {
+                var labels = [];
+                $(".table thead th").each(function() {
+                    labels.push($(this).text());
+                });
+                $(".table tbody tr").each(function() {
+                    $(this)
+                        .find("td")
+                        .each(function(column) {
+                            $("<span class='colHeader'>" + labels[column] + ":</span>").prependTo(
+                                $(this)
+                            );
+                        });
+                });
+            }
+            $(".table").toggleClass("card-able");
+            $('tfoot').hide();
+        } 
         // assign class to staff 
 
         // general dropdown 
@@ -540,36 +563,38 @@
 
 
     function FormMultiSelect2Post(idOrClass, route, pid, plh, pre = null) {
-        var url = "{{route('load.available.dropdown')}}";
-        var token = $("input[name='_token']").val();
-        $(idOrClass).addClass('select2');
-        $(idOrClass).select2({
-            placeholder: plh,
-            // dropdownParent: $('#' + modal),
-            width: "100%",
-            allowClear: true,
-            ajax: {
-                url: url + route,
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        pid: pid,
-                        _token: token,
-                        q: params.term,
-                        page_limit: 10
-                    }
-                },
-                type: "POST",
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        }).val(pre).trigger('change').trigger('focus');
+        if (pid != null) {
+            var url = "{{route('load.available.dropdown')}}";
+            var token = $("input[name='_token']").val();
+            $(idOrClass).addClass('select2');
+            $(idOrClass).select2({
+                placeholder: plh,
+                // dropdownParent: $('#' + modal),
+                width: "100%",
+                allowClear: true,
+                ajax: {
+                    url: url + route,
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            pid: pid,
+                            _token: token,
+                            q: params.term,
+                            page_limit: 10
+                        }
+                    },
+                    type: "POST",
+                    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            }).val(pre).trigger('change').trigger('focus');
+        }
     }
 
 
@@ -608,36 +633,38 @@
     }
 
     function multiSelect2Post(idOrClass, modal, route, pid, plh, pre = null) {
-        var url = "{{route('load.available.dropdown')}}";
-        var token = "{{csrf_token()}}";
-        $(idOrClass).addClass('select2');
-        $(idOrClass).select2({
-            placeholder: plh,
-            dropdownParent: $('#' + modal),
-            width: "100%",
-            allowClear: true,
-            ajax: {
-                url: url + route,
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        pid: pid,
-                        _token: token,
-                        q: params.term,
-                        page_limit: 10
-                    }
-                },
-                type: "POST",
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        }).val(pre).trigger('change').trigger('focus');
+        if (pid != null) {
+            var url = "{{route('load.available.dropdown')}}";
+            var token = "{{csrf_token()}}";
+            $(idOrClass).addClass('select2');
+            $(idOrClass).select2({
+                placeholder: plh,
+                dropdownParent: $('#' + modal),
+                width: "100%",
+                allowClear: true,
+                ajax: {
+                    url: url + route,
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            pid: pid,
+                            _token: token,
+                            q: params.term,
+                            page_limit: 10
+                        }
+                    },
+                    type: "POST",
+                    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            }).val(pre).trigger('change').trigger('focus');
+        }
     }
 
     function successClearForm(formId, msg) {

@@ -275,6 +275,16 @@
                 <i class="bi bi-circle"></i><span>Student Attendance</span>
             </a>
         </li>
+        <li>
+            <a href="{{route('student.attendance.count')}}">
+                <i class="bi bi-circle"></i><span>Attendance Count</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('student.attendance.history')}}">
+                <i class="bi bi-circle"></i><span>Attendance History</span>
+            </a>
+        </li>
     </ul>
 </li>
 <!-- End Charts Nav -->
@@ -453,7 +463,7 @@
 @if(canComment())
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#comment-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-bar-chart"></i><span>Cmmt</span><i class="bi bi-chevron-down ms-auto"></i>
+        <i class="bi bi-bar-chart"></i><span>Comment</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="comment-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         @if(getUserActiveRole() == "500" || hasRole())

@@ -95,6 +95,15 @@ use Illuminate\Support\Facades\Mail;
     function classTeacher(){
         return (getUserActiveRole() == 301 || hasRole());
     }
+    function studentRole(){
+        return (getUserActiveRole() == 600);
+    }
+    function parentRole(){
+        return (getUserActiveRole() == 605 || hasRole());
+    }
+    function parentRider(){
+        return (getUserActiveRole() == 610 || hasRole());
+    }
     function canComment(){
         $cn =['301','307','500'];
         return (in_array(getUserActiveRole(), $cn) || hasRole());

@@ -27,7 +27,7 @@ body{
     visibility: hidden !important;
 }
 .text-white{
-    visibility: hidden !important;
+    /* visibility: hidden !important; */
 }
 
 .ellipsis-text{
@@ -134,4 +134,56 @@ body{
 
 .footer{
     margin-top: auto;
+}
+
+@media screen and (max-width:760px) {
+        
+            .table-bordered.card-able {
+                border: 0 !important;
+                width: 100% !important;
+            }
+        
+            .card-able {
+                border: 0 !important;
+                width: 100% !important;
+                left: 0 !important;
+                right: 0 !important;
+            }
+        
+            .card-able>thead {
+                display: none;
+            }
+        
+            .card-able{
+                display: flex;
+                justify-content: space-between;
+            }
+        
+            .card-able>tbody tr {
+                flex-basis: 100%;
+                flex-grow: 1;
+                float: left;
+                width: 100%;
+                margin: 0.5em;
+                border: 1px solid #bfbfbf;
+                border-radius: 0.5em;
+                background-color: transparent !important;
+                box-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+                margin-bottom: 5px;
+            }
+            .card-able>tbody tr {
+                flex: 1 0 50%;  
+            }
+        
+            .card-able>tbody tr td {
+                display: block;
+                border: 0;
+            }
+
+            .colHeader,#tfoot{
+                display: block;
+            }
+                        .studentTotal {
+                            width: 50% !important;
+                        }
 }

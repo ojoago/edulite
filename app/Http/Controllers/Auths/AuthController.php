@@ -27,6 +27,8 @@ class AuthController extends Controller
         if($user){
             $data = [
                     'email'=>$request->email,
+                    'name'=>$request->username,
+                    'blade'=>'auth',
                     'url'=> 'verify/'. base64Encode($user->pid),
                     'subject'=> 'Account Verification Link'
             ];
@@ -98,10 +100,12 @@ class AuthController extends Controller
             'email'=>'required|email']);
             
         if(!$validator->fails()){
-            $user = User::where('email',$request->email)->first(['pid','email','reset_token','id']);
+            $user = User::where('email',$request->email)->first(['pid','email','reset_token','id','username']);
             if($user){
                 $data = [
                     'email' => $request->email,
+                    'name' => $user->username,
+                    'blade' => 'reset',
                     'url' => 'reset/' . base64Encode($user->pid),
                     'subject' => 'Password reset Link'
                 ];

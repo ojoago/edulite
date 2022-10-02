@@ -306,7 +306,7 @@ class StaffController extends Controller
                             $name = ($staff['staff_id'] ?? $request->staff_id) . '-stamp';
                             $staff['stamp'] = saveImg($request->file('stamp'), name: $name);
                         }
-                        $result = self::registerStaffToSchool($staff);
+                        $result = SchoolController::createSchoolStaff($staff);
                         if ($result) {
                             if($request->pid){
                                 
@@ -379,24 +379,6 @@ class StaffController extends Controller
         return response()->json($data);
     }
 
-
-    public static function registerStaffToSchool(array $data){
-        try {
-            $data['school_pid'] = $data['school_pid'] ?? getSchoolPid();
-            $dup = SchoolStaff::where(['school_pid' => $data['school_pid'], 'user_pid' => $data['user_pid']])->first();
-            if ($dup) {
-                $dup->fill($data);
-                return $dup->save();
-            }
-            $data['pid'] =  public_id();
-            $data['staff_id'] = $data['staff_id'] ?? self::staffUniqueId();
-            return SchoolStaff::create($data);
-        } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
-            logError($error);
-        }
-        
-    }
 
     public static function staffUniqueId(){
         $id = self::countStaff() + 1;

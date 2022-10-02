@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\Rider\SchoolRiderController;
+use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 
 class UploadRiderController extends Controller
@@ -63,7 +64,7 @@ class UploadRiderController extends Controller
                                     ];
                                     $dtl = UserDetailsController::insertUserDetails($userDetail);
                                     if ($dtl) {
-                                        $sts = SchoolRiderController::createSchoolRider($rider);
+                                        $sts = SchoolController::createSchoolRider($rider);
                                         if (!$sts) {
                                             $errors[] = 'Rider/Care on row ' . $k . ' not linked to school';
                                         }

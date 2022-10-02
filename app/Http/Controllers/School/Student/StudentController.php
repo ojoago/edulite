@@ -137,19 +137,7 @@ class StudentController extends Controller
                 ->rawColumns(['data', 'status'])
             ->make(true);
     }
-    public static function createSchoolStudent($data){
-        try {
-            $dup = Student::where(['school_pid' => $data['school_pid'], 'user_pid' => $data['user_pid']])->first();
-            if ($dup) {
-                $dup->fill($data);
-                return $dup->save();
-            }
-            return Student::create($data);
-        } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
-        }
-    }
+   
 
     public static function createStudentClassRecord($data)
     {
@@ -188,7 +176,7 @@ class StudentController extends Controller
                         ->first([
                             'students.reg_number', 
                             'students.fullname', 
-                            'students.student_image_path',
+                            'students.passport',
                             'gender','dob', 'students.pid']);
 
         return $std;
