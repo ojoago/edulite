@@ -12,7 +12,7 @@
         </nav>
     </div>
     <!-- <a href="{{route('create.organisation')}}">create organisation</a><br> -->
-    <a href="{{route('create.school')}}">create lite</a><br>
+    <a href="{{route('create.school')}}">create School</a><br>
     <div class="row">
         <div class="col-md-6">
             <div class="card shadow-inner">

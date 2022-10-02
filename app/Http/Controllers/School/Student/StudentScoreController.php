@@ -32,6 +32,7 @@ class StudentScoreController extends Controller
         'subject'=>$request->subject,
         'arm'=>$request->arm,
     ]);
+
     setActionablePid(); //set assessment pid to null
         // self::useClassArmSubjectToGetSubjectScroe();
     return redirect()->route('enter.student.score');
@@ -81,10 +82,11 @@ class StudentScoreController extends Controller
         $session = session('session');
         $term = session('term');
         $arm = session('arm');
+        // dd($session,$term,$arm);
         $scoreParams = ScoreSettingsController::loadClassScoreSettings($term,$session,$arm);
         
         $data = Student::where([
-            'current_class' => $arm,
+            'current_class_pid' => $arm,
             'school_pid' => getSchoolPid(),
             'current_session_pid' => $session
         ])->get([
@@ -184,13 +186,14 @@ class StudentScoreController extends Controller
         $term =     session('term');
         $arm =      session('arm');
         $subject =  session('subject');
-        $teacher = StaffController::getSubjectTeacherPid($session, $term, $subject);
+       
+        $teacher = StaffController::getSubjectTeacherPid(session:  $session,term: $term,subject: $subject);
         if(!$teacher){
             return false;
         }
         $data = [
             'school_pid' => $schoolPid,
-            // 'teacher_pid' => $teacher,
+            'teacher_pid' => $teacher,
             'session_pid' => $session,
             'term_pid' => $term,
             'arm_pid' => $arm,

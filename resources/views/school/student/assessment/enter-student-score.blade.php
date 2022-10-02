@@ -44,7 +44,6 @@
                     </div>
                 </div>
             </form>
-
             <!-- Primary Color Bordered Table -->
             <h5 class="card-title">{{$class->arm}} <small>{{$class->subject}} <i class="bi bi-calendar-event-fill"></i> {{termName(session('term'))}} {{sessionName(session('session'))}}</small></h5>
             @if($scoreParams->isNotEmpty())
@@ -92,8 +91,8 @@
                 </tbody>
                 {{-- <tfoot>
                     <td colspan="{{$scoreParams->count()+2}}"></td>
-                    <td colspan="2">
-                    </td>
+                <td colspan="2">
+                </td>
                 </tfoot> --}}
                 </form>
             </table>
@@ -119,7 +118,7 @@
         });
         $('.studentCaScore').change(function() {
             var score = $(this).val(); //CA score
-
+            alert(score)
             var max = $(this).attr('max_score'); // obtainable score
             if (score <= max) {
                 var title = $(this).attr('id'); // title pid

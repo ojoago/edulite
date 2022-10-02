@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auths;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Failed;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -169,15 +170,25 @@ class AuthController extends Controller
             'email' => 'required',
             'password' => 'required',
         ]);
-        $username = User::where('email',$request->email)
+        $user = User::where('email',$request->email)
                         ->orwhere('gsm', $request->email)
-                        ->orwhere('username', $request->email)->pluck('username')->first();
-        if (auth()->attempt(['username'=>$username, 'password'=>$request->password,/*$request->only('email', 'password')*/])) {
-            $name = authUsername();
-            self::clearAuthSession();
-            setAuthFullName($name);
-            return redirect()->route('users.dashboard');
+                        ->orwhere('username', $request->email)->first(['username','account_status']);
+        if(!isset($user->account_status)){
+            return abort(500);
         }
+        if($user->account_status==1){
+            if (auth()->attempt(['username' => $user->username, 'password' => $request->password,/*$request->only('email', 'password')*/])) {
+                $name = authUsername();
+                self::clearAuthSession();
+                setAuthFullName($name);
+                return redirect()->route('users.dashboard');
+            }
+        }else{
+            if($user->account_status==0){
+                return back()->with('message', "info|Your acccount is not yet verified, please login to your mail and click on verification link to activate your account.");
+            }
+        }
+        
         return back()->with('message', "error|Invalid login details");
     }
 

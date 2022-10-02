@@ -45,6 +45,7 @@ use App\Http\Controllers\School\Student\Assessment\Psychomotor\RecordPsychomotor
 
 // port 8400
 Route::view('/','welcome')->middleware('guest');
+// Route::view('/401','welcome')->name('401')->middleware('guest');
 // authentication 
 // sign up 
 Route::get('/mail',function(){
@@ -91,7 +92,7 @@ Route::post('base-user-access',[OrgUserAccessController::class,'store'])->name('
 // Route::post('organisation-sign-up/{id}',[OrgUserAccessController::class,'store'])->name('organisation.sign.up');
 Route::view('create-school', 'school.create-school')->name('create.school');
 Route::post('create-school', [SchoolController::class, 'createSchool']);
-Route::get('lite-sign-in/{id}', [SchoolController::class, 'schoolLogin'])->name('login.school');
+Route::get('school-sign-in/{id}', [SchoolController::class, 'schoolLogin'])->name('login.school');
 //load states
 Route::post('load-available-state', [Select2Controller::class, 'loadStates'])->name('load.available.state');
 //load school states
@@ -99,19 +100,19 @@ Route::post('load-available-state-lga', [Select2Controller::class, 'loadStatesLg
     
 Route::middleware('schoolAuth')->group(function(){
     // user create school 
-    Route::get('lite-dashboard', [SchoolController::class, 'mySchoolDashboard'])->name('my.school.dashboard');
-    Route::get('update-lite/{id}', [SchoolController::class, 'update'])->name('update.school');
-    Route::get('delete-lite/{id}', [SchoolController::class, 'update'])->name('delete.school');
+    Route::get('school-dashboard', [SchoolController::class, 'mySchoolDashboard'])->name('my.school.dashboard');
+    Route::get('update-school/{id}', [SchoolController::class, 'update'])->name('update.school');
+    Route::get('delete-school/{id}', [SchoolController::class, 'update'])->name('delete.school');
     // load school user
-    Route::get('lite-users', [SchoolUserController::class, 'index'])->name('school.users');
+    Route::get('school-users', [SchoolUserController::class, 'index'])->name('school.users');
     // add user to school 
-    Route::post('lite-users', [SchoolUserController::class, 'create']);
+    Route::post('school-users', [SchoolUserController::class, 'create']);
     // school user access right 
-    Route::post('lite-user-access', [SchoolUserAccessController::class, 'store'])->name('school.user.access');
+    Route::post('school-user-access', [SchoolUserAccessController::class, 'store'])->name('school.user.access');
     // sign up with school link direct 
     // Route::post('school-sign-up/{id}',[OrgUserAccessController::class,'store'])->name('school.sign.up');
     // category and class has the same controller 
-    Route::view('lite-class', 'school.framework.class.class-and-category')->name('school.class');
+    Route::view('school-class', 'school.framework.class.class-and-category')->name('school.class');
     // tab 1 
     Route::get('load-school-category', [ClassController::class, 'loadCategory'])->name('load.school.category');
     // tab 2 
@@ -121,11 +122,11 @@ Route::middleware('schoolAuth')->group(function(){
     // tab 4 
     Route::post('load-school-class-arm-subject', [ClassController::class, 'loadClassArmSubject'])->name('load.school.class.arm.subject');
     // create category 
-    Route::post('create-lite-category', [ClassController::class, 'createCategory'])->name('create.school.category');
+    Route::post('create-school-category', [ClassController::class, 'createCategory'])->name('create.school.category');
     // create class 
-    Route::post('lite-class', [ClassController::class, 'createClass'])->name('create.school.class');
+    Route::post('school-class', [ClassController::class, 'createClass'])->name('create.school.class');
     // create class arm 
-    Route::post('lite-arm', [ClassController::class, 'createClassArm'])->name('create.school.class.arm');
+    Route::post('school-arm', [ClassController::class, 'createClassArm'])->name('create.school.class.arm');
     // create class arm 
     Route::post('create-class-arm-subject', [ClassController::class, 'createClassArmSubject'])->name('create.school.class.arm.subject');
     // create class arm 
@@ -134,9 +135,9 @@ Route::middleware('schoolAuth')->group(function(){
     // create class arm rep 
     Route::post('assign-class-arm-rep', [StudentClassController::class, 'assignClassRep'])->name('assign.class.arm.rep');
     // academic session
-    Route::view('lite-session', 'school.framework.session.school-session')->name('school.session');
+    Route::view('school-session', 'school.framework.session.school-session')->name('school.session');
     // create new session 
-    Route::post('lite-session', [SchoolSessionController::class, 'createSession']);
+    Route::post('school-session', [SchoolSessionController::class, 'createSession']);
     // load session on tab with datatable server  
     Route::get('load-school-session', [SchoolSessionController::class, 'index'])->name('load.school.session');
 
@@ -144,22 +145,22 @@ Route::middleware('schoolAuth')->group(function(){
     // load active session on tab 
     Route::get('load-school-active-session', [SchoolSessionController::class, 'loadSchoolActiveSession'])->name('load.school.active.session');
     // update active session 
-    Route::post('lite-session-active', [SchoolSessionController::class, 'setActiveSession'])->name('school.session.active');
+    Route::post('school-session-active', [SchoolSessionController::class, 'setActiveSession'])->name('school.session.active');
 
     // terms 
-    Route::view('lite-term', 'school.framework.terms.school-terms')->name('school.term');
-    Route::get('list-lite-term', [SchoolTermController::class, 'index'])->name('school.list.term');
-    Route::post('lite-term', [SchoolTermController::class, 'createSchoolTerm']);
-    Route::post('lite-active-term', [SchoolTermController::class, 'setSchoolActiveTerm'])->name('school.term.active');
+    Route::view('school-term', 'school.framework.terms.school-terms')->name('school.term');
+    Route::get('list-school-term', [SchoolTermController::class, 'index'])->name('school.list.term');
+    Route::post('school-term', [SchoolTermController::class, 'createSchoolTerm']);
+    Route::post('school-active-term', [SchoolTermController::class, 'setSchoolActiveTerm'])->name('school.term.active');
     Route::get('load-active-term', [SchoolTermController::class, 'loaSchoolActiveTerm'])->name('load.school.active.term');
     Route::get('load-active-term-detail', [SchoolTermController::class, 'loaSchoolActiveTermDetails'])->name('load.school.active.term.details');
 
 
     // Assesment Title
-    Route::view('lite-assessment-title', 'school.framework.assessment.assessment-title')->name('school.assessment.title');
+    Route::view('school-assessment-title', 'school.framework.assessment.assessment-title')->name('school.assessment.title');
     Route::get('load-assessment-title', [AssessmentTitleController::class, 'index'])->name('load.school.assessment.title');
     // submiting form and create assessment title 
-    Route::post('lite-assessment-title', [AssessmentTitleController::class, 'createAssessmentTitle']);
+    Route::post('school-assessment-title', [AssessmentTitleController::class, 'createAssessmentTitle']);
     //load score settings 
     Route::get('load-score-setting', [ScoreSettingsController::class, 'index'])->name('load.score.setting');
 
@@ -202,7 +203,7 @@ Route::middleware('schoolAuth')->group(function(){
     // load subject type 
     Route::post('load-available-subject-type', [Select2Controller::class, 'loadAvailableSubjectType'])->name('load.available.subject.type');
     // score settings 
-    Route::post('lite-score-settings', [ScoreSettingsController::class, 'createScoreSettings'])->name('create.school.score.settings');
+    Route::post('school-score-settings', [ScoreSettingsController::class, 'createScoreSettings'])->name('create.school.score.settings');
     // load hostel 
     Route::post('load-available-hostels', [Select2Controller::class, 'loadAvailableHostels']);
     // portal 
@@ -210,11 +211,11 @@ Route::middleware('schoolAuth')->group(function(){
 
     // subjects & subject type
     // load subject type page 
-    Route::view('lite-subject-type', 'school.framework.subject.subjects')->name('school.subject.type');
+    Route::view('school-subject-type', 'school.framework.subject.subjects')->name('school.subject.type');
     // load subject type 
     Route::get('load-subject-type', [SubjectTypeController::class, 'index'])->name('load.school.subject.type');
     // create subject type 
-    Route::post('lite-subject-type', [SubjectTypeController::class, 'createSubjectType'])->name('create.school.subject.type');
+    Route::post('school-subject-type', [SubjectTypeController::class, 'createSubjectType'])->name('create.school.subject.type');
     // load subjects 
     Route::post('load-school-subject', [SubjectController::class, 'index'])->name('load.school.subject');
     // create school category subject 
@@ -223,19 +224,19 @@ Route::middleware('schoolAuth')->group(function(){
 
 
     // grade key 
-    Route::view('lite-grade-key', 'school.framework.grade.grade-key')->name('school.grade.key');
-    Route::get('load-lite-grade-key', [GradeKeyController::class, 'index'])->name('load.school.grade.key');
-    Route::post('lite-grade-key', [GradeKeyController::class, 'createGradeKey']);
-    Route::view('lite-attendance', 'school.framework.attendance.attendance-setting')->name('school.attendance.setting');
+    Route::view('school-grade-key', 'school.framework.grade.grade-key')->name('school.grade.key');
+    Route::get('load-school-grade-key', [GradeKeyController::class, 'index'])->name('load.school.grade.key');
+    Route::post('school-grade-key', [GradeKeyController::class, 'createGradeKey']);
+    Route::view('school-attendance', 'school.framework.attendance.attendance-setting')->name('school.attendance.setting');
     Route::get('load-attendance', [AttendanceTypeController::class, 'index'])->name('load.school.attendance.setting');
-    Route::post('lite-attendance', [AttendanceTypeController::class, 'createAttendanceType']);
-    Route::post('lite-class-attendance', [AttendanceTypeController::class, 'createClassAttendance'])->name('school.class.attendance');
+    Route::post('school-attendance', [AttendanceTypeController::class, 'createAttendanceType']);
+    Route::post('school-class-attendance', [AttendanceTypeController::class, 'createClassAttendance'])->name('school.class.attendance');
     // Route::post('school-take-class-attendance',[AttendanceTypeController::class, 'createCLassAttendance'])->name('school.take.class.attendance');
 
 
     // Psychomotor, effective domain and grade key 
     // Psychomotor 
-    Route::view('lite-confrence', 'school.framework.psychomotor.psychomotor-config')->name('school.psychomotor.config');
+    Route::view('school-confrence', 'school.framework.psychomotor.psychomotor-config')->name('school.psychomotor.config');
 
     Route::view('timetable-config', 'school.framework.timetable.timetable-config')->name('timetable.config');
     // Psychomotor, effective domain and grade key 
@@ -267,18 +268,18 @@ Route::middleware('schoolAuth')->group(function(){
 
 
     // result config 
-    Route::view('lite-result-config', 'school.framework.result.result_config')->name('school.result.config');
+    Route::view('school-result-config', 'school.framework.result.result_config')->name('school.result.config');
 
     Route::view('register-staff', 'school.registration.staff.register-staff')->name('create.staff.form');
-    Route::view('lite-staff-list', 'school.staff.staff-list')->name('school.staff.list');
-    Route::post('lite-staff', [StaffController::class, 'createStaff'])->name('create.school.staff');
+    Route::view('school-staff-list', 'school.staff.staff-list')->name('school.staff.list');
+    Route::post('school-staff', [StaffController::class, 'createStaff'])->name('create.school.staff');
     Route::get('edit-staff/{id}', [StaffController::class, 'find'])->name('edit.staff');
     // load staff details for editing 
     Route::post('load-staff-detal-by-id', [StaffController::class, 'loadStaffDetailsById'])->name('load.staff.detail.by.id');
-    // Route::post('lite-staff-role/{id}', [StaffController::class, 'staffRole'])->name('school.staff.role');
-    Route::post('lite-staff-access/{id}', [StaffController::class, 'staffAccessRight'])->name('school.staff.access');
+    // Route::post('school-staff-role/{id}', [StaffController::class, 'staffRole'])->name('school.staff.role');
+    Route::post('school-staff-access/{id}', [StaffController::class, 'staffAccessRight'])->name('school.staff.access');
     Route::post('school-staff-class', [StaffController::class, 'assignClassToStaff'])->name('school.staff.class');
-    Route::post('lite-staff-subject', [StaffController::class, 'staffSubject'])->name('school.staff.subject');
+    Route::post('school-staff-subject', [StaffController::class, 'staffSubject'])->name('school.staff.subject');
     // update staff images 
     Route::post('update-staff-images', [StaffController::class, 'updateStaffImages'])->name('update.staff.image');
     // update role 
@@ -287,7 +288,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('update-staff-status/{id}', [StaffController::class, 'updateStaffStatus'])->name('update.staff.status');
 
     // student 
-    // Route::view('lite-registration', 'school.registration.index')->name('school.registration');
+    // Route::view('school-registration', 'school.registration.index')->name('school.registration');
     // student 
     Route::view('register-s', 'school.registration.student.register-student')->name('school.registration.student.form');
     Route::post('register-student', [StudentRegistrationController::class, 'registerStudent'])->name('register.student');
@@ -305,8 +306,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('parents-ward/{id}', [ParentController::class, 'myWards'])->name('school.parent.child');
 
     // parent assistance 
-    Route::view('create-lite-rider-form', 'school.registration.rider.register-rider')->name('school.rider');
-    Route::post('create-lite-rider', [SchoolRiderController::class, 'submitSchoolRiderForm'])->name('create.lite.rider');
+    Route::view('create-school-rider-form', 'school.registration.rider.register-rider')->name('school.rider');
+    Route::post('create-school-rider', [SchoolRiderController::class, 'submitSchoolRiderForm'])->name('create.school.rider');
     // link Rider to student 
     Route::post('link-student-to-rider', [SchoolRiderController::class, 'linkStudentToRider'])->name('link.student.to.rider');
 
@@ -346,7 +347,7 @@ Route::middleware('schoolAuth')->group(function(){
 
     // list 
     // list school staff 
-    Route::view('lite-staff-list', 'school.lists.staff.staff-list')->name('school.staff.list');
+    Route::view('school-staff-list', 'school.lists.staff.staff-list')->name('school.staff.list');
 
     // load staff 
     // load active staff 
@@ -370,7 +371,7 @@ Route::middleware('schoolAuth')->group(function(){
 
 
     // student list 
-    Route::view('lite-s-list', 'school.lists.student.student-list')->name('school.student.list');
+    Route::view('school-s-list', 'school.lists.student.student-list')->name('school.student.list');
     // load active student 
     Route::get('load-active-student', [StudentController::class, 'index'])->name('load.active.student.list');
     // load diabled student 
@@ -381,7 +382,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('p-list', 'school.lists.parent.parent-list')->name('school.parent.list');
     Route::get('load-parent-list', [ParentController::class, 'index'])->name('load.school.parent.list');
     // student list 
-    Route::view('lite-rider-list', 'school.lists.rider.rider-list')->name('school.rider.list');
+    Route::view('school-rider-list', 'school.lists.rider.rider-list')->name('school.rider.list');
     Route::get('load-rider-list', [SchoolRiderController::class, 'index'])->name('load.school.rider.list');
 
     // student profile 

@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\Users\UserDetailsController;
-use App\Http\Controllers\School\Parent\ParentController;
 use App\Http\Controllers\School\SchoolController;
 
 class UploadParentController extends Controller
@@ -67,6 +66,7 @@ class UploadParentController extends Controller
                                         if (!$sts) {
                                             $errors[] = 'Parent on row ' . $k . ' not linked to school';
                                         }
+                                        $k++;
                                     }else{
 
                                         $errors[] = 'parent on row ' . $k . ' partially created use edit to completed it please';
@@ -81,7 +81,7 @@ class UploadParentController extends Controller
                         } else {
                             $errors[] = 'Parent on row ' . $k . ' not inserted because of either firstname, surname or gsm is empty';
                         }
-                        $k++;
+                        
                     }
                     $msg = $k - count($errors) . ' parent(s) uploaded successfully';
                     return response()->json(['status' => 1, 'message' => $msg, 'errors' => $errors]);

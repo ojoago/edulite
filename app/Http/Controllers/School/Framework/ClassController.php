@@ -90,9 +90,9 @@ class ClassController extends Controller
     }
     public function loadClassArm()
     {
-        $data = ClassArm::join('school_staff', 'school_staff.pid', 'classes.staff_pid')
+        $data = ClassArm::join('classes', 'classes.pid', 'class_arms.class_pid')
+        ->join('school_staff', 'school_staff.pid', 'classes.staff_pid')
         ->join('users', 'users.pid', 'school_staff.user_pid')
-        ->join('classes', 'classes.pid', 'class_arms.class_pid')
         ->where(['class_arms.school_pid' => getSchoolPid()])
             ->get(['class_arms.pid', 'class','arm', 'class_arms.created_at', 'class_arms.status','username']);
         return datatables($data)
@@ -385,18 +385,20 @@ class ClassController extends Controller
         if ($pid) {
             return $pid;
         }
-        $data['teacher_pid'] = self::getClassTeacherPid($data['session_pid'], $data['term_pid'], $data['arm_pid']);
+        $data['teacher_pid'] = self::getClassTeacherPid(session: $data['session_pid'],term: $data['term_pid'],arm: $data['arm_pid']);
+
         $data['pid'] = public_id();
         $result = StudentClassScoreParam::create($data);
         return $result->pid;
     }
     public static function getClassTeacherPid($arm,$session,$term){
-        return StaffClass::where([
-                            'arm_pid'=>$arm,
-                            'session_pid'=>$session,
-                            'term_pid'=>$term,
-                            'school_pid'=>getSchoolPid()
-                            ])->pluck('teacher_pid')->first();
+        $pid = StaffClass::where([
+            'arm_pid'=>$arm,
+            'session_pid'=>$session,
+            'term_pid'=>$term,
+            'school_pid'=>getSchoolPid()
+            ])->pluck('teacher_pid')->first();
+        return $pid;
     }
 
     

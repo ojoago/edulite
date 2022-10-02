@@ -333,7 +333,7 @@
                                 <option value="9">Nine</option>
                                 <option value="10">Ten</option>
                             </select>
-                            <i class="bi bi-x-circle-fill text-danger m-2 removeRowBtn"></i>
+                            <i class="bi bi-x-circle-fill text-danger pointer m-2 removeRowBtn"></i>
                             </div>
                             <p class="text-danger class_number_error"></p>
                         </div>

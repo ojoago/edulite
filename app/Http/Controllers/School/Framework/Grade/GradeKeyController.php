@@ -4,11 +4,7 @@ namespace App\Http\Controllers\School\Framework\Grade;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\School\Framework\Class\Category;
-use App\Models\School\Framework\Term\Term;
-use App\Models\School\Framework\Class\ClassArm;
 use App\Models\School\Framework\Grade\GradeKey;
-use App\Models\School\Framework\Session\Session;
 use App\Models\School\Framework\Grade\SchoolGrade;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -100,6 +96,7 @@ class GradeKeyController extends Controller
             } catch (\Throwable $e) {
                 $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
                 logError($error);
+                return response()->json(['status'=>'error', 'message'=>'Something Went Wrong']);
             }
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
@@ -111,7 +108,7 @@ class GradeKeyController extends Controller
             $data = SchoolGrade::create($data);
             return $data->pid;
         } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+            $error = $e->getMessage();
             logError($error);
         }
     }

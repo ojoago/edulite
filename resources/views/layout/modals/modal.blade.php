@@ -1,6 +1,6 @@
 <!-- create class subject to teacher modal  -->
 <div class="modal fade" id="createArmSubjectTeacherModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Assign Class Arm Subject to Teacher</h5>
@@ -9,22 +9,33 @@
             <div class="modal-body">
                 <form action="" method="post" class="" id="createArmSubjectTeacherForm">
                     @csrf
-                    <label for="category_pid">Category</label>
-                    <select name="category_pid" id="categorySelect2s" placeholder="select" class="categorySelect2 form-control form-control-sm" style="width: 100%;">
-                    </select>
-                    <p class="text-danger category_pid_error"></p>
-                    <label for="session_pid">Session</label>
-                    <select name="session_pid" id="sessionSelect2s" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
-                    </select>
-                    <p class="text-danger session_pid_error"></p>
-                    <label for="class_pid">Class</label>
-                    <select name="class_pid" id="classSelect2s" placeholder="select" class="classSelect2 form-control form-control-sm" style="width: 100%;">
-                    </select>
-                    <p class="text-danger class_pid_error"></p>
-                    <label for="term_pid">Term</label>
-                    <select name="term_pid" id="termSelect2s" placeholder="select" class="termSelect2 form-control form-control-sm" style="width: 100%;">
-                    </select>
-                    <p class="text-danger term_pid_error"></p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="category_pid">Category</label>
+                            <select name="category_pid" id="categorySelect2s" placeholder="select" class="categorySelect2 form-control form-control-sm" style="width: 100%;">
+                            </select>
+                            <p class="text-danger category_pid_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="session_pid">Session</label>
+                            <select name="session_pid" id="sessionSelect2s" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
+                            </select>
+                            <p class="text-danger session_pid_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="class_pid">Class</label>
+                            <select name="class_pid" id="classSelect2s" placeholder="select" class="classSelect2 form-control form-control-sm" style="width: 100%;">
+                            </select>
+                            <p class="text-danger class_pid_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="term_pid">Term</label>
+                            <select name="term_pid" id="termSelect2s" placeholder="select" class="termSelect2 form-control form-control-sm" style="width: 100%;">
+                            </select>
+                            <p class="text-danger term_pid_error"></p>
+                        </div>
+                    </div>
+
                     <label for="arm_pid">Arm</label>
                     <select name="arm_pid[]" id="armSelect2s" multiple="multiple" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>

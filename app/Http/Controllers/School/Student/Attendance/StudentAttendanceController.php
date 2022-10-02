@@ -22,7 +22,7 @@ class StudentAttendanceController extends Controller
 
     public function loadArmStudent(Request $request){
         $data = Student::where([
-                            'current_class'=>$request->arm,
+                            'current_class_pid'=>$request->arm,
                             'current_session_pid'=>activeSession(),
                             'status'=>1
                         ])->get(['pid', 'reg_number', 'fullname']);

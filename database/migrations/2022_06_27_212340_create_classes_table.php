@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('class');
             $table->string('staff_pid')->comment('creator');
             $table->string('status')->default(1)->comment('1 enabled, 0 disabled');
+            $table->string('class_number');//->comment('1 enabled, 0 disabled');
             $table->timestamps();
         });
     }

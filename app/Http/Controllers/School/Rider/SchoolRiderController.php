@@ -11,7 +11,6 @@ use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Student\StudentController;
-use App\Models\School\Student\Student;
 
 class SchoolRiderController extends Controller
 {

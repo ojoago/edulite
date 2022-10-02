@@ -74,7 +74,9 @@ class Select2Controller extends Controller
             ->orderBy('subject')->get(['pid', 'subject']); //
         else
         $result = Subject::where(['school_pid' => getSchoolPid(), 'status' => 1, 'category_pid' => $request->pid])
-            ->limit(10)->orderBy('subject')->get(['pid', 'subject']); //
+            ->limit(10)
+            ->orderBy('subject')
+            ->get(['pid', 'subject']); //
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }
@@ -83,8 +85,8 @@ class Select2Controller extends Controller
                     'id' => $row->pid,
                     'text' => $row->subject,
                 ];
+            }
             return response()->json($data);
-        }
     }
     public function loadAvailableCategoryHead(){
         $data = null;
@@ -197,12 +199,12 @@ class Select2Controller extends Controller
         $result = Student::where([['school_pid',getSchoolPid()],
                                     ['status', 1],
                                     ['fullname', 'like', '%' . $request->q . '%'],
-                                    ['current_class',$request->pid]
+                                    ['current_class_pid',$request->pid]
                                     ])
                                 ->orwhere([
                                     ['school_pid', getSchoolPid()],
                                     ['status', 1],
-                                    ['current_class',$request->pid]])
+                                    ['current_class_pid',$request->pid]])
                                     ->limit($request->page_limit)
             ->orderBy('id', 'DESC')->get(['pid', 'fullname', 'reg_number']); //
         else

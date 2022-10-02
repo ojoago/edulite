@@ -60,7 +60,7 @@ class PromoteStudentController extends Controller
         // });
     // $arms = ClassArm::where(['school_pid'=>getSchoolPid(),'class_pid'=>$request->class, 'status' => 1])->get(['arm_number', 'pid', 'arm'])->dd();
     // ClassArm::join('classes','classes.pid','class_pid')->where(['classes.school_pid'=>getSchoolPid(), 'class_arms.pid'=>$request->arm])->get()->dd();
-       $student = Student::where(['current_class'=>$request->arm])->get(['pid', 'reg_number', 'fullname', 'student_image_path', 'current_class']);
+       $student = Student::where(['current_class_pid'=>$request->arm])->get(['pid', 'reg_number', 'fullname', 'passport', 'current_class_pid']);
 
     return view('school.student.promotion.promote-student',
                 compact(

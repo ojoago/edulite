@@ -89,7 +89,7 @@ class UploadStudentController extends Controller
                                     'session_pid' =>  $request->session_pid,
                                     'term_pid' =>  $request->term_pid,
                                     'admitted_class' =>  $request->arm_pid,
-                                    'current_class' =>  $request->arm_pid,
+                                    'current_class_pid' =>  $request->arm_pid,
                                     'current_session_pid' =>  $request->session_pid,
                                 ];
                                 $userDetails = UserDetailsController::insertUserDetails($detail);
@@ -107,6 +107,7 @@ class UploadStudentController extends Controller
                                         StudentController::createStudentClassRecord($studentClass);
                                         $errors[] = 'Student on row ' . $k . ' not Linked to School';
                                     }
+                                    $k++;
                                 } else {
                                     $errors[] = 'Student on row ' . $k . ' partially created use edit to completed it please';
                                 }
@@ -116,7 +117,7 @@ class UploadStudentController extends Controller
                         } else {
                             $errors[] = 'Student on row ' . $k . ' not inserted because of either firstname, surname or gsm is empty';
                         }
-                        $k++;
+                       
                     }
                     $msg = $k - count($errors) . ' Student(s) uploaded successfully';
                     return response()->json(['status' => 1, 'message' => $msg, 'errors' => $errors]);

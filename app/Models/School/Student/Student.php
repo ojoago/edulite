@@ -11,8 +11,8 @@ class Student extends Model
     protected $fillable = [
         'reg_number', 'user_pid', 'pid', 'type', 'school_pid', 'status',
         'passport', 'address', 'date', 'religion', 'title', 'fullname',
-        'admitted_class', 'current_class', 'address', 'religion', 'session_pid','parent_pid',
-        'current_session_pid', 'admitted_term'
+        'admitted_class', 'current_session_pid', 'address', 'religion', 'session_pid','parent_pid',
+        'current_class_pid', 'admitted_term', 'admitted_session_pid'
     ];
 
 }

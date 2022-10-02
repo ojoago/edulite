@@ -27,23 +27,23 @@ class UserController extends Controller
         $office = DB::table('school_staff as t')
         ->join('schools as s','s.pid','t.school_pid')
         ->where('t.user_pid', getUserPid())->get(['s.pid', 's.school_name']);
-
-        if(!getDefaultLanding()){
-            if(($schools->isEmpty() || $office->isEmpty()) && !($schools->isEmpty() && $office->isEmpty())){
-                if ($schools->isEmpty()) {
-                    if (count($office) === 1) {
-                        $pid = $office[0]->pid;
-                    }
-                } else {
-                    if (count($schools) === 1) {
-                        $pid = $schools[0]->pid;
-                    }
-                }
-                AuthController::clearAuthSession();
-                return redirect()->route('login.school', [base64Encode($pid)]);
-            }
+        // dd(getDefaultLanding());
+        // if(!getDefaultLanding()){
+        //     if(($schools->isEmpty() || $office->isEmpty()) && !($schools->isEmpty() && $office->isEmpty())){
+        //         if ($schools->isEmpty()) {
+        //             if (count($office) === 1) {
+        //                 $pid = $office[0]->pid;
+        //             }
+        //         } else {
+        //             if (count($schools) === 1) {
+        //                 $pid = $schools[0]->pid;
+        //             }
+        //         }
+        //         AuthController::clearAuthSession();
+        //         return redirect()->route('login.school', [base64Encode($pid)]);
+        //     }
             
-        }
+        // }
         AuthController::clearAuthSession();
         $data =['schools'=> $schools,'work'=>$office];
         return view('users.dashboard', compact('data'));

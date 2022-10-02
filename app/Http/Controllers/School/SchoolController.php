@@ -167,6 +167,7 @@ class SchoolController extends Controller
 
     public static function createSchoolStaff($data){
         try {
+            $data['pid'] = $data['pid'] ?? public_id();
             self::createSchoolUser(userId: $data['user_pid'], pid: $data['pid'], role: $data['role']);
             $data['school_pid'] = $data['school_pid'] ?? getSchoolPid();
             $dup = SchoolStaff::where(['school_pid' => $data['school_pid'], 'user_pid' => $data['user_pid']])->first();
@@ -174,11 +175,11 @@ class SchoolController extends Controller
                 $dup->fill($data);
                 return $dup->save();
             }
-            $data['pid'] =  public_id();
+            
             $data['staff_id'] = $data['staff_id'] ?? StaffController::staffUniqueId();
             return SchoolStaff::create($data);
         } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+            $error = $e->getMessage();
             logError($error);
         }
     }
@@ -218,6 +219,7 @@ class SchoolController extends Controller
                 'user_pid' => $data['user_pid'],
                 'school_pid' => $data['school_pid'],
             ];
+            $data['rider_id'] = '';
             return SchoolRider::updateOrCreate($dupParams, $data);
         } catch (\Throwable $e) {
             $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
@@ -333,8 +335,9 @@ class SchoolController extends Controller
                 'type' => $request->type ?? getSchoolType(),
                 'session_pid' => activeSession(),
                 'term_pid' => activeTerm(),
+                'admitted_term' => activeTerm(),
                 'admitted_class' => $request->arm,
-                'current_class' => $request->arm,
+                'current_class_pid' => $request->arm,
                 'current_session_pid' => activeSession(),
                 'staff_pid' => getSchoolUserPid(),
                 'school_pid'=>getSchoolPid(),

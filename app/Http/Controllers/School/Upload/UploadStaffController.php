@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\School\Staff\SchoolStaff;
 use App\Http\Controllers\Auths\AuthController;
+use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Staff\StaffController;
 use Illuminate\Support\Facades\Validator;
@@ -60,10 +61,11 @@ class UploadStaffController extends Controller
                                         'user_pid' => $user->pid,
                                         'staff_id' => StaffController::staffUniqueId()
                                     ];
-                                    $sts = StaffController::registerStaffToSchool($staff);
+                                    $sts = SchoolController::createSchoolStaff($staff);
                                     if (!$sts) {
                                         $errors[] = 'Staff on row ' . $k . ' not Linked to School';
                                     }
+                                    $k++;
                                }else{
                                     $errors[] = 'Staff on row ' . $k . ' partially created use edit to completed it please';
 
@@ -74,7 +76,7 @@ class UploadStaffController extends Controller
                         } else {
                             $errors[] = 'Staff on row ' . $k . ' not inserted because of either firstname, surname or gsm is empty';
                         }
-                        $k++;
+                        
                     }
                     $msg = $k - count($errors) . ' Staff uploaded successfully';
                     return response()->json(['status'=>1,'message'=>$msg,'errors'=>$errors]);

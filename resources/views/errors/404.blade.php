@@ -1,14 +1,20 @@
 @extends('layout.mainlayout')
-@section('title','page not fount')
+@section('title','eror 404')
 @section('content')
-<h1>404</h1>
-<div class="col-12">
-    <p class="small mb-0">Already have an account? <a href="{{route('login')}}">Create an account</a></p>
+<style>
+    .section{
+        width:50%;
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-6 d-flex flex-column align-items-center justify-content-center">
+        <div class="section">
+            <h5 class="card-title text-center pb-0 fs-4"></h5>
+            <p class="text-center text-warning">You Hit the Wrong Spot</p>
+            <img src="{{asset('files/edulite/svg/monster 404 Error-amico.svg')}}" style="width:100%" alt="hero image" />
+            <p class="text-center">Follow the back door <a href="{{route('logout')}}"> <button class="btn btnsm btn-danger">Logout</button> </a> </p>
+        </div>
+    </div>
 </div>
+
 @endsection
-
-
-<!-- school_logo
-school_website -->
-
-<!-- <h1>education is light hence EduLite</h1> -->

@@ -18,9 +18,10 @@ return new class extends Migration
             $table->string('school_pid');
             $table->string('class_pid');
             $table->string('pid')->unique();
+            $table->string('arm');
             $table->string('arm_number');
             $table->string('staff_pid')->comment('creator');
-            $table->string('status')->comment('1 enabled, 0 disabled');
+            $table->string('status')->default(1)->comment('1 enabled, 0 disabled');
             $table->timestamps();
         });
     }

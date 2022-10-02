@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('lga', function (Blueprint $table) {
-            $table->id();
-            $table->string('lga');
-            $table->foreignId('state_id');
-            $table->timestamps();
+        Schema::table('schools', function (Blueprint $table) {
+            $table->renameColumn('state_id', 'state');
+            $table->renameColumn('lga_id', 'lga');
         });
     }
 
@@ -28,6 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lga');
+        Schema::table('schools', function (Blueprint $table) {
+            //
+        });
     }
 };

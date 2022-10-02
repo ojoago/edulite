@@ -29,7 +29,7 @@ class UploadRiderController extends Controller
                 $header = $resource['header'];
                 $data = $resource['data'];
                 $errors = [];
-                $k = 1;
+                $k = 0;
                 if ((($header === $this->header))) {
                     foreach ($data as $row) {
                         if (!empty($row[0]) && !empty($row[1]) && !empty($row[3])) {
@@ -61,6 +61,7 @@ class UploadRiderController extends Controller
                                         'user_pid' => $user->pid,
                                         'school_pid' => getSchoolPid(),
                                         'pid' => public_id(),
+                                        'rider_id' => SchoolRiderController::riderUniqueId()
                                     ];
                                     $dtl = UserDetailsController::insertUserDetails($userDetail);
                                     if ($dtl) {
@@ -68,6 +69,8 @@ class UploadRiderController extends Controller
                                         if (!$sts) {
                                             $errors[] = 'Rider/Care on row ' . $k . ' not linked to school';
                                         }
+                                        $k++;
+                                        
                                     } else {
 
                                         $errors[] = 'Rider/care on row ' . $k . ' partially created use edit to completed it please';
@@ -82,7 +85,6 @@ class UploadRiderController extends Controller
                         } else {
                             $errors[] = 'Rider on row ' . $k . ' not inserted because of either firstname, surname or gsm is empty';
                         }
-                        $k++;
                     }
                     $msg = $k - count($errors) . ' record(s) uploaded successfully';
                     return response()->json(['status' => 1, 'message' => $msg, 'errors' => $errors]);

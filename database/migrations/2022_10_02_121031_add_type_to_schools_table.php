@@ -13,10 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('states', function (Blueprint $table) {
-            $table->id();
-            $table->string('state');
-            $table->timestamps();
+        Schema::table('schools', function (Blueprint $table) {
+            $table->integer('type');
         });
     }
 
@@ -27,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('state');
+        Schema::table('schools', function (Blueprint $table) {
+            //
+        });
     }
 };

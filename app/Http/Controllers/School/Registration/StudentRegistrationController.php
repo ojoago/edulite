@@ -123,7 +123,7 @@ class StudentRegistrationController extends Controller
                 $student['session_pid'] =  $request->session_pid;
                 $student['term_pid'] =  $request->term_pid;
                 $student['admitted_class'] =  $request->arm_pid;
-                $student['current_class'] =  $request->arm_pid;
+                $student['current_class_pid'] =  $request->arm_pid;
                 $student['current_session_pid'] =  $request->session_pid;
             }
 

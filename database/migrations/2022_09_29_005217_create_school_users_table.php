@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('user_pid',50);
             $table->string('pid',50)->unique();
             $table->string('role',10);
-            $table->string('status',10);
+            $table->string('status',10)->default(1);
             $table->timestamps();
         });
     }

@@ -136,6 +136,16 @@ body{
     margin-top: auto;
 }
 
+
+/* table  */
+
+    .table tr th {
+        font-size: 13px;
+    }
+    .table tr td {
+        font-size: 12px;
+    }
+
 @media screen and (max-width:760px) {
         
             .table-bordered.card-able {

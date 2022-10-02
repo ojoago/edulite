@@ -68,7 +68,7 @@ class RecordPsychomotorController extends Controller
         $psycho = Psychomotor::where(['school_pid'=>getSchoolPid(),'status'=>1])
                                 ->get(['title', 'pid', 'max_score']);
         $data = Student::where([
-            'current_class' => $request->arm,
+            'current_class_pid' => $request->arm,
             'school_pid' => getSchoolPid(),
             'current_session_pid' => $request->session
         ])->get([

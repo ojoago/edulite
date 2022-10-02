@@ -4,7 +4,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Multi Columns Form</h5>
+        <h5 class="card-title">Register Rider/Care</h5>
 
         <!-- Multi Columns Form -->
         <form class="row g-3" id="createRiderForm">

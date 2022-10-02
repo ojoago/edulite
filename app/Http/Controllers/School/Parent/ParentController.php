@@ -46,7 +46,7 @@ class ParentController extends Controller
     }
 
     public function myWards($id){
-        $data = DB::table("students as s")->join("class_arms as a",'a.pid', 's.current_class')
+        $data = DB::table("students as s")->join("class_arms as a",'a.pid', 's.current_class_pid')
                 ->join('sessions as e','e.pid', 's.current_session_pid')
                 ->join('users as u','u.pid','s.user_pid')
                 ->join('user_details as d','d.user_pid','s.user_pid')

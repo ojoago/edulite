@@ -73,11 +73,11 @@ class PsychoGradeKeyController extends Controller
     private function createOrUpdatePsychoGrade($data)
     {
         try {
-            return  PsychoGrade::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid'],$data['grade']], $data);
+            return  PsychoGrade::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid'], 'grade'=>$data['grade']], $data);
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
+            
         }
     }
 

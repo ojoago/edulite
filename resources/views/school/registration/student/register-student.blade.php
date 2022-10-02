@@ -186,45 +186,11 @@
 
         // term dropdown 
         FormMultiSelect2('#tmSelect2', 'term', 'Select Term')
-
-        // create school category 
         $('#createStudentBtn').click(function() {
-            $('.overlay').show();
-            $.ajax({
-                url: "{{route('register.student')}}",
-                type: "POST",
-                data: new FormData($('#createStudentForm')[0]),
-                dataType: "JSON",
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    $('#createStudentForm').find('p.text-danger').text('');
-                    $('#createStudentBtn').prop('disabled', true);
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#createStudentBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    if (data.status === 0) {
-                        alert_toast('Fill in form correctly', 'warning');
-                        $.each(data.error, function(prefix, val) {
-                            $('.' + prefix + '_error').text(val[0]);
-                        });
-                    } else if (data.status === 1) {
-                        alert_toast(data.message, 'success');
-                        $('#createStudentForm')[0].reset();
-                    } else {
-                        alert_toast(data.message, 'warning');
-                    }
-                },
-                error: function(data) {
-                    console.log(data);
-                    $('#createStudentBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    alert_toast('Something Went Wrong', 'error');
-                }
-            });
+            var route = "{{route('register.student')}}";
+            submitFormAjax('createStudentForm', 'createStudentBtn', route);
         });
+        // create school category 
         let pid = "<?php echo $pid ?? '' ?>"
         if (pid != '') {
             $('#createStudentBtn').text('Update')

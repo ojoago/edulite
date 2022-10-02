@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('actors', function (Blueprint $table) {
-            $table->id();
-            $table->string('role');
-            $table->string('description')->comment('100 app admin, 200 school admin, 300 school teacher ... security, cleaner, nani,hostel attendant');
-            $table->string('pid')->unique();
-            $table->timestamps();
+        Schema::table('schools', function (Blueprint $table) {
+            $table->string('user_pid');
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('actors');
+        Schema::table('schools', function (Blueprint $table) {
+            //
+        });
     }
 };

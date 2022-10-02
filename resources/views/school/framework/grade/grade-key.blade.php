@@ -167,49 +167,10 @@
         });
 
 
-
         $('#createGradeKeyBtn').click(function() {
-            $('.overlay').show();
-            $.ajax({
-                url: "{{route('school.grade.key')}}",
-                type: "POST",
-                data: new FormData($('#createGradeKeyForm')[0]),
-                dataType: "JSON",
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    $('#createGradeKeyForm').find('p.text-danger').text('');
-                    $('#createGradeKeyBtn').prop('disabled', true);
-                },
-                success: function(data) {
-                    // console.log(data);
-                    $('#createGradeKeyBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    if (data.status === 0) {
-                        alert_toast('Fill in form correctly', 'warning');
-                        $.each(data.error, function(prefix, val) {
-                            $('.' + prefix + '_error').text(val[0]);
-                        });
-                    } else {
-                        alert_toast(data.message, 'success');
-                        $('#title').val('')
-                        $('#min_score').val('')
-                        $('#max_score').val('')
-                        $('#grade').val('')
-                        $('#grade_point').val('')
-                        $('#color').val('')
-                        $('#remark').val('')
-                        // $('#createGradeKeyForm')[0].reset();
-                    }
-                },
-                error: function(data) {
-                    $('#createGradeKeyBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    alert_toast('Something Went Wrong', 'error');
-                }
-            });
+            submitFormAjax('createGradeKeyForm', 'createGradeKeyBtn', "{{route('school.grade.key')}}");
         });
-
+        
     });
 </script>
 

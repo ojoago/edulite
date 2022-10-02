@@ -56,7 +56,7 @@ class HostelController extends Controller
             $data = DB::table('hostel_students as sh')
                 ->join('students as s', 's.pid', 'sh.student_pid')
                 ->join('sessions as ss', 'ss.pid', 's.current_session_pid')
-                ->join('class_arms as a', 'a.pid', 's.current_class')
+                ->join('class_arms as a', 'a.pid', 's.current_class_pid')
                 ->leftJoin('user_details as d', 'd.user_pid', 'sh.staff_pid')
                 ->join('hostels as h', 'h.pid', 'sh.hostel_pid')
                 ->where(['sh.school_pid' => getSchoolPid(),
@@ -68,7 +68,7 @@ class HostelController extends Controller
             $data = DB::table('hostel_students as sh')
             ->join('students as s', 's.pid', 'sh.student_pid')
             ->join('sessions as ss', 'ss.pid', 's.current_session_pid')
-            ->join('class_arms as a', 'a.pid', 's.current_class')
+            ->join('class_arms as a', 'a.pid', 's.current_class_pid')
             ->leftJoin('user_details as d', 'd.user_pid', 'sh.staff_pid')
             ->join('hostels as h', 'h.pid', 'sh.hostel_pid')
             ->where(['sh.school_pid'=> getSchoolPid(), 's.current_session_pid'=>$request->session])
@@ -78,7 +78,7 @@ class HostelController extends Controller
             $data = DB::table('hostel_students as sh')
             ->join('students as s', 's.pid', 'sh.student_pid')
             ->join('sessions as ss', 'ss.pid', 's.current_session_pid')
-            ->join('class_arms as a', 'a.pid', 's.current_class')
+            ->join('class_arms as a', 'a.pid', 's.current_class_pid')
             ->leftJoin('user_details as d', 'd.user_pid', 'sh.staff_pid')
             ->join('hostels as h', 'h.pid', 'sh.hostel_pid')->where('sh.school_pid', getSchoolPid())
                 ->select('s.fullname', 'd.fullname as creator', 'reg_number', 'h.name', 'session', 'arm', 'sh.updated_at')->get();

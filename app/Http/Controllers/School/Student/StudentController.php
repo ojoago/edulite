@@ -21,7 +21,7 @@ class StudentController extends Controller
 
     public function index(){
        try {
-            $data = DB::table('students as s')->join('class_arms as a', 'a.pid', 's.current_class')
+            $data = DB::table('students as s')->join('class_arms as a', 'a.pid', 's.current_class_pid')
                 ->leftJoin('school_parents as p', 'p.pid', 's.parent_pid')
                 ->leftjoin('user_details as d', 'd.user_pid', 'p.user_pid')
                 ->where(['s.school_pid' => getSchoolPid(),'s.status'=>1])//active student
@@ -36,7 +36,7 @@ class StudentController extends Controller
     public function inActiveStudent()
     {
         try {
-            $data = DB::table('students as s')->join('class_arms as a','a.pid','s.current_class')
+            $data = DB::table('students as s')->join('class_arms as a','a.pid','s.current_class_pid')
                             ->leftJoin('school_parents as p','p.pid','s.parent_pid')
                             ->join('user_details as d','d.user_pid','p.user_pid')
                             ->where(['s.school_pid'=>getSchoolPid()])->whereIn('s.status',[0,4])//suspended/disabled
@@ -53,7 +53,7 @@ class StudentController extends Controller
     public function exStudent()
     {
         try {
-            $data = DB::table('students as s')->join('class_arms as a', 'a.pid', 's.current_class')
+            $data = DB::table('students as s')->join('class_arms as a', 'a.pid', 's.current_class_pid')
                 ->leftJoin('school_parents as p', 'p.pid', 's.parent_pid')
                 ->join('user_details as d', 'd.user_pid', 'p.user_pid')
                 ->where(['s.school_pid' => getSchoolPid()])->whereIn('s.status', [2, 3])//graduated/left school
@@ -91,7 +91,7 @@ class StudentController extends Controller
     public function viewStudentProfile(Request $request){
         $data = DB::table('users as u')->join('user_details as d', 'd.user_pid', 'u.pid')
             ->join('students as s', 's.user_pid', 'u.pid')
-            ->join('class_arms as a', 's.current_class', 'a.pid')
+            ->join('class_arms as a', 's.current_class_pid', 'a.pid')
             ->where(['s.school_pid' => getSchoolPid(), 's.pid' => base64Decode($request->pid)])
             ->select('gsm', 'email', 'username', 's.fullname','reg_number', 's.address', 'dob', 'gender', 's.religion', 's.passport','s.status','a.arm')->first();
          return response()->json(formatStudentProfile($data));

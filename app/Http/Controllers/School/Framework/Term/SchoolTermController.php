@@ -23,7 +23,7 @@ class SchoolTermController extends Controller
     public function createSchoolTerm(Request $request)
     {
         $in = $request['term'];
-        $request['term'] = strtoupper($request['term']); 
+        // $request['term'] = strtoupper($request['term']); 
         $validator = Validator::make($request->all(),[
             'term' => ['required', Rule::unique('terms')->where(function ($query) {
                 $query->where('school_pid', '=', getSchoolPid());
