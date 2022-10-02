@@ -498,7 +498,7 @@ class StaffController extends Controller
             $validator = Validator::make($request->all(),[
             'category_pid'=>'required',
             'class_pid'=> 'required',
-            'arm_pid'=> 'required',
+            // 'arm_pid'=> 'required',
             'session_pid'=> 'required',
             'term_pid'=> 'required',
             'teacher_pid'=> 'required',
@@ -506,7 +506,7 @@ class StaffController extends Controller
         ],[
             'category_pid.required'=>'Select Category to get the corresponding classes',
             'class_pid.required'=>'Select Class to get the corresponding Arms',
-            'arm_pid.required'=>'Select class Arm to get the corresponding Subjects',
+            // 'arm_pid.required'=>'Select class Arm to get the corresponding Subjects',
             'term_pid.required'=>'Select Term',
             'session_pid.required'=>'Select Session',
             'teacher_pid.required'=>'Select Teacher',
@@ -522,11 +522,11 @@ class StaffController extends Controller
                 'subject_pid'=> $request->subject_pid,
                 'staff_pid'=> getSchoolUserPid(),
             ];
-            logError($request->arm_pid);
-            foreach($request->arm_pid as $row){
-                $data['arm_pid'] = $row;
-                $result= $this->assignClassArmSubjectToTeacher($data);
-            }
+            // logError($request->arm_pid);
+            // foreach($request->arm_pid as $row){
+            //     $data['arm_pid'] = $row;
+            // }
+            $result= $this->assignClassArmSubjectToTeacher($data);
             if($result){
                 return response()->json(['status'=>1,'message'=>'Selected Subject (s) assigned to staff!!!']);
             }

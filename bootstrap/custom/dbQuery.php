@@ -26,17 +26,16 @@ use App\Models\Users\UserDetail;
     }
 
     function getTitleScore($student,$pid,$param=null,$subject=null){
-            //   return  $score = DB::table('student_score_params as p')
-            //                     ->join('student_score_sheets as s','p.pid', 's.score_param_pid')
-            //                     ->where(['p.pid'=> getActionablePid()])->first();
-        $score = StudentScoreSheet::join('student_score_params', 'student_score_params.pid',
-                                    'student_score_sheets.score_param_pid')->where([
-                                    'student_score_sheets.student_pid'=>$student,
-                                    'student_score_sheets.ca_type_pid'=>$pid,
-                                    'student_score_params.subject_pid'=> $subject ?? session('subject'),
-                                    'student_score_params.school_pid'=>getSchoolPid(),
-                                    'student_score_params.pid'=> $param ?? getActionablePid()
+              return  $score = DB::table('student_score_params as p')
+                                ->join('student_score_sheets as s','p.pid', 's.score_param_pid')
+                                ->where([
+                                    's.student_pid'=>$student,
+                                    's.ca_type_pid'=>$pid,
+                                    'p.subject_pid'=> $subject ?? session('subject'),
+                                    'p.school_pid'=>getSchoolPid(),
+                                    'p.pid'=> $param ?? getActionablePid()
                                     ])->pluck('score')->first();
+       
         return $score;
     }
     function getTitleAVGScore($student, $pid, $param,$sub){

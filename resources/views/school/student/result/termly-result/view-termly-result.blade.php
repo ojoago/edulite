@@ -62,10 +62,10 @@
                         <td>{{$row->count}}</td>
                         <td>{{number_format($row->total,2)}}</td>
                         <td>{{number_format($row->average,1)}}</td>
-                        <td>{{$row->class_teacher_comment}}</td>
-                        <td>{{$row->principal_comment}}</td>
+                        <td>{{--$row->class_teacher_comment--}}</td>
+                        <td>{{--$row->principal_comment--}}</td>
                         @if(getSchoolType()!=1)
-                        <td>{{$row->portal_comment}}</td>
+                        <td>{{--$row->portal_comment--}}</td>
                         @endif
                     </tr>
                     @endforeach

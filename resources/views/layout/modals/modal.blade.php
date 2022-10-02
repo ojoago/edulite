@@ -35,9 +35,9 @@
                             <p class="text-danger term_pid_error"></p>
                         </div>
                     </div>
-
+                    <!-- no need to select class cos subject already belong to class  -->
                     <label for="arm_pid">Arm</label>
-                    <select name="arm_pid[]" id="armSelect2s" multiple="multiple" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
+                    <select name="arm_pid" id="armSelect2s" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger arm_pid_error"></p>
                     <label for="subject_pid">Subject</label>

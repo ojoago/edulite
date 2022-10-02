@@ -48,12 +48,15 @@ class StudentTermlyResultController extends Controller
             ->joinSub($class, 'class', function ($sub) {
                 $sub->on('r.class_param_pid', '=', 'class.pid');
             })->select(DB::raw('r.student_pid,r.total,r.class_param_pid,
-                                class_teacher_comment,principal_comment,portal_comment,
                                 COUNT(DISTINCT(subject_type)) AS count,
                                 r.total/COUNT(DISTINCT(subject_type)) AS average,
                                 RANK() OVER (ORDER BY r.total DESC) AS position'))
             ->groupBy('r.student_pid')
-            ->groupBy('r.class_param_pid');
+            // ->groupBy('r.class_teacher_comment')
+            // ->groupBy('r.principal_comment')
+            // ->groupBy('r.portal_comment')
+            ->groupBy('r.total')
+            ->groupBy('r.class_param_pid');//->get()->dd();
 
         $result = DB::table('students as s')->joinSub($rank, 'rank', function ($sub) {
             $sub->on('s.pid', '=', 'rank.student_pid');
@@ -63,9 +66,9 @@ class StudentTermlyResultController extends Controller
             'position',
             'total',
             'student_pid',
-            'class_teacher_comment',
-            'principal_comment',
-            'portal_comment',
+            // 'class_teacher_comment',
+            // 'principal_comment',
+            // 'portal_comment',
             'average',
             'count',
             'class_param_pid',

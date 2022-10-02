@@ -24,6 +24,7 @@ class StudentScoreController extends Controller
 //
     public function enterStudentScoreRecord(Request $request){
     //    dd($request->all());
+        // retrieve form data 
     session([
         'category'=> $request->category,
         'class'=> $request->class,
@@ -33,10 +34,13 @@ class StudentScoreController extends Controller
         'arm'=>$request->arm,
     ]);
 
+
     setActionablePid(); //set assessment pid to null
         // self::useClassArmSubjectToGetSubjectScroe();
     return redirect()->route('enter.student.score');
     }
+
+    // switch to another subject from the blade
     public function changeSubject(Request $request){
     //    dd($request->all());
         session([
@@ -51,6 +55,8 @@ class StudentScoreController extends Controller
             // self::useClassArmSubjectToGetSubjectScroe();
         return redirect()->route('enter.student.score');
     }
+
+    // view subject score 
     public function viewStudentScoreRecord(Request $request){
         session([
             'session'=> $request->session,
@@ -66,7 +72,7 @@ class StudentScoreController extends Controller
     
 //
     public function enterStudentScore(){
-        
+        // load student names and score settings 
         $params = $this->loadStudentAndScoreSetting();
         $data = $params['data']; //list of student in selected class
         $scoreParams = $params['scoreParams']; //score header
@@ -83,6 +89,7 @@ class StudentScoreController extends Controller
         $term = session('term');
         $arm = session('arm');
         // dd($session,$term,$arm);
+        // load score setting 
         $scoreParams = ScoreSettingsController::loadClassScoreSettings($term,$session,$arm);
         
         $data = Student::where([
@@ -93,6 +100,7 @@ class StudentScoreController extends Controller
             'fullname', 'reg_number', 'pid',
             // 'student_score_sheets.ca_type_pid', 'student_score_sheets.score'
         ]);
+        // load student 
         $class = ClassController::GetClassSubjectAndName(session('subject'));
 
         return [
@@ -103,8 +111,8 @@ class StudentScoreController extends Controller
     }
 
 
+    // submit and student CA on change from jquery 
     public function submitCaScore(Request $request){
-      
         $data = [
             'score_param_pid'=> getActionablePid(),
             'student_pid'=>$request->student_pid,
@@ -128,7 +136,7 @@ class StudentScoreController extends Controller
             StudentScoreSheet::updateOrCreate($dupParams, $data);
             $ca = self::sumStudentSubjectScore($data['score_param_pid'], $data['student_pid'], session('subject'));
             $data = [
-                'school_pid' => $data['student_pid'],
+                'school_pid' => getSchoolPid(),
                 'student_pid' => $data['student_pid'],
                 'class_param_pid' => $ca->class_param_pid,
                 'subject_type' => $ca->subject_type,
@@ -140,17 +148,21 @@ class StudentScoreController extends Controller
             logError($error);
         }
     }
+
+
     // sum individual score to form combined score
-    private static function sumStudentSubjectScore($pid, $student, $subject)//combined
+    private static function sumStudentSubjectScore($pid, $student, $subject) //combined
     {
         $subject_score = DB::table("student_score_sheets as s")
         ->join("student_score_params AS p", 'p.pid', 's.score_param_pid')
         ->where(['s.student_pid' => $student, 'p.subject_pid' => $subject, 'p.pid' => $pid])
-            ->groupBy('p.subject_type')
-            ->groupBy('p.class_param_pid')
-            ->select(DB::raw('(SUM(s.score)/COUNT(DISTINCT(s.score_param_pid))) as score,p.subject_type,p.class_param_pid'))->first();
+        ->groupBy('p.subject_type')
+        ->groupBy('p.class_param_pid')
+        ->select(DB::raw('(SUM(s.score)/COUNT(DISTINCT(s.score_param_pid))) as score,p.subject_type,p.class_param_pid'))->first();
         return $subject_score;
     }
+
+    // subject result 
     private function studentSubjectScore(array $data){
         $dupParams = $data;
         unset($dupParams['total']);
@@ -164,6 +176,9 @@ class StudentScoreController extends Controller
         ];
         return $this->recordStudentTotal($data);
     }
+
+    
+    // get combine subject score 
     private function sumStudentTotalScore($pid,$student){
         $student_total = StudentSubjectResult::where([
                                             'class_param_pid'=>$pid,
@@ -173,6 +188,7 @@ class StudentScoreController extends Controller
         return $student_total;
     }
 
+    // add subject score to total scroe  
     private function recordStudentTotal($data){
         $dupParams = $data;
         unset($dupParams['total']);
@@ -180,7 +196,6 @@ class StudentScoreController extends Controller
     }
     
     private function createScoreSheetParams(){
-        $schoolPid = getSchoolPid();
         $session =  session('session');
         $term =     session('term');
         $arm =      session('arm');
@@ -191,8 +206,7 @@ class StudentScoreController extends Controller
             return false;
         }
         $data = [
-            'school_pid' => $schoolPid,
-            // 'teacher_pid' => $teacher, class teahcer pid
+            'school_pid' => getSchoolPid(),
             'session_pid' => $session,
             'term_pid' => $term,
             'arm_pid' => $arm,
@@ -202,9 +216,8 @@ class StudentScoreController extends Controller
         $pid = StudentScoreParam::where([
                                     'subject_pid'=>$subject, 
                                     'class_param_pid'=> $class_pid, 
-                                    'school_pid'=>$schoolPid
+                                    'school_pid'=>getSchoolPid()
                                 ])->pluck('pid')->first();
-        // dd($pid, $subject, $class_pid, $schoolPid);
         if($pid){
             setActionablePid($pid);
             return true;
@@ -218,7 +231,7 @@ class StudentScoreController extends Controller
             'pid' => public_id(),
             'subject_type' => $subject_type,
             'staff_pid' => getSchoolUserPid(),
-            'school_pid' => $schoolPid
+            'school_pid' =>getSchoolPid()
         ];
         $result = StudentScoreParam::create($param);
         setActionablePid($result->pid);
@@ -248,7 +261,6 @@ class StudentScoreController extends Controller
             'arm' => $request->arm,
         ]);
         setActionablePid(); //set assessment pid to null
-        // self::useClassArmSubjectToGetSubjectScroe();
         return redirect()->route('view.student.score');
     }
     public function loadStudentScore()

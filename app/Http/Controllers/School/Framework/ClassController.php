@@ -381,13 +381,13 @@ class ClassController extends Controller
     {
         // $teacher = $data['teacher_pid'];
         // unset($data['teacher_pid']);// class tec
-        $pid = StudentClassScoreParam::where($data)->pluck('pid')->first();
+        $pid = StudentClassScoreParam::where($data)->pluck('pid')->first();//check if param already created
         if ($pid) {
             return $pid;
         }
         $data['teacher_pid'] = self::getClassTeacherPid(session: $data['session_pid'],term: $data['term_pid'],arm: $data['arm_pid']);
         $data['pid'] = public_id();
-        $result = StudentClassScoreParam::create($data);
+        $result = StudentClassScoreParam::create($data);// create class param
         return $result->pid;
     }
     public static function getClassTeacherPid($arm,$session,$term){
