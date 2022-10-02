@@ -25,15 +25,10 @@ use App\Models\Users\UserDetail;
         return UserDetail::where('user_pid',getUserPid())->pluck('fullname')->first();
     }
 
-    function uniqueNess($tbl,$key,$val){
-        $query = DB::select("SELECT {$key} FROM {$tbl} WHERE {$key} = '$val' ");
-        if($query){
-            return $val .' exists in the table';
-        }
-        return null;
-    }
-
     function getTitleScore($student,$pid,$param=null,$subject=null){
+            //   return  $score = DB::table('student_score_params as p')
+            //                     ->join('student_score_sheets as s','p.pid', 's.score_param_pid')
+            //                     ->where(['p.pid'=> getActionablePid()])->first();
         $score = StudentScoreSheet::join('student_score_params', 'student_score_params.pid',
                                     'student_score_sheets.score_param_pid')->where([
                                     'student_score_sheets.student_pid'=>$student,

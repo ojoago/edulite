@@ -82,6 +82,7 @@
                                 $score = getTitleScore($student->pid,$row->assessment_title_pid);
                                 $total += $score;
                                 @endphp
+                                {{-- dd($score,$student->pid,$row->assessment_title_pid,getActionablePid()) --}}
                                 <input type="number" step="0.01" class="form-control form-control-sm studentCaScore" id="{{$row->assessment_title_pid}}" value="{{$score}}" max_score="{{$row->score}}" placeholder="max obtainable {{--$row->score--}}">
                             </td>
                             @endforeach
@@ -118,9 +119,8 @@
         });
         $('.studentCaScore').change(function() {
             var score = $(this).val(); //CA score
-            alert(score)
-            var max = $(this).attr('max_score'); // obtainable score
-            if (score <= max) {
+            var max = Number($(this).attr('max_score')); // obtainable score
+            if (score < max + 0.00000001) {
                 var title = $(this).attr('id'); // title pid
                 var spid = $(this).closest('tr').attr('id'); // student pid 
                 var token = $("input[name='_token']").val();

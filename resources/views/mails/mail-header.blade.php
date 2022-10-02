@@ -36,23 +36,23 @@
                             </div>
                             <!-- first column  -->
                             <div class="section">
-                                <table width="100%">
+                                <!-- <table width="100%">
                                     <tr>
                                         <td class="inner-td">
                                             <table class="content">
                                                 <tr>
                                                     <div class="" id="callout">
                                                         <ul class="social">
-                                                            <li><a href="#"><img src="{{asset('files/edulite/svg/facebook.svg')}}" alt=""></a></li>
+                                                            <li><a href="#"><img src="asset('files/edulite/svg/facebook.svg')" alt=""></a></li>
                                                             <li><a href="#">Instagram</a></li>
-                                                            <li><a href="#"><img src="{{asset('files/edulite/svg/YouTube.svg')}}" alt=""></a></li>
+                                                            <li><a href="#"><img src="asset('files/edulite/svg/YouTube.svg')" alt=""></a></li>
                                                         </ul>
                                                     </div>
                                                 </tr>
                                             </table>
                                         </td>
                                     </tr>
-                                </table>
+                                </table> -->
                             </div>
                             <!-- first column  -->
                         </td>

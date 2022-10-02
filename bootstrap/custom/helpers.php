@@ -38,11 +38,7 @@ use Illuminate\Support\Facades\Mail;
         //bruteLogout();
     }
     function setActionablePid($pid=null){ //set pid key of the table to be acted upone
-        if($pid){
-            session(['activeRecordPid'=>$pid]); //get user pid
-        }else{
-            session(['activeRecordPid'=>null]); //get user pid
-        }
+        session(['activeRecordPid'=>$pid]); //get user pid
     }
     function getActionablePid(){ //set pid key of the table to be acted upone 
         if(getUserPid()){//check if user is still logged
@@ -72,7 +68,7 @@ use Illuminate\Support\Facades\Mail;
         session(['schoolLogo'=>$logo]); 
     }
      function getSchoolLogo(){ //set school logo
-        $path = session('schoolLogo') ? '/files/logo/'. session('schoolLogo') : '/themes/img/logo.png'; //'files/edulite/edulite logo.png'
+        $path = session('schoolLogo') ? '/files/logo/'. session('schoolLogo') : 'files/edulite/edulite logo.png'; //'files/edulite/edulite logo.png'
         return $path; 
     }
     function getSchoolUserPid(){ //set pid key of the table to be acted upone 

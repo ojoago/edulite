@@ -149,7 +149,6 @@ class StudentScoreController extends Controller
             ->groupBy('p.subject_type')
             ->groupBy('p.class_param_pid')
             ->select(DB::raw('(SUM(s.score)/COUNT(DISTINCT(s.score_param_pid))) as score,p.subject_type,p.class_param_pid'))->first();
-        logError($subject_score);
         return $subject_score;
     }
     private function studentSubjectScore(array $data){
@@ -193,7 +192,7 @@ class StudentScoreController extends Controller
         }
         $data = [
             'school_pid' => $schoolPid,
-            'teacher_pid' => $teacher,
+            // 'teacher_pid' => $teacher, class teahcer pid
             'session_pid' => $session,
             'term_pid' => $term,
             'arm_pid' => $arm,
@@ -205,6 +204,7 @@ class StudentScoreController extends Controller
                                     'class_param_pid'=> $class_pid, 
                                     'school_pid'=>$schoolPid
                                 ])->pluck('pid')->first();
+        // dd($pid, $subject, $class_pid, $schoolPid);
         if($pid){
             setActionablePid($pid);
             return true;

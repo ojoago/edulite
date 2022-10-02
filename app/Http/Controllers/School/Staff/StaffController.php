@@ -522,26 +522,18 @@ class StaffController extends Controller
                 'subject_pid'=> $request->subject_pid,
                 'staff_pid'=> getSchoolUserPid(),
             ];
-            $result= $this->assignClassArmSubjectToTeacher($data);
+            logError($request->arm_pid);
+            foreach($request->arm_pid as $row){
+                $data['arm_pid'] = $row;
+                $result= $this->assignClassArmSubjectToTeacher($data);
+            }
             if($result){
                 return response()->json(['status'=>1,'message'=>'Selected Subject (s) assigned to staff!!!']);
             }
             return response()->json(['status'=>'error','message'=>'Something Went Wrong from the Back!']);
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
-        try {
-            $request['school_pid'] = getSchoolPid();
-            $request['pid'] = public_id();
-            $result = StaffSubject::create($request->all());
-            if($result){
-                return redirect()->route('school.staff')->with('success', 'class asigned');
-            }
-            return redirect()->route('school.staff')->with('error', 'sorry sorry sorry dont cry');
-        } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
-            dd($error);
-        }   
+        
     }
     
     private function assignClassArmSubjectToTeacher(array $data){
