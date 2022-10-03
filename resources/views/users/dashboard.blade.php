@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="pagetitle">
-        <h1>Dashboard</h1>
+        <!-- <h1>Dashboard</h1> -->
         <nav>
             <ol class="breadcrumb">
                 <!-- <li class="breadcrumb-item"><a href="index.html">Home</a></li> -->
@@ -38,7 +38,7 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header">
-                    School You Created---Config
+                    School You Created --- Config
                 </div>
                 <div class="card-body shadow p-1">
                     <div class="row">

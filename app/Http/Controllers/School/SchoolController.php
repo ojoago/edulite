@@ -42,10 +42,6 @@ class SchoolController extends Controller
         $schoolUser = DB::table('school_users as u')->join('schools as s','s.pid','u.school_pid')
                         ->where(['u.school_pid' => $id, 'u.user_pid' => getUserPid()])
                         ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'u.status']);
-        // $schoolUser = SchoolStaff::join('schools','schools.pid','school_staff.school_pid')
-        //                 ->where(['school_pid'=>$id, 'school_staff.user_pid'=>getUserPid()])
-        //                 ->first(['school_staff.pid', 'school_name', 'school_logo', 'type','role','school_staff.status']);
-       
         if(!$schoolUser){
             return redirect()->back()->with('error','you are doing it wrong');
         }
@@ -145,7 +141,7 @@ class SchoolController extends Controller
                     // if($user){
                     //     return response()->json(['status' => 1, 'message' => 'School Created Successfully']);
                     // }
-                    return response()->json(['status' => 1, 'message' => 'School Created Successfully']);
+                    return response()->json(['status' => 1, 'message' => 'School Created Successfully','code'=> base64Encode($result->pid)]);
                     }
                 } catch (\Throwable $e) {
                     $error = $e->getMessage();

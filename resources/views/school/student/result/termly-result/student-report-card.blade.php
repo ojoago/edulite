@@ -65,8 +65,8 @@
         white-space: nowrap;
         /* overflow: hidden; */
         /* width: 25px; */
-        transform: rotate(180deg);
-        /* height: auto !important; */
+        /* transform: rotate(90deg); */
+        /* height: 150px; */
         width: 30px;
         /* transform-origin: left bottom; */
         /* box-sizing: border-box; */

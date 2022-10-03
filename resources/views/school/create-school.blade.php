@@ -99,9 +99,13 @@
 
         // create school category 
 
-        $('#createSchoolBtn').click(function() {
+        $('#createSchoolBtn').click(async function() {
             var route = "{{route('create.school')}}";
-            submitFormAjax('createSchoolForm', 'createSchoolBtn', route);
+            let msg = await submitFormAjax('createSchoolForm', 'createSchoolBtn', route);
+            if (msg) {
+                let url = "{{'school-sign-in/'}}"+msg;
+                location.href = url;
+            }
         });
 
     });

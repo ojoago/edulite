@@ -8,9 +8,9 @@
                  <span class="d-none d-lg-block ellipsis-text" id="schoolName">{{getSchoolName()}}</span>
              </a>
              @else
-             <a href="{{route('users.dashboard')}}" class="logo d-flex align-items-center">
+             <a href="{{route('users.home')}}" class="logo d-flex align-items-center">
                  <img src="{{asset(getSchoolLogo())}}" alt="">
-                 <span class="d-none d-lg-block ellipsis-text" id="appName">{{env('APP_NAME', 'EuLite')}}</span>
+                 <span class="d-none d-lg-block ellipsis-text" id="appName">{{env('APP_NAME', APP_NAME)}}</span>
              </a>
              @endif
              <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -201,7 +201,7 @@
                          <li>
                              <hr class="dropdown-divider">
                          </li>
-                        @endif
+                         @endif
                          <li>
                              <a class="dropdown-item d-flex align-items-center pointer" data-bs-toggle="modal" data-bs-target="#updatePwd">
                                  <i class="bi bi-lock-fill"></i>

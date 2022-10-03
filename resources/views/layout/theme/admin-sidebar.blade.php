@@ -317,13 +317,13 @@
     <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
             <a href="{{route('student.assessment.form')}}">
-                <i class="bi bi-circle"></i><span>TML</span>
+                <i class="bi bi-circle"></i><span>Record CA's</span>
             </a>
         </li>
 
         <li>
             <a href="{{route('view.student.subject.score.form')}}">
-                <i class="bi bi-circle"></i><span> VSR</span>
+                <i class="bi bi-circle"></i><span> View Subject Result</span>
             </a>
         </li>
 
@@ -342,22 +342,22 @@
     <ul id="psychomotor-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
             <a href="{{route('psychomotor.assessment.form')}}">
-                <i class="bi bi-circle"></i><span>PS</span>
+                <i class="bi bi-circle"></i><span>Psychomotor Assessment</span>
             </a>
         </li>
         <li>
             <a href="{{route('affective.assessment.form')}}">
-                <i class="bi bi-circle"></i><span>AF</span>
+                <i class="bi bi-circle"></i><span>Affective Domain</span>
             </a>
         </li>
         <li>
             <a href="tables-general.html">
-                <i class="bi bi-circle"></i><span> VPS</span>
+                <i class="bi bi-circle"></i><span> View Psychomotor Assessment</span>
             </a>
         </li>
         <li>
             <a href="{{route('view.student.subject.score.form')}}">
-                <i class="bi bi-circle"></i><span> VFS</span>
+                <i class="bi bi-circle"></i><span> View Affective Domain</span>
             </a>
         </li>
     </ul>
@@ -372,17 +372,17 @@
     <ul id="result-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
             <a href="{{route('view.student.termly.result')}}">
-                <i class="bi bi-circle"></i><span>V STR</span>
+                <i class="bi bi-circle"></i><span>View Student Result</span>
             </a>
         </li>
         <li>
             <a href="{{route('view.student.cumualtive.result')}}">
-                <i class="bi bi-circle"></i><span>V SCR</span>
+                <!-- <i class="bi bi-circle"></i><span>View Cumulative Result</span> -->
             </a>
         </li>
         <li>
             <a href="{{--route('view.broadsheet')--}}">
-                <i class="bi bi-circle"></i><span>V SBS</span>
+                <!-- <i class="bi bi-circle"></i><span>V SBS</span> -->
             </a>
         </li>
 

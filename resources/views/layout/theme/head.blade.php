@@ -18,8 +18,8 @@
   <meta content="author" name="edulite">
 
   <!-- Favicons -->
-  <link href="{{asset('files/edulite/edulite favicon.png')}}" rel="icon">
-  <link href="{{asset('files/edulite/edulite favicon.png')}}" rel="apple-touch-icon">
+  <link href="{{asset('files/edulite/edulite drk bg.png')}}" rel="icon">
+  <link href="{{asset('files/edulite/edulite drk bg.png')}}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">

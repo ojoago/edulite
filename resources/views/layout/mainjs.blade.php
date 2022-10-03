@@ -23,7 +23,7 @@
             }
             $(".table").toggleClass("card-able");
             $('tfoot').hide();
-        } 
+        }
         // assign class to staff 
 
         // general dropdown 
@@ -678,46 +678,57 @@
         // create score seeting 
         // $('#createScoreSettingBtn').click(function(e) {
         // e.preventDefault()
-        $('.overlay').show();
-        $.ajax({
-            url: route, //"{{route('create.school.score.settings')}}",
-            type: "POST",
-            data: new FormData($('#' + formId)[0]),
-            dataType: "JSON",
-            processData: false,
-            contentType: false,
-            beforeSend: function() {
-                $('#' + formId).find('p.text-danger').text('');
-                $('#settingParams').find('p.text-danger').text('');
-                $('#' + btnId).prop('disabled', true);
-            },
-            success: function(data) {
-                console.log(data);
-                $('#' + btnId).prop('disabled', false);
-                $('.overlay').hide();
-                if (data.status === 0) {
-                    alert_toast('Fill in form correctly', 'warning');
-                    $.each(data.error, function(prefix, val) {
-                        $('.' + prefix + '_error').text(val[0]);
-                    });
-                    $.each(data.error, function(prefix, val) {
-                        let prfx = prefix.replace(".", "");
-                        $('.' + prfx + '_error').text(val[0]);
-                    });
-                } else if (data.status === 1) {
-                    successClearForm(formId, data.message)
-                    alert_toast(data.message, 'success');
-                    $('#' + formId)[0].reset();
+        return new Promise((resolve, reject) => {
 
-                } else {
-                    alert_toast(data.message, 'error');
+            $('.overlay').show();
+
+            $.ajax({
+                url: route, //"{{route('create.school.score.settings')}}",
+                type: "POST",
+                data: new FormData($('#' + formId)[0]),
+                dataType: "JSON",
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+                    $('#' + formId).find('p.text-danger').text('');
+                    $('#settingParams').find('p.text-danger').text('');
+                    $('#' + btnId).prop('disabled', true);
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#' + btnId).prop('disabled', false);
+                    $('.overlay').hide();
+                    if (data.status === 0) {
+                        alert_toast('Fill in form correctly', 'warning');
+                        $.each(data.error, function(prefix, val) {
+                            $('.' + prefix + '_error').text(val[0]);
+                        });
+                        $.each(data.error, function(prefix, val) {
+                            let prfx = prefix.replace(".", "");
+                            $('.' + prfx + '_error').text(val[0]);
+                        });
+                        resolve(null)
+                    } else if (data.status === 1) {
+                        successClearForm(formId, data.message)
+                        alert_toast(data.message, 'success');
+                        $('#' + formId)[0].reset();
+                        if(data.code){
+                            resolve(data.code)
+                        }else{
+                            resolve(data.message)
+                        }
+                    } else {
+                        alert_toast(data.message, 'error');
+                        resolve(data.message)
+                    }
+                },
+                error: function(data) {
+                    $('#' + btnId).prop('disabled', false);
+                    $('.overlay').hide();
+                    alert_toast('Something Went Wrong', 'error');
+                    reject(true);
                 }
-            },
-            error: function(data) {
-                $('#' + btnId).prop('disabled', false);
-                $('.overlay').hide();
-                alert_toast('Something Went Wrong', 'error');
-            }
+            });
         });
         // });
     }

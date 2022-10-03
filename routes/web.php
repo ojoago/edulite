@@ -76,6 +76,7 @@ Route::get('logout-school', [AuthController::class, 'logoutSchool'])->middleware
 
 // user dashboard 
 Route::get('users-dashboard', [UserController::class, 'index'])->name('users.dashboard');
+Route::get('users-home', [UserController::class, 'dashboard'])->name('users.home');
 
 // user create organization 
 Route::get('create-base', [OrganisationController::class, 'index'])->name('create.organisation');
