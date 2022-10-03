@@ -137,7 +137,7 @@
 <section class="mt-4">
     <div class="row shadow">
         <div class="col-md-6">
-            <div class="hero_left shadow">
+            <div class="hero_left shadow mt-4">
                 <h1>
                     <span class="ed-color">Learning Today</span>,
                     <span class="lite-color">Leading Tomorrow</span>
@@ -153,7 +153,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="hero_right">
+            <div class="hero_right mt-4">
                 <img src="{{asset('files/edulite/svg/seminar-pana.svg')}}" alt="hero image" />
             </div>
         </div>
@@ -169,7 +169,7 @@
 
         <ul>
             <li>
-                automated schoresheet / broadsheet
+                Automated Result
             </li>
             <li>
                 Attendance
