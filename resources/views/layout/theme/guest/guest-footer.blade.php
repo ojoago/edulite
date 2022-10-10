@@ -7,7 +7,7 @@
         &copy; Copyright <strong><span>{{env('APP_NAME', APP_NAME)}}</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-        Developed by <a href="https://bootstrapmade.com/">Stack Core</a>
+        Developed by <a href="https://bootstrapmade.com/">Optimal</a>
     </div>
 </footer><!-- End Footer -->
 
