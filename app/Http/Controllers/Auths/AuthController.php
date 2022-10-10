@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auths;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Auth\Events\Failed;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -34,7 +33,7 @@ class AuthController extends Controller
                     'subject'=> 'Account Verification Link'
             ];
             sendMail($data);
-            return back()->with('success','Account Created successfully, Verification link sent to your mail');
+            return back()->with('success','Account Created successfully, Verification link sent to your mail, check inbox or Spam-folder now!!!');
         } 
         return back()->with('error','failed to created account');
         $token = $user->createToken('traqToken')->plainTextToken;
@@ -131,16 +130,27 @@ class AuthController extends Controller
     // reseting password when user submit b=form 
     public function resetPassword(Request $request)
     {
-        $request->validate(['password' => 'required|confirmed|min:6']);
-        $user = User::where('pid', base64Decode(session('pid')))->first();// load user detail
-        $diff = strtotime(now()) - $user->reset_token; //compare token
-        if (abs($diff / 86400) > 1) {
-            return redirect()->back()->with('warning', 'error|Reset Token has expired!');
+        try {
+            $request->validate(['password' => 'required|confirmed|min:6']);
+            $user = User::where('pid', base64Decode(session('pid')))->first(); // load user detail
+            $diff = strtotime(now()) - $user->reset_token; //compare token
+            if (abs($diff / 86400) > 1) {
+                return redirect()->back()->with('warning', 'error|Reset Token has expired!');
+            }
+            $user->password = $request->password;
+            // $user->reset_token = null;
+            $msg = 'success|Password reset successfull!!!.';
+            if ($user->account_status === 0) {
+                $user->account_status = 1;
+                $msg = 'success|Password reset successfull and account Verified!!!.';
+            }
+            $user->save();
+            return redirect()->route('login')->with('message', $msg);
+        } catch (\Throwable $e) {
+            $error = $e->getMessage();
+            logError($error);
+            return redirect()->route('login')->with('error', 'Something Went Wrong');
         }
-        $user->password = $request->password;
-        $user->reset_token = null;
-        $user->save();
-        return redirect()->route('login')->with('message', 'success|Password reset successfull!!!.');
     }
     public function updatePassword(Request $request){
         $validator = Validator::make($request->all(),[

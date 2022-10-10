@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\School\Framework\Term\Term;
 use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
 use App\Models\School\Student\Assessment\Psychomotor\PsychomotorRecord;
-use App\Models\School\Student\Assessment\StudentScoreSheet;
 use App\Models\Users\UserDetail;
 
     function activeSession()
@@ -104,4 +103,9 @@ function activeTermName()
                             'school_pid'=>getSchoolPid()
                         ])->pluck('score')->first();
         return $score;
+    }
+
+    function getScoreGrade($arm,$score){
+
+        return 'A';
     }

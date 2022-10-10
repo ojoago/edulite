@@ -10,7 +10,7 @@ class GradeKey extends Model
     use HasFactory;
     protected $fillable = [
         'grade_pid','title','grade','grade_point','min_score',
-        'max_score','color','pid', 'school_pid','remark','term_pid','class_pid'
+        'max_score','color','pid', 'school_pid','remark','term_pid','class_pid','session_pid'
     ];
 
     public function setGradeAttribute($value)

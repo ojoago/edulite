@@ -143,7 +143,7 @@
                     <span class="lite-color">Leading Tomorrow</span>
                 </h1>
                 <p>
-                    Dear parent, guadian, teacher elders, it is our collective duty to give our children (the next generation) the best education they deserve in-order to make this world a better and safe place.
+                    Dear parent, guardian, teacher elders, it is our collective duty to give our children (the next generation) the best education they deserve in-order to make this world a better and safe place.
                 </p>
                 <h5 class="shadow m-3 p-2">
                     <b class="ed-color">Education</b> <i class="bg-text">is</i> <b class="lite-color">Light</b> Hence <span class="ed-color">Edu</span><span class="lite-color">Lite</span>
@@ -162,7 +162,7 @@
 <section class="basic_section">
     <div class="basic">
         <h1><span class="ed-color">Edu</span><span class="lite-color">Lite</span></h1>
-        <p>Upgrade your school with edulite suite, and ease the stress of school manual process at less cost. get accurate and accessible information about students, staff remotely. Allow guardian/parent keep track of their childrens performance easily and at you their own time and convenience. EduLite manage school process such as report card, performance charts, attendance, student promotion, automated principal comment, hostel/portals, student pick up rider, event notification such as holidays, notify parent student exam timetable</p>
+        <p>Upgrade your school with edulite suite, and ease the stress of school manual process at less cost. get accurate and accessible information about students, staff remotely. Allow guardian/parent keep track of their childrens performance easily and at their own time and convenience. EduLite manage school process such as report card, performance charts, attendance, student promotion, automated principal comment, hostel/portals, student pick up rider, event notification such as holidays, notify parent student exam timetable</p>
         <p>
             Edulite help school manage various tasks of school staff (admin, teacher, portal, hostel, Student pick up rider), parent, student.
             it helps to generate and organize reports, monitor activities etc.
@@ -175,16 +175,16 @@
                 Attendance
             </li>
             <li>
-                TimeTable
+                Time-Table
             </li>
             <li>
                 Manage adminssion
             </li>
             <li>
-                Record fee collection
+                Record Fee Collection
             </li>
             <li>
-                Event, birthday, holiday etc
+                Event, Birthday, holiday etc
             </li>
         </ul>
         </p>

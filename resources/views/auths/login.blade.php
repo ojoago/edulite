@@ -17,11 +17,11 @@
                             <label for="yourUsername" class="form-label">Email address</label>
                             <div class="input-group has-validation">
                                 <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                <input type="text" class="form-control" id="email" name="email" value="{{@old('email')}}" placeholder="Email, Username or Phone Number">
-                                @error('email')
-                                <p class="text-danger">{{$message}}</p>
-                                @enderror
+                                <input type="text" class="form-control" id="email" name="email" value="{{ @old('email') }}" placeholder="Email, Username or Phone Number">
                             </div>
+                            @error('email')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="col-12">
@@ -29,10 +29,10 @@
                             <div class="input-group has-validation">
                                 <span class="input-group-text bi bi-shield-lock-fill" id="inputGroupPrepend"></span>
                                 <input type="password" class="form-control" name="password" id="password" placeholder="Password">
-                                @error('password')
-                                <p class="text-danger">{{$message}}</p>
-                                @enderror
                             </div>
+                            @error('password')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
                         </div>
 
                         <div class="col-12">
@@ -64,7 +64,7 @@
                             <h5 class="modal-title" id="exampleModalLabel">Forget Password </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form method="post" action="" id="forgetPwdForm">
+                        <form method="post" id="forgetPwdForm">
                             <div id="updatePwdMsg"></div>
                             <div class="modal-body">
                                 <div class="form-group mb-2">

@@ -1,15 +1,16 @@
 <?php 
+use App\Mail\AuthMail;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Http\Controllers\Auths\AuthController;
-use App\Mail\AuthMail;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
-    define('APP_NAME','EuLite');
+    define('APP_NAME','EduLite');
    function logError($error){
     Log::error(json_encode($error));
    }
@@ -207,6 +208,12 @@ use Illuminate\Support\Facades\Mail;
        return $role; 
     }
 
+    function dateToAge($date){
+        return Carbon::parse($date)->age;
+    // $date = new DateTime($date);
+    // return $date->diff(Carbon::now())
+    // ->format('%y years, %m months and %d days');
+    }
     function ordinalFormat($num){
         try {
             if(class_exists('NumberFormatter')){
@@ -232,6 +239,50 @@ use Illuminate\Support\Facades\Mail;
             $surfix = $num . $end[$num % 10];
         return $surfix;
     }
+
+    function rtnGrade($num,$grd){
+
+        foreach($grd as $val){
+                if($num >=$val->min_score && $num <= $val->max_score)
+                 return $val->grade;
+        }
+        return 'NA';
+    }
+   
+function date_diff_weekdays($from, $to)
+{
+    if ($from === null || $to === null)
+        return null;
+
+    $date_from = new DateTime($from);
+    $date_to = new DateTime($to);
+
+    // calculate number of weekdays from start of week - start date
+    $from_day = intval($date_from->format('w')); // 0 (for Sunday) through 6 (for Saturday)
+    if ($from_day == 0)
+        $from_day = 7;
+    $from_wdays = $from_day > 5 ? 5 : $from_day;
+
+    // calculate number of weekdays from start of week - end date
+    $to_day = intval($date_to->format('w'));
+    if ($to_day == 0)
+        $to_day = 7;
+    $to_wdays = $to_day > 5 ? 5 : $to_day;
+
+    // calculate number of days between the two dates
+    $interval = $date_from->diff($date_to);
+    $days = intval($interval->format('%R%a')); // shows negative values too
+
+    // calculate number of full weeks between the two dates
+    $weeks_between = floor($days / 7);
+    if ($to_day >= $from_day)
+        $weeks_between -= 1;
+
+    // complete calculation of number of working days between
+    $diff_wd = 5 * ($weeks_between) + (5 - $from_wdays) + $to_wdays;
+
+    return $diff_wd;
+}
     function flashMessage(){
     if (Session::has('message')) {
         list($type, $message) = explode('|', Session::get('message'));

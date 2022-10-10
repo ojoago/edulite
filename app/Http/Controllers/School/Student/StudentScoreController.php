@@ -13,6 +13,7 @@ use App\Http\Controllers\School\Framework\ClassController;
 use App\Models\School\Student\Result\StudentSubjectResult;
 use App\Models\School\Student\Assessment\StudentScoreParam;
 use App\Models\School\Student\Assessment\StudentScoreSheet;
+use App\Models\School\Student\Result\SubjectTotal;
 use App\Models\School\Student\Results\Cumulative\CumulativeResult;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -88,9 +89,20 @@ class StudentScoreController extends Controller
         $session = session('session');
         $term = session('term');
         $arm = session('arm');
+        $class = session('class');
         // dd($session,$term,$arm);
         // load score setting 
-        $scoreParams = ScoreSettingsController::loadClassScoreSettings($term,$session,$arm);
+        $data = [
+            'school_pid' => getSchoolPid(),
+            'session_pid' => $session,
+            'term_pid' => $term,
+            'arm_pid' => $arm,
+        ];
+        $class_param_pid = ClassController::createClassParam($data);
+
+        ScoreSettingsController::createClassSoreSetting(param_pid: $class_param_pid,class_pid:$class); //copy score setting from base score setting
+
+        $scoreParams = ScoreSettingsController::loadClassScoreSettings($class_param_pid);// load class score seetting 
         
         $data = Student::where([
             'current_class_pid' => $arm,
@@ -140,6 +152,7 @@ class StudentScoreController extends Controller
                 'student_pid' => $data['student_pid'],
                 'class_param_pid' => $ca->class_param_pid,
                 'subject_type' => $ca->subject_type,
+                'subject_pid' => session('subject'),
                 'total' => $ca->score,
             ];
             return $this->studentSubjectScore($data);
@@ -166,6 +179,10 @@ class StudentScoreController extends Controller
     private function studentSubjectScore(array $data){
         $dupParams = $data;
         unset($dupParams['total']);
+        SubjectTotal::updateOrCreate($dupParams,$data);// sum all ca as to individual score
+        unset($data['subject_pid']);
+        unset($dupParams['subject_pid']);
+        $data['total'] = $this->combinedScore($data);// take average of combined score as total and insert into subject type
         StudentSubjectResult::updateOrCreate($dupParams,$data);
         $total = $this->sumStudentTotalScore($data['class_param_pid'],$data['student_pid']);//sum student total score
         $data = [
@@ -177,6 +194,16 @@ class StudentScoreController extends Controller
         return $this->recordStudentTotal($data);
     }
 
+    private function combinedScore($data){
+        $param = [
+            'class_param_pid'=>$data['class_param_pid'],
+            'student_pid'=>$data['student_pid'],
+            'subject_type'=>$data['subject_type'],
+            'school_pid' => getSchoolPid(),
+        ];
+        $total = SubjectTotal::where($param)->avg('total');
+        return $total;
+    }
     
     // get combine subject score 
     private function sumStudentTotalScore($pid,$student){
@@ -214,7 +241,7 @@ class StudentScoreController extends Controller
         $class_pid = ClassController::createClassParam($data);
         $subject_type = ClassController::GetClassArmSubjectType($subject);
         $pid = StudentScoreParam::where([
-                                    'subject_pid'=>$subject, 
+                                    'subject_pid'=>$subject,
                                     'class_param_pid'=> $class_pid, 
                                     'school_pid'=>getSchoolPid()
                                 ])->pluck('pid')->first();

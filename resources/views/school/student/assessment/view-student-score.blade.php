@@ -5,8 +5,8 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">{{--$class->arm--}} <small>{{$class->subject}}</small></h5>
-            <p> <i class="bi bi-calendar-event-fill"></i> {{--sessionName(session('session'))--}} {{termName(session('term'))}}</p>
+            <h5 class="card-title">{{$class->arm}} <small>{{$class->subject}}</small></h5>
+            <p> <i class="bi bi-calendar-event-fill"></i> {{sessionName(session('session'))}} {{termName(session('term'))}}</p>
             <!-- Primary Color Bordered Table -->
             <table class="table table-bordered border-primary" id="scoreTable">
                 <thead>
@@ -28,24 +28,23 @@
                     @foreach($data as $student)
                     <tr class="studentId" id="{{$student->pid}}">
                         <td>{{$loop->iteration}}</td>
-                        <td>{{--$student->reg_number--}}</td>
-                        <td> <input type="checkbox" name="{{$student->pid}}" class="examStatus" id="{{$student->pid}}" checked> {{ $student->fullname }}</td>
-                        <form>
-                            @csrf
-                            @foreach($scoreParams as $row)
-                            <td scope="col">{{getTitleScore($student->pid,$row->assessment_title_pid)}}</td>
-                            @endforeach
-                            <td scope="col"></td>
+                        <td>{{$student->reg_number}}</td>
+                        <td>  {{ $student->fullname }}</td>
+                        @php $total = 0;@endphp
+                        @foreach($scoreParams as $row)
+                            @php
+                            $score = getTitleScore($student->pid,$row->assessment_title_pid);
+                            $total += $score;
+                            @endphp
+                        <td scope="col">
+                            {{$score}}
+                        </td>
+                        @endforeach
+                        <td scope="col"> {{$total}}</td>
                     </tr>
                     @endforeach
                 </tbody>
-                <tbody>
-                    <td colspan="{{$scoreParams->count()+2}}"></td>
-                    <td colspan="2">
-                        <button type="button" class="btn btn-primary">Confirm</button>
-                    </td>
-                </tbody>
-                </form>
+
             </table>
             <!-- End Primary Color Bordered Table -->
 

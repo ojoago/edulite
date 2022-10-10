@@ -8,25 +8,25 @@
         <!-- Default Tabs -->
         <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#psychomotor" type="button" role="tab" aria-controls="home" aria-selected="true">Psychomotor</button>
+                <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#psychomotor" type="button">Psychomotors</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#effectiveDomain" type="button" role="tab" aria-controls="profile" aria-selected="false">Affective</button>
+                <button class="nav-link w-100" id="psychomotoKey-tab" data-bs-toggle="tab" data-bs-target="#psychomotoKey" type="button" role="tab">Psychomotors Keys</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#psychoGrade" type="button" role="tab" aria-controls="contact" aria-selected="false">Grade Key</button>
+                <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#psychoGrade" type="button" role="tab">Grade Key</button>
             </li>
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="psychomotor" role="tabpanel" aria-labelledby="home-tab">
-                <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createPsychomotorModal">
+                <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createPsychomotorBaseModal">
                     Create Psychomotor
                 </button>
-                <table class="table table-hover table-striped" id="psychomotorDataTable" width="100%">
+                <table class="table table-hover table-striped" id="psychomotorBaseDataTable" width="100%">
                     <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Score</th>
+                            <th>PsyChomotor Names</th>
+                            <th>Description</th>
                             <th>Status</th>
                             <th>Date</th>
                             <th>Created By</th>
@@ -34,13 +34,23 @@
                     </thead>
                 </table>
             </div>
-            <div class="tab-pane fade" id="effectiveDomain" role="tabpanel" aria-labelledby="profile-tab">
-                <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createEffectiveDomainModal">
-                    Create Affective
-                </button>
-                <table class="table table-hover table-striped" id="affectiveDomainDataTable" width="100%">
+            <div class="tab-pane fade" id="psychomotoKey" role="tabpanel" aria-labelledby="profile-tab">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createPsychomotorKeyModal">
+                            Create Psychomotor keys
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="category_pid" id="psychomotorBaseSelect2" class="form-control form-control-sm">
+                        </select>
+                    </div>
+                </div>
+                <table class="table table-hover table-striped" id="psychomotorKeyDataTable" width="100%">
                     <thead>
                         <tr>
+                            <th>Psychomotor</th>
                             <th>Title</th>
                             <th>Score</th>
                             <th>Status</th>
@@ -73,17 +83,48 @@
     </div>
 </div>
 
-<!-- create psycho modal  -->
-<div class="modal fade" id="createPsychomotorModal" tabindex="-1">
+<!-- create psycho Base modal  -->
+<div class="modal fade" id="createPsychomotorBaseModal" tabindex="-1">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create CY</h5>
+                <h5 class="modal-title">Create Psychomotor Name</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" id="createPsychomotorForm">
+                <form method="post" id="createPsychomotorBaseForm">
                     @csrf
+                    <label for="">Psychomotor Name</label>
+                    <input type="text" name="psychomotor" class="form-control form-control-sm" placeholder="Create Base Psychomotor">
+                    <p class="text-danger title_error"></p>
+                    <label for="">Description</label>
+                    <textarea type="text" name="description" class="form-control form-control-sm" placeholder="Description"></textarea>
+                    <p class="text-danger description_error"></p>
+                    <!-- <input type="number" name="score" class="form-control form-control-sm" placeholder="obtainable score" required>
+                    <p class="text-danger score_error"></p> -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="createPsychomotorBaseBtn">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div><!-- End Psychomotro Modal-->
+<!-- create psycho modal  -->
+<div class="modal fade" id="createPsychomotorKeyModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Psychomotor Keys</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="createPsychomotorkeyForm">
+                    @csrf
+                    <select name="psychomotor_pid" id="psychomotorkeySelect2" class="form-control form-control-sm">
+                    </select>
+                    <p class="text-danger psychomotor_pid_error"></p>
                     <input type="text" name="title" class="form-control form-control-sm" placeholder="CY title">
                     <p class="text-danger title_error"></p>
                     <input type="number" name="score" class="form-control form-control-sm" placeholder="obtainable score" required>
@@ -91,38 +132,13 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createPsychomotorBtn">Submit</button>
+                <button type="button" class="btn btn-primary" id="createPsychomotorkeyBtn">Submit</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div><!-- End Psychomotro Modal-->
 
-
-<!-- effective domain  -->
-<div class="modal fade" id="createEffectiveDomainModal" tabindex="-1">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Create EF</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="post" id="createEffectiveDomainForm">
-                    @csrf
-                    <input type="text" name="title" class="form-control form-control-sm" placeholder="CY title">
-                    <p class="text-danger title_error"></p>
-                    <input type="number" name="score" class="form-control form-control-sm" placeholder="obtainable score" required>
-                    <p class="text-danger score_error"></p>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createEffectiveDomainBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div><!-- End effective domain Modal-->
 <!-- psycho grade modal  -->
 <div class="modal fade" id="createPyschoGradeModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-scrollable">
@@ -169,7 +185,7 @@
 <script>
     $(document).ready(function() {
         // psychomotor-dataTable
-        $('#psychomotorDataTable').DataTable({
+        $('#psychomotorBaseDataTable').DataTable({
             "processing": true,
             "serverSide": true,
             rowReorder: {
@@ -177,12 +193,12 @@
             },
             // ->rawColumns(['data', 'action'])
             responsive: true,
-            "ajax": "{{route('load.psychomotor')}}",
+            "ajax": "{{route('load.psychomotor.base')}}",
             "columns": [{
-                    "data": "title"
+                    "data": "psychomotor"
                 },
                 {
-                    "data": "max_score"
+                    "data": "description"
                 },
                 {
                     "data": "status"
@@ -199,35 +215,16 @@
             ],
         });
         // psychomotor-dataTable
-        $('#affectiveDomainDataTable').DataTable({
-            "processing": true,
-            "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
-            // ->rawColumns(['data', 'action'])
-            responsive: true,
-            "ajax": "{{route('load.effective-domain')}}",
-            "columns": [{
-                    "data": "title"
-                },
-                {
-                    "data": "max_score"
-                },
-                {
-                    "data": "status"
-                },
-                {
-                    "data": "created_at"
-                },
-                {
-                    "data": "username"
-                },
-                // {
-                //     "data": "action"
-                // },
-            ],
-        });
+
+        $('#psychomotoKey-tab').click(function() {
+            loadPsychomotorKeys()
+        })
+
+        $('#psychomotorBaseSelect2').change(function() {
+            let id = $(this).val();
+            loadPsychomotorKeys(id)
+        })
+
         // psychomotor-dataTable
         $('#psychoGradeDataTable').DataTable({
             "processing": true,
@@ -261,43 +258,18 @@
         });
 
         // create psychomotor  
-        $('#createPsychomotorBtn').click(function(e) {
+        $('#createPsychomotorBaseBtn').click(function(e) {
             e.preventDefault()
-            $('.overlay').show();
-            $.ajax({
-                url: "{{route('create.psychomotor')}}",
-                type: "POST",
-                data: new FormData($('#createPsychomotorForm')[0]),
-                dataType: "JSON",
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    $('#createPsychomotorForm').find('p.text-danger').text('');
-                    $('#createPsychomotorBtn').prop('disabled', true);
-                },
-                success: function(data) {
-                    // console.log(data);
-                    $('#createPsychomotorBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    if (data.status === 0) {
-                        alert_toast('Fill in form correctly, Note (Specail Character is not allowed)', 'warning');
-                        $.each(data.error, function(prefix, val) {
-                            $('.' + prefix + '_error').text(val[0]);
-                        });
-                    } else if (data.status === 2) {
-                        alert_toast(data.message, 'warning');
-                    } else {
-                        alert_toast(data.message, 'success');
-                        $('#createPsychomotorForm')[0].reset();
-                    }
-                },
-                error: function(data) {
-                    $('#createPsychomotorBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    alert_toast('Something Went Wrong', 'error');
-                }
-            });
+            submitFormAjax('createPsychomotorBaseForm', 'createPsychomotorBaseBtn', "{{route('create.psychomotor.base')}}")
         });
+        $('#createPsychomotorkeyBtn').click(function(e) {
+            e.preventDefault()
+            submitFormAjax('createPsychomotorkeyForm', 'createPsychomotorkeyBtn', "{{route('create.psychomotor.key')}}")
+        });
+
+        FormMultiSelect2('#psychomotorBaseSelect2', 'psychomotors', 'Select Psychomotor name');
+        multiSelect2('#psychomotorkeySelect2', 'createPsychomotorKeyModal', 'psychomotors', 'Select Psychomotor name');
+
         // create psychomotor  
         $('#createEffectiveDomainBtn').click(function(e) {
             e.preventDefault()
@@ -367,41 +339,52 @@
         // create psycho grade  
         $('#createPyschoGradeBtn').click(function(e) {
             e.preventDefault()
-            $('.overlay').show();
-            $.ajax({
-                url: "{{route('create.psycho.grade')}}",
-                type: "POST",
-                data: new FormData($('#createPyschoGradeForm')[0]),
-                dataType: "JSON",
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    $('#createPyschoGradeForm').find('p.text-danger').text('');
-                    $('#createPyschoGradeBtn').prop('disabled', true);
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#createPyschoGradeBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    if (data.status === 0) {
-                        alert_toast('Fill in form correctly Note (Specail Character is not allowed)', 'warning');
-                        $.each(data.error, function(prefix, val) {
-                            $('.' + prefix + '_error').text(val[0]);
-                        });
-                    } else if (data.status === 2) {
-                        alert_toast(data.message, 'warning');
-                    } else {
-                        alert_toast(data.message, 'success');
-                        $('#createPyschoGradeForm')[0].reset();
-                    }
-                },
-                error: function(data) {
-                    $('#createPyschoGradeBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    alert_toast('Something Went Wrong', 'error');
-                }
-            });
+            submitFormAjax('createPyschoGradeForm', 'createPyschoGradeBtn', "{{route('create.psycho.grade')}}")
         });
+
     });
+
+    function loadPsychomotorKeys(pid = null) {
+        $('#psychomotorKeyDataTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            },
+            // ->rawColumns(['data', 'action'])
+            responsive: true,
+            destroy: true,
+            "ajax": {
+                url: "{{route('load.psychomotor.key')}}",
+                type: "post",
+                data: {
+                    _token: "{{csrf_token()}}",
+                    pid: pid
+                }
+            },
+            "columns": [{
+                    "data": "psychomotor"
+                },
+                {
+                    "data": "title"
+                },
+                {
+                    "data": "max_score"
+                },
+                {
+                    "data": "status"
+                },
+                {
+                    "data": "created_at"
+                },
+                {
+                    "data": "username"
+                },
+                // {
+                //     "data": "action"
+                // },
+            ],
+        });
+    }
 </script>
 @endsection

@@ -26,8 +26,8 @@
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="GradeKeyTable">
                     <thead>
                         <tr>
-                            <th>Title</th>
                             <th>Grade</th>
+                            <th>Title</th>
                             <th>Grade Point</th>
                             <th>Remark</th>
                             <th>Min Score</th>
@@ -64,9 +64,16 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="text" name="title" id="title" maxlength="20" placeholder="ass title" class="form-control form-control-sm" required>
+                            <label for=""><small>Grade</small></label>
+                            <input type="text" name="grade" placeholder="grade e.g AB" maxlength="3" id="grade" class="form-control form-control-sm" required>
+                            <p class="text-danger grade_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for=""><small>Grade Title</small></label>
+                            <input type="text" name="title" id="title" maxlength="15" placeholder="Grade Title e.g V.Good" class="form-control form-control-sm" required>
                             <p class="text-danger title_error"></p>
                         </div>
+
                         <div class="col-md-6">
                             <input type="text" name="min_score" id="min_score" min="0" maxlength="4" placeholder="min" class="form-control form-control-sm" required>
                             <p class="text-danger min_score_error"></p>
@@ -75,22 +82,23 @@
                             <input type="text" name="max_score" id="max_score" maxlength="4" max="100" placeholder="max" class="form-control form-control-sm" required>
                             <p class="text-danger max_score_error"></p>
                         </div>
-                        <div class="col-md-6">
-                            <input type="text" name="grade" placeholder="grade" maxlength="15" id="grade" class="form-control form-control-sm" required>
-                            <p class="text-danger grade_error"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <input type="number" minimum="1" name="grade_point" maxlength="2" id="grade_point" class="form-control form-control-sm" placeholder="point" required>
-                            <p class="text-danger grade_point_error"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <input type="text" name="color" id="color" placeholder="color" class="form-control form-control-sm" required>
-                            <p class="text-danger color_error"></p>
+
+                        <div class="toggle-v" style="display: none;">
+                            <div class="col-md-6">
+                                <input type="number" minimum="1" name="grade_point" maxlength="2" id="grade_point" class="form-control form-control-sm" placeholder="point" required>
+                                <p class="text-danger grade_point_error"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" name="color" id="color" placeholder="color" class="form-control form-control-sm" required>
+                                <p class="text-danger color_error"></p>
+                            </div>
+                            <div class="col-md-12">
+                                <textarea type="text" name="remark" id="remark" placeholder="remark" maxlength="30" class="form-control form-control-sm" required></textarea>
+                                <p class="text-danger remark_error"></p>
+                            </div>
                         </div>
                     </div>
 
-                    <textarea type="text" name="remark" id="remark" placeholder="remark" maxlength="30" class="form-control form-control-sm" required></textarea>
-                    <p class="text-danger remark_error"></p>
                     <select type="text" name="category_pid" id="gradeCategorySelect2" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger category_pid_error"></p>
@@ -128,11 +136,13 @@
             responsive: true,
             type: "get",
             "ajax": "{{route('load.school.grade.key')}}",
-            "columns": [{
-                    "data": "title"
-                },
+            "columns": [
+
                 {
                     "data": "grade"
+                },
+                {
+                    "data": "title"
                 },
                 {
                     "data": "grade_point"
@@ -170,7 +180,7 @@
         $('#createGradeKeyBtn').click(function() {
             submitFormAjax('createGradeKeyForm', 'createGradeKeyBtn', "{{route('school.grade.key')}}");
         });
-        
+
     });
 </script>
 

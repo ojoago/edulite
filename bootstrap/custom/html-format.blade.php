@@ -11,7 +11,7 @@ function formatStaff($row)
                         <option disabled selected>Select Role</option>
                         <option value="200">Super Admin</option>
                         <option value="205">School Admin</option>
-                        <option value="500">Pincipal</option>
+                        <option value="500">Principal</option>
                         <option value="505">Head Teacher</option>
                         <option value="301">Form/Class Teacher</option>
                         <option value="300">Teacher</option>
@@ -184,7 +184,7 @@ function formatStaffProfile($row)
             </div>';
         $info = '
              <h5 class="card-title">About</h5>
-                  <p class="small fst-italic">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</p>
+                  <p class="small fst-italic"></p>
                   <h5 class="card-title">Profile Details</h5>
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Full Name</div>
@@ -323,7 +323,7 @@ function formatStudentProfile($row)
        $roles = '<option disabled selected>Select Role</option>
         <option value="200">Super Admin</option>
         <option value="205">School Admin</option>
-        <option value="500">Pincipal</option>
+        <option value="500">Principal</option>
         <option value="505">Head Teacher</option>
         <option value="301">Form/Class Teacher</option>
         <option value="300">Teacher</option>

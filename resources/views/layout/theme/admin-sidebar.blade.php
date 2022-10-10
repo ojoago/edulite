@@ -213,7 +213,7 @@
     </a>
     <ul id="assign-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-            <a class="pointer" data-bs-target="#createArmTeacherModal" data-bs-toggle="modal">
+            <a class="pointer" data-bs-target="#assignClassArmTeacherModal" data-bs-toggle="modal">
                 <i class="bi bi-circle"></i><span>Class</span>
             </a>
         </li>
@@ -254,7 +254,7 @@
 
 @endif
 
-@if(classTeacher())
+@if(classTeacher() || 1==1)
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#attendance-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>My Student</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -333,7 +333,7 @@
 @endif
 
 
-@if(getUserActiveRole() =="301" || hasRole())
+@if(getUserActiveRole() =="301" || hasRole() || 1==1)
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#psychomotor-nav" data-bs-toggle="collapse" href="#">
@@ -345,21 +345,13 @@
                 <i class="bi bi-circle"></i><span>Psychomotor Assessment</span>
             </a>
         </li>
+        
         <li>
-            <a href="{{route('affective.assessment.form')}}">
-                <i class="bi bi-circle"></i><span>Affective Domain</span>
+            <a href="{{route('view.psychomotor.form')}}">
+                <i class="bi bi-circle"></i><span> View Psychomotor Score</span>
             </a>
         </li>
-        <li>
-            <a href="tables-general.html">
-                <i class="bi bi-circle"></i><span> View Psychomotor Assessment</span>
-            </a>
-        </li>
-        <li>
-            <a href="{{route('view.student.subject.score.form')}}">
-                <i class="bi bi-circle"></i><span> View Affective Domain</span>
-            </a>
-        </li>
+       
     </ul>
 </li><!-- End Tables Nav -->
 @endif

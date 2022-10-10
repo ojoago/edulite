@@ -13,13 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('porfolios', function (Blueprint $table) {
+        Schema::create('score_setting_bases', function (Blueprint $table) {
             $table->id();
             $table->string('school_pid');
+            $table->string('class_pid')->nullable();
+            $table->string('arm_pid')->nullable();
             $table->string('pid')->unique();
-            $table->string('title');
-            $table->string('description');
-            $table->integer('status')->comment('1 enabled, 0 disabled');
+            $table->float('score'); //max score
+            $table->string('assessment_title_pid'); //
+            $table->integer('type')->default(1)->comment('1 part of student result, 2 mid term');
+            $table->integer('order');
             $table->timestamps();
         });
     }
@@ -31,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('porfolios');
+        Schema::dropIfExists('score_setting_bases');
     }
 };

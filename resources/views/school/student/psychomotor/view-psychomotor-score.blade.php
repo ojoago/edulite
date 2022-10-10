@@ -53,21 +53,14 @@
                         <td>{{$loop->iteration}}</td>
                         <td>{{$student->reg_number}}</td>
                         <td> {{ $student->fullname }}</td>
-                        <form>
                             @csrf
                             @foreach($psycho as $row)
-                            <td scope="col"><input type="number" value="{{getPsychoKeyScore(student:$student->pid,param:$params['param'],key:$row->pid)}}" step="0.01" class="form-control form-control-sm studentPsycho" id="{{$row->pid}}" placeholder="max obtainable {{$row->max_score}}" max_score="{{$row->max_score}}"> </td>
+                            <td scope="col">{{getPsychoKeyScore(student:$student->pid,param:$params['param'],key:$row->pid)}} </td>
                             @endforeach
                     </tr>
                     @endforeach
                 </tbody>
-                <tbody>
-                    <td colspan="{{$psycho->count()+2}}"></td>
-                    <td colspan="2">
-                        <button type="button" class="btn btn-primary">Confirm</button>
-                    </td>
-                </tbody>
-                </form>
+                
             </table>
             <!-- End Primary Color Bordered Table -->
 

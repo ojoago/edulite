@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('score_settings', function (Blueprint $table) {
             $table->id();
             $table->string('school_pid');
-            $table->string('score_data_pid');
+            $table->string('score_data_pid')->nullable();//not longer usefull
             $table->string('pid')->unique();
             $table->float('score');//max score
             $table->string('assessment_title_pid');//

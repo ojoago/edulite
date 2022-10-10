@@ -33,19 +33,17 @@
             </div>
             <div class="tab-pane fade" id="bordered-justified-scoreSetting" role="tabpanel" aria-labelledby="scoreSetting-tab">
                 <!-- Create Session -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createScoreSettingModal">
+                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createScoreSettingModal">
                     Create Score Setting
                 </button>
                 <table class="table table-hover table-striped" id="scoreDataTable" width="100%">
                     <thead>
                         <tr>
-                            <th>Session</th>
                             <th>Class</th>
-                            <th>Term</th>
                             <th>Title</th>
                             <th>Order</th>
                             <th>Score</th>
-                            <th>Display</th>
+                            <th>Category</th>
                             <th>Date</th>
                         </tr>
                     </thead>
@@ -93,7 +91,7 @@
     <div class="modal-dialog modal-lg  modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Set lite Session</h5>
+                <h5 class="modal-title">Score Setting</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -102,48 +100,40 @@
                         <div class="row">
                             <div class="col-md-7">
                                 @csrf
-                                <select type="text" name="session_pid" id="cssSessionSelect2" style="width: 100%;" class="form-control form-control-sm">
+                                <!-- <select type="text" name="session_pid" id="cssSessionSelect2" style="width: 100%;" class="form-control form-control-sm">
                                 </select>
-                                <p class="text-danger session_pid_error"></p>
+                                <p class="text-danger session_pid_error"></p> -->
                                 <select name="category_pid" id="cssCategorySelect2" style="width: 100%;">
                                 </select>
                                 <p class="text-danger category_pid_error"></p>
                                 <select type="text" name="class_pid" id="cssClassSelect2" style="width: 100%;" class="form-control form-control-sm">
                                 </select>
                                 <p class="text-danger class_pid_error"></p>
-                                <select type="text" name="term_pid" id="cssTermSelect2" style="width: 100%;" class="form-control form-control-sm">
+                                <!-- <select type="text" name="term_pid" id="cssTermSelect2" style="width: 100%;" class="form-control form-control-sm">
                                 </select>
-                                <p class="text-danger term_pid_error"></p>
+                                <p class="text-danger term_pid_error"></p> -->
                             </div>
                             <div class="col-md-5">
-                                <h4 class="text-warning">Score settings has to be equal to 100</h4>
-                                <p class="text-info">
-                                    Title will appear on student result in the other they are entered.
-                                    I.e if you enter exam first then from left to right exam will appear before other student assessment titles
-                                </p>
+                                <h5 class="text-danger">The Sum of Score Settings has to be equal to 100</h5>
+
                             </div>
                         </div>
                         <div class="text-center">
-                            Multiple ? <input class="custom-check m-1" name="keekVal" type="checkbox" id="gridCheck2">
+                            <p class="text-info">
+                                Title will appear on student result in the other they are entered.
+                                I.e if you enter exam first then from left to right exam will appear before other student assessment titles
+                            </p>
+                            <!-- Multiple ? <input class="custom-check m-1" name="keekVal" type="checkbox" id="gridCheck2"> -->
 
                             <button id="addMore" type="button" class="btn btn-danger btn-sm btn-small m-1">Add More Row</button>
-                            <p class="text-danger titles_pid_error"></p>
-                        </div>
-
-                        <div class="row" id="inputRow">
-                            <div class="col-md-5">
-                                <p class="text-danger title_pid_error"></p>
-                            </div>
-                            <div class="col-md-7">
-                                <p class="text-danger score_error"></p>
-                            </div>
+                            <p class="text-danger title_pid_error"></p>
                         </div>
 
                         <div class="row">
                             <div class="col-md-5">
-                                <select type="text" name="title_pid[]" id="titleSelect2" style="width:100%;" class="titleSelect2 form-control form-control-sm">
+                                <select type="text" name="title_pid[]" id="titleSelect0" style="width:100%;" class="titleSelect2 form-control form-control-sm">
                                 </select>
-                                <p class="text-danger title_pid_error"></p>
+                                <p class="text-danger title_pid0_error"></p>
                             </div>
                             <div class="col-md-7">
                                 <div class="input-group mb-3">
@@ -152,7 +142,7 @@
                                     <input class="custom-check m-1" value="2" name="mid[]" type="checkbox" id="gridCheck2">
                                     <i class="bi bi-x-circle-fill text-danger hidden-item m-2"></i>
                                 </div>
-                                <p class="text-danger score_error"></p>
+                                <p class="text-danger score0_error"></p>
                             </div>
                         </div>
                         <div id="settingParams"></div>
@@ -162,7 +152,7 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-primary" id="createScoreSettingBtn">Submit</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button id="resetForm" type="reset" class="btn btn-warning btn-sm btn-small m-3">Reset</button>
+            <!-- <button id="resetForm" type="reset" class="btn btn-warning btn-sm btn-small m-3">Reset</button> -->
         </div>
     </div>
 </div>
@@ -206,14 +196,9 @@
             responsive: true,
             "ajax": "{{route('load.score.setting')}}",
             "columns": [{
-                    "data": "session"
-                },
-                {
                     "data": "class"
                 },
-                {
-                    "data": "term"
-                },
+
                 {
                     "data": "title"
                 },
@@ -231,42 +216,6 @@
                 },
 
             ],
-        });
-
-        // validate signup form on keyup and submit
-        $('#createAssessmentBtn').click(function() {
-            $('.overlay').show();
-            $.ajax({
-                url: "{{route('school.assessment.title')}}",
-                type: "POST",
-                data: new FormData($('#createAssessmentForm')[0]),
-                dataType: "JSON",
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    $('#createAssessmentForm').find('p.text-danger').text('');
-                    $('#createAssessmentBtn').prop('disabled', true);
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#createAssessmentBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    if (data.status === 0) {
-                        alert_toast('Fill the form correctly', 'warning');
-                        $.each(data.error, function(prefix, val) {
-                            $('p.' + prefix + '_error').text(val[0]);
-                        });
-                    } else {
-                        alert_toast(data.message, 'success');
-                        $('#createAssessmentForm')[0].reset();
-                    }
-                },
-                error: function(data) {
-                    $('#createAssessmentBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    alert_toast('Something Went Wrong', 'error');
-                }
-            });
         });
 
 
@@ -301,7 +250,7 @@
 
 
         // title dropdown 
-        var pid = 2;
+        var pid = 0;
         titleDropDown(pid)
 
         function titleDropDown(id) {
@@ -317,7 +266,7 @@
                             <div class="col-md-5">
                                 <select type="text" name="title_pid[]" id="titleSelect${pid}" style="width:100%;" class="titleSelect2 form-control form-control-sm">
                                 </select>
-                                <p class="text-danger title_pid_error"></p>
+                                <p class="text-danger title_pid${pid}_error"></p>
                             </div>
                             <div class="col-md-7">
                                 <div class="input-group mb-3">
@@ -326,7 +275,7 @@
                                     <input class="custom-check m-1" value="2" name="mid[]" type="checkbox" id="gridCheck2">
                                     <i class="bi bi-x-circle-fill text-danger removeRowBtn pointer m-2"></i>
                                 </div>
-                                <p class="text-danger score_error"></p>
+                                <p class="text-danger score${pid}_error"></p>
                             </div>
                         </div>`
             );
@@ -336,6 +285,12 @@
 
         $(document).on('click', '.addedRow .removeRowBtn', function() {
             $(this).parent().parent().parent().remove();
+        });
+
+        // validate signup form on keyup and submit
+        $('#createAssessmentBtn').click(function(e) {
+            e.preventDefault()
+            submitFormAjax('createAssessmentForm', 'createAssessmentBtn', "{{route('school.assessment.title')}}")
         });
 
 

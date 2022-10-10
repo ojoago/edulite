@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('attendance_records', function (Blueprint $table) {//attendance histories
             $table->id();
             $table->string('school_pid')->nullable();
-            $table->string('attendance_pid');//selected attendance eg jss 1 a attendance
+            $table->string('attendance_pid')->nullable();//selected attendance eg jss 1 a attendance
             $table->string('staff_pid')->comment('attendance taken by');
             $table->string('date', 20);
-            $table->integer('note')->nullable()->comment('comments');
-            $table->integer('pid')->unique();
+            $table->string('note')->nullable()->comment('comments');
+            $table->string('pid')->unique();
             $table->timestamps();
         });
     }

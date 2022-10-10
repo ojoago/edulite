@@ -104,7 +104,7 @@
     </div>
 </div>
 <!-- assign class to class arm teacher modal  -->
-<div class="modal fade" id="createArmTeacherModal" tabindex="-1">
+<div class="modal fade" id="assignClassArmTeacherModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

@@ -188,7 +188,7 @@
         });
 
         // assign class to staff 
-        multiSelect2('.sessionSelect2', 'createArmTeacherModal', 'session', 'Select Session');
+        multiSelect2('.sessionSelect2', 'assignClassArmTeacherModal', 'session', 'Select Session');
         // load state on modal 
         multiSelect2('#parentStateSelect2', 'createParentOnStudentFormMadal', 'state', 'Select State');
 
@@ -197,17 +197,17 @@
             multiSelect2Post('#parentLgaSelect2', 'createParentOnStudentFormMadal', 'state-lga', id, 'Select lga of origin');
         });
 
-        multiSelect2('.termSelect2', 'createArmTeacherModal', 'term', 'Select Term');
-        multiSelect2('.categorySelect2', 'createArmTeacherModal', 'category', 'Select Category');
+        multiSelect2('.termSelect2', 'assignClassArmTeacherModal', 'term', 'Select Term');
+        multiSelect2('.categorySelect2', 'assignClassArmTeacherModal', 'category', 'Select Category');
         $('.categorySelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('.classSelect2', 'createArmTeacherModal', 'class', id, 'Select Class');
+            multiSelect2Post('.classSelect2', 'assignClassArmTeacherModal', 'class', id, 'Select Class');
         });
         $('.classSelect2').on('change', function(e) {
             var id = $(this).val();
-            multiSelect2Post('.armSelect2', 'createArmTeacherModal', 'class-arm', id, 'Select Class Arm');
+            multiSelect2Post('.armSelect2', 'assignClassArmTeacherModal', 'class-arm', id, 'Select Class Arm');
         });
-        multiSelect2('.teacherSelect2', 'createArmTeacherModal', 'school-teachers', 'Select Class Teacher');
+        multiSelect2('.teacherSelect2', 'assignClassArmTeacherModal', 'school-teachers', 'Select Class Teacher');
         // assign class subject to staff
         multiSelect2('#sessionSelect2s', 'createArmSubjectTeacherModal', 'session', 'Select Session');
         multiSelect2('#termSelect2s', 'createArmSubjectTeacherModal', 'term', 'Select Term');
@@ -251,7 +251,7 @@
             var route = "{{route('link.student.to.rider')}}";
             submitFormAjax('linkStudentToRiderForm', 'linkStudentToRiderBtn', route);
         });
-        // createArmTeacherModal
+        // assignClassArmTeacherModal
         //  class arm rep 
         $('#assignArmToRepBtn').click(function() {
             var route = "{{route('assign.class.arm.rep')}}";

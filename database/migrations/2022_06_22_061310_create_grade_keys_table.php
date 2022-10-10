@@ -25,8 +25,8 @@ return new class extends Migration
             $table->float('max_score')->default(0);
             $table->string('color')->nullable();
             $table->string('pid')->unique();
-            $table->string('term_pid')->unique();
-            $table->string('class_pid')->unique();
+            $table->string('term_pid')->nullable();
+            $table->string('class_pid')->nullable();
             $table->timestamps();
         });
     }

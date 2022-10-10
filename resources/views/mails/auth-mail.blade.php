@@ -22,7 +22,7 @@
                                 </p>
                                 <br>
                                 <p class="text-red">Please click on the button below to verify your Account</p>
-                                <p class="button-hover-center" style="margin: 20px;">
+                                <p class="button-hover-center text-center" style="margin: 20px;">
                                     <a class="btn" href="{{URL::to('/')}}/{{$param['url']}}">CLICK ME</a>
                                 </p>
                             </td>

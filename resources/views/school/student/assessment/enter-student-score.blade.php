@@ -14,7 +14,7 @@
         border: none;
         background-color: transparent;
         color: #000;
-        width: 20px;
+        width: 100%;
         padding: 0;
         margin: 0;
         text-align: center;
@@ -47,60 +47,60 @@
             <!-- Primary Color Bordered Table -->
             <h5 class="card-title">{{$class->arm}} <small>{{$class->subject}} <i class="bi bi-calendar-event-fill"></i> {{termName(session('term'))}} {{sessionName(session('session'))}}</small></h5>
             @if($scoreParams->isNotEmpty())
-             @if($data->isNotEmpty())
-                <div class="btn-group">
-                    <a href="{{route('export.student.list')}}"><button class="btn btn-primary btn-sm" type="btn" id="exportStudentList" data-bs-toggle="tooltip" title="Export Student list to excel to enter score offline">export</button></a>
-                    <button class="btn btn-success btn-sm" type="button" id="importStudentScore" data-bs-toggle="tooltip" title="Import Student Scores">import</button>
-                </div>
-                <table class="table table-bordered border-primary" id="scoreTable">
-                    <thead>
-                        <tr>
-                            <th scope="col" width="5%">S/N</th>
-                            <th scope="col">
-                                Reg-Number
-                            </th>
-                            <th scope="col">Names</th>
+            @if($data->isNotEmpty())
+            <div class="btn-group">
+                <a href="{{route('export.student.list')}}"><button class="btn btn-primary btn-sm" type="btn" id="exportStudentList" data-bs-toggle="tooltip" title="Export Student list to excel to enter score offline">export</button></a>
+                <button class="btn btn-success btn-sm" type="button" id="importStudentScore" data-bs-toggle="tooltip" title="Import Student Scores">import</button>
+            </div>
+            <table class="table table-bordered border-primary" id="scoreTable">
+                <thead>
+                    <tr>
+                        <th scope="col" width="5%">S/N</th>
+                        <th scope="col">
+                            Reg-Number
+                        </th>
+                        <th scope="col">Names</th>
+                        @foreach($scoreParams as $row)
+                        <th scope="col">{{$row->title}} [{{$row->score}}]</th>
+                        @endforeach
+                        <th scope="col" width="5%">Total
+                            [100]
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <form>
+                        @csrf
+                        @foreach($data as $student)
+                        <tr class="studentId" id="{{$student->pid}}">
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$student->reg_number}}</td>
+                            <td> <input type="checkbox" name="{{$student->pid}}" class="examStatus" id="{{$student->pid}}" checked> {{ $student->fullname }}</td>
+                            @php $total = 0;@endphp
                             @foreach($scoreParams as $row)
-                            <th scope="col">{{$row->title}} [{{$row->score}}]</th>
+                            <td scope="col">
+                                @php
+                                $score = getTitleScore($student->pid,$row->assessment_title_pid);
+                                $total += $score;
+                                @endphp
+                                <input type="number" step="0.01" class="form-control form-control-sm studentCaScore score{{$student->pid}}" id="{{$row->assessment_title_pid}}" value="{{$score}}" max_score="{{$row->score}}" placeholder="max obtainable {{--$row->score--}}">
+                            </td>
                             @endforeach
-                            <th scope="col" width="5%">Total
-                                [100]
-                            </th>
+                            <td scope="col" id="total{{$student->pid}}">{{$total}}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <form>
-                            @csrf
-                            @foreach($data as $student)
-                            <tr class="studentId" id="{{$student->pid}}">
-                                <td>{{$loop->iteration}}</td>
-                                <td>{{$student->reg_number}}</td>
-                                <td> <input type="checkbox" name="{{$student->pid}}" class="examStatus" id="{{$student->pid}}" checked> {{ $student->fullname }}</td>
-                                @php $total = 0;@endphp
-                                @foreach($scoreParams as $row)
-                                <td scope="col">
-                                    @php
-                                    $score = getTitleScore($student->pid,$row->assessment_title_pid);
-                                    $total += $score;
-                                    @endphp
-                                    <input type="number" step="0.01" class="form-control form-control-sm studentCaScore" id="{{$row->assessment_title_pid}}" value="{{$score}}" max_score="{{$row->score}}" placeholder="max obtainable {{--$row->score--}}">
-                                </td>
-                                @endforeach
-                                <td scope="col"> <input type="text" class="studentTotal" value="{{$total}}" id="total{{$student->pid}}" disabled></td>
-                            </tr>
-                            @endforeach
-                    </tbody>
-                    {{-- <tfoot>
+                        @endforeach
+                </tbody>
+                {{-- <tfoot>
                         <td colspan="{{$scoreParams->count()+2}}"></td>
-                    <td colspan="2">
-                    </td>
-                    </tfoot> --}}
-                    </form>
-                </table>
-                <button type="button" class="btn btn-primary" id="confirmBtn">Confirm</button>
-                @else
-                <h3 class="card-title bg-warning text-center">No Student Assign to {{$class->arm}} in {{sessionName(session('session'))}} , Please contact the School Admin...</h3>
-                @endif
+                <td colspan="2">
+                </td>
+                </tfoot> --}}
+                </form>
+            </table>
+            <button type="button" class="btn btn-primary" id="confirmBtn">Confirm</button>
+            @else
+            <h3 class="card-title bg-warning text-center">No Student Assign to {{$class->arm}} in {{sessionName(session('session'))}} , Please contact the School Admin...</h3>
+            @endif
             @else
             <h3 class="card-title bg-warning text-center">Score Settings for {{termName(session('term'))}} {{sessionName(session('session'))}} Has not been set, Please contact the School Admin...</h3>
             @endif
@@ -138,10 +138,11 @@
                     },
                     success: function(data) {
                         if (data.status == 1) {
-                            let total = ($('#total' + spid).val());
-                            total = total - Number(score);
-                            total = total + Number(score);
-                            $('#total' + spid).val(total);
+                            let total = 0;
+                            $('.score' + spid).each(function() {
+                                total += Number($(this).val());
+                            });
+                            $('#total' + spid).text(total.toFixed(2))
                         } else {
                             alert_toast(data.message, 'error')
                             showTipMessage(data.message)
@@ -160,6 +161,7 @@
                 return false;
             }
         });
+
         $('#confirmBtn').click(function() {
             alert_toast('Weldone', 'success')
         });

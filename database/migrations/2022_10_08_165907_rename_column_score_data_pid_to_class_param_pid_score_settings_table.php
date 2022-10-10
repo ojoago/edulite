@@ -13,14 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('curricula', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->string('pid')->unique();
-            $table->string('school_pid');
-            $table->integer('status')->default(1);
-            $table->timestamps();
+        Schema::table('score_settings', function (Blueprint $table) {
+            $table->renameColumn('score_data_pid', 'class_param_pid');
         });
     }
 
@@ -31,6 +25,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('curricula');
+        
     }
 };

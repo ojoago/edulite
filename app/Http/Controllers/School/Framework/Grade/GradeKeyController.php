@@ -45,27 +45,28 @@ class GradeKeyController extends Controller
             })],
             'min_score'=>'required|numeric|min:0|max:99',
             'max_score'=>'required|numeric|min:1|max:100',
-            'grade'=>['required', 'string',Rule::unique('grade_keys')->where(function($param) use ($request){
+            'grade'=>['required','max:3', 'string',Rule::unique('grade_keys')->where(function($param) use ($request){
                             $param->where([
                                 'term_pid'=>$request->term_pid,
                                 'class_pid'=>$request->class_pid,
                                 'school_pid'=>getSchoolPid()
                             ])->where('pid','!=',$request->pid);
                         })],
-            'grade_point'=>'required|int',
+            'grade_point'=>'nullable|numeric',
             'session_pid'=>'required|string',
             'class_pid'=>'required|string',
             'term_pid'=>'required|string',
         ],[
             'title.required'=>'Enter Grade Title',
-            'grade.required'=>'Enter Grade key e.g A ',
+            'grade.required'=>'Enter Grade key e.g A',
+            'grade.max'=>'3 letters at most',
             'min_score.required'=>'Enter Grade Minimum Score',
             'min_score.numeric'=>'Minimum Score must be a number',
             'max_score.required'=>'Enter Grade Maximum Score',
             'max_score.numeric'=>'Maximum Score must be a number',
-            'session_pid.reqiured'=>'Select Academic Session',
-            'class_pid.reqiured'=>'Select Class',
-            'term_pid.reqiured'=>'Select Term',
+            'session_pid.required'=>'Select Academic Session',
+            'class_pid.required'=>'Select Class',
+            'term_pid.required'=>'Select Term',
         ]);
         if(!$validator->fails()){
             $data = [

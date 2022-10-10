@@ -237,6 +237,7 @@ class StaffController extends Controller
             ->addIndexColumn()
             ->make(true);
     }
+
     public function createStaff(Request $request){
         $validator = Validator::make($request->all(),[
             'firstname'=>'required|string|min:3|max:25',
@@ -368,7 +369,7 @@ class StaffController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
     public function find($pid){
-        return view('school.registration.staff.create-staff',compact('pid'));
+        return view('school.registration.staff.register-staff',compact('pid'));
     }
     // load staff details on for editing 
     public function loadStaffDetailsById(Request $request){

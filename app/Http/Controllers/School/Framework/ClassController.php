@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\School\Framework;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\School\Staff\StaffClass;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Class\Classes;
 use App\Models\School\Framework\Class\Category;
 use App\Models\School\Framework\Class\ClassArm;
 use App\Models\School\Framework\Class\ClassArmSubject;
-use App\Models\School\Staff\StaffClass;
 use App\Models\School\Student\Result\StudentClassScoreParam;
-use Illuminate\Validation\Rule;
 
 class ClassController extends Controller
 {
@@ -377,7 +378,7 @@ class ClassController extends Controller
     }
 
 
-    public static function createClassParam($data)
+    public static function createClassParam(array $data)
     {
         // $teacher = $data['teacher_pid'];
         // unset($data['teacher_pid']);// class tec
@@ -386,6 +387,7 @@ class ClassController extends Controller
             return $pid;
         }
         $data['teacher_pid'] = self::getClassTeacherPid(session: $data['session_pid'],term: $data['term_pid'],arm: $data['arm_pid']);
+        $data['principal_pid'] = self::getCategoryHeadPid($data['arm_pid']);
         $data['pid'] = public_id();
         $result = StudentClassScoreParam::create($data);// create class param
         return $result->pid;
@@ -397,6 +399,13 @@ class ClassController extends Controller
             'term_pid'=>$term,
             'school_pid'=>getSchoolPid()
             ])->pluck('teacher_pid')->first();
+        return $pid;
+    }
+    public static function getCategoryHeadPid($arm){
+       $pid = DB::table('class_arms as a')
+                ->join('classes as c','c.pid','a.class_pid')
+                ->join('categories as cg','cg.pid','c.category_pid')
+                ->where(['a.pid'=>$arm,'a.school_pid'=>getSchoolPid()])->pluck('head_pid')->first();
         return $pid;
     }
 

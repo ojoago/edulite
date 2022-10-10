@@ -205,25 +205,25 @@
         }
 
         .btn {
-            font-size: 15px;
-            font-weight: 600;
-            background: #00AFF0;
-            color: #FFF;
-            text-decoration: none;
-            padding: 9px 16px;
-            border-radius: 28px;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            background: #00AFF0 !important;
+            color: #FFF !important;
+            text-decoration: none !important;
+            padding: 9px 16px !important;
+            border-radius: 28px !important;
         }
 
         .ed-color {
-            color: #00AFF0;
+            color: #00AFF0 !important;
         }
 
         .lite-color {
-            color: #FCBA03;
+            color: #FCBA03 !important;
         }
 
         .text-red {
-            color: red;
+            color: red !important;
         }
 
         /*--- Start Two Column Image & Text Sections --*/
@@ -325,7 +325,7 @@
         }
 
         .footer img {
-            max-width: 135px;
+            max-width: 135px !important;
             Margin: 0 auto;
             display: block;
             padding: 4% 0 1% 0;

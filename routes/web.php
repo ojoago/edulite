@@ -36,6 +36,7 @@ use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 use App\Http\Controllers\School\Framework\Attendance\AttendanceTypeController;
 use App\Http\Controllers\School\Framework\Assessment\AssessmentTitleController;
 use App\Http\Controllers\School\Student\Attendance\StudentAttendanceController;
+use App\Http\Controllers\School\Framework\Psychomotor\PsychomotorBaseController;
 use App\Http\Controllers\School\Student\Results\Comments\CommentResultController;
 use App\Http\Controllers\School\Student\Results\Termly\StudentTermlyResultController;
 use App\Http\Controllers\School\Student\Result\Comments\PortalCommentResultController;
@@ -209,6 +210,9 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-available-hostels', [Select2Controller::class, 'loadAvailableHostels']);
     // portal 
     Route::post('load-available-portals', [Select2Controller::class, 'loadAvailablePortals']);
+    
+    // psychomotor 
+    Route::post('load-available-psychomotors', [Select2Controller::class, 'loadAvailablePsychomotors']);
 
     // subjects & subject type
     // load subject type page 
@@ -255,9 +259,17 @@ Route::middleware('schoolAuth')->group(function(){
         // assign hostel to student 
         Route::Post('assign-hostel-to-student', [HostelController::class, 'assignHostelToStudent'])->name('assign.hostel.to.student');
     });
-    Route::get('load-psychomotor', [PsychomotorController::class, 'index'])->name('load.psychomotor');
+    
+    // load school base pschomotor 
+    Route::get('load-psychomotor-base', [PsychomotorBaseController::class, 'index'])->name('load.psychomotor.base');
+    
+    // load school pschomotor key
+    Route::post('load-psychomotor-key', [PsychomotorBaseController::class, 'psychomotorKeys'])->name('load.psychomotor.key');
+    // Route::post('creat-psychomotor', [PsychomotorController::class, 'index'])->name('load.psychomotor');
+    
+    Route::post('create-psychomotor-base', [PsychomotorBaseController::class, 'createPsychomotorBase'])->name('create.psychomotor.base');
     // create psychomotor
-    Route::post('create-psychomotor', [PsychomotorController::class, 'createPsychomotor'])->name('create.psychomotor');
+    Route::post('create-psychomotor-key', [PsychomotorBaseController::class, 'createPsychomotorkey'])->name('create.psychomotor.key');
     // load effective domain 
     Route::get('load-effective-domian', [AffectiveDomainController::class, 'index'])->name('load.effective-domain');
     // create effective domain 
@@ -434,9 +446,12 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('view-student-score', [StudentScoreController::class, 'loadStudentScore'])->name('view.student.score');
 
     // psychomotor 
-    Route::view('student-ps-form', 'school.student.psychomotor.psychomotor-form')->name('psychomotor.assessment.form');
-    Route::post('student-ps-form', [RecordPsychomotorController::class, 'loadPsychomotoKeys']);
+    Route::view('student-psychomotor-form', 'school.student.psychomotor.psychomotor-form')->name('psychomotor.assessment.form');
+    Route::post('student-psychomotor-form', [RecordPsychomotorController::class, 'loadPsychomotoKeys']);
     Route::post('record-psychomotor-score', [RecordPsychomotorController::class, 'recordPsychomotorScore'])->name('record.psycomotor.score');
+
+    Route::view('view-psychomotor-form', 'school.student.psychomotor.view-psychomotor-form')->name('view.psychomotor.form');
+    Route::post('view-psychomotor-form', [RecordPsychomotorController::class, 'loadPsychomotoScore']);
     // affective domain 
     Route::view('student-ad-form', 'school.student.affective.affective-form')->name('affective.assessment.form');
     Route::post('student-ad-form', [AffectiveDomainController::class, 'loadAffecitveKeys']);
@@ -450,7 +465,7 @@ Route::middleware('schoolAuth')->group(function(){
     // redirect to this route 
     Route::get('student-termly-result', [StudentTermlyResultController::class, 'classResult'])->name('view.student.result');
     // particular student money
-    Route::get('s-r-c/{param}/{pid}', [StudentTermlyResultController::class, 'studentReportCard'])->name('student.report.card');
+    Route::get('student-report-card/{param}/{pid}', [StudentTermlyResultController::class, 'studentReportCard'])->name('student.report.card');
     // view student cumualtive result 
     //view-student-cumualtive-result
     Route::view('v-s-c-r', 'school.student.result.cumulative.cumulative-result-form')->name('view.student.cumualtive.result');
