@@ -12,7 +12,7 @@
 
                                 <p class="text-red">If you did not request to reset your password, please ignore this email</p>
                                 <p class="button-hover-center" style="margin: 20px;">
-                                    <a class="btn" href="URL::to('/')}}/{{$param['url']}}">Reset PASSWORD NOW</a>
+                                    <a class="btn" href="{{URL::to('/')}}/{{$param['url']}}">Reset PASSWORD NOW</a>
                                 </p>
                                 <p>We're always ready to help.</p>
                                 <b class="lite-color">{{env('APP_NAME',APP_NAME)}} TEAM</b>
