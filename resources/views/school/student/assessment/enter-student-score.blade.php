@@ -52,7 +52,7 @@
                 <a href="{{route('export.student.list')}}"><button class="btn btn-primary btn-sm" type="btn" id="exportStudentList" data-bs-toggle="tooltip" title="Export Student list to excel to enter score offline">export</button></a>
                 <button class="btn btn-success btn-sm" type="button" id="importStudentScore" data-bs-toggle="tooltip" title="Import Student Scores">import</button>
             </div>
-            <table class="table table-bordered border-primary" id="scoreTable">
+            <table class="table table-bordered border-primary  cardTable" id="scoreTable">
                 <thead>
                     <tr>
                         <th scope="col" width="5%">S/N</th>

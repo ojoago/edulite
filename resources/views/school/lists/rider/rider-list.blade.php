@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">Rider List</h5>
-        <table class="table table-hover table-responsive table-striped table-bordered" id="riderDataTable">
+        <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="riderDataTable">
             <thead>
                 <tr>
                     <th>S/N</th>

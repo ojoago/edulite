@@ -40,7 +40,7 @@
                 <div class="col-md-8">
                     <form id="studentAttendanceForm">
                         @csrf
-                        <table class="table table-bordered border-primary" id="resultTable">
+                        <table class="table table-bordered border-primary cardTable" id="resultTable">
                             <thead>
                                 <tr>
                                     <th width="5%">S/N</th>
@@ -57,7 +57,7 @@
                                     <td>{{$loop->iteration}}</td>
                                     <td>{{$row->reg_number}}</td>
                                     <td>{{$row->fullname}}</td>
-                                     <input type="hidden" name="student[]" value="{{$row->pid}}">
+                                    <input type="hidden" name="student[]" value="{{$row->pid}}">
                                     <td> <input type="checkbox" class="checkAll" name="check[]"></td>
                                 </tr>
                                 @endforeach

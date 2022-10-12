@@ -43,7 +43,7 @@
             </div>
             <!-- Primary Color Bordered Table -->
 
-            <table class="table table-bordered border-primary" id="attendanceTable">
+            <table class="table table-bordered border-primary  cardTable" id="attendanceTable">
                 <thead>
                     <tr>
                         <th width="5%">S/N</th>

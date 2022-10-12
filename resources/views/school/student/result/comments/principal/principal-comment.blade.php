@@ -35,7 +35,7 @@
                 </div>
             </div>
             <!-- Primary Color Bordered Table -->
-            <table class="table table-bordered border-primary" id="resultTable">
+            <table class="table table-bordered border-primary cardTable" id="resultTable">
                 <thead>
                     <tr>
                         <th scope="col">S/N</th>
@@ -96,10 +96,10 @@
                 url: "{{route('comment.principal.student.termly.result')}}",
                 type: "post",
                 data: {
-                    comment:comment,
-                    std:std,
-                    param:param,
-                    _token:token
+                    comment: comment,
+                    std: std,
+                    param: param,
+                    _token: token
                 },
                 success: function(data) {
                     showTipMessage(data)

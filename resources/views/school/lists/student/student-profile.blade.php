@@ -41,7 +41,7 @@
                         <div id='calendar'></div>
                     </div>
                     <div class="tab-pane fade" id="class" role="tabpanel">
-                        <table class="table table-hover table-striped table-bordered" id="classDataTable">
+                        <table class="table table-hover table-striped table-bordered cardTable" id="classDataTable">
                             <thead>
                                 <tr>
                                     <th>Class</th>
@@ -53,7 +53,7 @@
                         </table>
                     </div>
                     <div class="tab-pane fade" id="results" role="tabpanel">
-                        <table class="table table-hover table-striped table-bordered" id="resultDataTable">
+                        <table class="table table-hover table-striped table-bordered cardTable" id="resultDataTable">
                             <thead>
                                 <tr>
 
@@ -69,7 +69,7 @@
                         </table>
                     </div>
                     <div class="tab-pane fade" id="rider" role="tabpanel">
-                        <table class="table table-hover table-striped table-bordered" id="riderDataTable">
+                        <table class="table table-hover table-striped table-bordered cardTable" id="riderDataTable">
                             <thead>
                                 <tr>
 

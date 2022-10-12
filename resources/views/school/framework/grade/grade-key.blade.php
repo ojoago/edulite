@@ -23,7 +23,7 @@
                     Create Grade
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="GradeKeyTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="GradeKeyTable">
                     <thead>
                         <tr>
                             <th>Grade</th>

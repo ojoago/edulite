@@ -102,7 +102,7 @@
             </a>
         </li>
         <li>
-            <a href="{{route('school.rider')}}">
+            <a href="{{route('school.rider.form')}}">
                 <i class="bi bi-circle"></i><span> PickUps Rider</span>
             </a>
         </li>

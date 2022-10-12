@@ -19,7 +19,7 @@
                     </select>
                 </div>
             </div>
-            <table class="table table-hover table-responsive table-striped table-bordered mt-2" id="staffClassesdataTable">
+            <table class="table table-hover table-responsive table-striped table-bordered mt-2 cardTable" id="staffClassesdataTable">
                 <thead>
                     <tr>
                         <th width="5%">S/N</th>

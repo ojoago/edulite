@@ -29,7 +29,7 @@
                 </select>
             </div>
         </div>
-        <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="timetableDatatable">
+        <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="timetableDatatable">
             <thead>
                 <tr>
                     <th width="5%">S/N</th>
@@ -168,7 +168,7 @@
             let arm = $(this).val();
             let session = $('#timetableSessionSelect2').val();
             let term = $('#timetableTermSelect2').val();
-            if(arm !=null){
+            if (arm != null) {
 
                 loadTimetable(arm, session, term);
             }
@@ -177,7 +177,7 @@
             let session = $(this).val();
             let arm = $('#timetableArmSelect2').val();
             let term = $('#timetableTermSelect2').val();
-            if(session != null){
+            if (session != null) {
 
                 loadTimetable(arm, session, term);
             }
@@ -186,7 +186,7 @@
             let term = $(this).val();
             let arm = $('#timetableArmSelect2').val();
             let session = $('#timetableSessionSelect2').val();
-            if(term != null){
+            if (term != null) {
 
                 loadTimetable(arm, session, term);
             }

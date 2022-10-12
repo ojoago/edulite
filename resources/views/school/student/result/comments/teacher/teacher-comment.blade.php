@@ -35,7 +35,7 @@
                 </div>
             </div>
             <!-- Primary Color Bordered Table -->
-            <table class="table table-bordered border-primary" id="resultTable">
+            <table class="table table-bordered border-primary  cardTable" id="resultTable">
                 <thead>
                     <tr>
                         <th scope="col">S/N</th>

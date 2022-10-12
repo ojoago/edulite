@@ -19,7 +19,7 @@
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="active-staff" role="tabpanel" aria-labelledby="home-tab">
-                <table class="table table-hover table-responsive table-striped table-bordered" id="list-active-staff-dataTable">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="list-active-staff-dataTable">
                     <thead>
                         <tr>
                             <th>S/N</th>
@@ -36,7 +36,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="in-active-staff" role="tabpanel" aria-labelledby="in-active-staff-tab">
-                <table class="table table-hover table-responsive table-striped table-bordered" id="activedataTable">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="activedataTable">
                     <thead>
                         <tr>
                             <th>S/N</th>
@@ -54,7 +54,7 @@
             </div>
             <div class="tab-pane fade" id="admin-user" role="tabpanel" aria-labelledby="admin-tab">
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped table-bordered" id="admin-list-dataTable">
+                    <table class="table table-hover table-striped table-bordered cardTable" id="admin-list-dataTable">
 
                     </table>
                 </div>

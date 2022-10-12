@@ -22,7 +22,7 @@
                 <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createPsychomotorBaseModal">
                     Create Psychomotor
                 </button>
-                <table class="table table-hover table-striped" id="psychomotorBaseDataTable" width="100%">
+                <table class="table table-hover table-striped cardTable" id="psychomotorBaseDataTable" width="100%">
                     <thead>
                         <tr>
                             <th>PsyChomotor Names</th>
@@ -47,7 +47,7 @@
                         </select>
                     </div>
                 </div>
-                <table class="table table-hover table-striped" id="psychomotorKeyDataTable" width="100%">
+                <table class="table table-hover table-striped cardTable" id="psychomotorKeyDataTable" width="100%">
                     <thead>
                         <tr>
                             <th>Psychomotor</th>
@@ -65,7 +65,7 @@
                 <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createPyschoGradeModal">
                     Create GD
                 </button>
-                <table class="table table-hover table-striped" id="psychoGradeDataTable" width="100%">
+                <table class="table table-hover table-striped cardTable" id="psychoGradeDataTable" width="100%">
                     <thead>
                         <tr>
                             <th>S/N</th>

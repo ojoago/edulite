@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">Parent/Guardian List</h5>
-        <table class="table table-hover table-responsive table-striped table-bordered" id="parentDataTable">
+        <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="parentDataTable">
             <thead>
                 <tr>
                     <th>S/N</th>

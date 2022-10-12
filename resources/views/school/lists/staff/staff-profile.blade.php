@@ -55,7 +55,7 @@
                                 </select>
                             </div>
                         </div>
-                        <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="staffClassTable">
+                        <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="staffClassTable">
                             <thead>
                                 <tr>
                                     <th width="5%">S/N</th>
@@ -84,7 +84,7 @@
                                 </select>
                             </div>
                         </div>
-                        <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="staffSubjectTable">
+                        <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="staffSubjectTable">
                             <thead>
                                 <tr>
                                     <th width="5%">S/N</th>

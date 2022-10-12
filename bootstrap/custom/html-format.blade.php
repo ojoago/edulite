@@ -291,7 +291,7 @@ function formatStudentProfile($row)
         $info = '
              <div class="row p-4">
                 <div class=" shadow p-3">
-                    Username: ' . $row->reg_number . '
+                    Reg Number: ' . $row->reg_number . '
                     <hr>
                     Username: ' . $row->username . '
                     <hr>

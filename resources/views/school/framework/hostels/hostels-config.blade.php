@@ -22,7 +22,7 @@
                 <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createHostelModal">
                     Create Hostel
                 </button>
-                <table class="table table-hover table-striped table-bordered" id="hostelDataTable" width="100%">
+                <table class="table table-hover table-striped table-bordered cardTable" id="hostelDataTable" width="100%">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -37,7 +37,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="hostel-student" role="tabpanel" aria-labelledby="profile-tab">
-                <table class="table table-hover table-striped table-bordered" id="hostelPortalDataTable" width="100%">
+                <table class="table table-hover table-striped table-bordered cardTable" id="hostelPortalDataTable" width="100%">
                     <thead>
                         <tr>
                             <th>Hostel</th>
@@ -62,7 +62,7 @@
                         </select>
                     </div>
                 </div>
-                <table class="table table-hover table-striped table-bordered" id="studentDataTable" width="100%">
+                <table class="table table-hover table-striped table-bordered cardTable" id="studentDataTable" width="100%">
                     <thead>
                         <tr>
                             <th>Fullname</th>

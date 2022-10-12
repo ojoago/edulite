@@ -93,6 +93,7 @@ Route::post('base-user-access',[OrgUserAccessController::class,'store'])->name('
 // sign up with organisation link direct 
 // Route::post('organisation-sign-up/{id}',[OrgUserAccessController::class,'store'])->name('organisation.sign.up');
 Route::view('create-school', 'school.create-school')->name('create.school');
+Route::view('help', 'helps.help')->name('helps');
 Route::post('create-school', [SchoolController::class, 'createSchool']);
 Route::get('school-sign-in/{id}', [SchoolController::class, 'schoolLogin'])->name('login.school');
 //load states
@@ -303,13 +304,13 @@ Route::middleware('schoolAuth')->group(function(){
     // student 
     // Route::view('school-registration', 'school.registration.index')->name('school.registration');
     // student 
-    Route::view('register-s', 'school.registration.student.register-student')->name('school.registration.student.form');
+    Route::view('register-student', 'school.registration.student.register-student')->name('school.registration.student.form');
     Route::post('register-student', [StudentRegistrationController::class, 'registerStudent'])->name('register.student');
     // edit student 
 
     Route::post('link-student-parent', [StudentController::class, 'linkStudentToParent'])->name('link.student.parent');
 
-    Route::view('register-p', 'school.registration.parent.register-parent')->name('school.parent.registration.form');
+    Route::view('register-parent', 'school.registration.parent.register-parent')->name('school.parent.registration.form');
 
     Route::post('school-parent-registration', [ParentRegistrationController::class, 'registerParent'])->name('school.register.parent');
 
@@ -319,25 +320,25 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('parents-ward/{id}', [ParentController::class, 'myWards'])->name('school.parent.child');
 
     // parent assistance 
-    Route::view('create-school-rider-form', 'school.registration.rider.register-rider')->name('school.rider');
+    Route::view('create-school-rider-form', 'school.registration.rider.register-rider')->name('school.rider.form');
     Route::post('create-school-rider', [SchoolRiderController::class, 'submitSchoolRiderForm'])->name('create.school.rider');
     // link Rider to student 
     Route::post('link-student-to-rider', [SchoolRiderController::class, 'linkStudentToRider'])->name('link.student.to.rider');
 
     // uploads 
     // upload staff 
-    Route::view('upload-s', 'school.uploads.staff.upload-staff')->name('upload.staff');
-    Route::post('upload-s', [UploadStaffController::class,'importStaff']);
+    Route::view('upload-staff', 'school.uploads.staff.upload-staff')->name('upload.staff');
+    Route::post('upload-staff', [UploadStaffController::class,'importStaff']);
 
     // upload student 
-    Route::view('upload-std', 'school.uploads.student.upload-student')->name('upload.student');
-    Route::post('upload-std', [UploadStudentController::class,'importStudent']);
+    Route::view('upload-student', 'school.uploads.student.upload-student')->name('upload.student');
+    Route::post('upload-student', [UploadStudentController::class,'importStudent']);
     // upload parent 
-    Route::view('upload-p', 'school.uploads.parent.upload-parent')->name('upload.parent');
-    Route::post('upload-p', [UploadParentController::class,'importParent']);
+    Route::view('upload-parent', 'school.uploads.parent.upload-parent')->name('upload.parent');
+    Route::post('upload-parent', [UploadParentController::class,'importParent']);
     // upload rider 
-    Route::view('upload-r', 'school.uploads.rider.upload-rider')->name('upload.rider');
-    Route::post('upload-r', [UploadRiderController::class,'importRider']);
+    Route::view('upload-rider', 'school.uploads.rider.upload-rider')->name('upload.rider');
+    Route::post('upload-rider', [UploadRiderController::class,'importRider']);
 
 
     // link Activities 

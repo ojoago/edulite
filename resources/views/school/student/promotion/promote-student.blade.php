@@ -5,10 +5,9 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">{{--$class->arm--}} <small>{{--$class->subject--}}</small></h5>
-            <p> <i class="bi bi-calendar-event-fill"></i> {{--sessionName(session('session'))--}} {{termName(session('term'))}}</p>
-            <!-- Primary Color Bordered Table -->
-            <table class="table table-bordered border-primary" id="scoreTable">
+            <h5 class="card-title">Promote Student</h5>
+            <p> <i class="bi bi-calendar-event-fill"></i> {{sessionName(session('session')) }} {{termName(session('term'))}}</p>
+            <table class="table table-bordered border-primary cardTable" id="scoreTable">
                 <thead>
                     <tr>
                         <th scope="col">S/N</th>

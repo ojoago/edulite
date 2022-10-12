@@ -43,7 +43,7 @@
             </div>
             <!-- Primary Color Bordered Table -->
 
-            <table class="table table-bordered border-primary" id="attendanceTable">
+            <table class="table table-bordered border-primary cardTable" id="attendanceTable">
                 <thead>
                     <tr>
                         <th scope="col">Reg-Number</th>
@@ -101,7 +101,7 @@
             var arm = $('#formArmSelect2').val();
             var term = $('#formTermSelect2').val();
             if (arm != null && term != null && session != null) {
-                loadAttendanceHistory(arm, term, session , date = null);
+                loadAttendanceHistory(arm, term, session, date = null);
             } else {
                 alert_toast('select Arm and Term to filter', 'warning');
             }

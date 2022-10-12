@@ -124,7 +124,7 @@
         $('#createRiderBtn').click(function() {
             $('.overlay').show();
             $.ajax({
-                url: "{{route('create.lite.rider')}}",
+                url: "{{route('create.school.rider')}}",
                 type: "POST",
                 data: new FormData($('#createRiderForm')[0]),
                 dataType: "JSON",

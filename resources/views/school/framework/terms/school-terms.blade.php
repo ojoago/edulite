@@ -29,7 +29,7 @@
                     New Term
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display table-bordered table-striped table-hover mt-3" id="term-dataTable">
+                <table class="table display table-bordered table-striped table-hover mt-3 cardTable" id="term-dataTable">
                     <thead>
                         <tr>
                             <!-- <th>SN</th> -->
@@ -51,7 +51,7 @@
                     Set Active Term
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="active-term-table">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="active-term-table">
                     <thead>
                         <tr>
                             <th>Active term</th>
@@ -66,7 +66,7 @@
             <div class=" tab-pane fade" id="detail" role="tabpanel">
 
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="detailDatatable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="detailDatatable">
                     <thead>
                         <tr>
                             <!-- <th>SN</th> -->

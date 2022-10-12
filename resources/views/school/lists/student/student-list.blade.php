@@ -19,7 +19,7 @@
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="activeStudent" role="tabpanel" aria-labelledby="activeStudent-tab">
-                <table class="table table-hover table-responsive table-striped table-bordered" id="activeStudentDataTable">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="activeStudentDataTable">
                     <thead>
                         <tr>
                             <th>S/N</th>
@@ -35,7 +35,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="inActiveStudent" role="tabpanel" aria-labelledby="nonActiveStudent-tab">
-                <table class="table table-hover table-responsive table-striped table-bordered" id="inActiveStudentDataTable">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="inActiveStudentDataTable">
                     <thead>
                         <tr>
                             <th>S/N</th>
@@ -51,7 +51,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="graduatedStudent" role="tabpanel" aria-labelledby="graduatedStudent-tab">
-                <table class="table table-hover table-responsive table-striped table-bordered" id="exStudentDataTable">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="exStudentDataTable">
                     <thead>
                         <tr>
                             <th>S/N</th>

@@ -25,7 +25,7 @@
                     Create Category
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="classCategoryTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="classCategoryTable">
                     <thead>
                         <tr>
                             <th>Category</th>
@@ -43,7 +43,7 @@
                     Create Class
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="classTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="classTable">
                     <thead>
                         <tr>
                             <th>Category</th>
@@ -63,7 +63,7 @@
                     Create Class Arm
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="classArmTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="classArmTable">
                     <thead>
                         <tr>
                             <th>Class</th>
@@ -99,7 +99,7 @@
                     </div>
                 </div>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="classArmSubjectTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="classArmSubjectTable">
                     <thead>
                         <tr>
                             <th>Session</th>
@@ -486,7 +486,7 @@
                     selector: 'td:nth-child(2)'
                 },
                 responsive: true,
-                destroy:true,
+                destroy: true,
                 // type: "post",
                 "ajax": {
                     url: "{{route('load.school.class.arm.subject')}}",
@@ -535,7 +535,7 @@
         });
         $('#classArmSubjectSelect2').on('change', function(e) {
             var id = $(this).val();
-            if(id != null){
+            if (id != null) {
                 loadSubject(id);
             }
         });

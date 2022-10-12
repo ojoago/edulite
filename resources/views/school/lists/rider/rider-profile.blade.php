@@ -21,7 +21,7 @@
             <div class="tab-pane fade" id="student" role="tabpanel">
                 <div id="studentDetail"></div>
                 <h5 class="card-title">Rider List</h5>
-                <table class="table table-hover table-responsive table-striped table-bordered" id="studentDataTable">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="studentDataTable">
                     <thead>
                         <tr>
                             <!-- <th>S/N</th> -->
@@ -72,11 +72,14 @@
                         selector: 'td:nth-child(2)'
                     },
                     responsive: true,
-                    destroy:true,
+                    destroy: true,
                     "ajax": {
                         url: "{{route('load.rider.student')}}",
                         type: "post",
-                        data: {pid:pid,_token:"{{csrf_token()}}",},
+                        data: {
+                            pid: pid,
+                            _token: "{{csrf_token()}}",
+                        },
                     },
                     "columns": [
                         // {

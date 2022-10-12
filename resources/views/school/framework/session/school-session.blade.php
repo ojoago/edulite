@@ -24,7 +24,7 @@
                     New Session
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table table-bordered table-striped table-hover mt-3" id="dataTable">
+                <table class="table table-bordered table-striped table-hover mt-3 cardTable" id="dataTable">
                     <thead>
                         <tr>
                             <!-- <th>SN</th> -->
@@ -45,7 +45,7 @@
                     Set Active Session
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table table-bordered table-striped table-hover mt-3" width="100%" id="active-session-table">
+                <table class="table table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="active-session-table">
                     <thead>
                         <tr>
                             <!-- <th>SN</th> -->

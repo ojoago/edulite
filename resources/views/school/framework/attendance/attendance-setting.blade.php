@@ -23,7 +23,7 @@
                     Create Attendance
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="attendanceTypeTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="attendanceTypeTable">
                     <thead>
                         <tr>
                             <th>Title</th>

@@ -22,7 +22,7 @@
                     Create Subject Type
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="SubjectTypeTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="SubjectTypeTable">
                     <thead>
                         <tr>
                             <th>Subject Type</th>
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3" width="100%" id="SubjectTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="SubjectTable">
                     <thead>
                         <tr>
                             <th>Subject Type</th>

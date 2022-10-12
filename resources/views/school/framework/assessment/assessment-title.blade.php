@@ -19,7 +19,7 @@
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createAssessmentModal">
                     Create Assessment
                 </button>
-                <table class="table table-hover table-striped" id="title-dataTable" width="100%">
+                <table class="table table-hover table-striped cardTable" id="title-dataTable" width="100%">
                     <thead>
                         <tr>
                             <th>Title</th>
@@ -36,7 +36,7 @@
                 <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createScoreSettingModal">
                     Create Score Setting
                 </button>
-                <table class="table table-hover table-striped" id="scoreDataTable" width="100%">
+                <table class="table table-hover table-striped cardTable" id="scoreDataTable" width="100%">
                     <thead>
                         <tr>
                             <th>Class</th>

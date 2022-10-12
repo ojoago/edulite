@@ -23,7 +23,7 @@
                         <div class="col-md-6">
                             <div class="card info-card sales-card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Sales <span>| Today</span></h5>
+                                    <h5 class="card-title">Click on the name to login </span></h5>
                                     <div class="d-flex align-items-center">
                                         <a href="{{route('login.school',[base64Encode($row->pid)])}}">{{$row->school_name}}</a></span>
                                     </div>
@@ -46,7 +46,7 @@
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Sales <span>| Today</span></h5>
+                                    <h5 class="card-title">Click on the nane to login</h5>
                                     <div class="d-flex align-items-center">
                                         <a href="{{route('login.school',[base64Encode($row->pid)])}}">{{$row->school_name}}</a></span>
                                     </div>
