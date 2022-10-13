@@ -114,41 +114,43 @@ class TimetableController extends Controller
             'date.*.required'=>'Choose this date or remove it',
             'time.*.required'=> 'Choose this time or remove it',
         ]);
-
-        if(!$validator->fails()){
-            $params = [
-                'term_pid'=>activeTerm(),
-                'school_pid'=>getSchoolPid(),
-                'session_pid'=>activeSession()
-            ];
-            $data = [
-                'arms'=>$request->arm_pid,
-                'subjects'=>$request->subject,
-                'dates'=>$request->date,
-                'times'=>$request->time,
-            ];
-            logError($params);
-            $timetable=['school_pid'=>getSchoolPid()];
-            $len = count($data['times']);
-            foreach($data['arms'] as $arm){
-                $params['arm_pid'] = $arm;
-                $pid = $this->createOrUpdateTimeTableParam($params);
-                for ($i=0; $i < $len; $i++) {
-                    $timetable['param_pid'] = $pid;
-                    $timetable['exam_date'] = $data['dates'][$i];
-                    $timetable['exam_time'] = $data['times'][$i];
-                    $timetable['subject_pid'] = $data['subjects'][$i];
-                    $result = $this->createOrUpdateTimeTable($timetable);
+        if(activeTerm() && activeSession()){
+            if (!$validator->fails()) {
+                $params = [
+                    'term_pid' => activeTerm(),
+                    'school_pid' => getSchoolPid(),
+                    'session_pid' => activeSession()
+                ];
+                $data = [
+                    'arms' => $request->arm_pid,
+                    'subjects' => $request->subject,
+                    'dates' => $request->date,
+                    'times' => $request->time,
+                ];
+                $timetable = ['school_pid' => getSchoolPid()];
+                $len = count($data['times']);
+                foreach ($data['arms'] as $arm) {
+                    $params['arm_pid'] = $arm;
+                    $pid = $this->createOrUpdateTimeTableParam($params);
+                    for ($i = 0; $i < $len; $i++) {
+                        $timetable['param_pid'] = $pid;
+                        $timetable['exam_date'] = $data['dates'][$i];
+                        $timetable['exam_time'] = $data['times'][$i];
+                        $timetable['subject_pid'] = $data['subjects'][$i];
+                        $result = $this->createOrUpdateTimeTable($timetable);
+                    }
                 }
-            }
-            if($result){
+                if ($result) {
 
-                return response()->json(['status'=>1,'message'=>'Timetable created for the selected arm(s) for '.activeTermName().' '.activeSessionName().' Exams']);
+                    return response()->json(['status' => 1, 'message' => 'Timetable created for the selected arm(s) for ' . activeTermName() . ' ' . activeSessionName() . ' Exams']);
+                }
+                return response()->json(['status' => 'error', 'message' => 'Something Went Wrong']);
             }
-            return response()->json(['status'=>'error','message'=>'Something Went Wrong']);
+
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         }
-
-        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+        return response()->json(['status' => 'error', 'message' => 'Please set Active Term & Session First']);
+        
     }
 
     private function createOrUpdateTimeTableParam(array $data){
