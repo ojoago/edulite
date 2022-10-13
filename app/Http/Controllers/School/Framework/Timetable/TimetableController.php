@@ -127,6 +127,7 @@ class TimetableController extends Controller
                 'dates'=>$request->date,
                 'times'=>$request->time,
             ];
+            logError($params);
             $timetable=['school_pid'=>getSchoolPid()];
             $len = count($data['times']);
             foreach($data['arms'] as $arm){
