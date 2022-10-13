@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('grade_keys', function (Blueprint $table) {
+        Schema::create('grade_key_bases', function (Blueprint $table) {
             $table->id();
             $table->string('school_pid');
+            // $table->string('grade_pid');
             $table->string('title');
             $table->string('grade');
             $table->float('grade_point')->nullable();
@@ -26,7 +27,6 @@ return new class extends Migration
             $table->string('pid')->unique();
             $table->string('class_pid')->nullable();
             $table->string('arm_pid')->nullable();
-            $table->string('class_param_pid')->nullable();
             $table->timestamps();
         });
     }
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('grade_keys');
+        Schema::dropIfExists('grade_key_bases');
     }
 };

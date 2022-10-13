@@ -15,16 +15,24 @@ class ParentController extends Controller
     }
 
     public function index(){
-        $data = DB::table('school_parents as p')
-                    ->join('user_details as d','p.user_pid','d.user_pid')
-                    ->join('users as u','u.pid','p.user_pid')
-                    ->leftJoin('students as s','s.parent_pid','p.pid')
-                    ->where('p.school_pid',getSchoolPid())
-                    ->select(DB::raw('COUNT(s.parent_pid) AS count,d.fullname,gsm,p.pid,email,d.address,username,p.created_at,p.status'))
-                    ->groupBy('p.pid')->get();
+        $data = SchoolParent::join('user_details', 'school_parents.user_pid', 'user_details.user_pid')
+                            ->join('users','users.pid', 'school_parents.user_pid')
+                            ->where('school_parents.school_pid', getSchoolPid())
+                            ->get(['fullname', 'gsm', 'email', 'address', 'username', 'school_parents.pid', 'school_parents.created_at', 'school_parents.status']);
+        // $data = DB::table('school_parents as p')
+        //             ->join('user_details as d','p.user_pid','d.user_pid')
+        //             ->join('users as u','u.pid','p.user_pid')
+        //             ->leftJoin('students as s','s.parent_pid','p.pid')
+        //             ->where('p.school_pid',getSchoolPid())
+        //             ->select(DB::raw('COUNT(s.parent_pid) AS count, d.fullname,gsm,p.pid,email,d.address,username,p.created_at,p.status'))
+        //             // ->groupBy('p.pid')
+        //             ->get();
                      return datatables($data)
                         ->editColumn('date',function($data){
                                 return date('d F Y',strtotime($data->created_at));
+                        })
+                        ->editColumn('count',function($data){
+                                return $data->wardCount();
                         })
                         // ->editColumn('status',function($data){
                         //         return $data->status==1 ? '<span class="text-success">Enabled</span>' : '<span class="text-success">Disabled</span>';
@@ -38,15 +46,23 @@ class ParentController extends Controller
 
   
     public static function parentProfile ($id){
-        $data = DB::table('school_parents as p')->join('users as u','u.pid','p.user_pid')
-                        ->join('user_details as d','d.user_pid','p.user_pid')
-                        ->leftJoin('students as s','s.parent_pid','p.pid')->where('p.pid',base64Decode($id))
-                        ->select(DB::raw('COUNT(s.parent_pid) AS count,d.fullname,d.address,d.dob,gsm,username,email,d.gender,d.religion,d.title,d.state,d.lga,p.passport,account_status as status,p.pid'))->groupBy('p.pid')->first();
+        $data = SchoolParent::join('user_details', 'school_parents.user_pid', 'user_details.user_pid')
+        ->join('users', 'users.pid', 'school_parents.user_pid')
+        ->where('school_parents.school_pid', getSchoolPid())
+            ->first(['fullname', 'gsm', 'email', 'address',
+                     'username', 'school_parents.pid', 'school_parents.created_at',
+                      'school_parents.status', 'gender', 'religion', 'title', 'state', 'lga',
+                       'passport', 'account_status as status', 'school_parents.pid']);
+        
+        // $data = DB::table('school_parents as p')->join('users as u','u.pid','p.user_pid')
+        //                 ->join('user_details as d','d.user_pid','p.user_pid')
+        //                 ->leftJoin('students as s','s.parent_pid','p.pid')->where('p.pid',base64Decode($id))
+        //                 ->select(DB::raw('COUNT(s.parent_pid) AS count,d.fullname,d.address,d.dob,gsm,username,email,d.gender,d.religion,d.title,d.state,d.lga,p.passport,account_status as status,p.pid'))->groupBy('p.pid')->first();
         return view('school.lists.parent.parent-profile', compact('data'));
     }
 
     public function myWards($id){
-        $data = DB::table("students as s")->join("class_arms as a",'a.pid', 's.current_class_pid')
+        $data = DB::table("students as s")->leftjoin("class_arms as a",'a.pid', 's.current_class_pid')
                 ->join('sessions as e','e.pid', 's.current_session_pid')
                 ->join('users as u','u.pid','s.user_pid')
                 ->join('user_details as d','d.user_pid','s.user_pid')

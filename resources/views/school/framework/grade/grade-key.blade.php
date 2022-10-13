@@ -102,15 +102,15 @@
                     <select type="text" name="category_pid" id="gradeCategorySelect2" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger category_pid_error"></p>
-                    <select type="text" name="session_pid" id="gradeSessionSelect2" class="form-control form-control-sm" placeholder="" required style="width: 100%;">
+                    <!-- <select type="text" name="session_pid" id="gradeSessionSelect2" class="form-control form-control-sm" placeholder="" required style="width: 100%;">
                     </select>
-                    <p class="text-danger session_pid_error"></p>
+                    <p class="text-danger session_pid_error"></p> -->
                     <select type="text" name="class_pid" id="gradeClassSelect2" class="form-control form-control-sm" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger class_pid_error"></p>
-                    <select type="text" name="term_pid" id="gradeTermSelect2" class="form-control form-control-sm" placeholder="" required style="width: 100%;">
+                    <!-- <select type="text" name="term_pid" id="gradeTermSelect2" class="form-control form-control-sm" placeholder="" required style="width: 100%;">
                     </select>
-                    <p class="text-danger term_pid_error"></p>
+                    <p class="text-danger term_pid_error"></p> -->
 
                 </form>
             </div>

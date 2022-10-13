@@ -14,8 +14,10 @@
         <div id="wrapper-inner">
             <table class="outer-table">
                 <tr>
-                    <td class="header">
-                        <p><a href="#">Education is light, hence {{env('APP_NAME',APP_NAME)}}</a></p>
+                    <td class="header" style=" background-color: #00AFF0;border-bottom: 3px solid #FCBA03;">
+                        <p style="text-align: center;padding: 1%;font-weight: 500;font-size: 11px;text-transform: uppercase;">
+                            <a href="#">Education is light, hence {{env('APP_NAME',APP_NAME)}}</a>
+                        </p>
                     </td>
                 </tr>
                 <table class="main-table-first">
@@ -67,7 +69,7 @@
             <tr>
                 <td class="top-banner">
                     <h1>
-                        <span >Learning Today</span>,
+                        <span>Learning Today</span>,
                         <span>Leading Tomorrow</span>
                     </h1>
                     <p>
