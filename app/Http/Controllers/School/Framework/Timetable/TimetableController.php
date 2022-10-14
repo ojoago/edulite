@@ -149,7 +149,7 @@ class TimetableController extends Controller
 
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         }
-        return response()->json(['status' => 'error', 'message' => 'Please set Active Term & Session First']);
+        return response()->json(['status' => 'error', 'message' => 'Please, set Active Term & Session First']);
         
     }
 

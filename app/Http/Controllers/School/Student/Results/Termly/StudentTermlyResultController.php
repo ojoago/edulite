@@ -10,8 +10,6 @@ use App\Http\Controllers\School\Framework\ClassController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Models\School\Framework\Psychomotor\PsychomotorBase;
 use App\Models\School\School;
-use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
-use App\Models\School\Student\Assessment\Psychomotor\PsychomotorRecord;
 use App\Models\School\Student\Result\StudentClassScoreParam;
 
 class StudentTermlyResultController extends Controller
@@ -211,7 +209,7 @@ class StudentTermlyResultController extends Controller
                                             ->get(['psychomotor', 'pid']);
             $school = School::where('pid',getSchoolPid())
                     ->first(['school_email', 'school_website', 'school_logo', 'school_moto', 'school_address', 'school_contact']);
-           $grades = DB::table('grade_keys AS g')->join('student_class_score_params as p', 'p.term_pid', 'g.term_pid')->where('p.pid',$param)->get(['grade','title','min_score','max_score']);
+           $grades = DB::table('grade_keys AS g')->where('class_param_pid',$param)->get(['grade','title','min_score','max_score']);
         }
         return view('school.student.result.termly-result.student-report-card', compact('subResult', 'std', 'scoreSettings','param','psycho','results','grades','school'));
 

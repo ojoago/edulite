@@ -10,10 +10,10 @@
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab" aria-controls="home" aria-selected="true">Grade Key</button>
             </li>
-            <!-- <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab" aria-controls="profile" aria-selected="false">Cho</button>
-            </li>
             <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100" id="class-grade-tab" data-bs-toggle="tab" data-bs-target="#class-grade" type="button" role="tab">Classes Grade</button>
+            </li>
+            <!-- <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-justified" type="button" role="tab" aria-controls="contact" aria-selected="false">Ef</button>
             </li> -->
         </ul>
@@ -28,10 +28,10 @@
                         <tr>
                             <th>Grade</th>
                             <th>Title</th>
-                            <th>Grade Point</th>
-                            <th>Remark</th>
                             <th>Min Score</th>
                             <th>Max Score</th>
+                            <th>Grade Point</th>
+                            <th>Remark</th>
                             <th>Date</th>
                             <!-- <th>Action</th> -->
                         </tr>
@@ -40,8 +40,23 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
-                Nesciunt totam et. Consequuntur magnam aliquid eos nulla dolor iure eos quia. Accusantium distinctio omnis et atque fugiat. Itaque doloremque aliquid sint quasi quia distinctio similique. Voluptate nihil recusandae mollitia dolores. Ut laboriosam voluptatum dicta.
+            <div class="tab-pane fade" id="class-grade" role="tabpanel">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="classGradeKeyTable">
+                    <thead>
+                        <tr>
+                            <th>Grade</th>
+                            <th>Title</th>
+                            <th>Min Score</th>
+                            <th>Max Score</th>
+                            <th>Grade Point</th>
+                            <th>Remark</th>
+                            <th>Date</th>
+                            <!-- <th>Action</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
             <div class="tab-pane fade" id="contact-justified" role="tabpanel" aria-labelledby="contact-tab">
                 Saepe animi et soluta ad odit soluta sunt. Nihil quos omnis animi debitis cumque. Accusantium quibusdam perspiciatis qui qui omnis magnam. Officiis accusamus impedit molestias nostrum veniam. Qui amet ipsum iure. Dignissimos fuga tempore dolor.
@@ -53,7 +68,7 @@
 
 <!-- create school term modal  -->
 <div class="modal fade" id="createGradeKeyModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create School Grade </h5>
@@ -62,42 +77,6 @@
             <div class="modal-body">
                 <form action="" method="post" class="" id="createGradeKeyForm">
                     @csrf
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for=""><small>Grade</small></label>
-                            <input type="text" name="grade" placeholder="grade e.g AB" maxlength="3" id="grade" class="form-control form-control-sm" required>
-                            <p class="text-danger grade_error"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <label for=""><small>Grade Title</small></label>
-                            <input type="text" name="title" id="title" maxlength="15" placeholder="Grade Title e.g V.Good" class="form-control form-control-sm" required>
-                            <p class="text-danger title_error"></p>
-                        </div>
-
-                        <div class="col-md-6">
-                            <input type="text" name="min_score" id="min_score" min="0" maxlength="4" placeholder="min" class="form-control form-control-sm" required>
-                            <p class="text-danger min_score_error"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <input type="text" name="max_score" id="max_score" maxlength="4" max="100" placeholder="max" class="form-control form-control-sm" required>
-                            <p class="text-danger max_score_error"></p>
-                        </div>
-
-                        <div class="toggle-v" style="display: none;">
-                            <div class="col-md-6">
-                                <input type="number" minimum="1" name="grade_point" maxlength="2" id="grade_point" class="form-control form-control-sm" placeholder="point" required>
-                                <p class="text-danger grade_point_error"></p>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" name="color" id="color" placeholder="color" class="form-control form-control-sm" required>
-                                <p class="text-danger color_error"></p>
-                            </div>
-                            <div class="col-md-12">
-                                <textarea type="text" name="remark" id="remark" placeholder="remark" maxlength="30" class="form-control form-control-sm" required></textarea>
-                                <p class="text-danger remark_error"></p>
-                            </div>
-                        </div>
-                    </div>
 
                     <select type="text" name="category_pid" id="gradeCategorySelect2" placeholder="" required style="width: 100%;">
                     </select>
@@ -112,6 +91,48 @@
                     </select>
                     <p class="text-danger term_pid_error"></p> -->
 
+                    <div class="text-center">
+                        <button type="button" class="btn btn-danger btn-sm" id="addMore" title="Add More" data-bs-toggle="tooltip"><i class="bi bi-plus-circle"></i> </button>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for=""><small>Grade</small></label>
+                            <input type="text" name="grade[]" placeholder="grade e.g AB" maxlength="3" id="grade" class="form-control form-control-sm" required>
+                            <p class="text-danger grade0_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for=""><small>Grade Title</small></label>
+                            <input type="text" name="title[]" id="title" maxlength="15" placeholder="Grade Title e.g V.Good" class="form-control form-control-sm" required>
+                            <p class="text-danger titleo_error"></p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <input type="text" name="min_score[]" id="min_score" min="0" maxlength="4" placeholder="min" class="form-control form-control-sm" required>
+                            <p class="text-danger min_score0_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" name="max_score[]" id="max_score" maxlength="4" max="100" placeholder="max" class="form-control form-control-sm" required>
+                            <p class="text-danger max_score0_error"></p>
+                        </div>
+
+                        <div class="toggle-v" style="display: none;">
+                            <div class="col-md-6">
+                                <input type="number" minimum="1" name="grade_point" maxlength="2" id="grade_point" class="form-control form-control-sm" placeholder="point" required>
+                                <p class="text-danger grade_point0_error"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" name="color" id="color" placeholder="color" class="form-control form-control-sm" required>
+                                <p class="text-danger color0_error"></p>
+                            </div>
+                            <div class="col-md-12">
+                                <textarea type="text" name="remark" id="remark" placeholder="remark" maxlength="30" class="form-control form-control-sm" required></textarea>
+                                <p class="text-danger remark0_error"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="moreRows"></div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -125,8 +146,57 @@
 
 <script>
     $(document).ready(function() {
+        let i = 0;
+        $('#addMore').click(function() {
+            i++;
+            $('#moreRows').append(
+                `
+                <div class="row">
+                     <div class="text-center">
+                        <button type="button" class="btn btn-danger btn-sm removeRow"><i class="bi bi-x-circle-fill text-white"></i> </button>
+                    </div>
+                        <div class="col-md-6">
+                            <label for=""><small>Grade</small></label>
+                            <input type="text" name="grade[]" placeholder="grade e.g AB" maxlength="3" id="grade" class="form-control form-control-sm" required>
+                            <p class="text-danger grade${i}_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for=""><small>Grade Title</small></label>
+                            <input type="text" name="title[]" id="title" maxlength="15" placeholder="Grade Title e.g V.Good" class="form-control form-control-sm" required>
+                            <p class="text-danger title${i}_error"></p>
+                        </div>
 
-        // load school session
+                        <div class="col-md-6">
+                            <input type="text" name="min_score[]" id="min_score" min="0" maxlength="4" placeholder="min" class="form-control form-control-sm" required>
+                            <p class="text-danger min_score${i}_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" name="max_score[]" id="max_score" maxlength="4" max="100" placeholder="max" class="form-control form-control-sm" required>
+                            <p class="text-danger max_score${i}_error"></p>
+                        </div>
+
+                        <div class="toggle-v" style="display: none;">
+                            <div class="col-md-6">
+                                <input type="number" minimum="1" name="grade_point" maxlength="2" id="grade_point" class="form-control form-control-sm" placeholder="point" required>
+                                <p class="text-danger grade_point${i}_error"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" name="color" id="color" placeholder="color" class="form-control form-control-sm" required>
+                                <p class="text-danger color${i}_error"></p>
+                            </div>
+                            <div class="col-md-12">
+                                <textarea type="text" name="remark" id="remark" placeholder="remark" maxlength="30" class="form-control form-control-sm" required></textarea>
+                                <p class="text-danger remark${i}_error"></p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            );
+        })
+        $(document).on('click', '.row .removeRow', function() {
+            $(this).parent().parent().remove()
+        });
+        // load school grade
         $('#GradeKeyTable').DataTable({
             "processing": true,
             "serverSide": true,
@@ -144,17 +214,18 @@
                 {
                     "data": "title"
                 },
-                {
-                    "data": "grade_point"
-                },
-                {
-                    "data": "remark"
-                },
+
                 {
                     "data": "min_score"
                 },
                 {
                     "data": "max_score"
+                },
+                {
+                    "data": "grade_point"
+                },
+                {
+                    "data": "remark"
                 },
                 {
                     "data": "created_at"
