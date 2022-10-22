@@ -498,3 +498,74 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="updateAccountModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-uppercase text-info">Update Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" id="updateAccountForm">
+                    @csrf
+                    <div class="col-md-6">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control form-control-sm" name="firstname" id="updateAccountFirstname" placeholder="Enter your first name">
+                        <p class="text-danger firstname_error"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control form-control-sm" name="lastname" id="updateAccountLastname" placeholder="Enter your last name">
+                        <p class="text-danger lastname_error"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Othername</label>
+                        <input type="text" class="form-control form-control-sm" name="othername" id="updateAccountOthername" placeholder="Other name">
+                        <p class="text-danger othername_error"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Date of birth</label>
+                        <input type="date" class="form-control form-control-sm" name="dob" id="updateAccountDOB" placeholder="date od birth">
+                        <p class="text-danger dob_error"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Gender</label>
+                        <select id="gender" name="gender" class="form-select form-select-sm" id="updateAccountGender">
+                            <option disabled selected>Select Gender</option>
+                            <option value="2">Female</option>
+                            <option value="1">Male</option>
+                        </select>
+                        <p class="text-danger gender_error"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Religion</label>
+                        <select id="religion" name="religion" class="form-select form-select-sm" id="updateAccountReligion">
+                            <option disabled selected>Select Religion</option>
+                            <option value="2">Christian</option>
+                            <option value="1">Muslim</option>
+                            <option value="3">Other</option>
+                        </select>
+                        <p class="text-danger religion_error"></p>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Address</label>
+                        <textarea type="text" class="form-control form-control-sm" name="address" id="updateAccountAddress" placeholder="Enter Address"></textarea>
+                        <p class="text-danger address_error"></p>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">About</label>
+                        <textarea type="text" class="form-control form-control-sm" name="about" id="updateAccountAbout" placeholder="say something good about yourself"></textarea>
+                        <p class="text-danger about_error"></p>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button class="btn btn-primary" type="button" id="updateAccountBtn">Update</button>
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

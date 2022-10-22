@@ -513,6 +513,38 @@
         });
 
 
+        // load user account details  
+        $('#updateAccount').click(function() {
+            $.ajax({
+                url: "{{route('load.user.detail')}}",
+                dataType: "json",
+                beforeSend: function() {
+                    $('.overlay').show();
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('.overlay').hide();
+                    if (data) {
+                        $('#updateAccountFirstname').val(data.firstname);
+                        $('#updateAccountLastname').val(data.lastname);
+                        $('#updateAccountOthername').val(data.othername);
+                        $('#updateAccountDOB').val(data.dob);
+                        $('#updateAccountGender').val(data.gender).trigger('change');
+                        $('#updateAccountReligion').val(data.religion).trigger('change');
+                        $('#updateAccountAddress').val(data.address);
+                        $('#updateAccountAbout').val(data.about);
+                    }
+                },
+                error: function() {
+                    $('.overlay').hide();
+                }
+            });
+            $('#updateAccountModal').modal('show');
+        })
+        $('#updateAccountBtn').click(function() {
+            var route = "{{route('update.user.detail')}}";
+            submitFormAjax('updateAccountForm', 'updateAccountBtn', route);
+        });
     })
 
     function FormMultiSelect2(idOrClass, route, plh, pre = null) {
@@ -712,9 +744,9 @@
                         successClearForm(formId, data.message)
                         alert_toast(data.message, 'success');
                         $('#' + formId)[0].reset();
-                        if(data.code){
+                        if (data.code) {
                             resolve(data.code)
-                        }else{
+                        } else {
                             resolve(data.message)
                         }
                     } else {

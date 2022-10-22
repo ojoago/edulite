@@ -10,7 +10,7 @@ class School extends Model
     use HasFactory;
     protected $fillable = [
         'state','lga','school_name','school_contact','school_address', 'school_logo',
-        'school_moto','school_handle','pid','user_pid', 'school_email','type', 'school_code'
+        'school_moto','school_handle','pid','user_pid', 'school_email','type', 'school_code', 'referrer_code'
     ];
     
     public function setSchoolNameAttribute($vaule){

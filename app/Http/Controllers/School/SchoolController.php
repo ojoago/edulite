@@ -65,31 +65,49 @@ class SchoolController extends Controller
         // here show dashboard and load params based on role
         switch (getUserActiveRole()) {
             case schoolTeacher():
-                $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
-                $students = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
-                $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
-                $parents = DB::table('school_parents as p')
-                    ->join('students as s', 's.parent_pid', 'p.pid')
-                    ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->count('p.id');
-                $data = ['staff' => $staff, 'students' => $students, 'riders' => $riders, 'parents' => $parents];
-                return view('school.dashboard.admin-dashboard', compact('data'));
-                break;
+               return $this->staffLogin();
             case parentRole():
-                # code...
-                break;
+               return $this->parentLogin();
             case studentRole():
-                # code...
-                break;
-            
-            case parentRider():
-                # code...
-                break;
-            
+                return $this->studentLogin();
+            case riderRole():
+                return $this->riderLogin();
             default:
-                return redirect()->route('login.school', [base64Encode(getSchoolPid())])->with('waring','who are you!!!');
-                break;
+                return redirect()->route('login.school', [base64Encode(getSchoolPid())])->with('warning','who are you!!!');
+            break;
         } 
         
+    }
+
+    private function staffLogin(){
+        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $students = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $parents = DB::table('school_parents as p')
+        ->join('students as s', 's.parent_pid', 'p.pid')
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->count('p.id');
+        $data = ['staff' => $staff, 'students' => $students, 'riders' => $riders, 'parents' => $parents];
+        return view('school.dashboard.admin-dashboard', compact('data'));
+    }
+    private function parentLogin(){
+        $data = DB::table('students as s')->join('class_arms as a','a.pid','s.current_class_pid')
+                                        ->join('sessions as i','i.pid','current_session_pid')
+                                        ->where(['s.school_pid' => getSchoolPid(), 's.parent_pid' => getSchoolUserPid()])
+                                        ->orderByDesc('s.id')
+                                        ->get(['reg_number','fullname','s.status','passport','session','arm','s.pid']);
+        if(count($data)==1){
+            return redirect()->route('student.profile', ['id' => base64Encode($data[0]->pid)]);
+        }
+        return view('school.dashboard.parent-dashboard', compact('data'));
+    }
+    private function studentLogin(){
+        $data = Student::where(['school_pid' => getSchoolPid(), 'pid' => getSchoolUserPid()])->first(['pid','status']);
+        return redirect()->route('student.profile',['id'=>base64Encode($data->pid)]);
+        return view('school.dashboard.student-dashboard', compact('data'));
+    }
+    private function riderLogin(){
+        $data = Student::where(['school_pid' => getSchoolPid(), 'parent_pid' => getSchoolUserPid()])->get();
+        return view('school.dashboard.parent-dashboard', compact('data'));
     }
     public function createSchool(Request $request){
         $validator = Validator::make($request->all(),[
@@ -155,7 +173,7 @@ class SchoolController extends Controller
        
     }
 
-    public static function createSchoolUser(string $userId, string $pid, string $role){
+    public static function createSchoolUser(string $userId, string $pid, string $role){//school user pid is the same as either staff pid, parent pid, student pid or rider pid
         $data = $dupParam = ['user_pid'=>$userId,'pid'=>$pid,'school_pid'=>getSchoolPid()];
         $data['role']= $role;
        return SchoolUser::updateOrCreate($dupParam,$data);

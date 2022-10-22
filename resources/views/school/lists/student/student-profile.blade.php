@@ -53,6 +53,16 @@
                         </table>
                     </div>
                     <div class="tab-pane fade" id="results" role="tabpanel">
+                        <div class="row m-2">
+                            <div class="col-md-6">
+                                <select name="session_pid" id="resultSessionSelect2" class="form-control form-control-sm">
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select name="term_pid" id="resultTermSelect2" class="form-control form-control-sm">
+                                </select>
+                            </div>
+                        </div>
                         <table class="table table-hover table-striped table-bordered cardTable" id="resultDataTable">
                             <thead>
                                 <tr>
@@ -105,6 +115,8 @@
         let session = "{{activeSession()}}"
         FormMultiSelect2('#formTermSelect2', 'term', 'Select Term', term)
         FormMultiSelect2('#formSessionSelect2', 'session', 'Select Session', session)
+        FormMultiSelect2('#resultTermSelect2', 'term', 'Select Term');
+        FormMultiSelect2('#resultSessionSelect2', 'session', 'Select Session');
         loadProfile()
 
         function loadProfile() {

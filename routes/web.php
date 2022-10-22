@@ -100,7 +100,12 @@ Route::get('school-sign-in/{id}', [SchoolController::class, 'schoolLogin'])->nam
 Route::post('load-available-state', [Select2Controller::class, 'loadStates'])->name('load.available.state');
 //load school states
 Route::post('load-available-state-lga', [Select2Controller::class, 'loadStatesLga'])->name('load.available.state.lga');
+
+
+Route::get('load-user-detail', [UserController::class, 'loadUserDetail'])->name('load.user.detail');
+Route::post('update-user-detail', [UserController::class, 'updateUserDetail'])->name('update.user.detail');
     
+
 Route::middleware('schoolAuth')->group(function(){
     // user create school 
     Route::get('school-dashboard', [SchoolController::class, 'mySchoolDashboard'])->name('my.school.dashboard');

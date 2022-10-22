@@ -209,6 +209,12 @@
                              </a>
                          </li>
                          <li>
+                             <a class="dropdown-item d-flex align-items-center pointer" id="updateAccount">
+                                 <i class="bi bi-file-earmark-person-fill"></i>
+                                 <span>Update Account</span>
+                             </a>
+                         </li>
+                         <li>
                              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
                                  <i class="bi bi-gear"></i>
                                  <span>Account Settings</span>

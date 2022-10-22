@@ -98,7 +98,7 @@ use App\Http\Controllers\Auths\AuthController;
     function parentRole(){
         return (getUserActiveRole() == 605 || hasRole());
     }
-    function parentRider(){
+    function riderRole(){
         return (getUserActiveRole() == 610 || hasRole());
     }
     function canComment(){
@@ -166,6 +166,7 @@ use App\Http\Controllers\Auths\AuthController;
                 '610'=> 'Rider',
                 '700'=> 'Agent/Referer',
                 '710'=> 'Partners',
+                '10'=> 'App Admin',
                 default=>''
                 };
        return $role; 

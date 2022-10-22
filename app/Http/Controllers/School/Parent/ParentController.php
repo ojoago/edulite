@@ -68,7 +68,7 @@ class ParentController extends Controller
                 ->join('user_details as d','d.user_pid','s.user_pid')
                 ->where(['s.school_pid'=>getSchoolPid(),'parent_pid'=>base64Decode($id)])->orderByDesc('s.id')
                 ->get(['reg_number', 's.fullname', 'type', 's.status','passport', 's.religion','session','arm','username','gsm','gender','dob', 'parent_pid']);
-        return view('school.lists.parent.wards.wards',compact('data'));
+        return view('school.lists.parent.wards.parent-wards',compact('data'));
     }
 
     public static function getParentFullname($pid){

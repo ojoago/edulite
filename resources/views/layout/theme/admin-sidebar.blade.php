@@ -254,7 +254,7 @@
 
 @endif
 
-@if(classTeacher() || 1==1)
+@if(classTeacher())
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#attendance-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>My Student</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -333,7 +333,7 @@
 @endif
 
 
-@if(getUserActiveRole() =="301" || hasRole() || 1==1)
+@if(getUserActiveRole() =="301" || hasRole())
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#psychomotor-nav" data-bs-toggle="collapse" href="#">
@@ -345,13 +345,13 @@
                 <i class="bi bi-circle"></i><span>Psychomotor Assessment</span>
             </a>
         </li>
-        
+
         <li>
             <a href="{{route('view.psychomotor.form')}}">
                 <i class="bi bi-circle"></i><span> View Psychomotor Score</span>
             </a>
         </li>
-       
+
     </ul>
 </li><!-- End Tables Nav -->
 @endif
@@ -498,17 +498,17 @@
 </li><!-- End Charts Nav -->
 @endif
 <!-- parent  -->
-@if(getUserActiveRole() == "605" || hasRole())
+@if(parentRole() || hasRole())
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#guardian-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="guardian-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li>
+        <!-- <li>
             <a href="#">
                 <i class="bi bi-circle"></i><span>Dashboard </span>
             </a>
-        </li>
+        </li> -->
         <li>
             <a href="#">
                 <i class="bi bi-circle"></i><span>My Wards</span>
@@ -518,17 +518,17 @@
 </li>
 @endif
 <!-- rider  -->
-@if(getUserActiveRole() == "610" || hasRole())
+@if(riderRole() || hasRole())
 <li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#guardian-nav" data-bs-toggle="collapse" href="#">
+    <a class="nav-link collapsed" data-bs-target="#rider-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
-    <ul id="guardian-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li>
+    <ul id="rider-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <!-- <li>
             <a href="#">
                 <i class="bi bi-circle"></i><span>Dashboard </span>
             </a>
-        </li>
+        </li> -->
         <li>
             <a href="#">
                 <i class="bi bi-circle"></i><span>My Wards</span>
@@ -537,20 +537,30 @@
     </ul>
 </li>
 @endif
-@if(getUserActiveRole() == "600" || hasRole())
+@if(studentRole() || hasRole())
 <li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#guardian-nav" data-bs-toggle="collapse" href="#">
+    <a class="nav-link collapsed" data-bs-target="#student-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
-    <ul id="guardian-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+    <ul id="student-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
             <a href="#">
-                <i class="bi bi-circle"></i><span>Dashboard </span>
+                <i class="bi bi-circle"></i><span>My Activities</span>
             </a>
         </li>
         <li>
             <a href="#">
-                <i class="bi bi-circle"></i><span>My Wards</span>
+                <i class="bi bi-circle"></i><span>Attendance</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="bi bi-circle"></i><span>Result</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="bi bi-circle"></i><span>Timetable</span>
             </a>
         </li>
     </ul>

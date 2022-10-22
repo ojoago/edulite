@@ -53,7 +53,13 @@ class AuthController extends Controller
             logError($error);
         }
     }
-   
+    public static function referrerCode()
+    {
+        $count = User::where(['school_pid' => getSchoolPid()])->where('code', 'like', '%' . date('yMd') . '%')->count('id');
+        $id = $count + 1;
+        $id = strlen($id) == 1 ? '0' . $id : $id;
+        return date('yMd').$id;
+    }
     public static function uniqueUsername(string $firstname)
     {
         if(empty($firstname)){

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Http\Controllers\Auths\AuthController;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
@@ -25,13 +27,17 @@ class User extends Authenticatable
         'password',
         'gsm',
         'account_status',
-        'reset_token'
+        'reset_token',
+        'code'
     ];
     public function setPasswordAttribute($value){
         $this->attributes['password'] = Hash::make($value);
     }
     public function setUsernameAttribute($value){
         $this->attributes['username'] = strtolower(str_replace(' ','',trim($value)));
+    }
+    public function setCodeAttribute(){
+        $this->attributes['code'] = AuthController::referrerCode();
     }
 
     
