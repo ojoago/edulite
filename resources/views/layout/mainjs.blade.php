@@ -3,15 +3,15 @@
 
         // switch from table to card 
         if ($(window).width() < 760) {
-            let tableId = $('.table').attr('id');
-            if ($(".table").hasClass("card-able")) {
+            let tableId = $('.cardTable').attr('id');
+            if ($(".cardTable").hasClass("card-able")) {
                 $(".colHeader").remove();
             } else {
                 var labels = [];
-                $(".table thead th").each(function() {
+                $(".cardTable thead th").each(function() {
                     labels.push($(this).text());
                 });
-                $(".table tbody tr").each(function() {
+                $(".cardTable tbody tr").each(function() {
                     $(this)
                         .find("td")
                         .each(function(column) {
@@ -21,7 +21,7 @@
                         });
                 });
             }
-            $(".table").toggleClass("card-able");
+            $(".cardTable").toggleClass("card-able");
             $('tfoot').hide();
         }
         // assign class to staff 

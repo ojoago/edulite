@@ -10,6 +10,7 @@ use App\Models\School\Student\Student;
 use App\Http\Controllers\School\Staff\StaffController;
 use App\Models\School\Student\Result\StudentClassResult;
 use App\Http\Controllers\School\Framework\ClassController;
+use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
 use App\Models\School\Student\Result\StudentSubjectResult;
 use App\Models\School\Student\Assessment\StudentScoreParam;
 use App\Models\School\Student\Assessment\StudentScoreSheet;
@@ -78,7 +79,10 @@ class StudentScoreController extends Controller
         $data = $params['data']; //list of student in selected class
         $scoreParams = $params['scoreParams']; //score header
         $class = $params['class'];//selected class and subject
-        if(!$this->createScoreSheetParams()){
+        if(!$this->createScoreSheetParams() || $this->createScoreSheetParams() === 'no class'){
+            if($this->createScoreSheetParams()==='no class'){
+                return redirect()->route('student.assessment.form')->with('error', ClassController::getClassArmNameByPid(session('arm')). '  not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')));
+            }
             return redirect()->route('student.assessment.form')->with('error', 'Subject not Assigned to any teacher ' . termName(session('term')) . ' ' . sessionName(session('session')));
         }
        
@@ -101,6 +105,8 @@ class StudentScoreController extends Controller
         $class_param_pid = ClassController::createClassParam($data);
 
         ScoreSettingsController::createClassSoreSetting(param_pid: $class_param_pid,class_pid:$class); //copy score setting from base score setting
+       
+        GradeKeyController::createClassGradeKey(param_pid: $class_param_pid,class_pid:$class); //copy score setting from base score setting
 
         $scoreParams = ScoreSettingsController::loadClassScoreSettings($class_param_pid);// load class score seetting 
         
@@ -229,9 +235,11 @@ class StudentScoreController extends Controller
         $subject =  session('subject');
        
         $teacher = StaffController::getSubjectTeacherPid(session:  $session,term: $term,subject: $subject);
+       
         if(!$teacher){
             return false;
         }
+        
         $data = [
             'school_pid' => getSchoolPid(),
             'session_pid' => $session,
@@ -239,6 +247,9 @@ class StudentScoreController extends Controller
             'arm_pid' => $arm,
         ];
         $class_pid = ClassController::createClassParam($data);
+        if(!$class_pid){
+            return 'no class';
+        }
         $subject_type = ClassController::GetClassArmSubjectType($subject);
         $pid = StudentScoreParam::where([
                                     'subject_pid'=>$subject,

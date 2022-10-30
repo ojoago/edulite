@@ -19,6 +19,7 @@ use App\Http\Controllers\School\Student\StudentClassController;
 use App\Http\Controllers\School\Student\StudentScoreController;
 use App\Http\Controllers\School\Upload\UploadStudentController;
 use App\Http\Controllers\Organisation\OrganisationUserController;
+use App\Http\Controllers\School\Admission\AdmissionController;
 use App\Http\Controllers\School\Framework\Hostel\HostelController;
 use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
 use App\Http\Controllers\School\Framework\Subject\SubjectController;
@@ -250,6 +251,22 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('school-confrence', 'school.framework.psychomotor.psychomotor-config')->name('school.psychomotor.config');
 
     Route::view('timetable-config', 'school.framework.timetable.timetable-config')->name('timetable.config');
+
+    Route::view('event-config', 'school.framework.event.event-config')->name('event.config');
+
+
+    Route::view('fees-config', 'school.framework.fees.fees-config')->name('fee.config');
+    
+    
+    // adminssion 
+    Route::view('school-admission', 'school.admission.admission-form')->name('school.admission');
+    Route::post('school-admission', [AdmissionController::class, 'submitAdminssion']);
+    // admission list 
+    Route::view('admission-list', 'school.admission.admission-list')->name('admission.list');
+    Route::get('load-admission', [AdmissionController::class, 'loadAdmission'])->name('load.admission');
+    Route::post('grant-admission', [AdmissionController::class, 'grantAdmission'])->name('grant.admission');
+    Route::post('deny-admission', [AdmissionController::class, 'denyAdmission'])->name('deny.admission');
+    
     // Psychomotor, effective domain and grade key 
     // hostels  
     //   

@@ -162,6 +162,7 @@ use App\Http\Controllers\Auths\AuthController;
                 '500'=> 'Principal/Head Teacher',
                 // '505'=> 'Head Teacher',
                 '600'=> 'Student',
+                '601'=> 'Applicant',
                 '605'=> 'Parent/Guardian',
                 '610'=> 'Rider',
                 '700'=> 'Agent/Referer',
@@ -208,7 +209,14 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $role; 
     }
-
+function getInitials($string = null)
+{
+    $string = preg_split("/[\s,_-]+/",$string);
+        $ret = '';
+        foreach ($string as $word)
+            $ret .= strtoupper($word[0]);
+        return $ret;
+}
     function dateToAge($date){
         return Carbon::parse($date)->age;
     // $date = new DateTime($date);

@@ -8,7 +8,7 @@
         <!-- Default Tabs -->
         <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100 active" id=active-staff-tab" data-bs-toggle="tab" data-bs-target="#active-staff" type="button" role="tab" aria-controls="active" aria-selected="true">Active Staff</button>
+                <button class="nav-link w-100 active" id="active-staff-tab" data-bs-toggle="tab" data-bs-target="#active-staff" type="button" role="tab" aria-controls="active" aria-selected="true">Active Staff</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="in-active-staff-tab" data-bs-toggle="tab" data-bs-target="#in-active-staff" type="button" role="tab" aria-controls="in-active" aria-selected="false">In-Active Staff</button>

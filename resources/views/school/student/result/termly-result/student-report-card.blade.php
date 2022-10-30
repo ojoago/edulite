@@ -99,17 +99,23 @@
         /* box-sizing: border-box; */
     }
 
+    @media screen and (max-width:560px) {
+        .student-img {
+            border: none;
+        }
+    }
+
     @media print {
 
         .header,
         #header,
         button {
-            display: none;
+            display: none !important;
         }
 
         .rotate-up {
             vertical-align: bottom !important;
-            text-align: center;
+            text-align: center !important;
         }
 
         .rotate-up {
@@ -118,10 +124,10 @@
             writing-mode: vertical-rl !important;
             white-space: nowrap !important;
             transform: rotate(180deg) !important;
-            width: 30px;
+            width: 30px !important;
         }
 
-        .student-img{
+        .student-img {
             border: none;
         }
     }
@@ -217,20 +223,26 @@
                 </tr>
                 <tr>
                     <td align="center">
-                        Number of times open
+                        Number of Times Open
                     </td>
                     <td>
                         {{date_diff_weekdays($results->begin,$results->end)}}
                     </td>
                 </tr>
                 <tr>
+                    @if($results->present>0 || $results->absent>0)
                     <td>
                         Present: {{$results->present}}
                     </td>
                     <td>
                         Absent: {{$results->absent}}
                     </td>
+                    @else
+                    <td colspan="2" align="center">
+                        No Attendance Record
+                    </td>
 
+                    @endif
                 </tr>
 
             </table>
@@ -346,36 +358,37 @@
             </div>
         </div>
 
-        <div class="flex-row">
-            <div class="section">
-                <div class="card-header">Principal/Head Teacher</div>
-                Name: {{$results->teacher}}<br>
-                Comment: {{$results->principal_comment}}<br>
-                @php $imgUrl = $std->passport ? asset("/files/images/".$results->signature) :'' @endphp
-                <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
-            </div>
-            <div class="section">
-                <div class="card-header">Class/Form Teacher</div>
-                Name: {{$results->teacher}}<br>
-                Comment: {{$results->class_teacher_comment}}<br>
-                @php $imgUrl = $std->passport ? asset("/files/images/".$results->signature) :'' @endphp
-                <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
-            </div>
-            @if($results->type==2)
-            <div class="section">
-                <div class="card-header">Class/Form Teacher</div>
-                Name: {{$results->teacher}}<br>
-                Comment: {{$results->portal_comment}}<br>
-                @php $imgUrl = $std->passport ? asset("/files/images/".$results->signature) :'' @endphp
-                <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
-            </div>
-            @endif
-        </div>
-        <div class="col-md-12">
-            <div id="column_Chart" class="chartZoomable" style="width:90%;height:auto;"></div>
-        </div>
-        <button class="btn btn-success btn-sm"> <i class="bi bi-printer"></i> </button>
     </div>
+    <div class="flex-row">
+        <div class="section">
+            <div class="card-header">Principal/Head Teacher</div>
+            Name: {{$results->teacher}}<br>
+            Comment: {{$results->principal_comment}}<br>
+            @php $imgUrl = $std->passport ? asset("/files/images/".$results->signature) :'' @endphp
+            <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+        </div>
+        <div class="section">
+            <div class="card-header">Class/Form Teacher</div>
+            Name: {{$results->teacher}}<br>
+            Comment: {{$results->class_teacher_comment}}<br>
+            @php $imgUrl = $std->passport ? asset("/files/images/".$results->signature) :'' @endphp
+            <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+        </div>
+        @if($results->type==2)
+        <div class="section">
+            <div class="card-header">Class/Form Teacher</div>
+            Name: {{$results->teacher}}<br>
+            Comment: {{$results->portal_comment}}<br>
+            @php $imgUrl = $std->passport ? asset("/files/images/".$results->signature) :'' @endphp
+            <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+        </div>
+        @endif
+    </div>
+    <div class="col-md-12">
+        <div id="column_Chart" class="chartZoomable" style="width:90%;height:auto;"></div>
+    </div>
+    <button class="btn btn-success btn-sm"> <i class="bi bi-printer"></i> </button>
+
 </div>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -406,7 +419,7 @@
         // ]);
 
         var options = {
-            title: "Student Score Against total,MIN, MAX & AVG",
+            title: "Student Score Against total, MIN, MAX & AVG",
             // subtitle: "based on meter type and installation status",
             bar: {
                 groupWidth: "20%"

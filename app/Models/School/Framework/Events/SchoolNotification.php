@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\School\Admission;
+namespace App\Models\School\Framework\Events;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Adminssion extends Model
+class SchoolNotification extends Model
 {
     use HasFactory;
 }

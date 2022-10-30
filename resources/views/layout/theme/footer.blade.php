@@ -4,7 +4,7 @@
     <div style=" flex-grow: 1;"></div>
     <footer id="footer" class="footer">
         <div class="copyright">
-            &copy; Copyright <strong><span>{{env('APP_NAME', APP_NAME)}}</span></strong>. All Rights Reserved
+            &copy; <strong><span>{{env('APP_NAME', APP_NAME)}}</span></strong>. All Rights Reserved
         </div>
         <div class="credits">
             Developed by <a href="#">Optimal </a>

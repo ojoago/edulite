@@ -66,6 +66,20 @@
                 </span>
             </a>
         </li>
+        <li>
+            <a href="{{route('event.config')}}">
+                <i class="bi bi-circle"></i><span>
+                    Events
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('fee.config')}}">
+                <i class="bi bi-circle"></i><span>
+                    Fees
+                </span>
+            </a>
+        </li>
         @if(getSchoolType() == 2 || getSchoolType() == 3)
         <li>
             <a href="{{route('school.hostels.config')}}">
@@ -413,20 +427,16 @@
     </a>
     <ul id="student-admission-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-            <a href="charts-chartjs.html">
+            <a href="{{route('school.admission')}}">
+                <i class="bi bi-circle"></i><span>Admission</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('admission.list')}}">
                 <i class="bi bi-circle"></i><span>Admission List</span>
             </a>
         </li>
-        <li>
-            <a href="charts-apexcharts.html">
-                <i class="bi bi-circle"></i><span>ApexCharts</span>
-            </a>
-        </li>
-        <li>
-            <a href="charts-echarts.html">
-                <i class="bi bi-circle"></i><span>ECharts</span>
-            </a>
-        </li>
+        
     </ul>
 </li><!-- End Charts Nav -->
 <li class="nav-item">

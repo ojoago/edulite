@@ -116,4 +116,31 @@ class GradeKeyController extends Controller
             logError($error);
         }
     }
+
+
+    public static function createClassGradeKey($param_pid, $class_pid, $arm_pid = null)
+    {
+        $prm = GradeKey::where(['class_param_pid' => $param_pid, 'school_pid' => getSchoolPid()])->first('class_param_pid');
+        if ($prm) {
+            return;
+        }
+        $stn = self::loadClassGrade($class_pid, $arm_pid);
+        $data = [];
+        foreach ($stn as $item) {
+            $dtn = $item->toArray();
+            $dtn['class_param_pid'] = $param_pid;
+            $dtn['pid'] = public_id();
+            $dtn['updated_at'] = $dtn['created_at'] = date('Y-m-d H:i:s');
+            $data[] = $dtn;
+        }
+        GradeKey::insert($data);
+        return;
+    }
+
+    private static function loadClassGrade($class_pid, $arm_pid)
+    {
+        $data = GradeKeyBase::where(['class_pid' => $class_pid, 'arm_pid' => $arm_pid, 'school_pid' => getSchoolPid()])
+            ->get(['school_pid', 'title', 'grade', 'grade_point', 'remark','min_score','max_score','color']);
+        return $data;
+    }
 }

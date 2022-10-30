@@ -23,7 +23,7 @@ class SchoolController extends Controller
    
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
@@ -85,7 +85,7 @@ class SchoolController extends Controller
         $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
         $parents = DB::table('school_parents as p')
         ->join('students as s', 's.parent_pid', 'p.pid')
-            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->count('p.id');
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->distinct('p.pid')->count('p.id');
         $data = ['staff' => $staff, 'students' => $students, 'riders' => $riders, 'parents' => $parents];
         return view('school.dashboard.admin-dashboard', compact('data'));
     }

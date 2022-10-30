@@ -152,7 +152,7 @@ class StudentTermlyResultController extends Controller
             
             
             // query class result 
-
+// individual student result and class position 
             $dtl = DB::table('student_class_results as r')
             ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
             ->join('students as s', 's.pid', 'r.student_pid')
@@ -203,8 +203,13 @@ class StudentTermlyResultController extends Controller
                                 COUNT(CASE WHEN an.status = 1 THEN 'present' END) as 'present',
                                     COUNT(CASE WHEN an.status = 0 THEN 'absent' END) as 'absent'
                                     "))
-            ->where(['r.class_param_pid'=> $param,'rs.student_pid'=>$spid,'an.student_pid'=>$spid])
+            ->where([
+                'r.class_param_pid'=> $param,
+                'rs.student_pid'=>$spid,
+                // 'an.student_pid'=>$spid
+                ])
             ->groupBy('an.student_pid')->first();
+            // dd($results);
             $psycho = PsychomotorBase::where(['school_pid'=>getSchoolPid()])
                                             ->get(['psychomotor', 'pid']);
             $school = School::where('pid',getSchoolPid())

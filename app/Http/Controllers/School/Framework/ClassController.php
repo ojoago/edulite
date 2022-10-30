@@ -282,8 +282,7 @@ class ClassController extends Controller
             }
             return true;
         } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
-
+            $error =  $e->getMessage();
             logError($error);
         }
     }
@@ -313,7 +312,7 @@ class ClassController extends Controller
             ];
             foreach($request->arm_pid as $arm){
                 $data['arm_pid'] = $arm;
-                $result = $this->updateOrcreateArmSubject($data);
+                $result = $this->updateOrCreateArmSubject($data);
             }
             if($result){
                 return response()->json(['status'=>1,'message'=>'Class Subject Created successfully!!!']);
@@ -324,7 +323,7 @@ class ClassController extends Controller
 
     }
 
-    private function updateOrcreateArmSubject($data){
+    private function updateOrCreateArmSubject($data){
         try {
 
                     $dupParams = $data ;
@@ -347,7 +346,7 @@ class ClassController extends Controller
                 return ClassArmSubject::insert($datas);
 
         } catch (\Throwable $e) {
-            $error = ['message'=> $e->getMessage(),'file'=> __FILE__,'line'=> __LINE__,'code'=>$e->getCode()];
+            $error =  $e->getMessage();
             logError($error);
         }
     }
@@ -368,12 +367,10 @@ class ClassController extends Controller
 
     public static function getClassNameByPid($pid){
         $class = Classes::where(['school_pid'=>getSchoolPid(),'pid'=>$pid])->pluck('class')->first();
-
         return $class;
     }
     public static function getClassArmNameByPid($pid){
         $arm = ClassArm::where(['school_pid'=>getSchoolPid(),'pid'=>$pid])->pluck('arm')->first();
-
         return $arm;
     }
 
@@ -387,10 +384,13 @@ class ClassController extends Controller
             return $pid;
         }
         $data['teacher_pid'] = self::getClassTeacherPid(session: $data['session_pid'],term: $data['term_pid'],arm: $data['arm_pid']);
-        $data['principal_pid'] = self::getCategoryHeadPid($data['arm_pid']);
-        $data['pid'] = public_id();
-        $result = StudentClassScoreParam::create($data);// create class param
-        return $result->pid;
+        if($data['teacher_pid']){
+            $data['principal_pid'] = self::getCategoryHeadPid($data['arm_pid']);
+            $data['pid'] = public_id();
+            $result = StudentClassScoreParam::create($data); // create class param
+            return $result->pid;
+        }
+        return false;
     }
     public static function getClassTeacherPid($arm,$session,$term){
         $pid = StaffClass::where([
@@ -409,8 +409,5 @@ class ClassController extends Controller
         return $pid;
     }
 
-    
-    // public function assignClassArmSubjectToTeacher(Request $request){
 
-    // }
 }

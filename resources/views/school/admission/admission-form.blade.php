@@ -1,10 +1,10 @@
 @extends('layout.mainlayout')
-@section('title','Register Student')
+@section('title','Student Admission')
 @section('content')
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Register Student</h5>
+        <h5 class="card-title">{{activeSessionName()}} Student Admission, {{activeTermName()}}</h5>
 
         <!-- Multi Columns Form -->
         <form class="row g-3" id="createStudentForm">
@@ -24,7 +24,7 @@
                 <input type="text" class="form-control form-control-sm" id="othername" name="othername" placeholder="e.g oceje">
             </div>
             <div class="col-md-4">
-                <label for="gsm" class="form-label">Phone Number</label>
+                <label for="gsm" class="form-label">Applicant Phone Number</label>
                 <input type="text" class="form-control form-control-sm" maxlength="11" id="gsm" name="gsm" placeholder="e.g 070-XX-XX-XX-XX" required>
                 <p class="text-danger gsm_error"></p>
             </div>
@@ -87,7 +87,7 @@
                 <textarea type="text" class="form-control form-control-sm" id="address" name="address" placeholder="e.g no 51  offeoke"></textarea>
                 <p class="text-danger address_error"></p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="type" class="form-label">Student Type</label>
                 <select name="type" class="form-control  form-control-sm" id="studentType" required>
                     @if(getSchoolType()==1)
@@ -103,18 +103,7 @@
                 </select>
                 <p class="text-danger type_error"></p>
             </div>
-            <div class="col-md-4">
-                <label for="state" class="form-label">Session </label>
-                <select name="session_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="sessionSelect2" required>
-                </select>
-                <p class="text-danger session_pid_error"></p>
-            </div>
-            <div class="col-md-4">
-                <label for="term_pid" class="form-label">Term</label>
-                <select name="term_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="tmSelect2" required>
-                </select>
-                <p class="text-danger term_pid_error"></p>
-            </div>
+
             <div class="col-md-3">
                 <label for="category_pid" class="form-label">Category</label>
                 <select name="category_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="cateSelect2" required>
@@ -132,15 +121,30 @@
             </div>
             <div class="col-md-3">
                 <label for="arm_pid" class="form-label">Class Arm</label>
-                <select name="arm_pid" class="form-select form-select-sm readOnlyProp" style="width: 100%;" id="armSelect2" required>
+                <select name="arm_pid" class="form-select form-select-sm readOnlyProp" style="width: 100%;" id="armSelect2">
                 </select>
                 <p class="text-danger arm_pid_error"></p>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label for="passport" class="form-label">Passport</label>
                 <input name="passport" class="form-control form-control-sm" id="passport" type="file" accept="image/*">
                 <p class="text-danger passport_error"></p>
                 <img src="" id="studentPassport" class="previewImg" alt="">
+            </div>
+            <div class="col-md-4">
+                <label for="contact_person" class="form-label">Contact Person</label>
+                <input name="contact_person" class="form-control form-control-sm" id="contact_person" type="text" placeholder="name of contact person">
+                <p class="text-danger contact_person_error"></p>
+            </div>
+            <div class="col-md-3">
+                <label for="contact_gsm" class="form-label">Contact Person GSM</label>
+                <input name="contact_gsm" class="form-control form-control-sm" maxlength="11" id="contact_gsm" type="text" placeholder="phone number of contact person">
+                <p class="text-danger contact_gsm_error"></p>
+            </div>
+            <div class="col-md-3">
+                <label for="contact_email" class="form-label">Contact Person EMail</label>
+                <input name="contact_email" class="form-control form-control-sm" id="contact_email" type="text" placeholder="email of contact person">
+                <p class="text-danger contact_email_error"></p>
             </div>
             <div class="text-center">
                 <button type="button" class="btn btn-primary" id="createStudentBtn">Create</button>
@@ -161,7 +165,6 @@
         });
         // load dropdown  
         // session select2 
-        FormMultiSelect2('#sessionSelect2', 'session', 'Select Session')
         FormMultiSelect2('#stateSelect2', 'state', 'Select State of Origin')
         FormMultiSelect2('#parentSelect2', 'parent', 'Select Parent/Guardian')
 
@@ -174,7 +177,6 @@
         });
         $('#stateSelect2').change(function() {
             var id = $(this).val();
-
             FormMultiSelect2Post('#lgaSelect2', 'state-lga', id, 'Select Lga of Origin')
         });
 
@@ -185,9 +187,8 @@
         });
 
         // term dropdown 
-        FormMultiSelect2('#tmSelect2', 'term', 'Select Term')
         $('#createStudentBtn').click(function() {
-            var route = "{{route('register.student')}}";
+            var route = "{{route('school.admission')}}";
             submitFormAjax('createStudentForm', 'createStudentBtn', route);
         });
         // create school category 

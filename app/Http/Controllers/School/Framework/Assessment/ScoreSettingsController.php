@@ -214,7 +214,7 @@ class ScoreSettingsController extends Controller
             $dtn = $item->toArray();
             $dtn['class_param_pid'] = $param_pid;
             $dtn['pid'] = public_id();
-            $dtn['updated_at'] = $dtn['created_at'] = date('Y-m-6 H:i:s');
+            $dtn['updated_at'] = $dtn['created_at'] = date('Y-m-d H:i:s');
             $data[] = $dtn;
         }
         ScoreSetting::insert($data);

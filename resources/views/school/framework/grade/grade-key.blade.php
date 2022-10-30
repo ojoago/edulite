@@ -235,6 +235,44 @@
                 // },
             ],
         });
+        $('#classGradeKeyTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            },
+            responsive: true,
+            type: "get",
+            "ajax": "{{route('load.school.grade.key')}}",
+            "columns": [
+
+                {
+                    "data": "grade"
+                },
+                {
+                    "data": "title"
+                },
+
+                {
+                    "data": "min_score"
+                },
+                {
+                    "data": "max_score"
+                },
+                {
+                    "data": "grade_point"
+                },
+                {
+                    "data": "remark"
+                },
+                {
+                    "data": "created_at"
+                },
+                // {
+                //     "data": "action"
+                // },
+            ],
+        });
 
         // load dropdown on 
 
