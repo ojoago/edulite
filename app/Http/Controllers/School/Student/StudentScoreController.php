@@ -25,7 +25,16 @@ class StudentScoreController extends Controller
     
 //
     public function enterStudentScoreRecord(Request $request){
-    //    dd($request->all());
+        $request['session'] = activeSession();
+        $request['term'] = activeTerm();
+       $request->validate([
+            'category'=>'required',
+            'class'=>'required',
+            'arm'=>'required',
+            'subject'=>'required',
+            'term'=>'required',
+            'session'=>'required',
+       ]);
         // retrieve form data 
     session([
         'category'=> $request->category,
@@ -44,14 +53,17 @@ class StudentScoreController extends Controller
 
     // switch to another subject from the blade
     public function changeSubject(Request $request){
-    //    dd($request->all());
+        $request->validate([
+            'arm' => 'required',
+            'subject' => 'required',
+        ]);
         session([
             // 'category'=> $request->category,
             // 'class'=> $request->class,
             // 'session'=> $request->session,
             // 'term'=> $request->term,
             'subject'=>$request->subject,
-            // 'arm'=>$request->arm,
+            'arm'=>$request->arm,
         ]);
         setActionablePid(); //set assessment pid to null
             // self::useClassArmSubjectToGetSubjectScroe();

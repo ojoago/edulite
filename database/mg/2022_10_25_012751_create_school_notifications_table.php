@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('session_pid');
             $table->string('term_pid');
             $table->text('message');
+            $table->string('pid')->unique();
             $table->integer('type')->comment('1 notice board, 2 parent, 3 staff, 4 student, 5 all');
             $table->integer('category')->comment('1 notice board, 2 parent, 3 staff, 4 student, 5 all');
             $table->string('begin',20)->nullable();

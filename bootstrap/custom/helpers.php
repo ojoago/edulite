@@ -92,6 +92,10 @@ use App\Http\Controllers\Auths\AuthController;
     function classTeacher(){
         return (getUserActiveRole() == 301 || hasRole());
     }
+    function schoolAdmin(){
+        $cn = ['200', '205'];
+        return (in_array(getUserActiveRole(), $cn) || hasRole());
+    }
     function studentRole(){
         return (getUserActiveRole() == 600);
     }
@@ -152,8 +156,8 @@ use App\Http\Controllers\Auths\AuthController;
         $role =  match($role){
                 '200'=> 'School Super Admin',
                 '205'=> 'School Admin',
-                '301'=> 'Form/Class Teacher',
                 '300'=> 'Teacher',
+                '301'=> 'Form/Class Teacher',
                 '303'=> 'Clerk',
                 '305'=> 'Secretary',
                 '307'=> 'Portals',
@@ -214,7 +218,7 @@ function getInitials($string = null)
     $string = preg_split("/[\s,_-]+/",$string);
         $ret = '';
         foreach ($string as $word)
-            $ret .= strtoupper($word[0]);
+            $ret .= $word[0];
         return $ret;
 }
     function dateToAge($date){

@@ -16,4 +16,7 @@ class School extends Model
     public function setSchoolNameAttribute($vaule){
         $this->attributes['school_name'] = ucwords(strtolower($vaule));
     }
+    public function setSchoolCodeAttribute($vaule){
+        $this->attributes['school_code'] = strtoupper($vaule);
+    }
 }

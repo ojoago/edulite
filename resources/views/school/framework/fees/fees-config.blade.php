@@ -84,20 +84,16 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create School Category</h5>
+                <h5 class="modal-title">Create Fee Item</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="" method="post" class="" id="createClassCategoryForm">
                     @csrf
-                    <input type="date" name="event_date" class="form-control form-control-sm" required>
-                    <p class="text-danger event_date_error"></p>
-                    <label for="head_pid">Principal/Head</label>
-                    <select name="head_pid" id="staffSelect2" style="width: 100%;">
-                    </select>
-                    <p class="text-danger staff_pid_error"></p>
-                    <textarea type="text" name="message" class="form-control form-control-sm" placeholder="message" required></textarea>
-                    <p class="text-danger message_error"></p>
+                    <input type="text" name="fee_item" class="form-control form-control-sm" placeholder="example school fee" required>
+                    <p class="text-danger fee_item_error"></p>
+                    <textarea type="text" name="fee_description" class="form-control form-control-sm" placeholder="fee description" required></textarea>
+                    <p class="text-danger fee_description_error"></p>
                 </form>
             </div>
             <div class="modal-footer">

@@ -3,10 +3,11 @@
         <i class="bi bi-tools"></i>
     </button>
     <ul class="dropdown-menu">
-        <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#createClassSubjectToTeacherModal">Assign to Teacher</a></li>
+        <!-- <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#createClassSubjectToTeacherModal">Assign to Teacher</a></li> -->
         <li><a class="dropdown-item" href="#">Details</a></li>
         <li><a class="dropdown-item" href="#">Arms</a></li>
         <li><a class="dropdown-item" href="#">Class Subject</a></li>
+        <li><a class="dropdown-item" href="#">Disable</a></li>
     </ul>
 </div>
 <!-- create class subject  -->
@@ -29,7 +30,7 @@
                     </select>
                     <p class="text-danger term_pid_error"></p>
                     <label for="teacher_pid">Teacher</label>
-                    <select name="teacher_pid" id="teacherSelect24t" style="width: 100%;" class="teacherSelect2 form-control form-control-sm">
+                    <select name="teacher_pid" id="teacherSelect24t" style="width: 100%;" class="teacherSelect24t form-control form-control-sm">
                     </select>
                     <p class="text-danger teacher_pid_error"></p>
                 </form>

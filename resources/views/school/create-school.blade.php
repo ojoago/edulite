@@ -34,8 +34,8 @@
             </div>
             <div class="col-md-2">
                 <label for="school_handel">School Handle </label>
-                <input type="text" name="school_handle" class="form-control form-control-sm" placeholder="Schoo handle" required><br>
-                <p class="text-danger school_handle_error"></p>
+                <input type="text" name="school_code" class="form-control form-control-sm" placeholder="School Abreviation" required><br>
+                <p class="text-danger school_code_error"></p>
 
             </div>
             <div class="col-md-4">
@@ -103,8 +103,10 @@
             var route = "{{route('create.school')}}";
             let msg = await submitFormAjax('createSchoolForm', 'createSchoolBtn', route);
             if (msg) {
-                let url = "{{'school-sign-in/'}}"+msg;
-                location.href = url;
+                if (isset(msg.status) && isset(msg.code)) {
+                    let url = "{{'school-sign-in/'}}" + msg;
+                    location.href = url;
+                }
             }
         });
 

@@ -50,15 +50,16 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="denied" role="tabpanel" aria-labelledby="in-active-staff-tab">
-                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="activedataTable">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="deniedAdmission">
                     <thead>
                         <tr>
                             <th>S/N</th>
                             <th>Names</th>
-                            <th>Username</th>
+                            <th>Admission Number</th>
                             <th>Phone Number</th>
-                            <th>Email</th>
-                            <th>Primary Role</th>
+                            <th>Contacts</th>
+                            <th>Class</th>
+                            <th>Arm</th>
                             <th>Date</th>
                             <th>Action</th>
                         </tr>
@@ -88,7 +89,48 @@
                 selector: 'td:nth-child(2)'
             },
             responsive: true,
-            "ajax": "{{route('load.admission')}}",
+            "ajax": "{{route('admission.request')}}",
+            "columns": [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    // orderable: false,
+                    // searchable: false
+                },
+
+                {
+                    "data": "fullname"
+                },
+                {
+                    "data": "admission_number"
+                },
+                {
+                    "data": "gsm"
+                },
+                {
+                    "data": "contact_gsm"
+                },
+                {
+                    "data": "class"
+                },
+                {
+                    "data": "arm"
+                },
+                {
+                    "data": "date"
+                },
+                {
+                    "data": "action"
+                },
+            ],
+        });
+        $('#deniedAdmission').DataTable({
+            "processing": true,
+            "serverSide": true,
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            },
+            responsive: true,
+            "ajax": "{{route('denied.admission')}}",
             "columns": [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',

@@ -18,22 +18,22 @@
                                 <select type="text" name="category" class="form-control" id="formCategorySelect2" required>
                                 </select>
                             </div>
-                            <div class="col-12">
+                            <!-- <div class="col-12">
                                 <label for="session" class="form-label">Session</label>
                                 <select type="text" name="session" class="form-control" id="formSessionSelect2">
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="col-12">
                                 <label for="class" class="form-label">Class</label>
                                 <select type="text" name="class" class="form-control" id="formClassSelect2">
                                 </select>
                             </div>
-                            <div class="col-12">
+                            <!-- <div class="col-12">
                                 <label for="term" class="form-label">Term</label>
                                 <select type="text" name="term" class="form-control" id="formTermSelect2">
 
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="col-12">
                                 <label for="arm" class="form-label">Class Arm</label>
                                 <select type="text" name="arm" class="form-control" id="formArmSelect2">
@@ -73,7 +73,7 @@
         });
         $('#formClassSelect2').on('change', function(e) {
             var id = $(this).val();
-            FormMultiSelect2Post('#formArmSelect2', 'class-arm', id, 'Select Class Arm');
+            FormMultiSelect2Post('#formArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
         });
         $('#formArmSelect2').on('change', function(e) {
             var id = $(this).val();

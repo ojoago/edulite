@@ -17,13 +17,30 @@ use App\Models\School\Admission\AdminssionHistory;
 class AdmissionController extends Controller
 {
     private $pwd = 654321;
-    public function loadAdmission(){
+
+    public function loadAppliedAdmission(){
+        $cnd = ['a.school_pid' => getSchoolPid(),'a.status'=>1];
+        return $this->loadAdmission($cnd);
+    }
+    public function loadGrantedAdmission(){
+        $cnd = ['a.school_pid' => getSchoolPid(),'a.status' => 2];
+        return $this->loadAdmission($cnd);
+    }
+    public function loadDeniedAdmission(){
+        $cnd = ['a.school_pid' => getSchoolPid(),'a.status' => 3];
+        return $this->loadAdmission($cnd);
+    }
+    public function loadAllAdmission($cnd){
+        $cnd = ['a.school_pid' => getSchoolPid()];
+        return $this->loadAdmission($cnd);
+    }
+    private function loadAdmission($cnd){
         $data = DB::table("admissions as a")->join('classes as c','c.pid','a.class_pid')
                                             ->join('class_arms as ca','ca.pid','a.arm_pid')
                                             ->leftJoin('school_parents as p','p.pid','a.parent_pid')
                                             ->leftJoin('user_details as d','d.user_pid','p.user_pid')
                                             ->leftJoin('users as u','u.pid','p.user_pid')
-                                            ->where(['a.school_pid'=>getSchoolPid()])
+                                            ->where($cnd)
                                             ->select('admission_number','a.pid','a.status','a.created_at', 'a.fullname',
                                                     'a.gsm','contact_gsm','contact_person','contact_email','class','arm',
                                                     'u.gsm as mobile','d.fullname as names')->get();

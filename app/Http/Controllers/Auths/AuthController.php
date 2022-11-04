@@ -46,16 +46,17 @@ class AuthController extends Controller
 
     public static function createUser($data){
         try {
+        $data['code'] = null;
         $data['pid']  = $data['pid'] ?? public_id();
            return User::updateOrCreate(['pid'=>$data['pid']],$data);
         } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+            $error = $e->getMessage();
             logError($error);
         }
     }
     public static function referrerCode()
     {
-        $count = User::where(['school_pid' => getSchoolPid()])->where('code', 'like', '%' . date('yMd') . '%')->count('id');
+        $count = User::where('code', 'like', '%' . date('yMd') . '%')->count('id');
         $id = $count + 1;
         $id = strlen($id) == 1 ? '0' . $id : $id;
         return date('yMd').$id;

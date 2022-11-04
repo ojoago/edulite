@@ -110,6 +110,9 @@ class SchoolController extends Controller
         return view('school.dashboard.parent-dashboard', compact('data'));
     }
     public function createSchool(Request $request){
+        if($request->school_name){
+            $request['school_code'] = $request->school_code ?? getInitials($request->school_name);
+        }
         $validator = Validator::make($request->all(),[
             "state" => "required",
             "type" => "required",
@@ -119,9 +122,9 @@ class SchoolController extends Controller
             "school_contact" => "required",
             "school_address" => "required|string",
             "school_moto" => "required",
-            "school_handle" => "nullable|unique:schools",
+            "school_code" => "nullable|unique:schools",
             "school_logo" => "nullable|image|mimes:jpeg,png,jpg,gif",
-        ]);
+        ],['school_code.unique'=> ($request->school_code).' already exist, Enter a differnet one']);
 
         if(!$validator->fails()){
             $data = [
@@ -136,7 +139,7 @@ class SchoolController extends Controller
                 "pid" => public_id(),
                 "user_pid" => getUserPid(),
                 'school_handle' => $this->schoolHandle(),
-                'school_code' => $request->school_handle,
+                'school_code' => $request->school_code,
             ];
 
             if ($request->school_logo) {
@@ -170,7 +173,6 @@ class SchoolController extends Controller
         }
 
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
-       
     }
 
     public static function createSchoolUser(string $userId, string $pid, string $role){//school user pid is the same as either staff pid, parent pid, student pid or rider pid
@@ -189,7 +191,6 @@ class SchoolController extends Controller
                 $dup->fill($data);
                 return $dup->save();
             }
-            
             $data['staff_id'] = $data['staff_id'] ?? StaffController::staffUniqueId();
             return SchoolStaff::create($data);
         } catch (\Throwable $e) {
@@ -226,7 +227,6 @@ class SchoolController extends Controller
         }
     }
     public static function createSchoolRider($data){
-        
         try {
             self::createSchoolUser(userId: $data['user_pid'], pid: $data['pid'], role: '610');
             $dupParams = [
@@ -237,7 +237,6 @@ class SchoolController extends Controller
             return SchoolRider::updateOrCreate($dupParams, $data);
         } catch (\Throwable $e) {
             $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
-
             logError($error);
         }
     }

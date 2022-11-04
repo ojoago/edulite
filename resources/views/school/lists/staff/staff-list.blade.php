@@ -3,8 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Staff List</h5>
-
+            <h5 class="card-title mr-4">Staff List <a href="{{route('create.staff.form')}}"> <button class="btn btn-primary ml-3 btn-sm">New Staff</button> </a></h5>
         <!-- Default Tabs -->
         <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
             <li class="nav-item flex-fill" role="presentation">

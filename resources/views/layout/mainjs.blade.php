@@ -745,17 +745,40 @@
                         alert_toast(data.message, 'success');
                         $('#' + formId)[0].reset();
                         if (data.code) {
-                            resolve(data.code)
+                            resolve(data)
                         } else {
-                            resolve(data.message)
+                            resolve(data)
                         }
                     } else {
                         alert_toast(data.message, 'error');
-                        resolve(data.message)
+                        resolve(data)
                     }
                 },
                 error: function(data) {
                     $('#' + btnId).prop('disabled', false);
+                    $('.overlay').hide();
+                    alert_toast('Something Went Wrong', 'error');
+                    reject(true);
+                }
+            });
+        });
+        // });
+    }
+
+    function loadDataAjax(route, params, method = 'post') {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: route,
+                type: method,
+                data: params,
+                beforeSend: function() {
+                    $('.overlay').show();
+                },
+                success: function(data) {
+                    $('.overlay').hide();
+                    resolve(data);
+                },
+                error: function() {
                     $('.overlay').hide();
                     alert_toast('Something Went Wrong', 'error');
                     reject(true);
@@ -782,6 +805,18 @@
             }
 
             reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function isset(accessor) {
+        try {
+            // Note we're seeing if the returned value of our function is not
+            // undefined or null
+            return accessor() !== undefined && accessor() !== null
+        } catch (e) {
+            // And we're able to catch the Error it would normally throw for
+            // referencing a property of undefined
+            return false
         }
     }
 </script>

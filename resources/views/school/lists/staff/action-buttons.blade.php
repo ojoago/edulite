@@ -32,18 +32,45 @@
                 <form method="post" class="accessModal" id="accessForm{{$data->pid}}">
                     @csrf
                     <div class="col-md-12">
-                        <label for="state" class="form-label">Grant Access</label>
-                        <select id="accessSelect2" name="access[]" multiple="multiple" class="form-select form-select-sm " required>
-                            <option disabled selected>Select or more Access</option>
-                            <option value="605">Rider</option>
-                            <option value="605">Parent/Guardian</option>
-                            @if(getSchoolType() !=1)
-                            <option value="307">Portals</option>
-                            @endif
-                            <option value="305">Secretary</option>
-                            <option value="303">Clerk</option>
-                            <option value="1">Manage Results</option>
-                        </select>
+                        <label class="form-label">Grant Extra Access </label><br>
+                        @if(getSchoolType() !=1)
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="access[]" id="" value="307">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Portals
+                            </label>
+                        </div>
+                        @endif
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="access[]" id="" value="305">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Secretary
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="access[]" id="" value="303">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Clerk
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="access[]" id="" value="1">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Manage Results
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="access[]" id="" value="610">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Rider/Care
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="access[]" id="" value="605">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Parent/Guardian
+                            </label>
+                        </div>
                         <input type="hidden" value="{{$data->pid}}" name="pid">
                         <p class="text-danger access_error"></p>
                     </div>

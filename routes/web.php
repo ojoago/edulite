@@ -132,6 +132,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-school-class-arm-subject', [ClassController::class, 'loadClassArmSubject'])->name('load.school.class.arm.subject');
     // create category 
     Route::post('create-school-category', [ClassController::class, 'createCategory'])->name('create.school.category');
+    Route::post('load-school-category-by-pid', [ClassController::class, 'loadCategoryByPid'])->name('load.school.category.by.pid');
     // create class 
     Route::post('school-class', [ClassController::class, 'createClass'])->name('create.school.class');
     // create class arm 
@@ -188,6 +189,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-available-class', [Select2Controller::class, 'loadAvailableClass'])->name('load.available.class');
     // load classe arm 
     Route::post('load-available-class-arm', [Select2Controller::class, 'loadAvailableClassArm'])->name('load.available.class.arm');
+    // load class teacher/form classes 
+    Route::post('load-available-class-teacher-arm', [Select2Controller::class, 'loadClassTeacherClassArms'])->name('load.available.class.arm');
     Route::post('load-available-all-class-arm', [Select2Controller::class, 'loadAllClassArm'])->name('load.all.class.arm');
     // load class arm subject
     Route::post('load-available-class-arm-subject', [Select2Controller::class, 'loadAvailableClassArmSubject'])->name('load.available.class.arm.subject');
@@ -263,7 +266,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('school-admission', [AdmissionController::class, 'submitAdminssion']);
     // admission list 
     Route::view('admission-list', 'school.admission.admission-list')->name('admission.list');
-    Route::get('load-admission', [AdmissionController::class, 'loadAdmission'])->name('load.admission');
+    Route::get('load-admission', [AdmissionController::class, 'loadAppliedAdmission'])->name('admission.request');
+    Route::get('load-denied-admission', [AdmissionController::class, 'loadDeniedAdmission'])->name('denied.admission');
     Route::post('grant-admission', [AdmissionController::class, 'grantAdmission'])->name('grant.admission');
     Route::post('deny-admission', [AdmissionController::class, 'denyAdmission'])->name('deny.admission');
     
@@ -304,11 +308,12 @@ Route::middleware('schoolAuth')->group(function(){
 
 
     // result config 
-    Route::view('school-result-config', 'school.framework.result.result_config')->name('school.result.config');
+    Route::view('school-assessment-config', 'school.framework.result.assessment-config')->name('school.assessment.config');
+    Route::view('school-result-config', 'school.framework.result.result-config')->name('school.result.config');
 
     Route::view('register-staff', 'school.registration.staff.register-staff')->name('create.staff.form');
-    Route::view('school-staff-list', 'school.staff.staff-list')->name('school.staff.list');
-    Route::post('school-staff', [StaffController::class, 'createStaff'])->name('create.school.staff');
+    Route::view('staff-list', 'school.staff.staff-list')->name('school.staff.list');
+    Route::post('create-staff', [StaffController::class, 'createStaff'])->name('create.school.staff');
     Route::get('edit-staff/{id}', [StaffController::class, 'find'])->name('edit.staff');
     // load staff details for editing 
     Route::post('load-staff-detal-by-id', [StaffController::class, 'loadStaffDetailsById'])->name('load.staff.detail.by.id');
@@ -454,7 +459,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-student-attendance-count', [StudentAttendanceController::class, 'loadStudentAttendanceCount'])->name('load.student.attendance.count');
 
     // student assessment 
-    Route::view('student-subject-score-form', 'school.student.assessment.assessment-form')->name('student.assessment.form');
+    Route::view('student-subject-score-form', 'school.student.assessment.student-subject-score-form')->name('student.assessment.form');
     Route::post('student-subject-score-form', [StudentScoreController::class, 'enterStudentScoreRecord']);
     Route::post('change-arm-subject', [StudentScoreController::class, 'changeSubject'])->name('change.arm.subject');
     Route::get('student-score-entering', [StudentScoreController::class, 'enterStudentScore'])->name('enter.student.score');

@@ -28,43 +28,20 @@ class ClassController extends Controller
         ->where(['categories.school_pid' => getSchoolPid()])
             ->get(['categories.pid', 'category', 'categories.created_at', 'description', 'username']);
         return datatables($data)
-            // ->addColumn('action', function ($data) {
-            //     $html = '
-            //     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#editSubjectModal' . $data->pid . '">
-            //         <i class="bi bi-box-arrow-up" aria-hidden="true"></i>
-            //     </button>
-            //     <div class="modal fade" id="editSubjectModal' . $data->pid . '" tabindex="-1">
-            //         <div class="modal-dialog">
-            //             <div class="modal-content">
-            //                 <div class="modal-header">
-            //                     <h5 class="modal-title">Edit Lite S</h5>
-            //                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            //                 </div>
-            //                 <div class="modal-body">
-            //                     <form action="" method="post" class="" id="createSubjectForm">
-            //                         <p class="text-danger category_pid_error"></p>
-            //                         <input type="text" name="subject" value="' . $data->subject_type . '" class="form-control form-control-sm" placeholder="name of school" required>
-            //                         <p class="text-danger subject_error"></p>
-            //                         <textarea type="text" name="description" class="form-control form-control-sm" placeholder="description" required>' . $data->description . '</textarea>
-            //                         <p class="text-danger description_error"></p>
-            //                     </form>
-            //                 </div>
-            //                 <div class="modal-footer">
-            //                     <button type="button" class="btn btn-primary" id="createSubjectBtn">Submit</button>
-            //                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            //                 </div>
-            //             </div>
-            //         </div>
-            //     </div>
-            //     ';
-            //     return $html;
-            // })
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->diffForHumans();
             })
-            // ->rawColumns(['data', 'action'])
+            ->addColumn('action', function ($data) {
+                return view('school.framework.class.category-action-buttons', ['data' => $data]);
+            })
             ->make(true);
         
+    }
+    public function loadCategoryByPid(Request $request)
+    {
+        $data = Category::where(['school_pid'=>getSchoolPid(),'pid'=>base64Decode($request->pid)])
+                        ->first(['category', 'description','pid']);
+        return response()->json($data);   
     }
 
 
@@ -180,9 +157,7 @@ class ClassController extends Controller
             return Category::updateOrCreate(['school_pid'=>$data['school_pid'],'pid'=>$data['pid']],$data);
         } catch (\Throwable $e) {
             $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
-
             logError($error);
-           
         }
     }
 

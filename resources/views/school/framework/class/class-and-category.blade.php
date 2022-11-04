@@ -32,6 +32,7 @@
                             <th>Description</th>
                             <th>Date</th>
                             <th>Created By</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,13 +133,14 @@
             <div class="modal-body">
                 <form action="" method="post" class="" id="createClassCategoryForm">
                     @csrf
-                    <input type="text" name="category" class="form-control form-control-sm" placeholder="school category" required>
+                    <input type="text" name="category" id="categoryName" class="form-control form-control-sm" placeholder="school category" required>
+                    <input type="hidden" name="pid" id="categoryPid">
                     <p class="text-danger category_error"></p>
                     <label for="head_pid">Principal/Head</label>
                     <select name="head_pid" id="staffSelect2" style="width: 100%;">
                     </select>
-                    <p class="text-danger staff_pid_error"></p>
-                    <textarea type="text" name="description" class="form-control form-control-sm" placeholder="description" required></textarea>
+                    <p class="text-danger head_pid_error"></p>
+                    <textarea type="text" name="description" id="categoryDescription" class="form-control form-control-sm" placeholder="description" required></textarea>
                     <p class="text-danger description_error"></p>
                 </form>
             </div>
@@ -151,7 +153,7 @@
 </div>
 <!-- create school category modal  -->
 <div class="modal fade" id="createClassModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create School Class</h5>
@@ -164,7 +166,7 @@
                     </select>
                     <p class="text-danger category_pid_error"></p>
                     <button id="addMore" type="button" class="btn btn-danger btn-sm btn-small m-3">Add More Row</button><br>
-                    <i id="addMoreRow"></i>
+
                     <div class="row">
                         <div class="col-md-7">
                             <input type="text" name="class[]" placeholder="class e.g JSS 1" class="form-control form-control-sm" required>
@@ -190,6 +192,7 @@
                             <p class="text-danger class_number_error"></p>
                         </div>
                     </div>
+                    <div id="addMoreRow"></div>
                     <p>[Class equivalence in number] is used to promote student to the next class automatically by the system if need be</p>
                 </form>
             </div>
@@ -311,7 +314,7 @@
     $(document).ready(function() {
         // add more title 
         $('#addMore').click(function() {
-            $('#addMoreRow').prepend(
+            $('#addMoreRow').append(
                 `
                  <div class="row addedRow">
                         <div class="col-md-7">
@@ -413,6 +416,9 @@
                 },
                 {
                     "data": "username"
+                },
+                {
+                    "data": "action"
                 },
             ],
         });
@@ -571,6 +577,26 @@
         // create school category
         $('#createClassCategoryBtn').click(function() {
             submitFormAjax('createClassCategoryForm', 'createClassCategoryBtn', "{{route('create.school.category')}}");
+        });
+
+        // edit class category goes here  
+        $(document).on('click', '.editCategory', async function() {
+            let pid = $(this).attr('pid');
+            let params = {
+                pid: pid,
+                _token: "{{csrf_token()}}"
+            };
+            let route = "{{route('load.school.category.by.pid')}}";
+            let data = await loadDataAjax(route, params);
+            if (data) {
+                $('#categoryName').val(data.category);
+                $('#categoryPid').val(data.pid);
+                $('#categoryDescription').val(data.description);
+                $('.overlay').hide();
+                $('#createClassCategoryModal').modal('show');
+            } else {
+                showTipMessage('cluod not load category');
+            }
         });
         // create school class 
         $('#createClassBtn').click(function() {

@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','Result COnfig')
+@section('title','Result Config')
 @section('content')
 
 

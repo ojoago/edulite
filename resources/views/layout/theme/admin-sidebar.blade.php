@@ -42,6 +42,11 @@
             </a>
         </li>
         <li>
+            <a href="{{route('school.assessment.config')}}">
+                <i class="bi bi-circle"></i><span>Assessment</span>
+            </a>
+        </li>
+        <li>
             <a href="{{route('school.result.config')}}">
                 <i class="bi bi-circle"></i><span>Results</span>
             </a>
@@ -436,7 +441,7 @@
                 <i class="bi bi-circle"></i><span>Admission List</span>
             </a>
         </li>
-        
+
     </ul>
 </li><!-- End Charts Nav -->
 <li class="nav-item">

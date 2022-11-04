@@ -15,4 +15,9 @@ class Category extends Model
     public function setCategoryAttribute($value){
         $this->attributes['category'] = strtoupper(trim($value));
     }
+
+    public function categoryClass()
+    {
+        return $this->hasMany(Classes::class, 'category_pid', 'pid');
+    }
 }

@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Framework;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\School\System\State;
 use App\Http\Controllers\Controller;
 use App\Models\School\Student\Student;
 use App\Models\School\System\StateLga;
+use App\Models\School\Rider\SchoolRider;
 use App\Models\School\Staff\SchoolStaff;
 use App\Models\School\Framework\Class\Classes;
+use App\Models\School\Framework\Hostel\Hostel;
 use App\Models\School\Framework\Class\Category;
 use App\Models\School\Framework\Class\ClassArm;
 use App\Models\School\Framework\Session\Session;
@@ -16,9 +19,7 @@ use App\Models\School\Framework\Subject\Subject;
 use App\Models\School\Registration\SchoolParent;
 use App\Models\School\Framework\Subject\SubjectType;
 use App\Models\School\Framework\Class\ClassArmSubject;
-use App\Models\School\Framework\Hostel\Hostel;
 use App\Models\School\Framework\Psychomotor\PsychomotorBase;
-use App\Models\School\Rider\SchoolRider;
 
 class Select2Controller extends Controller
 {
@@ -439,6 +440,85 @@ class Select2Controller extends Controller
         return response()->json($data);
     }
 
+
+    // load all classes based on what is assigned to form/class teacher 
+    public function loadClassTeacherClassArms(Request $request)
+    {
+        $data = null;
+        if(schoolAdmin()){
+            if ($request->has('q'))
+                $result = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1, 'class_pid' => $request->pid])
+                    ->where('arm', 'like', '%' . $request->q . '%')
+                    ->limit(10)->orderBy('arm')->get(['pid', 'arm']); //
+            else
+                $result = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1, 'class_pid' => $request->pid])
+                    ->limit(10)->orderBy('arm')->get(['pid', 'arm']); //
+        }else{
+            if ($request->has('q'))
+                $result = DB::table('class_arms as c')->join('staff_classes as s','s.arm_pid','c.pid')
+                                ->where(['s.teacher_pid'=> getSchoolUserPid(),'s.school_pid'=>getSchoolPid(),'c.status'=>1, 'c.class_pid' => $request->pid])
+                                ->where('c.arm', 'like', '%' . $request->q . '%')
+                                ->limit(10)->orderBy('c.arm')
+                                ->get(['c.pid', 'c.arm']);
+            else
+            $result = DB::table('class_arms as c')->join('staff_classes as s', 's.arm_pid', 'c.pid')
+            ->where(['s.teacher_pid' => getSchoolUserPid(), 's.school_pid' => getSchoolPid(), 'c.status' => 1, 'c.class_pid' => $request->pid])
+           ->limit(10)->orderBy('c.arm')
+                ->get(['c.pid', 'c.arm']);//
+        }
+        if (!$result) {
+            return response()->json(['id' => null, 'text' => null]);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->arm,
+            ];
+        }
+        return response()->json($data);
+    }
+    // load class arms subject for teacher or class teacher or previliged staff 
+    public function loadClassTeacherClassArmsSubject(Request $request)
+    {
+        $data = null;
+        if(schoolAdmin()){
+            if ($request->has('q'))
+                $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
+                    ->join('subjects', 'subjects.pid', 'subject_pid')
+                    ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' => $request->pid])
+                    ->where('subject', 'like', '%' . $request->q . '%')
+                    ->limit($request->page_limit)->orderBy('arm')
+                    ->get(['class_arm_subjects.pid', 'arm', 'subject']); //
+            else
+                $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
+                    ->join('subjects', 'subjects.pid', 'subject_pid')
+                    ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' => $request->pid])
+                    ->limit(10)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm', 'subject']); //
+        }else{
+            if ($request->has('q'))
+                $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
+                    ->join('subjects', 'subjects.pid', 'subject_pid')
+                    ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' => $request->pid])
+                    ->where('subject', 'like', '%' . $request->q . '%')
+                    ->limit($request->page_limit)->orderBy('arm')
+                    ->get(['class_arm_subjects.pid', 'arm', 'subject']); //
+            else
+                $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
+                    ->join('subjects', 'subjects.pid', 'subject_pid')
+                    ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' => $request->pid])
+                    ->limit(10)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm', 'subject']); //
+        }
+        if (!$result) {
+            return response()->json(['id' => null, 'text' => null]);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->subject . ' - ' . $row->arm,
+            ];
+        }
+        return response()->json($data);
+    }
     // states and local govt 
     public function loadStates(Request $request){
         $data = null;
