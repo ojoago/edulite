@@ -88,21 +88,41 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" class="" id="createClassCategoryForm">
+                <form action="" method="post" class="" id="createNotificationForm">
                     @csrf
-                    <input type="date" name="event_date" class="form-control form-control-sm" required>
-                    <p class="text-danger event_date_error"></p>
-                    <label for="head_pid">Principal/Head</label>
-                    <select name="head_pid" id="staffSelect2" style="width: 100%;">
-                    </select>
-                    <p class="text-danger staff_pid_error"></p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Begin Date</label>
+                            <input type="date" name="begin" class="form-control form-control-sm" required>
+                            <p class="text-danger begin_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="">End Date</label>
+                            <input type="date" name="end" class="form-control form-control-sm" required>
+                            <p class="text-danger end_error"></p>
+                        </div>
+                    </div>
+                    <label for="">Message</label>
                     <textarea type="text" name="message" class="form-control form-control-sm" placeholder="message" required></textarea>
                     <p class="text-danger message_error"></p>
+                    <label for="">Audience</label>
+                    <select name="type" id="type" class="form-control form-control-sm">
+                        <option disabled selected>Select Audience</option>
+                        <option value="1">Notice Board</option>
+                        <option value="2">Parents</option>
+                        <option value="3">Rider/Care</option>
+                        <option value="4">General</option>
+                        <option value="5">Students</option>
+                        <option value="6">All Staff</option>
+                        <!-- <option value="7">Academic Staff</option>
+                        <option value="8">Non-Academic Staff</option> -->
+                    </select>
+                    <p class="text-danger type_error"></p>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createClassCategoryBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createNotificationBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -117,17 +137,17 @@
         // load dropdown on 
 
         // filter class subject 
-        FormMultiSelect2('#categoryClassSubjectSelect2', 'category', 'Select Category');
-        FormMultiSelect2('#categoryClassSubjectSelect2', 'category', 'Select Category');
+        // FormMultiSelect2('#categoryClassSubjectSelect2', 'category', 'Select Category');
+        // FormMultiSelect2('#categoryClassSubjectSelect2', 'category', 'Select Category');
         // create school class arm
-        $('#createClassArmBtn').click(function() {
-            submitFormAjax('createClassArmForm', 'createClassArmBtn', "{{route('create.school.class.arm')}}");
-        });
+        // $('#createClassArmBtn').click(function() {
+        //     submitFormAjax('createClassArmForm', 'createClassArmBtn', "{{route('create.school.class.arm')}}");
+        // });
 
 
         // create school class arm
-        $('#createClassArmSubjectBtn').click(function() {
-            submitFormAjax('createClassArmSubjectForm', 'createArmSubjectBtn', "{{route('create.school.class.arm.subject')}}");
+        $('#createNotificationBtn').click(function() {
+            submitFormAjax('createNotificationForm', 'createNotificationBtn', "{{route('create.school.notification')}}");
         });
 
     });

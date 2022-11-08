@@ -107,7 +107,7 @@ class SchoolController extends Controller
     }
     private function riderLogin(){
         $data = Student::where(['school_pid' => getSchoolPid(), 'parent_pid' => getSchoolUserPid()])->get();
-        return view('school.dashboard.parent-dashboard', compact('data'));
+        return view('school.dashboard.rider-dashboard', compact('data'));
     }
     public function createSchool(Request $request){
         if($request->school_name){
@@ -124,7 +124,7 @@ class SchoolController extends Controller
             "school_moto" => "required",
             "school_code" => "nullable|unique:schools",
             "school_logo" => "nullable|image|mimes:jpeg,png,jpg,gif",
-        ],['school_code.unique'=> ($request->school_code).' already exist, Enter a differnet one']);
+        ],['school_code.unique'=> $request->school_code.' already exist, Enter a differnet one']);
 
         if(!$validator->fails()){
             $data = [
@@ -159,9 +159,6 @@ class SchoolController extends Controller
                     // $user=
                     self::createSchoolStaff($data);
                     setSchoolPid();
-                    // if($user){
-                    //     return response()->json(['status' => 1, 'message' => 'School Created Successfully']);
-                    // }
                     return response()->json(['status' => 1, 'message' => 'School Created Successfully','code'=> base64Encode($result->pid)]);
                     }
                 } catch (\Throwable $e) {

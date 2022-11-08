@@ -2,10 +2,132 @@
 
 namespace App\Http\Controllers\School\Framework\Events;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use App\Models\School\Framework\Events\SchoolNotification;
 
 class SchoolNotificationController extends Controller
 {
-    //
+    
+    public function createSchoolNotification(Request $request){
+
+        $validator = Validator::make($request->all(),[
+            'begin'=>'',
+            'end'=>'',
+            'message'=>'required|string',
+            'type'=> 'required|int',
+            'begin'=> 'required_with:end',
+        ],['message.required'=>'Please Enter Notification Message', 'begin.required_with'=>'Event Begin Is required']);
+
+        if(!$validator->fails()){
+            $data = [
+                'begin'=>$request->begin,
+                'end'=>$request->end,
+                'message'=>$request->message,
+                'type'=>$request->type,
+                'school_pid'=>getSchoolPid(),
+                'term_pid'=>activeTerm(),
+                'session_pid'=>activeSession(),
+                'pid'=>public_id(),
+            ];
+            $sts = $this->createOrUpdateNotification($data);
+            if($sts){
+                if($data['type']==1){
+                    return response()->json(['status'=>1,'message'=>'Notification Created']);
+                }
+                $ps = $this->pushNotification($data);
+                if($ps){
+                    return response()->json(['status'=>1,'message'=>'Notification Created and scheduled']);
+                }
+
+            }
+            return response()->json(['status'=>'error','message'=>'Failed to Create Notification']);
+        }
+        
+        return response()->json(['status'=>0,'message'=>'','error'=>$validator->errors()->toArray()]);
+    }
+
+
+    private function createOrUpdateNotification(array $data){
+        return SchoolNotification::updateOrCreate(['pid'=>$data['pid']],$data);
+    }
+    private function pushNotification($data)
+    {
+        $list = $this->loadUser($data);
+        if($list){
+            // schedule mail 
+        }
+        return ;
+
+    }
+    private function loadUser($data)
+    {
+        switch ($data['type']) {
+            case 2: //send message to all active parents
+                $list = $this->loadActiveParents();
+                break;
+            case 3: // send message to school rider or student care
+                $list = $this->loadActiveRider();
+                break;
+            case 4: // send general message
+                $parents = $this->loadActiveParents();
+                $riders = $this->loadActiveRider();
+                $students = $this->loadActiveStudent(); 
+                $staff = $this->loadActiveStaff(); 
+                $list = [];
+                array_push($list, $parents);
+                array_push($list, $riders);
+                array_push($list, $staff);
+                array_push($list, $students);
+                break;
+            case 5: // send message to student only
+                $list = $this->loadActiveStudent();
+                break;
+            case 6: // send message to all staff 
+                $list = $this->loadActiveStaff();
+                break;
+            default:
+                return $list = [];
+        }
+        return $list;
+    }
+    
+    // load parent that has chield or ward in school  
+    private function loadActiveParents(){
+        $parents = DB::table('school_parents as p')
+        ->join('users as u', 'p.user_pid', 'u.pid')
+        ->join('user_details as d', 'd.user_pid', 'u.pid')
+        ->join('students as s', 's.parent_pid', 'p.pid')
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email','<>',null)->distinct('p.pid')->get(['fullname','email','gsm']);
+
+        return $parents;
+    }
+
+    private function loadActiveStudent(){
+        $students = DB::table('students as s')
+        ->join('users as u', 's.user_pid', 'u.pid')
+            ->where(['s.school_pid' => getSchoolPid(), 's.status' => 1])->where('email', '<>', null)->get(['fullname', 'email', 'gsm']);
+
+        return $students;
+    }
+    // load child rider  
+    private function loadActiveRider(){
+        $riders = DB::table('school_riders as r')
+            ->join('users as u', 'r.user_pid', 'u.pid')
+            ->join('user_details as d', 'd.user_pid', 'u.pid')
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email', '<>', null)->get(['fullname', 'email', 'gsm']);
+
+        return $riders;
+    }
+    // load school active staff  
+    private function loadActiveStaff(){
+        $staff = DB::table('school_staff as t')
+            ->join('users as u', 't.user_pid', 'u.pid')
+            ->join('user_details as d', 'd.user_pid', 'u.pid')
+            ->where(['p.school_pid' => getSchoolPid(), 't.status' => 1])->where('email', '<>', null)->get(['fullname', 'email', 'gsm']);
+
+        return $staff;
+    }
 }

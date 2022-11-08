@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('school_notification_statuses', function (Blueprint $table) {
             $table->id();
+            $table->string('message_pid');
+            $table->string('viewer_pid');
             $table->timestamps();
         });
     }

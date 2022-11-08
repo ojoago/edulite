@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\School\Framework\Events\SchoolNotification;
 use App\Models\School\Framework\Session\ActiveSession;
 use App\Models\School\Framework\Session\Session;
 use App\Models\School\Framework\Term\ActiveTerm;
@@ -55,7 +56,6 @@ use App\Models\Users\UserDetail;
                         ->pluck('score')->first();//->toArray();
         return $ca;
     }
-    function aggregate(){}
     function termName($pid){
         $term = Term::where(['school_pid'=>getSchoolPid(),'pid'=>$pid])->pluck('term')->first();
         return $term;
@@ -108,4 +108,42 @@ function activeTermName()
     function getScoreGrade($arm,$score){
 
         return 'A';
+    }
+
+    function loadRecentNotification(){
+        getUserActiveRole();
+        switch (getUserActiveRole()) {
+            case 610: //rider
+            $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid(), 'type' => 2])
+                ->orwhere(['school_pid' => getSchoolPid(), 'type' => 4])
+                ->orwhere(['school_pid' => getSchoolPid(), 'type' => 5])->get(['message', 'created_at']);
+                break;
+            case 605: //parent
+             $ntfn = SchoolNotification::where(['school_pid'=>getSchoolPid(),'type'=>2])
+                                        ->orwhere(['school_pid' => getSchoolPid(), 'type' => 4])
+                                        ->orwhere(['school_pid'=>getSchoolPid(),'type'=>5])->get(['message','created_at']);
+                break;
+            case 600: //student
+            $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid(), 'type' => 2])
+                ->orwhere(['school_pid' => getSchoolPid(), 'type' => 4])
+                ->orwhere(['school_pid' => getSchoolPid(), 'type' => 5])->get(['message', 'created_at']);
+                break;
+            case 200: //School Super Admin
+            case 205: //School Admin
+            case 300: //Teacher
+            case 301: //Form/Class Teacher
+            case 303: //Clerk
+            case 305: //Secretary
+            case 307: //Portals
+            case 400: //Office Assisstnace
+            case 405: //Security
+            case 500: //Principal/Head Teacher
+            $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid(), 'type' => 2])
+            ->orwhere(['school_pid' => getSchoolPid(), 'type' => 4])
+            ->orwhere(['school_pid' => getSchoolPid(), 'type' => 5])->get(['message', 'created_at','type']);
+                break;
+            default:
+                # code...
+                break;
+        }
     }

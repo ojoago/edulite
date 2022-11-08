@@ -104,7 +104,7 @@
             let msg = await submitFormAjax('createSchoolForm', 'createSchoolBtn', route);
             if (msg) {
                 if (isset(msg.status) && isset(msg.code)) {
-                    let url = "{{'school-sign-in/'}}" + msg;
+                    let url = "{{'school-sign-in/'}}" + msg.code;
                     location.href = url;
                 }
             }

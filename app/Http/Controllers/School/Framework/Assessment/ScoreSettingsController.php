@@ -5,7 +5,6 @@ namespace App\Http\Controllers\School\Framework\Assessment;
 use App\Http\Controllers\Controller;
 use App\Models\School\Framework\Assessment\ScoreSetting;
 use App\Models\School\Framework\Assessment\ScoreSettingBase;
-use App\Models\School\Framework\Assessment\ScoreSettingParam;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 

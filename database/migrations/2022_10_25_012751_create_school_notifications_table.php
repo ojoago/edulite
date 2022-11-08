@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('term_pid');
             $table->text('message');
             $table->string('pid')->unique();
-            $table->integer('type')->comment('1 notice board, 2 parent, 3 staff, 4 student, 5 all');
-            $table->integer('category')->comment('1 notice board, 2 parent, 3 staff, 4 student, 5 all');
+            $table->integer('type')->comment('1 notice board, 2 parent, 3 Rider, 4 general, 5 students, 6 all staff, 7 academic staff, 8 non-academic');
+            $table->integer('category')->comment('1 notice board, 2 parent, 3 staff, 4 student, 5 all')->nullable();
             $table->string('begin',20)->nullable();
             $table->string('end',20)->nullable();
             $table->timestamps();

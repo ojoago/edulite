@@ -36,6 +36,7 @@ use App\Http\Controllers\School\Student\Promotion\PromoteStudentController;
 use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 use App\Http\Controllers\School\Framework\Attendance\AttendanceTypeController;
 use App\Http\Controllers\School\Framework\Assessment\AssessmentTitleController;
+use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 use App\Http\Controllers\School\Student\Attendance\StudentAttendanceController;
 use App\Http\Controllers\School\Framework\Psychomotor\PsychomotorBaseController;
 use App\Http\Controllers\School\Student\Results\Comments\CommentResultController;
@@ -256,6 +257,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('timetable-config', 'school.framework.timetable.timetable-config')->name('timetable.config');
 
     Route::view('event-config', 'school.framework.event.event-config')->name('event.config');
+    // notification 
+    Route::post('create-school-notification', [SchoolNotificationController::class, 'createSchoolNotification'])->name('create.school.notification');
 
 
     Route::view('fees-config', 'school.framework.fees.fees-config')->name('fee.config');
@@ -485,8 +488,6 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('student-ad-form', [AffectiveDomainController::class, 'loadAffecitveKeys']);
     Route::post('record-affective-score', [AffectiveDomainController::class, 'recordAffectiveDomainScore'])->name('record.affective.score');
 
-
-
     // view student result 
     Route::view('view-student-termly-result', 'school.student.result.termly-result.view-termly-result-form')->name('view.student.termly.result');
     Route::post('view-student-termly-result', [StudentTermlyResultController::class, 'loadStudentResult']);
@@ -496,12 +497,12 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('student-report-card/{param}/{pid}', [StudentTermlyResultController::class, 'studentReportCard'])->name('student.report.card');
     // view student cumualtive result 
     //view-student-cumualtive-result
-    Route::view('v-s-c-r', 'school.student.result.cumulative.cumulative-result-form')->name('view.student.cumualtive.result');
-    Route::post('v-s-c-r', [ViewCumulativeResultController::class, 'loadStudentCumulativeResult']);
-    Route::get('s-c-r-c/{param}/{std}', [ViewCumulativeResultController::class, 'studentCumulativeReportCard'])->name('student.cumulative.result');
+    Route::view('view-student-cumulative-result', 'school.student.result.cumulative.cumulative-result-form')->name('view.student.cumualtive.result');
+    Route::post('view-student-cumulative-result', [ViewCumulativeResultController::class, 'loadStudentCumulativeResult']);
+    Route::get('class-cumulative-result/{param}/{std}', [ViewCumulativeResultController::class, 'studentCumulativeReportCard'])->name('student.cumulative.result');
     // redirect to this route 
     // particular student money
-    Route::get('s-c-r/{param}/{pid}', [StudentTermlyResultController::class, 'studentReportCard'])->name('student.cm.report.card');
+    Route::get('student-cumulative-result/{param}/{pid}', [StudentTermlyResultController::class, 'studentReportCard'])->name('student.cm.report.card');
 
     // comments 
     // principal comment 
