@@ -1,6 +1,8 @@
 @extends('layout.mainlayout')
 @section('title','School Events')
 @section('content')
+<link href="{{asset('plugins/fullcalendar/fullcalendar.min.css')}}" rel="stylesheet">
+
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">School Events</h5>
@@ -22,13 +24,14 @@
                     Create Notification
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="classCategoryTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="notificationTable">
                     <thead>
                         <tr>
-                            <th>Category</th>
-                            <th>Description</th>
-                            <th>Date</th>
-                            <th>Created By</th>
+                            <th>S/N</th>
+                            <th>Message</th>
+                            <th>type</th>
+                            <th>start date</th>
+                            <th>end date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,7 +40,7 @@
             </div>
             <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="classTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="Table">
                     <thead>
                         <tr>
                             <th>Category</th>
@@ -56,7 +59,8 @@
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassArmModal">
                     Event
                 </button>
-                <!-- <div class="table-responsive mt-3"> -->
+                <div class="response"></div>
+                <div id='calendar'></div>
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="classArmTable">
                     <thead>
                         <tr>
@@ -130,6 +134,8 @@
 <!-- create school category modal  -->
 <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
+<script src="{{asset('plugins/fullcalendar/lib/moment.min.js')}}"></script>
+<script src="{{asset('plugins/fullcalendar/fullcalendar.min.js')}}"></script>
 <script>
     $(document).ready(function() {
         // add more title 
@@ -149,6 +155,128 @@
         $('#createNotificationBtn').click(function() {
             submitFormAjax('createNotificationForm', 'createNotificationBtn', "{{route('create.school.notification')}}");
         });
+        // load page content  
+        loadNotification();
+        // load school Notification
+        function loadNotification(session = null, term = null) {
+            $('#notificationTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                destroy: true,
+                // type: "GET",
+                "ajax": {
+                    url: "{{route('load.school.notification')}}",
+                    type: "post",
+                    data: {
+                        _token: "{{csrf_token()}}",
+                        session_pid: session,
+                        term_pid: term,
+                    },
+                },
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                    },
+                    {
+                        "data": "message"
+                    },
+                    {
+                        "data": "type"
+                    },
+                    {
+                        "data": "begin"
+                    },
+                    {
+                        "data": "end",
+                    },
+
+                ],
+            });
+        }
+    });
+</script>
+
+<script>
+    var calendar = $('#calendar').fullCalendar({
+        editable: true,
+        events: {
+            url: "{{route('student.attendance')}}",
+            type: "post",
+            data: {
+                pid: '',
+                _token: "{{csrf_token()}}"
+            },
+        },
+        displayEventTime: false,
+        eventRender: function(event, element, view) {
+            if (event.allDay === 'true') {
+                event.allDay = true;
+            } else {
+                event.allDay = false;
+            }
+        },
+        selectable: true,
+        selectHelper: true,
+        select: function(start, end, allDay) {
+            var title = prompt('Event Title:');
+
+            if (title) {
+                var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+                var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+
+                $.ajax({
+                    url: 'add-event.php',
+                    data: 'title=' + title + '&start=' + start + '&end=' + end,
+                    type: "POST",
+                    success: function(data) {
+                        displayMessage("Added Successfully");
+                    }
+                });
+                calendar.fullCalendar('renderEvent', {
+                        title: title,
+                        start: start,
+                        end: end,
+                        allDay: allDay
+                    },
+                    true
+                );
+            }
+            calendar.fullCalendar('unselect');
+        },
+
+        editable: true,
+        eventDrop: function(event, delta) {
+            var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+            var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+            $.ajax({
+                url: 'edit-event.php',
+                data: 'title=' + event.title + '&start=' + start + '&end=' + end + '&id=' + event.id,
+                type: "POST",
+                success: function(response) {
+                    displayMessage("Updated Successfully");
+                }
+            });
+        },
+        eventClick: function(event) {
+            var deleteMsg = confirm("Do you really want to delete?");
+            if (deleteMsg) {
+                $.ajax({
+                    type: "POST",
+                    url: "delete-event.php",
+                    data: "&id=" + event.id,
+                    success: function(response) {
+                        if (parseInt(response) > 0) {
+                            $('#calendar').fullCalendar('removeEvents', event.id);
+                            displayMessage("Deleted Successfully");
+                        }
+                    }
+                });
+            }
+        }
 
     });
 </script>

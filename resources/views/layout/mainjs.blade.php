@@ -545,6 +545,10 @@
             var route = "{{route('update.user.detail')}}";
             submitFormAjax('updateAccountForm', 'updateAccountBtn', route);
         });
+        $('#loadNotifications').click(function(){
+            loadMyNotification();
+        })
+        countMyNotification();
     })
 
     function FormMultiSelect2(idOrClass, route, plh, pre = null) {
@@ -580,7 +584,25 @@
         }).val(pre).trigger('change').trigger('focus');
     }
 
+    function countMyNotification() {
+        // load.my.notification.tip
+        $.ajax({
+            url: "{{route('count.my.notification.tip')}}",
+            success: function(data) {
+                // console.log(data);
+                $('#badge-number').text(data);
+            }
+        });
+    }
 
+    function loadMyNotification() {
+        $.ajax({
+            url: "{{route('load.my.notification.tip')}}",
+            success: function(data) {
+                $('#notifications').html(data);
+            }
+        });
+    }
     // multiple select  default
 
     // var unselected = li.find('option:not(:selected)');

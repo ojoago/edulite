@@ -28,11 +28,16 @@ class AssessmentTitleController extends Controller
         // $classes = Classes::where('school_pid',getSchoolPid())->get(['pid','class']);//
         // $arm = ClassArm::where('school_pid',getSchoolPid())->get(['pid','arm']);//class arm
         // $score = ScoreSetting::where('school_pid',getSchoolPid())->get(['pid','score'])->dd();//class arm
-        return datatables($data)->editColumn('created_at', function ($data) {
-            return date('d F Y', strtotime($data->created_at));
+        return datatables($data)
+        ->editColumn('date', function ($data) {
+            return $data->created_at->diffForHumans();
         })->editColumn('category', function ($data) {
             return $data->category == 2 ? 'Mid-Term' : 'General';
-        })->make(true);
+        })
+        // ->addColumn('action',function($data){
+
+        // })
+        ->make(true);
         // return view('school.framework.assessment.index',compact('data','session','term','classes','arm'));
     }
     public function loadAvailableTitle()

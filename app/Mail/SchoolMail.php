@@ -16,9 +16,10 @@ class SchoolMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public $param;
+    public function __construct($param)
     {
-        //
+        $this->param = $param;
     }
 
     /**
@@ -28,6 +29,6 @@ class SchoolMail extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->subject($this->param['subject'])->view('mails.school-mail');
     }
 }

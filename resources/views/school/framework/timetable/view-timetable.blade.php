@@ -1,18 +1,10 @@
 @extends('layout.mainlayout')
-@section('title','Exam Timetable Config')
+@section('title','View Exam Timetable')
 @section('content')
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">Student Exam Timetable</h5>
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createTimetableModal">
-            Create
-        </button>
-
-        <div class="float-end">
-            <button type="button" class="btn btn-primary mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#createNotificationModal">
-                Notify
-            </button>
-        </div>
+        
         <div class="row mb-3">
             <div class="col-md-3">
                 <select name="category_pid" id="timetableCategorySelect2" class="form-control form-control-sm">
@@ -324,10 +316,7 @@
         $('#createTimetableBtn').click(function() {
             submitFormAjax('createTimetableForm', 'createTimetableBtn', "{{route('create.school.timetable')}}");
         });
-        // notify parent 
-        $('#createNotificationBtn').click(function() {
-            submitFormAjax('createNotificationForm', 'createNotificationBtn', "{{route('create.school.notify.parent')}}");
-        });
+
     });
 </script>
 @endsection

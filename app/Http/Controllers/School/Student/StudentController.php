@@ -226,8 +226,7 @@ class StudentController extends Controller
             unset($dupParams['rider_pid']);
             return StudentPickUpRider::updateOrCreate($dupParams,$data);
         } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
-
+            $error = $e->getMessage();
             logError($error);
         }
     }
@@ -245,6 +244,14 @@ class StudentController extends Controller
         $id = self::countStudent() + 1;
         $id = strlen($id) == 1 ? '0' . $id : $id;
         return SchoolController::getSchoolHandle() . '/' . strtoupper(date('yM')) . $id; // concatenate shool handle with student id
+    }
+    public static function getStudentDetailBypId($pid)
+    {
+        $data = DB::table('students as s')->join('users as u', 'u.pid', 's.user_pid')
+                ->join('user_details as d', 'd.user_pid', 's.user_pid')
+                ->select('u.email', 'u.gsm', 's.fullname')
+                ->where(['s.pid' => $pid, 's.school_pid' => getSchoolPid()])->first();
+        return $data;
     }
     public static function countStudent()
     {

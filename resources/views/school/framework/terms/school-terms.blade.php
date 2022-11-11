@@ -36,7 +36,7 @@
                             <th>Term</th>
                             <th>Description</th>
                             <th>Date</th>
-                            <!-- <th>Action</th> -->
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -156,40 +156,16 @@
     $(document).ready(function() {
         // validate signup form on keyup and submit
         $('#createTermBtn').click(function() {
-            $('.overlay').show();
-            $.ajax({
-                url: "{{route('school.term')}}",
-                type: "POST",
-                data: new FormData($('#createTermForm')[0]),
-                dataType: "JSON",
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    $('#createTermForm').find('p.text-danger').text('');
-                    $('#createTermBtn').prop('disabled', true);
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#createTermBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    if (data.status === 0) {
-                        alert_toast('Fill the form correctly', 'warning');
-                        $.each(data.error, function(prefix, val) {
-                            $('p.' + prefix + '_error').text(val[0]);
-                        });
-                    } else {
-                        alert_toast(data.message, 'success');
-                        $('#createTermForm')[0].reset();
-                    }
-                },
-                error: function(data) {
-                    $('#createTermBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    alert_toast('Something Went Wrong', 'error');
-                }
-            });
+            submitFormAjax('createTermForm', 'createTermBtn', "{{route('school.term')}}");
+            $('#' + formId)[0].reset();
         });
-
+        $(document).on('click', '.createTermBtn', function() {
+            let pid = $(this).attr('pid');
+            let formId = 'termForm' + pid;
+            let btnId = 'id' + pid;
+            submitFormAjax(formId, btnId, "{{route('school.term')}}");
+            $('#' + formId)[0].reset();
+        })
         // load school session
         $('#term-dataTable').DataTable({
             "processing": true,
@@ -208,9 +184,9 @@
                 {
                     "data": "created_at"
                 },
-                // {
-                //     "data": "action"
-                // },
+                {
+                    "data": "action"
+                },
             ],
         });
         $('#active-term-table').DataTable({
@@ -258,42 +234,10 @@
         multiSelect2('#setTermSelect2', 'setActiveTermModal', 'term', 'Select Term');
 
         // term dropdown 
-
-
         // set active session 
         $('#setActiveTermBtn').click(function() {
-            $('.overlay').show();
-            $.ajax({
-                url: "{{route('school.term.active')}}",
-                type: "POST",
-                data: new FormData($('#setActiveTermForm')[0]),
-                dataType: "JSON",
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    $('#setActiveTermForm').find('p.text-danger').text('');
-                    $('#setActiveTermBtn').prop('disabled', true);
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#setActiveTermBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    if (data.status === 0) {
-                        alert_toast('Fill in form correctly', 'warning');
-                        $.each(data.error, function(prefix, val) {
-                            $('.' + prefix + '_error').text(val[0]);
-                        });
-                    } else {
-                        alert_toast(data.message, 'success');
-                        $('#setActiveTermForm')[0].reset();
-                    }
-                },
-                error: function(data) {
-                    $('#setActiveTermBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    alert_toast('Something Went Wrong', 'error');
-                }
-            });
+            submitFormAjax('setActiveTermForm', 'setActiveTermBtn', "{{route('school.term.active')}}");
+            $('#' + formId)[0].reset();
         });
     });
 </script>

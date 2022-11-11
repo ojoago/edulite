@@ -14,7 +14,7 @@ class SchoolSessionController extends Controller
     public function __construct()
     {
         // school member auth 
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
@@ -27,46 +27,33 @@ class SchoolSessionController extends Controller
     {
         // datatable serve 
         $data = Session::where(['school_pid'=>getSchoolPid()])->select(['pid','session','created_at']);
-        return datatables($data)->editColumn('created_at', function ($data) {
-            return date('d F Y', strtotime($data->created_at));
+        return datatables($data)->editColumn('date', function ($data) {
+            return $data->created_at->diffForHumans();
+        })->addColumn('action',function($data){
+            return view('school.framework.session.session-action-button', ['data' => $data]);
         })->make(true);
 
-        // return datatables($data)
-        //     // ->addColumn('action', function ($data) {
-        //     //         $html = '
-        //     //             <a href="/reminders/' . $data->pid . '/done"><button class="button is-primary" type="submit" data-toggle="tooltip" title="Edit Session"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
-        //     //             </a>
-        //     //         </a>';
-        //     //     return $html;
-        //     // })
-        //     ->editColumn('created_at', function ($data) {
-        //         return date('d F Y', strtotime($data->created_at));
-        //     })
-        //     // ->rawColumns(['data','action'])
-        //     ->make(true);
     }
 
     public function createSession(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'session' => ['required',Rule::unique('sessions')->where(function($q){
-                $q->where('school_pid',getSchoolPid());
+            'session' => ['required',Rule::unique('sessions')->where(function($q) use ($request){
+                $q->where('school_pid',getSchoolPid())->where('pid','<>',$request->pid);
             })]
         ],['session.required'=>'Enter session','session.unique'=>$request->session.' already exist']);
         if (!$validator->fails()) {
             $data = [
-                'pid' => public_id(),
+                'pid' => $request->pid ?? public_id(),
                 'school_pid' => getSchoolPid(),
                 'staff_pid' => getSchoolUserPid(),
                 'session' => $request->session
             ];
-            $query = Session::where(['school_pid' => getSchoolPid(), 'session' => $data['session']])->first();
-            if ($query) {
-                $data = $query;
-                // $msg = "exists in is it";
-            }
             $result = $this->createOrUpdateSession($data);
             if ($result) {
+                if($request->pid){
+                    return response()->json(['status' => 1, 'message' => 'Session Updated']);
+                }
                 return response()->json(['status' => 1, 'message' => 'Session created']);
             }
         }
@@ -81,7 +68,6 @@ class SchoolSessionController extends Controller
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
         }
     }
 

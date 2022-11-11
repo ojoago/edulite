@@ -10,9 +10,12 @@ use App\Models\School\Staff\SchoolStaff;
 use App\Models\School\Staff\StaffSubject;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
+use App\Http\Controllers\School\Framework\ClassController;
+use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Models\School\School;
+use App\Models\School\Staff\StaffRoleHistory;
 use Illuminate\Validation\Rule;
 
 class StaffController extends Controller
@@ -286,6 +289,7 @@ class StaffController extends Controller
                     'title' => $request->title,
                     'pid' => $request->pid
                 ];
+                
                 $user = AuthController::createUser($data);
                 if ($user) {
                     $detail['user_pid'] = $data['pid'] ?? $user->pid;
@@ -309,11 +313,16 @@ class StaffController extends Controller
                         }
                         $result = SchoolController::createSchoolStaff($staff);
                         if ($result) {
+
+                            $this->staffRoleHistory(role: $request->role, pid: $result->pid ?? $request->pid);
                             if($request->pid){
-                                
                                 return response()->json(['status' => 1, 'message' => 'Staff Detail updated  Successfully & username is ' . $data['username']]);
                             }
-                            
+                            $message = 'Your account has been created, Staff Id: ' . $staff['staff_id']  . ' & username is ' . $data['username'].' and Password: '.$this->pwd;
+                            $message .= 'Your primary Role is ' .matchStaffRole($request->role);
+
+                            SchoolNotificationController::notifyIndividualStaff(message: $message, pid: $result->pid ?? $request->pid);
+
                             return response()->json(['status' => 1, 'message' => 'Staff Registration Successful, Staff Id ' . $staff['staff_id']  . ' & username is ' . $data['username']]);
                         }
 
@@ -324,7 +333,7 @@ class StaffController extends Controller
                 return response()->json(['status' => 1, 'message' => 'user account not completed, and not linked to school!! use ' . $data['gsm'] . ' or ' . $data['username'] . ' to link to school, and then update account details']);
 
             } catch (\Throwable $e) {
-                $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+                $error =  $e->getMessage();
                 logError($error);
                 return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
             }
@@ -362,7 +371,7 @@ class StaffController extends Controller
                 }
                 return response()->json(['status'=>'error','message'=>'Something Went Wrong']);
             } catch (\Throwable $e) {
-                $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+                $error =  $e->getMessage();
                 logError($error);
             }
         }
@@ -402,7 +411,7 @@ class StaffController extends Controller
             }
             return 'Something Went Wrong';
         } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+            $error =  $e->getMessage();
             logError($error);
         }
     }
@@ -419,11 +428,12 @@ class StaffController extends Controller
                 $staff['role'] = $request->role;
                 $sts = $staff->save();
                 if($sts){
+                    // log staff role update 
+                    $this->staffRoleHistory(role: $request->role,pid: $request->pid);
                     if($request->role==200){
                         $school = School::where('pid',getSchoolPid())->first();
                         $school['user_pid'] = $staff->user_pid;
                         $sts = $school->save();
-
                     }
                     return response()->json(['status'=>1,'message'=>'staff role updated!!!']);
                 }
@@ -434,6 +444,22 @@ class StaffController extends Controller
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
         
+    }
+    private function staffRoleHistory($role,$pid){
+        $roleHistry = [
+            'school_pid' => getSchoolPid(),
+            'term_pid' => activeTerm(),
+            'session_pid' => activeSession(),
+            'role' => $role,
+            'staff_pid' => $pid,
+            'creator' => getSchoolUserPid()
+        ];
+       $sts =  StaffRoleHistory::create($roleHistry);
+       if($sts){
+            $message ='You have been assigned '. matchStaffRole($role).' Role';
+            SchoolNotificationController::notifyIndividualStaff(message: $message, pid: $pid);
+       }
+       return $sts;
     }
     public function staffAccessRight($pid){
         $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->first(['id', 'status']);
@@ -448,7 +474,6 @@ class StaffController extends Controller
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
         }
     }
 
@@ -478,11 +503,19 @@ class StaffController extends Controller
                     ];
                     $data['teacher_pid']=$request->teacher_pid;
                         // 'arm_pid'=>'',
+                    $msg = 'The following class has been assigned to you<br>';
+                    if(count($request->arm_pid)==1){
+                        $msg = '';
+                    }
+                    $n=0;
                     foreach($request->arm_pid as $row){
+                        $msg .=++$n.' '. ClassController::getClassArmNameByPid($row).'<br>';
                         $dupParams['arm_pid'] = $data['arm_pid'] = $row;
                         $result = StaffClass::updateOrCreate($dupParams,$data);
                     }
                     if ($result) {
+                        $message = $msg;
+                        SchoolNotificationController::notifyIndividualStaff(message:$message,pid: $request->teacher_pid);
                         return response()->json(['status'=>1,'message'=> count($request->arm_pid)." Class(es) Assigned to Staff"]);
                     }
                     return response()->json(['status'=>'error','message'=> 'Something Went Wrong']);
@@ -564,5 +597,14 @@ class StaffController extends Controller
             'arm_subject_pid'=>$subject
             ])->pluck('teacher_pid')->first();
         return $teacher;
+    }
+
+    public static function getStaffDetailBypId(string $pid)
+    {
+        $data = SchoolStaff::join('users', 'users.pid', 'school_staff.user_pid')
+        ->join('user_details', 'users.pid', 'user_details.user_pid')
+        ->where(['school_staff.school_pid' => getSchoolPid(),'pid'=>$pid])
+            ->first(['gsm', 'title', 'email','fullname']);
+        return $data;
     }
 }

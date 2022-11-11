@@ -30,7 +30,7 @@
                             <!-- <th>SN</th> -->
                             <th>Session</th>
                             <th>Date</th>
-                            <!-- <th>Action</th> -->
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -119,40 +119,16 @@
     $(document).ready(function() {
         // validate signup form on keyup and submit
         $('#createSessionBtn').click(function() {
-            $('.overlay').show();
-            $.ajax({
-                url: "{{route('school.session')}}",
-                type: "POST",
-                data: new FormData($('#createSessionForm')[0]),
-                dataType: "JSON",
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    $('#createSessionForm').find('p.text-danger').text('');
-                    $('#createSessionBtn').prop('disabled', true);
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#createSessionBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    if (data.status === 0) {
-                        alert_toast('Fill the form correctly', 'warning');
-                        $.each(data.error, function(prefix, val) {
-                            $('p.' + prefix + '_error').text(val[0]);
-                        });
-                    } else {
-                        alert_toast(data.message, 'success');
-                        $('#createSessionForm')[0].reset();
-                    }
-                },
-                error: function(data) {
-                    $('#createSessionBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    alert_toast('Something Went Wrong', 'error');
-                }
-            });
+            submitFormAjax('createSessionForm', 'createSessionBtn', "{{route('school.session')}}");
         });
 
+        // update session 
+        $(document).on('click', '.createSessionBtn', function() {
+            let pid = $(this).attr('pid');
+            let formId = 'sessionForm' + pid;
+            let btnId = 'id' + pid;
+            submitFormAjax(formId, btnId, "{{route('school.session')}}");
+        })
         // load school session
         $('#dataTable').DataTable({
             "processing": true,
@@ -162,11 +138,11 @@
                     "data": "session"
                 },
                 {
-                    "data": "created_at"
+                    "data": "date"
                 },
-                // {
-                //     "data": "action"
-                // },
+                {
+                    "data": "action"
+                },
             ],
         });
 
@@ -188,39 +164,9 @@
 
         // set active session 
         $('#setActiveSessionBtn').click(function() {
-            $('.overlay').show();
-            $.ajax({
-                url: "{{route('school.session.active')}}",
-                type: "POST",
-                data: new FormData($('#setActiveSessionForm')[0]),
-                dataType: "JSON",
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    $('#setActiveSessionForm').find('span.text-danger').text('');
-                    $('#setActiveSessionBtn').prop('disabled', true);
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#setActiveSessionBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    if (data.status === 0) {
-                        alert_toast('Select Session', 'warning');
-                        $.each(data.error, function(prefix, val) {
-                            $('.' + prefix + '_error').text(val[0]);
-                        });
-                    } else {
-                        alert_toast(data.message, 'success');
-                        $('#setActiveSessionForm')[0].reset();
-                    }
-                },
-                error: function(data) {
-                    $('#setActiveSessionBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    alert_toast('Something Went Wrong', 'error');
-                }
-            });
+            submitFormAjax('setActiveSessionForm', 'setActiveSessionBtn', "{{route('school.session.active')}}");
         });
+
     });
 </script>
 @endsection

@@ -53,7 +53,7 @@ Route::view('/','welcome')->middleware('guest');
 // sign up 
 Route::get('/mail',function(){
     
-    return view('mails.auth-mail');
+    return view('mails.school-mail');
 });
 // sign up form 
 Route::view('sign-up', 'auths.sign-up')->name('sign.up')->middleware('guest');
@@ -242,6 +242,7 @@ Route::middleware('schoolAuth')->group(function(){
     // grade key 
     Route::view('school-grade-key', 'school.framework.grade.grade-key')->name('school.grade.key');
     Route::get('load-school-grade-key', [GradeKeyController::class, 'index'])->name('load.school.grade.key');
+    Route::get('load-school-grade-key-by-class', [GradeKeyController::class, 'loadGradeKeyByClass'])->name('load.class.grade.key');
     Route::post('school-grade-key', [GradeKeyController::class, 'createGradeKey']);
     Route::view('school-attendance', 'school.framework.attendance.attendance-setting')->name('school.attendance.setting');
     Route::get('load-attendance', [AttendanceTypeController::class, 'index'])->name('load.school.attendance.setting');
@@ -256,9 +257,20 @@ Route::middleware('schoolAuth')->group(function(){
 
     Route::view('timetable-config', 'school.framework.timetable.timetable-config')->name('timetable.config');
 
+    Route::view('view-timetable', 'school.framework.timetable.view-timetable')->name('view.timetable');
+
     Route::view('event-config', 'school.framework.event.event-config')->name('event.config');
     // notification 
     Route::post('create-school-notification', [SchoolNotificationController::class, 'createSchoolNotification'])->name('create.school.notification');
+    // load notification 
+    Route::post('load-school-notification', [SchoolNotificationController::class, 'loadMyNotificationHistories'])->name('load.school.notification');
+
+    // notify parent when time table is ready 
+    Route::post('notify-parent-timetable', [SchoolNotificationController::class, 'createSchoolNotifyParent'])->name('create.school.notify.parent');
+   
+    Route::get('count-my-notification-tip', [SchoolNotificationController::class, 'countMyNotificationTip'])->name('count.my.notification.tip');
+    Route::get('load-my-notification-tip', [SchoolNotificationController::class, 'loadMyNotificationTip'])->name('load.my.notification.tip');
+    Route::get('load-my-notification-details', [SchoolNotificationController::class, 'loadMyNotificationDetails'])->name('load.my.notification.details');
 
 
     Route::view('fees-config', 'school.framework.fees.fees-config')->name('fee.config');

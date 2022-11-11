@@ -18,28 +18,33 @@ class SchoolTermController extends Controller
         $data = Term::where('school_pid',getSchoolPid())->get(['pid','term','description','created_at']);
                 return datatables($data)->editColumn('created_at', function ($data) {
                     return date('d F Y', strtotime($data->created_at));
-                })->make(true);
+                })->addColumn('action', function ($data) {
+            return view('school.framework.terms.term-action-button', ['data' => $data]);
+        })->make(true);
     }
     public function createSchoolTerm(Request $request)
     {
         $in = $request['term'];
         // $request['term'] = strtoupper($request['term']); 
         $validator = Validator::make($request->all(),[
-            'term' => ['required', Rule::unique('terms')->where(function ($query) {
-                $query->where('school_pid', '=', getSchoolPid());
+            'term' => ['required', Rule::unique('terms')->where(function ($query) use($request) {
+                $query->where('school_pid', '=', getSchoolPid())->where('pid','<>',$request->pid);
             })]
         ],['term.required'=>'Enter Term name','term.unique'=>$in.' already exists']);
    
         if(!$validator->fails()){
             $data = [
-                'pid'=>public_id(),
+                'pid'=> $request->pid ?? public_id(),
                 'school_pid'=>getSchoolPid(),
                 'term'=>$request->term,
                 'description'=>$request->description,
             ];
             $result = $this->createOrUpdateTerm($data);
             if ($result) {
+                if($request->pid){
 
+                    return response()->json(['status'=>1,'message'=>'Term Updated']);
+                }
                 return response()->json(['status'=>1,'message'=>'Term Created']);
 
             }
@@ -55,7 +60,7 @@ class SchoolTermController extends Controller
     private function createOrUpdateTerm($data)
     {
         try {
-            return  Term::updateOrCreate(['term' => $data['term'], 'school_pid' => $data['school_pid']], $data);
+            return  Term::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);

@@ -304,7 +304,7 @@ class ClassController extends Controller
                     $dupParams = $data ;
                     unset($dupParams['sid']);
                     $dataArray = $dupParams;
-                   unset($dupParams['staff_pid']);
+                    unset($dupParams['staff_pid']);
         // $sid = (array) ;
                     $datas = [];
                     foreach($data['sid'] as $pid){

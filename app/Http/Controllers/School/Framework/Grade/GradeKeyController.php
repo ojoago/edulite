@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\School\Framework\Grade;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\School\Framework\Grade\GradeKey;
-use App\Models\School\Framework\Grade\GradeKeyBase;
-use App\Models\School\Framework\Grade\SchoolGrade;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use App\Models\School\Framework\Grade\GradeKey;
+use App\Models\School\Framework\Grade\SchoolGrade;
+use App\Models\School\Framework\Grade\GradeKeyBase;
 
 class GradeKeyController extends Controller
 {
@@ -28,6 +29,24 @@ class GradeKeyController extends Controller
         return datatables($data)
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->diffForHumans();
+            })
+            ->make(true);
+      
+    }
+    public function loadGradeKeyByClass()
+    {
+       
+        $data = DB::table("grade_keys as k")
+                    ->join('student_class_score_params as p','p.pid','k.class_param_pid')
+                    ->join('terms as t','t.pid','p.term_pid')
+                    ->join('sessions as s','s.pid','p.session_pid')
+                    ->join('class_arms as a','a.pid','p.arm_pid')
+                ->where('k.school_pid', getSchoolPid())
+                ->select('title', 'grade', 'grade_point', 'remark', 'min_score', 'max_score', 'k.created_at', 'a.arm','term','session')->get();
+        // $data = GradeKey::where('school_pid', getSchoolPid())->get(['title','grade','grade_point','remark','min_score','max_score','created_at','pid']);
+        return datatables($data)
+            ->editColumn('created_at', function ($data) {
+                return date('d F Y', strtotime($data->created_at));
             })
             ->make(true);
       

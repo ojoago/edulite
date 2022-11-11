@@ -48,12 +48,11 @@ class ParentController extends Controller
     public static function parentProfile ($id){
         $data = SchoolParent::join('user_details', 'school_parents.user_pid', 'user_details.user_pid')
         ->join('users', 'users.pid', 'school_parents.user_pid')
-        ->where('school_parents.school_pid', getSchoolPid())
+        ->where(['school_parents.school_pid'=> getSchoolPid(), 'school_parents.pid'=> base64Decode($id)])
             ->first(['fullname', 'gsm', 'email', 'address',
                      'username', 'school_parents.pid', 'school_parents.created_at',
                       'school_parents.status', 'gender', 'religion', 'title', 'state', 'lga',
                        'passport', 'account_status as status', 'school_parents.pid']);
-        
         // $data = DB::table('school_parents as p')->join('users as u','u.pid','p.user_pid')
         //                 ->join('user_details as d','d.user_pid','p.user_pid')
         //                 ->leftJoin('students as s','s.parent_pid','p.pid')->where('p.pid',base64Decode($id))
@@ -74,6 +73,13 @@ class ParentController extends Controller
     public static function getParentFullname($pid){
         return SchoolParent::join('user_details','user_details.user_pid','school_parents.user_pid')
                             ->where('school_parents.pid',$pid)->pluck('fullname')->first();
+    }
+    public static function getParentDetailBypId($pid){
+        $data = SchoolParent::join('user_details', 'school_parents.user_pid', 'user_details.user_pid')
+        ->join('users', 'users.pid', 'school_parents.user_pid')
+        ->where(['school_parents.school_pid' => getSchoolPid(), 'school_parents.pid' => $pid])
+        ->first(['fullname', 'gsm', 'email', 'title']);
+        return $data;
     }
 
     public function toggleParentStatus(Request $request){

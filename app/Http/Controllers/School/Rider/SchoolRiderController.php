@@ -193,6 +193,14 @@ class SchoolRiderController extends Controller
         $id = strlen($id) == 1 ? '0' . $id : $id;
         return SchoolController::getSchoolHandle() . '/' . strtoupper(date('yMd')) . $id; // concatenate shool handle with Rider id
     }
+    public static function getRiderDetailBypId(string $pid)
+    {
+        $data = SchoolRider::join('user_details', 'user_details.user_pid', 'school_riders.user_pid')
+        ->join('users', 'users.pid', 'school_riders.user_pid')
+        ->where(['school_riders.school_pid' => getSchoolPid(), 'school_riders.pid'=>$pid])
+            ->first(['fullname', 'gsm', 'email','title']);
+        return $data;
+    }
     public static function countRider()
     {
         return SchoolRider::where(['school_pid' => getSchoolPid()])

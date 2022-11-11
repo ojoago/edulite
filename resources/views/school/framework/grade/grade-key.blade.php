@@ -41,9 +41,31 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="class-grade" role="tabpanel">
+                <div class="row mb-3 mt-2">
+                    <div class="col-md-3">
+                        <select name="category_pid" id="classGradeKeyCategorySelect2" class="form-control form-control-sm">
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="class_pid" id="classGradeKeyClassSelect2" class="form-control form-control-sm">
+                        </select>
+                    </div>
+                   
+                    <div class="col-md-3">
+                        <select name="session_pid" id="classGradeKeySessionSelect2" class="form-control form-control-sm">
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="term_pid" id="classGradeKeyTermSelect2" class="form-control form-control-sm">
+                        </select>
+                    </div>
+                </div>
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="classGradeKeyTable">
                     <thead>
                         <tr>
+                            <th>Arm</th>
+                            <th>Term</th>
+                            <th>Session</th>
                             <th>Grade</th>
                             <th>Title</th>
                             <th>Min Score</th>
@@ -235,6 +257,32 @@
                 // },
             ],
         });
+        // filter class subject 
+        FormMultiSelect2('#classGradeKeyCategorySelect2', 'category', 'Select Category');
+        FormMultiSelect2('#classGradeKeyTermSelect2', 'term', 'Select Term');
+        FormMultiSelect2('#classGradeKeySessionSelect2', 'session', 'Select Session');
+        $('#classGradeKeyCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            FormMultiSelect2Post('#classGradeKeyClassSelect2', 'class', id, 'Select Class');
+        });
+        $('#classGradeKeyClassSelect2').on('change', function(e) {
+            var id = $(this).val();
+            FormMultiSelect2Post('#classGradeKeyArmSelect2', 'class-arm', id, 'Select Class Arm');
+        });
+
+
+        multiSelect2('#ctCategorySelect2', 'createclassGradeKeyModal', 'category', 'Select Category');
+        $('#ctCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#ctClassSelect2', 'createclassGradeKeyModal', 'class', id, 'Select Class');
+        });
+        $('#ctClassSelect2').on('change', function(e) {
+            var pid = $(this).val();
+            multiSelect2Post('#ctArmSelect2', 'createclassGradeKeyModal', 'class-arm', pid, 'Select Class Arm');
+            // var id = ;
+            multiSelect2Post('#ctArmSubjects0', 'createclassGradeKeyModal', 'all-arms-subject', pid, 'Select Class Subject');
+        });
+
         $('#classGradeKeyTable').DataTable({
             "processing": true,
             "serverSide": true,
@@ -243,8 +291,18 @@
             },
             responsive: true,
             type: "get",
-            "ajax": "{{route('load.school.grade.key')}}",
+            "ajax": "{{route('load.class.grade.key')}}",
             "columns": [
+
+                {
+                    "data": "arm"
+                },
+                {
+                    "data": "term"
+                },
+                {
+                    "data": "session"
+                },
 
                 {
                     "data": "grade"

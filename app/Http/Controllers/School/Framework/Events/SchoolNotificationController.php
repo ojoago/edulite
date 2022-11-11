@@ -5,12 +5,37 @@ namespace App\Http\Controllers\School\Framework\Events;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\School\Parent\ParentController;
+use App\Http\Controllers\School\Rider\SchoolRiderController;
+use App\Http\Controllers\School\Staff\StaffController;
+use App\Http\Controllers\School\Student\StudentController;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Events\SchoolNotification;
 
 class SchoolNotificationController extends Controller
 {
+
+    public function loadMyNotificationHistories(){
+        $data = SchoolNotification::where(['school_pid'=>getSchoolPid()])->get();
+        return datatables($data)
+                    ->addIndexColumn()
+                    ->make(true);
+    }
+    public function countMyNotificationTip(){
+       return countRecentNotification();
+    }
     
+    public function loadMyNotificationTip(){
+        $ntfn = loadRecentNotification();
+        return formatNotification($ntfn);
+
+    }
+    public function loadMyNotificationDetails(){
+        $ntfn = loadMyNotificationDetails();
+        return formatNotification($ntfn);
+
+    }
+
     public function createSchoolNotification(Request $request){
 
         $validator = Validator::make($request->all(),[
@@ -49,6 +74,94 @@ class SchoolNotificationController extends Controller
         return response()->json(['status'=>0,'message'=>'','error'=>$validator->errors()->toArray()]);
     }
 
+    public function createSchoolNotifyParent(Request $request){
+        $validator = Validator::make($request->all(), [
+            'message' => 'required|string',
+        ], ['message.required' => 'Please Enter Notification Message']);
+
+        if (!$validator->fails()) {
+            $data = [
+                'message' => $request->message== 'Student Timetable is ready' ? 'Student Timetable for '. activeTermName().' '.activeSessionName().' is ready' : $request->message,
+                'type' => 2,
+                'school_pid' => getSchoolPid(),
+                'term_pid' => activeTerm(),
+                'session_pid' => activeSession(),
+                'pid' => public_id(),
+            ];
+            $sts = $this->createOrUpdateNotification($data);
+            if ($sts) {
+                if ($data['type'] == 1) {
+                    return response()->json(['status' => 1, 'message' => 'Notification Created']);
+                }
+                $ps = $this->pushNotification($data);
+                if ($ps) {
+                    return response()->json(['status' => 1, 'message' => 'Notification Created and scheduled']);
+                }
+            }
+            return response()->json(['status' => 'error', 'message' => 'Failed to Create Notification']);
+        }
+
+        return response()->json(['status' => 0, 'message' => '', 'error' => $validator->errors()->toArray()]);
+    }
+
+    public static function notifyIndividualStaff(string $message,string $pid){
+        $data = [
+            'message'=>$message,
+            'notifyee'=> $pid,
+            'user'=>StaffController::getStaffDetailBypId(pid:$pid),
+        ];
+        return self::individualNotification($data);
+    }
+    public static function notifyIndividualParent(string $message,string $pid){
+        $data = [
+            'message'=>$message,
+            'notifyee'=> $pid,
+            'user'=>ParentController::getParentDetailBypId(pid:$pid),
+        ];
+        return self::individualNotification($data);
+    }
+    public static function notifyIndividualRider(string $message,string $pid){
+        $data = [
+            'message'=>$message,
+            'notifyee'=> $pid,
+            'user'=>SchoolRiderController::getRiderDetailBypId(pid:$pid),
+        ];
+        return self::individualNotification($data);
+    }
+    public static function notifyIndividualStudent(string $message,string $pid){
+        $data = [
+            'message'=>$message,
+            'notifyee'=> $pid,
+            'user'=>StudentController::getStudentDetailBypId(pid:$pid),
+        ];
+        return self::individualNotification($data);
+    }
+    private function individualNotification(array $param){
+        $data = [
+            'message' => $param['message'],
+            'notifyee' => $param['notifyee'],
+            'type' => 0,
+            'school_pid' => getSchoolPid(),
+            'term_pid' => activeTerm(),
+            'session_pid' => activeSession(),
+            'pid' => public_id(),
+        ];
+        $sts = self::createOrUpdateNotification($data);
+        if($sts){
+            /* 
+                $user contains 
+                gsm
+                title
+                email
+                fullname 
+            */
+            if($param['user']->email){
+                // send mail 
+            }
+            return true;
+        }
+        return false;
+    }
 
     private function createOrUpdateNotification(array $data){
         return SchoolNotification::updateOrCreate(['pid'=>$data['pid']],$data);
@@ -58,6 +171,7 @@ class SchoolNotificationController extends Controller
         $list = $this->loadUser($data);
         if($list){
             // schedule mail 
+            return true;
         }
         return ;
 
@@ -100,7 +214,7 @@ class SchoolNotificationController extends Controller
         ->join('users as u', 'p.user_pid', 'u.pid')
         ->join('user_details as d', 'd.user_pid', 'u.pid')
         ->join('students as s', 's.parent_pid', 'p.pid')
-            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email','<>',null)->distinct('p.pid')->get(['fullname','email','gsm']);
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email','<>',null)->distinct('p.pid')->get(['d.fullname','email']);
 
         return $parents;
     }
@@ -108,7 +222,7 @@ class SchoolNotificationController extends Controller
     private function loadActiveStudent(){
         $students = DB::table('students as s')
         ->join('users as u', 's.user_pid', 'u.pid')
-            ->where(['s.school_pid' => getSchoolPid(), 's.status' => 1])->where('email', '<>', null)->get(['fullname', 'email', 'gsm']);
+            ->where(['s.school_pid' => getSchoolPid(), 's.status' => 1])->where('email', '<>', null)->get(['fullname', 'email']);
 
         return $students;
     }
@@ -117,7 +231,7 @@ class SchoolNotificationController extends Controller
         $riders = DB::table('school_riders as r')
             ->join('users as u', 'r.user_pid', 'u.pid')
             ->join('user_details as d', 'd.user_pid', 'u.pid')
-            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email', '<>', null)->get(['fullname', 'email', 'gsm']);
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email', '<>', null)->get(['fullname', 'email']);
 
         return $riders;
     }
@@ -126,7 +240,7 @@ class SchoolNotificationController extends Controller
         $staff = DB::table('school_staff as t')
             ->join('users as u', 't.user_pid', 'u.pid')
             ->join('user_details as d', 'd.user_pid', 'u.pid')
-            ->where(['p.school_pid' => getSchoolPid(), 't.status' => 1])->where('email', '<>', null)->get(['fullname', 'email', 'gsm']);
+            ->where(['p.school_pid' => getSchoolPid(), 't.status' => 1])->where('email', '<>', null)->get(['fullname', 'email']);
 
         return $staff;
     }
