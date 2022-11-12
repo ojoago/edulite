@@ -37,6 +37,7 @@ use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 use App\Http\Controllers\School\Framework\Attendance\AttendanceTypeController;
 use App\Http\Controllers\School\Framework\Assessment\AssessmentTitleController;
 use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
+use App\Http\Controllers\School\Framework\Fees\FeeItemController;
 use App\Http\Controllers\School\Student\Attendance\StudentAttendanceController;
 use App\Http\Controllers\School\Framework\Psychomotor\PsychomotorBaseController;
 use App\Http\Controllers\School\Student\Results\Comments\CommentResultController;
@@ -224,6 +225,8 @@ Route::middleware('schoolAuth')->group(function(){
     
     // psychomotor 
     Route::post('load-available-psychomotors', [Select2Controller::class, 'loadAvailablePsychomotors']);
+// fee items 
+    Route::post('load-available-fee-items', [Select2Controller::class, 'loadAvailableFeeItem']);
 
     // subjects & subject type
     // load subject type page 
@@ -274,6 +277,9 @@ Route::middleware('schoolAuth')->group(function(){
 
 
     Route::view('fees-config', 'school.framework.fees.fees-config')->name('fee.config');
+    Route::get('load-fee-items', [FeeItemController::class,'loadFeeItems'])->name('load.fee.items');
+
+    Route::post('create-fee-name', [FeeItemController::class, 'createFeeName'])->name('create.fee.name');
     
     
     // adminssion 

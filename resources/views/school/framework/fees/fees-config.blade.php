@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','School Events')
+@section('title','Fee Config')
 @section('content')
 <div class="card">
     <div class="card-body">
@@ -18,17 +18,19 @@
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
-                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassCategoryModal">
-                    Create Notification
+                <button type="button" class="btn btn-primary mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#createFeeModal">
+                    Create Fee Name
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="classCategoryTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="feeNameTable">
                     <thead>
                         <tr>
-                            <th>Category</th>
+                            <th>S/N</th>
+                            <th>Name</th>
                             <th>Description</th>
+                            <th>status</th>
                             <th>Date</th>
-                            <th>Created By</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,6 +39,10 @@
             </div>
             <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
                 <!-- <div class="table-responsive mt-3"> -->
+                <button type="button" class="btn btn-primary mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#FeeConfigModal">
+                    Fee Config
+                </button>
+                <!--  -->
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="classTable">
                     <thead>
                         <tr>
@@ -80,24 +86,115 @@
 
 <!-- modals  -->
 <!-- create school category modal  -->
-<div class="modal fade" id="createClassCategoryModal" tabindex="-1">
+<div class="modal fade" id="createFeeModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create Fee Item</h5>
+                <h5 class="modal-title">Create Fee Name</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" class="" id="createClassCategoryForm">
+                <form action="" method="post" class="" id="createFeeForm">
                     @csrf
-                    <input type="text" name="fee_item" class="form-control form-control-sm" placeholder="example school fee" required>
-                    <p class="text-danger fee_item_error"></p>
+                    <input type="text" name="fee_name" class="form-control form-control-sm" placeholder="example school fee" required>
+                    <p class="text-danger fee_name_error"></p>
                     <textarea type="text" name="fee_description" class="form-control form-control-sm" placeholder="fee description" required></textarea>
                     <p class="text-danger fee_description_error"></p>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createClassCategoryBtn">Submit</button>
+                <button type="button" class="btn btn-primary" id="createFeeBtn">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="FeeConfigModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Fee Configuration</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="createFeeForm">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select name="fee_item" id="feeItem" class="form-control form-control-sm" style="width: 100%;">
+                            </select>
+                            <p class="text-danger fee_item_pid_error"></p>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="arm_number[]" id="classNumberSelect" class="form-control form-control-sm">
+                                <option disabled selected>Select Type</option>
+                                <option value="1">General</option>
+                                <option value="2">General Fixed</option>
+                                <option value="3">Class base</option>
+                                <option value="4">Four</option>
+                                <option value="5">Five</option>
+                                <option value="6">Six</option>
+                                <option value="7">Seven</option>
+                                <option value="8">Eight</option>
+                                <option value="9">Nine</option>
+                                <option value="10">Ten</option>
+                            </select>
+                            <p class="text-danger class_pid_error"></p>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="arm_number[]" id="classNumberSelect" class="form-control form-control-sm">
+                                <option disabled selected>Select Category</option>
+                                <option value="1">Compulsary</option>
+                                <option value="2">Optional</option>
+                                <option value="3">Class base</option>
+                                <option value="4">Four</option>
+                                <option value="5">Five</option>
+                                <option value="6">Six</option>
+                                <option value="7">Seven</option>
+                                <option value="8">Eight</option>
+                                <option value="9">Nine</option>
+                                <option value="10">Ten</option>
+                            </select>
+                            <p class="text-danger class_pid_error"></p>
+                        </div>
+                    </div>
+                    <center>
+                        prepend class name to class arm ? <input type="checkbox" name="prepend">
+                        <button id="addMoreArm" type="button" class="btn btn-danger btn-sm btn-small mb-1">Add More Row</button><br>
+                    </center>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="arm">Class Arm Name</label>
+                            <input type="text" name="arm[]" placeholder="class arm" class="form-control form-control-sm" required>
+                            <p class="text-danger arm_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="number">Class Arm Serial Number</label>
+                            <div class="input-group mb-3">
+                                <select name="arm_number[]" id="classNumberSelect" class="form-control form-control-sm">
+                                    <option disabled selected>Select Class Number</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                    <option value="4">Four</option>
+                                    <option value="5">Five</option>
+                                    <option value="6">Six</option>
+                                    <option value="7">Seven</option>
+                                    <option value="8">Eight</option>
+                                    <option value="9">Nine</option>
+                                    <option value="10">Ten</option>
+                                </select>
+                                <i class="bi bi-x-circle-fill text-white m-2 removeRowBtn"></i>
+                            </div>
+                            <p class="text-danger arm_number_error"></p>
+                        </div>
+                    </div>
+                    <div id="addMoreArmRow"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="createFeeBtn">Submit</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -108,6 +205,39 @@
 
 <script>
     $(document).ready(function() {
+
+        $('#feeNameTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            },
+            responsive: true,
+            // destroy: true,
+            type: "GET",
+            "ajax": "{{route('load.fee.items')}}",
+            "columns": [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                },
+                {
+                    "data": "fee_name"
+                },
+                {
+                    "data": "fee_description"
+                },
+                {
+                    "data": "status"
+                },
+                {
+                    "data": "date",
+                },
+                {
+                    "data": "action",
+                },
+
+            ],
+        });
         // add more title 
 
         // load dropdown on 
@@ -115,11 +245,18 @@
         // filter class subject 
         FormMultiSelect2('#categoryClassSubjectSelect2', 'category', 'Select Category');
         FormMultiSelect2('#categoryClassSubjectSelect2', 'category', 'Select Category');
-        // create school class arm
-        $('#createClassArmBtn').click(function() {
-            submitFormAjax('createClassArmForm', 'createClassArmBtn', "{{route('create.school.class.arm')}}");
-        });
+        multiSelect2('#feeItem', 'FeeConfigModal', 'fee-items', 'Select Fee');
 
+        // create fee
+        $('#createFeeBtn').click(function() {
+            submitFormAjax('createFeeForm', 'createFeeBtn', "{{route('create.fee.name')}}");
+        });
+        $(document).on('click', '.createFeeBtn', function() {
+            let pid = $(this).attr('pid');
+            let formId = 'feeForm' + pid;
+            let btnId = 'id' + pid;
+            submitFormAjax(formId, btnId, "{{route('create.fee.name')}}");
+        })
 
         // create school class arm
         $('#createClassArmSubjectBtn').click(function() {

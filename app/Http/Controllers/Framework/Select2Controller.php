@@ -19,6 +19,7 @@ use App\Models\School\Framework\Subject\Subject;
 use App\Models\School\Registration\SchoolParent;
 use App\Models\School\Framework\Subject\SubjectType;
 use App\Models\School\Framework\Class\ClassArmSubject;
+use App\Models\School\Framework\Fees\FeeItem;
 use App\Models\School\Framework\Psychomotor\PsychomotorBase;
 
 class Select2Controller extends Controller
@@ -627,19 +628,28 @@ class Select2Controller extends Controller
         }
         return response()->json($data);
     }
-    
-    public function userTitle(){
 
+    // subject type 
+    public function loadAvailableFeeItem(Request $request)
+    {
+        $data = null;
+        if ($request->has('q'))
+        $result = FeeItem::where(['school_pid' => getSchoolPid()])->where('fee_name', 'like', '%' . $request->q . '%')
+            ->orderBy('fee_name')->limit($request->page_limit)->get(['pid', 'fee_name']); //
+        else
+        $result = FeeItem::where(['school_pid' => getSchoolPid()])
+        ->orderBy('fee_name')->limit(10)->get(['pid', 'fee_name']); //
+        if (!$result) {
+            $data[] = ['id' => null, 'text' => null];
+            return response()->json($data);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->fee_name,
+            ];
+        }
+        return response()->json($data);
     }
 
-    private function titleArray(){
-        $data = [
-            '1'=>'Mr',
-            '2'=>'Mrs',
-            '3'=>'Mss',
-            '4'=>'Dr',
-            '4'=>'Dr',
-            
-        ];
-    }
 }

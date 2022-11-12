@@ -180,7 +180,7 @@
                     "data": "category"
                 },
                 {
-                    "data": "created_at"
+                    "data": "date"
                 },
                 // {
                 //     "data": "action"
