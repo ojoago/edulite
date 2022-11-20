@@ -283,7 +283,7 @@ Route::middleware('schoolAuth')->group(function(){
     // fee setup 
     Route::view('fees-config', 'school.framework.fees.fees-config')->name('fee.config');
     Route::get('load-fee-items', [FeeItemController::class,'loadFeeItems'])->name('load.fee.items');
-    Route::get('load-fee-amount', [FeeItemController::class, 'loadFeeAmount'])->name('load.fee.amount');
+    Route::post('load-fee-amount', [FeeItemController::class, 'loadFeeAmount'])->name('load.fee.amount');
     Route::get('load-fee-config', [FeeItemController::class, 'loadFeeConfig'])->name('load.fee.config');
     // admission config
     Route::view('admission-config', 'school.framework.admission.admission-config')->name('admission.config');

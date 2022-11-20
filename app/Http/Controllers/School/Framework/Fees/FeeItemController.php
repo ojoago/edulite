@@ -32,13 +32,19 @@ class FeeItemController extends Controller
         ->make(true);
     }
 
-    public function loadFeeAmount(){
+    public function loadFeeAmount(Request $request){
+        if(isset($request->session_pid) && isset($request->term_pid)){
+            $where = ['i.term_pid' => $request->term_pid, 'i.session_pid' => $request->session_pid, 'i.school_pid' => getSchoolPid()];
+        }else{
+            $where = ['i.term_pid' => activeTerm(), 'i.session_pid' => activeSession(), 'i.school_pid' => getSchoolPid()];
+        }
         $data = DB::table('fee_configurations as c')
                     ->join('fee_items as f','f.pid','c.fee_item_pid')
                     ->join('fee_item_amounts as i','i.config_pid','c.pid')
                     ->join('class_arms as a','a.pid','i.arm_pid')
                     ->join('terms as t','t.pid','i.term_pid')
                     ->join('sessions as s','s.pid','i.session_pid')
+                    ->where($where)
                     ->select('arm','amount','i.pid','term','session','fee_name','category','gender','religion','type','payment_model')
                     ->orderBy('fee_name')->orderBy('arm')->orderBy('term')->get();
         return datatables($data)

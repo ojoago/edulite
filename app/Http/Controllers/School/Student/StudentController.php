@@ -243,7 +243,7 @@ class StudentController extends Controller
     {
         $id = self::countStudent() + 1;
         $id = strlen($id) == 1 ? '0' . $id : $id;
-        return SchoolController::getSchoolHandle() . '/' . strtoupper(date('yM')) . $id; // concatenate shool handle with student id
+        return (SchoolController::getSchoolCode() ?? SchoolController::getSchoolHandle()) . '/' . strtoupper(date('yM')) . $id; // concatenate shool handle with student id
     }
     public static function getStudentDetailBypId($pid)
     {

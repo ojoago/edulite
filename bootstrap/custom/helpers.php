@@ -354,6 +354,44 @@ function date_diff_weekdays($from, $to)
     }
 function saveImg($image,$path='images',$name=null)
 {
+    // $image = $request->file('image');
+$name = str_replace('/', '-', $name . ' edulite.' .'.png' /*$image->extension()*/);
+
+    // $input['imagename'] = time() . '.' . $image->extension();
+
+    // $destinationPath = public_path('/files/thumbnail/');
+    $destinationPath = public_path("/files/" . $path . '/');
+
+    $img = Image::make($image->path());
+    $img->resize(150, 150, function ($constraint) {
+        $constraint->aspectRatio();
+    })->save($destinationPath . $name);
+
+    // $destinationPath = public_path("/files/" . $path);
+    // $image->move($destinationPath, $name);
+    return $name;
+    $percent=0.26;
+    $size = $image->getSize();
+    if($size < 1024 * 1024){
+        $percent = 1;
+    }
+    $destinationPath = public_path("/files/".$path.'/');
+    if(!$name){
+        $name = getSchoolPid() . '-' . public_id();
+    }
+    $name = str_replace('/','-',$name.' edulite.'. $image->extension());
+    $height = Image::make($image)->height();//get image width
+    $width = Image::make($image)->width();
+    $new_width = $width * $percent;
+    $new_height = $height*($new_width/$width);
+    $img = Image::make($image->getRealPath());
+    $img->resize($new_width, $new_height, function ($constraint) {
+        $constraint->aspectRatio();
+    })->save($destinationPath . $name);
+    return $name;
+}
+function _saveImg($image,$path='images',$name=null)
+{
     $percent=0.26;
     $size = $image->getSize();
     if($size < 1024 * 1024){

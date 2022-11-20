@@ -43,15 +43,15 @@ class StudentRegistrationController extends Controller
             'othername'=> 'nullable|string|regex:/^[a-zA-Z0-9\s]+$/',
             'gsm'=>['nullable','digits:11',
                                 Rule::unique('users')->where(function($param) use ($request){
-                                    $param->where('pid', '!=', $request->pid);
+                                    $param->where('pid', '<>', $request->user_pid);
                                 })],
             'username'=>['nullable', 'string', 'min:3', 
                                 Rule::unique('users')->where(function ($param) use ($request) {
-                                        $param->where('pid','!=', $request->pid);
+                                        $param->where('pid','<>', $request->user_pid);
                                     })],
             'email'=>['nullable', 'string', 'email', 
                                 Rule::unique('users')->where(function ($param) use ($request) {
-                                        $param->where('pid', '!=', $request->pid);
+                                        $param->where('pid', '<>', $request->user_pid);
                                     })],//|||unique:users,email
             'gender'=>'required|int',
             'dob'=>'required|date',
@@ -146,7 +146,7 @@ class StudentRegistrationController extends Controller
                         $student['user_pid'] = $request->user_pid ?? $user->pid;//get student user pid and save along with student info
                         // and prevent update if student leaves school 
                         if($request->passport){
-                            $name = ($request->reg_number ?? $student['reg_number']).'-passport';
+                            $name = ($request->reg_number ?? $student['reg_number']).'-resize';
                             $student['passport'] = saveImg(image: $request->file('passport'),name:$name);
                         }
                         $studentDetails = SchoolController::createSchoolStudent($student);// create school student

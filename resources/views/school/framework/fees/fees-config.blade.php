@@ -299,13 +299,19 @@
 
             ],
         });
-
+        $('#termFeeSelect2').change(function() {
+            let term = $(this).val();
+            let session = $('#sessionFeeSelect2').val();
+            if (term != null && session != null) {
+                loadFeeAmount(term, session);
+            }
+        })
 
         $('#itemFeeAmount').click(function() {
             loadFeeAmount()
         })
 
-        function loadFeeAmount() {
+        function loadFeeAmount(term = null, session = null) {
             $('#feeAmountTable').DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -314,8 +320,17 @@
                 },
                 responsive: true,
                 destroy: true,
-                type: "GET",
-                "ajax": "{{route('load.fee.amount')}}",
+                // type: "GET",
+                "ajax": {
+                    url: "{{route('load.fee.amount')}}",
+                    type: "POST",
+                    data: {
+                        _token: "{{csrf_token()}}",
+                        session_pid: session,
+                        term_pid: term,
+                        // arm_pid: arm,
+                    }
+                },
                 "columns": [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
