@@ -2,7 +2,7 @@
     $(document).ready(function() {
 
         // prevent typing on input type date
-        $("input[type=date]").on('keydown',function(){
+        $("input[type=date]").on('keydown', function() {
             return false;
         })
         // switch from table to card 
@@ -550,7 +550,7 @@
             var route = "{{route('update.user.detail')}}";
             submitFormAjax('updateAccountForm', 'updateAccountBtn', route);
         });
-        $('#loadNotifications').click(function(){
+        $('#loadNotifications').click(function() {
             loadMyNotification();
         })
         countMyNotification();
@@ -589,16 +589,25 @@
         }).val(pre).trigger('change').trigger('focus');
     }
 
-    function countMyNotification() {
-        // load.my.notification.tip
-        $.ajax({
-            url: "{{route('count.my.notification.tip')}}",
-            success: function(data) {
-                // console.log(data);
-                $('#badge-number').text(data);
-            }
-        });
+    <?php
+
+    if (getSchoolPid()) {
+    ?>
+
+        function countMyNotification() {
+            // load.my.notification.tip
+            $.ajax({
+                url: "{{route('count.my.notification.tip')}}",
+                success: function(data) {
+                    // console.log(data);
+                    $('#badge-number').text(data);
+                }
+            });
+        }
+    <?php
     }
+
+    ?>
 
     function loadMyNotification() {
         $.ajax({

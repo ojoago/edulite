@@ -19,9 +19,7 @@
     @include('layout.mainjs')
     @include('layout.theme.footer')
 </main>
-<!-- include('layout.partials.modals') -->
 @endauth
-<!-- include('layout.partials.footer-scripts') -->
 
 </body>
 

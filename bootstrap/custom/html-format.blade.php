@@ -2,7 +2,7 @@
 function formatStaff($row)
 {
     if ($row) {
-        $email = $row->email ? ' <hr><p>Email' .  $row->email  . '</p>' : '';
+        $email = $row->email ? ' <hr><p>Email ' .  $row->email  . '</p>' : '';
         return '
              
                 <label class="text-info m-2">Primary Role</label>
@@ -53,7 +53,7 @@ function formatStudent($row)
 {
     if ($row) {
 
-        $email = $row->email ? 'Email' .  $row->email : '';
+        $email = $row->email ? 'Email ' .  $row->email : '';
         return '
         <div class="card-body shadow">
             
@@ -99,7 +99,7 @@ function formatStudent($row)
 function formatParent($row)
 {
     if ($row) {
-        $email = $row->email ? ' <hr><p>Email' .  $row->email  . '</p>' : '';
+        $email = $row->email ? ' <hr><p>Email ' .  $row->email  . '</p>' : '';
         $imgUrl = asset("/files/images/" . $row->passport);
         return '
             <div class="card-body shadow p-3">
@@ -132,7 +132,7 @@ function formatParent($row)
 function formatRider($row)
 {
     if ($row) {
-        $email = $row->email ? ' <hr><p>Email' .  $row->email  . '</p>' : '';
+        $email = $row->email ? ' <hr><p>Email ' .  $row->email  . '</p>' : '';
         $imgUrl = asset("/files/images/" . $row->passport);
         return '
             <div class="card-body shadow p-3">

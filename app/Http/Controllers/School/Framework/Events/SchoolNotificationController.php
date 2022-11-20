@@ -27,12 +27,14 @@ class SchoolNotificationController extends Controller
     
     public function loadMyNotificationTip(){
         $ntfn = loadRecentNotification();
-        return formatNotification($ntfn);
+        return $ntfn ? formatNotification($ntfn) : 0;
 
     }
     public function loadMyNotificationDetails(){
         $ntfn = loadMyNotificationDetails();
-        return formatNotification($ntfn);
+        return $ntfn ? formatNotification($ntfn) : 0;
+
+        // return formatNotification($ntfn);
 
     }
 
