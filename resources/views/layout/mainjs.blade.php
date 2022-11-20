@@ -1,6 +1,10 @@
 <script>
     $(document).ready(function() {
 
+        // prevent typing on input type date
+        $("input[type=date]").on('keydown',function(){
+            return false;
+        })
         // switch from table to card 
         if ($(window).width() < 760) {
             let tableId = $('.cardTable').attr('id');
@@ -130,8 +134,9 @@
 
 
         // link portal to hostel 
-        multiSelect2('#ahtpSessionSelect2', 'assignHostelToPortalModal', 'session', 'Select Session');
-        multiSelect2('#ahtpTermSelect2', 'assignHostelToPortalModal', 'term', 'Select Term');
+        // assigning portal to hostel is default to active term and session 
+        // multiSelect2('#ahtpSessionSelect2', 'assignHostelToPortalModal', 'session', 'Select Session');
+        // multiSelect2('#ahtpTermSelect2', 'assignHostelToPortalModal', 'term', 'Select Term');
         multiSelect2('#ahtpPortalSelect2', 'assignHostelToPortalModal', 'portals', 'Select Portals');
         multiSelect2('#ahtpHostelSelect2', 'assignHostelToPortalModal', 'hostels', 'Select Hostels');
         // assign student portal 

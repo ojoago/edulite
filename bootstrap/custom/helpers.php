@@ -11,6 +11,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Http\Controllers\Auths\AuthController;
 
     define('APP_NAME','EduLite');
+    define('NAIRA_UNIT', "&#8358;");//NAIRA sign
    function logError($error){
     Log::error(json_encode($error));
    }
@@ -180,6 +181,7 @@ use App\Http\Controllers\Auths\AuthController;
         $role =  match($gn){
                 '2'=> 'Female',
                 '1'=> 'Male',
+                '3'=> 'Other',
                 default=>''
                 };
        return $role; 
@@ -192,6 +194,33 @@ use App\Http\Controllers\Auths\AuthController;
                 default=>''
                 };
        return $role; 
+    }
+    function matchPaymentModel($mdl){
+        $model =  match((string)$mdl){
+                '2'=> 'Per Session',
+                '1'=> 'Termy',
+                '3'=> 'Once',
+                default=>''
+                };
+       return $model; 
+    }
+    function matchPaymentCategory($ctg){
+        $model =  match($ctg){
+            '1'=>'Class base',
+            "2"=>'General',
+            "3"=>'Class Conditional',
+            "4"=> 'General Conditional',
+            default=>''
+        };
+       return $model; 
+    }
+    function matchPaymentType($type){
+        $model =  match($type){
+                '2'=> 'Optional',
+                '1'=> 'Compulsary',
+                default=>''
+                };
+       return $model; 
     }
     function matchStudentStatus($sts){
         $role =  match($sts){
@@ -330,7 +359,7 @@ function saveImg($image,$path='images',$name=null)
     if($size < 1024 * 1024){
         $percent = 1;
     }
-    $destinationPath = public_path('/files'.'/'.$path.'/');
+    $destinationPath = public_path("/files/".$path.'/');
     if(!$name){
         $name = getSchoolPid() . '-' . public_id();
     }

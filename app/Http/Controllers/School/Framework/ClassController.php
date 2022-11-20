@@ -384,5 +384,10 @@ class ClassController extends Controller
         return $pid;
     }
 
+    // load class arms 
+    public static function loadAllClassArms(){
+        $arms = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1])->get(['pid', 'arm']);
+        return $arms;
+    }
 
 }

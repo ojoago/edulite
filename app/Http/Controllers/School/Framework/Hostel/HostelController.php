@@ -137,8 +137,8 @@ class HostelController extends Controller
 
     public function assignHostelToPortal(Request $request){
         $validator = Validator::make($request->all(),[
-            'session_pid' =>'required',
-            'term_pid' => 'required',
+            // 'session_pid' =>'required',
+            // 'term_pid' => 'required',
             'portal_pid' => 'required',
             'hostel_pid' => 'required',
         ],[
@@ -147,11 +147,13 @@ class HostelController extends Controller
             'portal_pid.required'=>'Select Portal',
             'hostel_pid.required'=>'Select 1 Hostel, at least',
         ]);
-        
+        if(!activeSession() || !activeTerm()){
+            return response()->json(['status' => 'error', 'message' => ' Please set active term and session first']);
+        }
         if(!$validator->fails()){
             $data = [
-                'session_pid'=>$request->session_pid,
-                'term_pid'=>$request->term_pid,
+                'session_pid'=>activeSession(),
+                'term_pid'=>activeTerm(),
                 'portal_pid'=>$request->portal_pid,
                 'hostels'=>$request->hostel_pid,
                 'school_pid'=>getSchoolPid(),
@@ -159,7 +161,7 @@ class HostelController extends Controller
             $result  = $this->assignOrReassignHostel($data);
             if($result){
                 
-                return response()->json(['status'=>1,'message'=>count($request->hostel_pid) .' (s) Assigned to the selected staff Successfully']);
+                return response()->json(['status'=>1,'message'=>count($request->hostel_pid) .' hostel(s) Assigned to the selected staff Successfully']);
             }
             return response()->json(['status'=>'error','message'=>'Something Went Wrong... error log']);
         }
@@ -179,7 +181,7 @@ class HostelController extends Controller
             }
             return $result;
         } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+            $error = $e->getMessage();
             logError($error);
         }
     }
@@ -203,7 +205,7 @@ class HostelController extends Controller
             $result  = $this->assignOrReassignHostelToStudent($data);
             if($result){
                 
-                return response()->json(['status'=>1,'message'=>count($request->student_pid) .' (s) Assigned Hostel Successfully']);
+                return response()->json(['status'=>1,'message'=>count($request->student_pid) .' Student(s) Assigned Hostel Successfully']);
             }
             return response()->json(['status'=>'error','message'=>'Something Went Wrong... error log']);
         }
@@ -216,15 +218,18 @@ class HostelController extends Controller
         unset($data['students']);
         $dupParam = $data;
         $data['staff_pid'] = getSchoolUserPid();
+        $history = $data;
+        $history['term_pid'] = activeTerm();
+        $history['session_pid']=activeSession();
         try {
             foreach($students as $pid){
-                $dupParam['student_pid'] = $data['student_pid'] = $pid;
+                $history['student_pid'] = $dupParam['student_pid'] = $data['student_pid'] = $pid;
                 HostelStudent::updateOrCreate($dupParam,$data);
-                $result = StudentHostelHistory::create($data);
+                $result = StudentHostelHistory::create($history);
             }
             return $result;
         } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+            $error = $e->getMessage();
             logError($error);
         }
     }

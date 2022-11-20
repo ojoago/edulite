@@ -20,11 +20,11 @@ use App\Http\Controllers\School\Student\StudentScoreController;
 use App\Http\Controllers\School\Upload\UploadStudentController;
 use App\Http\Controllers\Organisation\OrganisationUserController;
 use App\Http\Controllers\School\Admission\AdmissionController;
+use App\Http\Controllers\School\Framework\Admission\AdmissionConfigController;
 use App\Http\Controllers\School\Framework\Hostel\HostelController;
 use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
 use App\Http\Controllers\School\Framework\Subject\SubjectController;
 use App\Http\Controllers\School\Framework\Term\SchoolTermController;
-use App\Http\Controllers\School\Framework\Psycho\PsychomotorController;
 use App\Http\Controllers\School\Framework\Subject\SubjectTypeController;
 use App\Http\Controllers\School\Framework\Timetable\TimetableController;
 use App\Http\Controllers\School\Framework\Psycho\PsychoGradeKeyController;
@@ -57,6 +57,7 @@ Route::get('/mail',function(){
     return view('mails.school-mail');
 });
 // sign up form 
+// Route::view('sign-up/{id?}', [AuthController::class, 'signUpForm'])->name('sign.up')->middleware('guest');
 Route::view('sign-up', 'auths.sign-up')->name('sign.up')->middleware('guest');
 // signing up 
 Route::post('sign-up', [AuthController::class, 'signUp']);
@@ -189,6 +190,10 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-available-term', [SchooltermController::class, 'loadSchoolTerm'])->name('load.available.term');
     // load classes 
     Route::post('load-available-class', [Select2Controller::class, 'loadAvailableClass'])->name('load.available.class');
+    // load all category classes 
+    Route::post('load-available-all-class', [Select2Controller::class, 'loadAvailableAllClasses'])->name('load.available.all.class');
+    // admission class
+    Route::post('load-available-admission-class', [Select2Controller::class, 'loadAvailableAdmissionClass'])->name('load.available.admission.class');
     // load classe arm 
     Route::post('load-available-class-arm', [Select2Controller::class, 'loadAvailableClassArm'])->name('load.available.class.arm');
     // load class teacher/form classes 
@@ -275,11 +280,20 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-my-notification-tip', [SchoolNotificationController::class, 'loadMyNotificationTip'])->name('load.my.notification.tip');
     Route::get('load-my-notification-details', [SchoolNotificationController::class, 'loadMyNotificationDetails'])->name('load.my.notification.details');
 
-
+    // fee setup 
     Route::view('fees-config', 'school.framework.fees.fees-config')->name('fee.config');
     Route::get('load-fee-items', [FeeItemController::class,'loadFeeItems'])->name('load.fee.items');
+    Route::get('load-fee-amount', [FeeItemController::class, 'loadFeeAmount'])->name('load.fee.amount');
+    Route::get('load-fee-config', [FeeItemController::class, 'loadFeeConfig'])->name('load.fee.config');
+    // admission config
+    Route::view('admission-config', 'school.framework.admission.admission-config')->name('admission.config');
+    Route::post('admission-config', [AdmissionConfigController::class, 'setAdmissionClass'])->name('configure.admission');
+    Route::get('load-admission-details', [AdmissionConfigController::class,'index'])->name('load.admission.details');
+    Route::get('load-admission-setup', [AdmissionConfigController::class,'setup'])->name('load.admission.setup');
 
     Route::post('create-fee-name', [FeeItemController::class, 'createFeeName'])->name('create.fee.name');
+
+    Route::post('configure-fee', [FeeItemController::class, 'feeConfigurationAndAmount'])->name('configure.fee');
     
     
     // adminssion 
@@ -300,9 +314,11 @@ Route::middleware('schoolAuth')->group(function(){
         Route::post('create-hostel', [HostelController::class, 'createHostel'])->name('create.hostel');
         Route::get('load-hostels', [HostelController::class, 'loadHostel'])->name('load.hostels');
         // load portals hostels 
-        Route::get('load-hostel-portal', [HostelController::class, 'loadHostelPortal'])->name('load.hostel.portals');
-        Route::post('load-hostel-student', [HostelController::class, 'loadHostelStudent'])->name('load.hostel.students');
+        Route::get('load-hostel-portal', [HostelController::class, 'loadHostelPortal'])->name('load.hostel.portals'); 
 
+        Route::post('load-hostel-student', [HostelController::class, 'loadHostelStudent'])->name('load.hostel.students');
+        
+        // assign hostel to portal staff 
         Route::Post('assign-hostel-to-portal', [HostelController::class, 'assignHostelToPortal'])->name('assign.hostel.to.portal');
         // assign hostel to student 
         Route::Post('assign-hostel-to-student', [HostelController::class, 'assignHostelToStudent'])->name('assign.hostel.to.student');

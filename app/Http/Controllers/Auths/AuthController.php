@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    // public function signUpForm($id=null){
+    //     if($id){
+    //         session(['linkId'=>base64Decode($id)]);
+    //     }
+    //     return view('auths.sign-up');
+    // }
     public function signUp(Request $request){
         $request->validate([
             'email'=>'required|email|unique:users,email',

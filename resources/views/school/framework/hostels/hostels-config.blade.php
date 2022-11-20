@@ -11,7 +11,7 @@
                 <button class="nav-link w-100 active" id="hostel-config-tab" data-bs-toggle="tab" data-bs-target="#hostel-config" type="button" role="tab">Hostels</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="hostel-tab" data-bs-toggle="tab" data-bs-target="#hostel-student" type="button" role="tab">Hostel Portal</button>
+                <button class="nav-link w-100" id="hostel-tab" data-bs-toggle="tab" data-bs-target="#hostelPortal" type="button" role="tab">Hostel Portal</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="ex-tab" data-bs-toggle="tab" data-bs-target="#hostelStudent" type="button" role="tab">Hostel Student</button>
@@ -36,7 +36,10 @@
                     </thead>
                 </table>
             </div>
-            <div class="tab-pane fade" id="hostel-student" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="tab-pane fade" id="hostelPortal" role="tabpanel" aria-labelledby="profile-tab">
+                <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#assignHostelToPortalModal">
+                    Assign Hostel
+                </button>
                 <table class="table table-hover table-striped table-bordered cardTable" id="hostelPortalDataTable" width="100%">
                     <thead>
                         <tr>
@@ -51,6 +54,9 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="hostelStudent" role="tabpanel" aria-labelledby="contact-tab">
+                <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#assignHostelToStudentModal">
+                    Assign Student
+                </button>
                 <div class="row">
                     <div class="col-md-4">
                         <select name="session_pid" id="hostelStudentSessionSelect2" placeholder="select" class="form-control form-control-sm">
@@ -108,6 +114,32 @@
         </div>
     </div>
 </div><!-- End Psychomotro Modal-->
+<!-- create psycho modal  -->
+<div class="modal fade" id="assignHostelModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign Hostel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="assignHostelForm">
+                    @csrf
+                    <select name="portal_pid" id="portalSelect2" class="form-control form-control-sm">
+                    </select>
+                    <p class="text-danger portal_pid_error"></p>
+                    <select name="hostel_pid" id="hostelSelect2" class="form-control form-control-sm">
+                    </select>
+                    <p class="text-danger hostel_pid_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="assignHostelBtn">Assign</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div><!-- End Psychomotro Modal-->
 
 
 
@@ -119,6 +151,10 @@
         $('#createHostelBtn').click(function() {
             var route = "{{route('create.hostel')}}";
             submitFormAjax('createHostelForm', 'createHostelBtn', route);
+        });
+        $('#createHostelBtn').click(function() {
+            var route = "{{route('assign.hostel.to.portal')}}";
+            submitFormAjax('assignHostelForm', 'assignHostelBtn', route);
         });
 
         $('#hostelDataTable').DataTable({
@@ -223,6 +259,9 @@
         }
         FormMultiSelect2('#hostelStudentSessionSelect2', 'session', 'Select Session');
         FormMultiSelect2('#hostelStudentHostelSelect2', 'hostels', 'Select Hostel');
+        multiSelect2('#portalSelect2', 'assignHostelModal', 'portals', 'Select Portal');
+        multiSelect2('#hostelSelect2', 'assignHostelModal', 'hostels', 'Select Hostel');
+
         $('#hostelStudentSessionSelect2').change(function() {
             let session = $(this).val();
             let hostel = $('#hostelStudentHostelSelect2').val();

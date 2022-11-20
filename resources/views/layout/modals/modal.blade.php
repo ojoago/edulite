@@ -359,14 +359,15 @@
             <div class="modal-body">
                 <form method="post" class="" id="assignHostelToPortalForm">
                     @csrf
-                    <label for="session_pid">Session</label>
+                    <p class="text-danger">Note, you are assigning to {{activeTermName()}} {{activeSessionName()}}</p>
+                    <!-- <label for="session_pid">Session</label>
                     <select name="session_pid" id="ahtpSessionSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger session_pid_error"></p>
                     <label for="term_pid">Term</label>
                     <select name="term_pid" id="ahtpTermSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>
-                    <p class="text-danger term_pid_error"></p>
+                    <p class="text-danger term_pid_error"></p> -->
                     <label for="portal_pid">Portals</label>
                     <select name="portal_pid" id="ahtpPortalSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>

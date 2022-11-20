@@ -104,13 +104,8 @@
                 <p class="text-danger type_error"></p>
             </div>
 
-            <div class="col-md-3">
-                <label for="category_pid" class="form-label">Category</label>
-                <select name="category_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="cateSelect2" required>
-                </select>
-                <p class="text-danger category_pid_error"></p>
-            </div>
-            <div class="col-md-3">
+
+            <div class="col-md-5">
                 <label for="class_pid" class="form-label">Class</label>
                 <select name="class_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="classSelect2" required>
                 </select>
@@ -119,7 +114,7 @@
                 <input name="user_pid" id="user_pid" type="hidden">
                 <p class="text-danger class_pid_error"></p>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label for="arm_pid" class="form-label">Class Arm</label>
                 <select name="arm_pid" class="form-select form-select-sm readOnlyProp" style="width: 100%;" id="armSelect2">
                 </select>
@@ -168,13 +163,8 @@
         FormMultiSelect2('#stateSelect2', 'state', 'Select State of Origin')
         FormMultiSelect2('#parentSelect2', 'parent', 'Select Parent/Guardian')
 
-        FormMultiSelect2('#cateSelect2', 'category', 'Select Category')
+        FormMultiSelect2('#classSelect2', 'admission-class', 'Select Class')
 
-        // class dropdown 
-        $('#cateSelect2').change(function() {
-            var id = $(this).val();
-            FormMultiSelect2Post('#classSelect2', 'class', id, 'Select Class')
-        });
         $('#stateSelect2').change(function() {
             var id = $(this).val();
             FormMultiSelect2Post('#lgaSelect2', 'state-lga', id, 'Select Lga of Origin')

@@ -233,7 +233,7 @@ class SchoolController extends Controller
             $data['rider_id'] = '';
             return SchoolRider::updateOrCreate($dupParams, $data);
         } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+            $error =  $e->getMessage();
             logError($error);
         }
     }
@@ -252,6 +252,10 @@ class SchoolController extends Controller
     public static function getSchoolHandle()
     {
         return School::where(['pid' => getSchoolPid()])->pluck('school_handle')->first();
+    }
+    public static function getSchoolCode()
+    {
+        return School::where(['pid' => getSchoolPid()])->pluck('school_code')->first();
     }
     /**
      * Update the specified resource in storage.

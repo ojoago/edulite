@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('fee_items', function (Blueprint $table) {
+        Schema::create('student_invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('fee_name');
-            $table->string('school_pid');
-            $table->string('pid')->unique();
-            $table->string('fee_description')->nullable();
-            $table->string('status')->default(1)->comment('1 enabled, 0 disabled');
+            $table->string('school_pid')->nullable();
+            $table->string('student_pid');
+            $table->string('invoice_pid');
+            $table->string('pid')->unique()->nullable();
+            $table->integer('status')->comment('0 not paid,1 paid')->default(0);
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fee_items');
+        Schema::dropIfExists('student_invoices');
     }
 };

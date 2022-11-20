@@ -60,7 +60,7 @@
             </div>
             <div class="col-md-3">
                 <label for="dob" class="form-label">Date Of Birth</label>
-                <input type="date" onkeydown="return false" class="form-control form-control-sm" id="dob" name="dob" required>
+                <input type="date" class="form-control form-control-sm" id="dob" name="dob" required>
                 <p class="text-danger dob_error"></p>
             </div>
             <div class="col-md-3">
@@ -154,7 +154,6 @@
 
         $('#stateSelect2').change(function() {
             var id = $(this).val();
-
             lga(id);
         });
         // create school category 

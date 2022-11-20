@@ -26,9 +26,7 @@ body{
 .hidden-item{
     visibility: hidden !important;
 }
-.text-white{
-    /* visibility: hidden !important; */
-}
+
 
 .ellipsis-text{
     overflow: hidden;

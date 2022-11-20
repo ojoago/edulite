@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('fee_items', function (Blueprint $table) {
+        Schema::create('fee_item_amounts', function (Blueprint $table) {
             $table->id();
-            $table->string('fee_name');
-            $table->string('school_pid');
+            $table->string('school_pid')->nullable();
+            $table->string('config_pid');
+            $table->float('amount');
+            $table->string('arm_pid');
             $table->string('pid')->unique();
-            $table->string('fee_description')->nullable();
-            $table->string('status')->default(1)->comment('1 enabled, 0 disabled');
+            $table->string('term_pid')->nullable();
+            $table->string('session_pid')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fee_items');
+        Schema::dropIfExists('fee_item_amounts');
     }
 };

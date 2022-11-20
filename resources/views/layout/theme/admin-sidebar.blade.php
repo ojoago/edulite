@@ -41,11 +41,7 @@
                 <i class="bi bi-circle"></i><span>Subjects</span>
             </a>
         </li>
-        <li>
-            <a href="{{route('school.assessment.config')}}">
-                <i class="bi bi-circle"></i><span>Assessment</span>
-            </a>
-        </li>
+
         <li>
             <a href="{{route('school.result.config')}}">
                 <i class="bi bi-circle"></i><span>Results</span>
@@ -83,6 +79,11 @@
                 <i class="bi bi-circle"></i><span>
                     Fees
                 </span>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('admission.config')}}">
+                <i class="bi bi-circle"></i><span>Admission</span>
             </a>
         </li>
         @if(getSchoolType() == 2 || getSchoolType() == 3)

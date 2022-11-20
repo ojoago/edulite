@@ -16,7 +16,7 @@ class SchoolNotificationController extends Controller
 {
 
     public function loadMyNotificationHistories(){
-        $data = SchoolNotification::where(['school_pid'=>getSchoolPid()])->get();
+        $data = SchoolNotification::where(['school_pid'=>getSchoolPid()])->orderByDesc('created_at')->get();
         return datatables($data)
                     ->addIndexColumn()
                     ->make(true);
@@ -110,7 +110,7 @@ class SchoolNotificationController extends Controller
             'notifyee'=> $pid,
             'user'=>StaffController::getStaffDetailBypId(pid:$pid),
         ];
-        return self::individualNotification($data);
+        return (new self)->individualNotification($data);
     }
     public static function notifyIndividualParent(string $message,string $pid){
         $data = [
@@ -118,7 +118,7 @@ class SchoolNotificationController extends Controller
             'notifyee'=> $pid,
             'user'=>ParentController::getParentDetailBypId(pid:$pid),
         ];
-        return self::individualNotification($data);
+        return (new self)->individualNotification($data);
     }
     public static function notifyIndividualRider(string $message,string $pid){
         $data = [
@@ -126,7 +126,7 @@ class SchoolNotificationController extends Controller
             'notifyee'=> $pid,
             'user'=>SchoolRiderController::getRiderDetailBypId(pid:$pid),
         ];
-        return self::individualNotification($data);
+        return  (new self)->individualNotification($data);
     }
     public static function notifyIndividualStudent(string $message,string $pid){
         $data = [
@@ -134,7 +134,7 @@ class SchoolNotificationController extends Controller
             'notifyee'=> $pid,
             'user'=>StudentController::getStudentDetailBypId(pid:$pid),
         ];
-        return self::individualNotification($data);
+        return (new self)->individualNotification($data);
     }
     private function individualNotification(array $param){
         $data = [
@@ -146,7 +146,7 @@ class SchoolNotificationController extends Controller
             'session_pid' => activeSession(),
             'pid' => public_id(),
         ];
-        $sts = self::createOrUpdateNotification($data);
+        $sts = $this->createOrUpdateNotification($data);
         if($sts){
             /* 
                 $user contains 

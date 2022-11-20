@@ -345,6 +345,55 @@ class Select2Controller extends Controller
         }
         return response()->json($data);
     }
+    // load all category class 2 
+    public function loadAvailableAllClasses(Request $request)
+    {
+        $data = null;
+        if ($request->has('q'))
+        $result = Classes::where(['school_pid' => getSchoolPid(), 'status' => 1])
+            ->where('class', 'like', '%' . $request->q . '%')
+            ->limit(5)->orderBy('class')->get(['pid', 'class']); //
+        else
+        $result = Classes::where(['school_pid' => getSchoolPid(), 'status' => 1])
+                            ->limit(5)->orderBy('class')->get(['pid', 'class']); //
+        if (!$result) {
+            return response()->json(['id' => null, 'text' => null]);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->class,
+            ];
+        }
+        return response()->json($data);
+    }
+    public function loadAvailableAdmissionClass(Request $request)
+    {
+        $data = null;
+        if ($request->has('q'))
+        $result = DB::table('classes as c')
+                        ->join('admission_setups as as','c.pid','as.class_pid')
+                        ->join('admission_details as ad','ad.pid','as.admission_pid')
+                        ->where(['ad.school_pid' => getSchoolPid()])
+            ->where('class', 'like', '%' . $request->q . '%')
+            ->limit(5)->orderBy('class')->get(['c.pid', 'c.class']); //
+        else
+        $result = DB::table('classes as c')
+                    ->join('admission_setups as as', 'c.pid', 'as.class_pid')
+                    ->join('admission_details as ad', 'ad.pid', 'as.admission_pid')
+                    ->where(['ad.school_pid' => getSchoolPid()])
+                    ->limit(5)->orderBy('class')->get(['c.pid', 'c.class']); //
+        if (!$result) {
+            return response()->json(['id' => null, 'text' => null]);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->class,
+            ];
+        }
+        return response()->json($data);
+    }
 
     public function loadAvailableClassArm(Request $request)
     {

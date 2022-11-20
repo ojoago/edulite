@@ -9,6 +9,6 @@ class StudentHostelHistory extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'school_pid', 'hostel_pid', 'student_pid', 'staff_pid'
+        'school_pid', 'hostel_pid', 'student_pid', 'staff_pid','term_pid','session_pid'
     ];
 }

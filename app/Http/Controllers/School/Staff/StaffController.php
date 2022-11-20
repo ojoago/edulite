@@ -319,7 +319,7 @@ class StaffController extends Controller
                                 return response()->json(['status' => 1, 'message' => 'Staff Detail updated  Successfully & username is ' . $data['username']]);
                             }
                             $message = 'Your account has been created, Staff Id: ' . $staff['staff_id']  . ' & username is ' . $data['username'].' and Password: '.$this->pwd;
-                            $message .= 'Your primary Role is ' .matchStaffRole($request->role);
+                            $message .= ' Your primary Role is ' .matchStaffRole($request->role);
 
                             SchoolNotificationController::notifyIndividualStaff(message: $message, pid: $result->pid ?? $request->pid);
 
@@ -393,7 +393,7 @@ class StaffController extends Controller
     public static function staffUniqueId(){
         $id = self::countStaff() + 1;
         $id =strlen($id) == 1 ? '0'.$id : $id;
-        return SchoolController::getSchoolHandle().'/'.strtoupper(date('yM')).$id;
+        return  (SchoolController::getSchoolCode() ?? SchoolController::getSchoolHandle()) .'/'.strtoupper(date('yM')).$id;
     }
     
     public static function countStaff(){
@@ -603,7 +603,7 @@ class StaffController extends Controller
     {
         $data = SchoolStaff::join('users', 'users.pid', 'school_staff.user_pid')
         ->join('user_details', 'users.pid', 'user_details.user_pid')
-        ->where(['school_staff.school_pid' => getSchoolPid(),'pid'=>$pid])
+        ->where(['school_staff.school_pid' => getSchoolPid(), 'school_staff.pid'=>$pid])
             ->first(['gsm', 'title', 'email','fullname']);
         return $data;
     }

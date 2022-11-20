@@ -16,10 +16,12 @@ return new class extends Migration
         Schema::create('fee_configurations', function (Blueprint $table) {
             $table->id();
             $table->string('school_pid');
-            $table->string('fee_pid');
-            $table->string('level_code');
-            $table->string('category_code');
-            $table->string('fee_type');
+            $table->string('fee_item_pid');
+            $table->string('category');
+            $table->string('gender')->nullable();
+            $table->string('religion')->nullable();
+            $table->string('pid')->unique();
+            $table->string('type');
             $table->timestamps();
         });
     }

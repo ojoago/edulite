@@ -5,10 +5,10 @@ namespace App\Models\School\Framework\Fees;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FeeConfiguration extends Model
+class FeeItemAmount extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'school_pid','fee_item_pid','category','gender','religion','pid','type', 'payment_model'
+        'school_pid','config_pid','amount','arm_pid','pid','term_pid','session_pid'
     ];
 }

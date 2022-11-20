@@ -12,8 +12,8 @@
     <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
     <script src="{{asset('plugins/sweetalert/sweetalert2.min.js')}}"></script>
     <script src="{{asset('plugins/DataTables/datatables.min.js')}}"></script>
-    <script src="{{asset('plugins/DataTables/FixedHeader-3.2.4/js/dataTables.fixedHeader.min.js')}}"></script>
-    <script src="{{asset('plugins/DataTables/FixedHeader-3.2.4/js/dataTables.fixedHeader.bootstrap5.min.js')}}"></script>
+    <!-- <script src="{{asset('plugins/DataTables/FixedHeader-3.2.4/js/dataTables.fixedHeader.min.js')}}"></script> -->
+    <!-- <script src="{{asset('plugins/DataTables/FixedHeader-3.2.4/js/dataTables.fixedHeader.bootstrap5.min.js')}}"></script> -->
     <script src="{{asset('plugins/select2/js/select2.min.js')}}"></script>
     <script src="{{asset('themes/vendor/tinymce/tinymce.min.js')}}"></script>
 
