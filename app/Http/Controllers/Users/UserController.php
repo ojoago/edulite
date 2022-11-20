@@ -33,9 +33,9 @@ class UserController extends Controller
         if(!getDefaultLanding()){
             if (count($data) === 1) {
                 $pid = $data[0]->pid;
+                AuthController::clearAuthSession();
+                return redirect()->route('login.school', [base64Encode($pid)]);
             }
-            AuthController::clearAuthSession();
-            return redirect()->route('login.school', [base64Encode($pid)]);
         }
         AuthController::clearAuthSession();
         return view('users.dashboard', compact('data'));
