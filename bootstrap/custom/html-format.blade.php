@@ -352,8 +352,7 @@ function formatNotification($sql){
        $roles = '<option disabled selected>Select Role</option>
         <option value="200">Super Admin</option>
         <option value="205">School Admin</option>
-        <option value="500">Principal</option>
-        <option value="505">Head Teacher</option>
+        <option value="500">Principal/Head Teacher</option>
         <option value="301">Form/Class Teacher</option>
         <option value="300">Teacher</option>
         <option value="303">Clerk</option>

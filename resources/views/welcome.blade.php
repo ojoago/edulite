@@ -175,10 +175,10 @@
                 Attendance
             </li>
             <li>
-                Time-Table
+                Exam Time-Table
             </li>
             <li>
-                Manage adminssion
+                Manage Admission
             </li>
             <li>
                 Record Fee Collection
@@ -210,7 +210,7 @@
             <div class="card-secction">
                 <img src="{{asset('files/edulite/svg/formula-pana.svg')}}" alt="student" />
                 <h3>Teacher</h3>
-                <p>Education needs wisdom, teacher handle humanly humanly task while <span class="ed-color">Edu</span><span class="lite-color">Lite</span> takes care of the computain </p>
+                <p>Education needs wisdom, teacher handle humanly task while <span class="ed-color">Edu</span><span class="lite-color">Lite</span> takes care of the computain </p>
             </div>
         </div>
         <div class="col-md-3 mb-3">
