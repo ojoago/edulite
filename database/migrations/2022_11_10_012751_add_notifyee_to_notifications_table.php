@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('school_notifications', function (Blueprint $table) {
-            $table->string('notifyee')->comment('to the indiviual the message is meant');
+            $table->string('notifyee')->nullable()->comment('to the indiviual the message is meant');
         });
     }
 

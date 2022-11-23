@@ -30,6 +30,11 @@
                         school component
                         <ul>
                             <li>School Head Principal/Head Teacher</li>
+                            <li>School Category | e.g Primary, Secondary etc</li>
+                            <li>Terms | e.g First Term</li>
+                            <li>Sessions | e.g 2022/2023 Session</li>
+                            <li>Classes | e.g Primary 1, 2, 3 etc</li>
+                            <li>Class Arms | e.g Primary 1 A, 1 B ,1 C etc</li>
                             <li>
                                 Subjects | e.g English
                                 <ol>
@@ -37,13 +42,8 @@
                                     <li>Subjects</li>
                                 </ol>
                             </li>
-                            <li>Terms | e.g First Term</li>
-                            <li>Sessions | e.g 2022/2023 Session</li>
-                            <li>School Category | e.g Primary, Secondary etc</li>
-                            <li>Classes | e.g Primary 1, 2, 3 etc</li>
-                            <li>Class Arms | e.g Primary 1 A, 1 B ,1 C etc</li>
                         </ul>
-                        <strong>Setting UP, <small>Framework</small></strong><br> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                        <strong>Setting UP, <small>Framework</small></strong><br>
                     </div>
                 </div>
             </div>
