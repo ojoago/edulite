@@ -17,6 +17,6 @@ class School extends Model
         $this->attributes['school_name'] = ucwords(strtolower($vaule));
     }
     public function setSchoolCodeAttribute($vaule){
-        $this->attributes['school_code'] = strtoupper($vaule);
+        $this->attributes['school_code'] = strtoupper(str_replace(' ','',$vaule));
     }
 }

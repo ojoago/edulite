@@ -248,6 +248,32 @@
             multiSelect2Post('#ccarStudentSelect2', 'assignArmToRepModal', 'class-arm-student', id, 'Select Class Student');
         });
 
+        // load student on fee payment modal 
+        multiSelect2('#apiStudentSelect2', 'acceptPaymentModal', 'student', 'Select Student');
+        // 
+        $(document).on('change propertychange', '#apiStudentSelect2', function() {
+            let pid = $(this).val();
+            loadStudentInvoice(pid)
+        });
+
+        function loadStudentInvoice(pid) {
+            alert(pid)
+        }
+        // find sudent by reg  
+        $('#findStudentByReg').click(async function() {
+            let reg = $('#studentReg').val();
+            if (reg != null) {
+                let params = {
+                    reg: reg,
+                    _token: "{{csrf_token()}}"
+                };
+                let route = "{{route('find.student.by.reg')}}";
+                let data = await loadDataAjax(route, params);
+                if (data && data.pid) {
+                    loadStudentInvoice(data.pid);
+                }
+            }
+        });
         // link rider to student  
         multiSelect2('#lstcrStudentSelect2', 'linkStudentToRiderModal', 'student', 'Select Student');
         multiSelect2('#lstcrRiderSelect2', 'linkStudentToRiderModal', 'rider', 'Select Care/Rider');

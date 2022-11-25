@@ -188,6 +188,8 @@ class AuthController extends Controller
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
+
+    // login into the app 
     public function login(Request $request){
         $request->validate([
             'email' => 'required',
@@ -221,7 +223,7 @@ class AuthController extends Controller
     }
     public function logoutSchool(){
         self::clearSchoolSession();
-        return redirect()->route('users.dashboard');
+        return redirect()->route('users.home');
     }
     public static function logUserout(){
         if (auth()->user()) {

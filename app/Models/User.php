@@ -36,6 +36,9 @@ class User extends Authenticatable
     public function setUsernameAttribute($value){
         $this->attributes['username'] = strtolower(str_replace(' ','',trim($value)));
     }
+    public function setEmailAttribute($value){
+        $this->attributes['email'] = strtolower($value);
+    }
     public function setCodeAttribute($value){
         $this->attributes['code'] = strtoupper(AuthController::referrerCode());
     }

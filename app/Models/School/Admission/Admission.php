@@ -15,6 +15,9 @@ class Admission extends Model
     ];
 
     public function setUsernameAttribute($value){
-        $this->attributes['username'] = strtolower($value);
+        $this->attributes['username'] = strtolower(str_replace(' ','',$value));
+    }
+    public function setEmailAttribute($value){
+        $this->attributes['email'] = strtolower($value);
     }
 }

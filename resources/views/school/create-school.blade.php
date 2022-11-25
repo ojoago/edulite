@@ -4,6 +4,7 @@
 
 <div class="card p-4">
     <h5 class="card-title text-center text-uppercase">Register School</h5>
+    <h5>How to create a school <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#createSchoolVideoModal">Watch Video</button></h5>
 
     <div class="card-body">
         <form action="" class="row g-3" method="post" id="createSchoolForm">
@@ -76,11 +77,32 @@
             <div class="text-center">
                 <button type="button" class="btn btn-primary" id="createSchoolBtn">Create</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
+                <a href="{{route('users.home')}}">Back to Home</a>
             </div>
         </form>
     </div>
 </div>
 
+
+<div class="modal fade" id="createSchoolVideoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h5 class="modal-title text-uppercase text-info">How to create school</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe width="420" height="315" src="https://youtu.be/FykOy8vwBkI">
+                </iframe>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>

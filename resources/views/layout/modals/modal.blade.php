@@ -410,7 +410,6 @@
                     <p class="text-danger student_pid_error"></p>
 
                 </form>
-
             </div>
             <div class="modal-footer">
                 <div class="text-center">
@@ -421,6 +420,86 @@
         </div>
     </div>
 </div>
+<!-- student invoice payment -->
+<div class="modal fade" id="acceptPaymentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Accept Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" class="" id="acceptPaymentForm">
+                    @csrf
+                    <label for="hostel_pid" class="text-center">Student</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select name="student_pid" id="apiStudentSelect2" class="form-control form-control-sm">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="text" name="" id="studentReg" class="form-control form-control-sm">
+                                <span class="input-group-text pointer" id="findStudentByReg"> <i class="bi bi-search"></i> </span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-danger student_pid_error"></p>
+                    <div id="studentInvoices"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button class="btn btn-primary btn-sm" type="button" id="acceptPaymentBtn">Submit</button>
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- student direct payment -->
+<div class="modal fade" id="payDirectModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Accept Payment</h5>
+                <div class="float-end">
+                    <button id="addMoreArm" type="button" class="btn btn-danger btn-sm btn-sm mb-1 text-center">Add More Row</button><br>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" class="" id="acceptPaymentForm">
+                    @csrf
+                    <label for="hostel_pid" class="text-center">Student</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select name="student_pid" id="apiStudentSelect2" class="form-control form-control-sm">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="text" name="" id="studentReg" class="form-control form-control-sm">
+                                <span class="input-group-text pointer" id="findStudentByReg"> <i class="bi bi-search"></i> </span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-danger student_pid_error"></p>
+                    <div id="studentInvoices"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button class="btn btn-primary btn-sm" type="button" id="acceptPaymentBtn">Submit</button>
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal fade" id="linkStudentToRiderModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -499,6 +578,8 @@
         </div>
     </div>
 </div>
+
+
 <div class="modal fade" id="updateAccountModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -570,3 +651,5 @@
         </div>
     </div>
 </div>
+
+<!-- videos modals  -->

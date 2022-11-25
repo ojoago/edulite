@@ -258,4 +258,10 @@ class StudentController extends Controller
         return Student::where(['school_pid' => getSchoolPid()])
             ->where('reg_number', 'like', '%' . date('yM') . '%')->count('id');
     }
+
+
+    public function findStudentByReg(Request $request){
+        $data = Student::where(['school_pid'=>getSchoolPid(),'reg_number'=>$request->reg])->first();
+        return response()->json($data);
+    }
 }

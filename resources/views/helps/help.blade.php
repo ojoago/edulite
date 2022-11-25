@@ -4,13 +4,6 @@
 
 <div class="pagetitle">
     <h1>Helps</h1>
-    <!-- <nav>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li class="breadcrumb-item">Components</li>
-            <li class="breadcrumb-item active">Accordion</li>
-        </ol>
-    </nav> -->
 </div><!-- End Page Title -->
 <div class="card">
     <div class="card-body">
@@ -28,7 +21,7 @@
                     <div class="accordion-body">
                         <strong>Create School</strong><br> Click on create school and fill the form with school details then click on create, wait for few seconds if everything is entered correctly, your school will be created.
                         school component
-                        <ul>
+                        <ol>
                             <li>School Head Principal/Head Teacher</li>
                             <li>School Category | e.g Primary, Secondary etc</li>
                             <li>Terms | e.g First Term</li>
@@ -42,7 +35,14 @@
                                     <li>Subjects</li>
                                 </ol>
                             </li>
-                        </ul>
+                            <li>Assessment
+                                <ol>
+                                    <li>Assessment Title</li>
+                                    <li>Score Setting</li>
+                                </ol>
+                            </li>
+                            <li>School Grade</li>
+                        </ol>
                         <strong>Setting UP, <small>Framework</small></strong><br>
                     </div>
                 </div>

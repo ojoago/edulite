@@ -285,6 +285,10 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-fee-items', [FeeItemController::class,'loadFeeItems'])->name('load.fee.items');
     Route::post('load-fee-amount', [FeeItemController::class, 'loadFeeAmount'])->name('load.fee.amount');
     Route::get('load-fee-config', [FeeItemController::class, 'loadFeeConfig'])->name('load.fee.config');
+
+    // payment collection and management by clert 
+    Route::view('payment', 'school.payments.invoice')->name('fee.payment');
+    Route::post('payment', [FeeItemController::class, 'loadAvailableFeeItem']);
     // admission config
     Route::view('admission-config', 'school.framework.admission.admission-config')->name('admission.config');
     Route::post('admission-config', [AdmissionConfigController::class, 'setAdmissionClass'])->name('configure.admission');
@@ -373,6 +377,8 @@ Route::middleware('schoolAuth')->group(function(){
     // edit student 
 
     Route::post('link-student-parent', [StudentController::class, 'linkStudentToParent'])->name('link.student.parent');
+    // find student by reg returrn pid 
+    Route::post('find-student-by-reg', [StudentController::class, 'findStudentByReg'])->name('find.student.by.reg');
 
     Route::view('register-parent', 'school.registration.parent.register-parent')->name('school.parent.registration.form');
 
@@ -457,7 +463,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-ex-student', [StudentController::class, 'exStudent'])->name('load.ex.student');
     Route::get('update-student-status/{id}', [StudentController::class, 'updateStudentStatus'])->name('update.student.status');
     // student list 
-    Route::view('p-list', 'school.lists.parent.parent-list')->name('school.parent.list');
+    Route::view('parent-list', 'school.lists.parent.parent-list')->name('school.parent.list');
     Route::get('load-parent-list', [ParentController::class, 'index'])->name('load.school.parent.list');
     // student list 
     Route::view('school-rider-list', 'school.lists.rider.rider-list')->name('school.rider.list');

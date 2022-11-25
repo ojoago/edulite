@@ -228,6 +228,9 @@ class AdmissionController extends Controller
                 'lastname.regex' => 'Special character is not allowed',
                 'lastname.regex' => 'Special character is not allowed',
                 'othername.regex' => 'Special character is not allowed',
+                'contact_gsm.required_without' => 'Enter contact person phone number',
+                'contact_person.required_without' => 'Enter name of contact person',
+                'class_pid.required_without' => 'Select Class',
             ]
         );
 
@@ -283,7 +286,7 @@ class AdmissionController extends Controller
     {
         $id = self::countStudent() + 1;
         $id = strlen($id) == 1 ? '0' . $id : $id;
-        return SchoolController::getSchoolHandle() . '/' . strtoupper(date('y')) . $id; // concatenate shool handle with student id
+        return (SchoolController::getSchoolCode() ?? SchoolController::getSchoolHandle()) . '/' . strtoupper(date('y')) . $id; // concatenate shool handle with student id
     }
     public static function countStudent()
     {

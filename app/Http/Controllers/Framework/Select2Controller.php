@@ -150,7 +150,7 @@ class Select2Controller extends Controller
                                     ->limit($request->page_limit)
             ->orderBy('id', 'DESC')->get(['pid', 'fullname', 'reg_number']); //
         else
-        $result = Student::where('school_pid',getSchoolPid())
+        $result = Student::where(['school_pid'=>getSchoolPid(),'status'=>1])
                             ->limit(10)
                             ->orderBy('id', 'DESC')->get(['pid', 'fullname','reg_number']);
         if (!$result) {

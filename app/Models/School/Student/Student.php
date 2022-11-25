@@ -15,4 +15,8 @@ class Student extends Model
         'current_class_pid', 'admitted_term', 'admitted_session_pid'
     ];
 
+
+    public function setStudentRegNumber($value){
+        $this->attributes['reg_number'] = strtoupper($value);
+    }
 }

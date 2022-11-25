@@ -1,43 +1,25 @@
 @extends('layout.mainlayout')
-@section('title','Fee Config')
+@section('title','School Invoices & Payment')
 @section('content')
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">School Fees</h5>
+        <h5 class="card-title">Invoices & Payment</h5>
         <!-- Default Tabs -->
         <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab">Fee Items</button>
+                <button class="nav-link w-100 active" id="itemFeeAmount" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab">Item Fee Amount</button>
             </li>
+
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="itemFeeAmount" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab">Item Fee Amount</button>
+                <button class="nav-link w-100" id="history" data-bs-toggle="tab" data-bs-target="#paymentHistory" type="button" role="tab">Payment Histories</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="itemConfig" data-bs-toggle="tab" data-bs-target="#class-arm" type="button" role="tab">Item Fee Config</button>
             </li>
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
-            <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
-                <button type="button" class="btn btn-primary mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#createFeeModal">
-                    Create Fee Name
-                </button>
-                <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="feeNameTable">
-                    <thead>
-                        <tr>
-                            <th width="5%">S/N</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>status</th>
-                            <th>Date</th>
-                            <th width="5%">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-            <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
+
+            <div class="tab-pane show active fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
                 <!-- <div class="table-responsive mt-3"> -->
                 <div class="row">
                     <div class="col-md-4">
@@ -77,6 +59,31 @@
                     </tbody>
                 </table>
             </div>
+            <div class="tab-pane fade" id="paymentHistory" role="tabpanel">
+                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#acceptPaymentModal">
+                    Pay Invoice(s)
+                </button>
+                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#payDirectModal">
+                    Pay Fee(s)
+                </button>
+                <!-- <div class="table-responsive mt-3"> -->
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="FeeItemTable">
+                    <thead>
+                        <tr>
+                            <th width="5%">S/N</th>
+                            <th>Fee Name</th>
+                            <th>Category</th>
+                            <th>Model</th>
+                            <th>Type</th>
+                            <th>Condition</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
             <div class="tab-pane fade" id="class-arm" role="tabpanel" aria-labelledby="class-arm-tab">
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassArmModal">
                     Event
@@ -306,7 +313,7 @@
                 loadFeeAmount(term, session);
             }
         })
-
+        loadFeeAmount()
         $('#itemFeeAmount').click(function() {
             loadFeeAmount()
         })

@@ -320,7 +320,7 @@
         </li>
         <li>
             <a href="charts-apexcharts.html">
-                <i class="bi bi-circle"></i><span>swap student</span>
+                <i class="bi bi-circle"></i><span>Swap student</span>
             </a>
         </li>
     </ul>
@@ -451,18 +451,23 @@
     </a>
     <ul id="payment-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-            <a href="charts-chartjs.html">
-                <i class="bi bi-circle"></i><span>Chart.js</span>
+            <a data-bs-toggle="modal" data-bs-target="#acceptPaymentModal" class="pointer">
+                <i class="bi bi-circle pointer"></i><span>Accept Payment</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('fee.payment')}}">
+                <i class="bi bi-circle"></i><span>Invoices</span>
             </a>
         </li>
         <li>
             <a href="charts-apexcharts.html">
-                <i class="bi bi-circle"></i><span>ApexCharts</span>
+                <i class="bi bi-circle"></i><span>Payment</span>
             </a>
         </li>
         <li>
             <a href="charts-echarts.html">
-                <i class="bi bi-circle"></i><span>ECharts</span>
+                <i class="bi bi-circle"></i><span>Payment Record</span>
             </a>
         </li>
     </ul>
