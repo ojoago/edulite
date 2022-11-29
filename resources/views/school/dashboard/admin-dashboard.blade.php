@@ -58,7 +58,6 @@
 
         </div>
     </div><!-- End Revenue Card -->
-
     <!-- Customers Card -->
     <div class="col-md-3">
         <div class="card info-card">

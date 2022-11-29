@@ -96,6 +96,14 @@
             </a>
         </li>
         @endif
+        <li>
+            <a href="{{route('edit.school.info')}}">
+                <i class="bi bi-circle"></i><span>
+                    Update School Info
+                    <!-- cycomfrence -->
+                </span>
+            </a>
+        </li>
     </ul>
 </li>
 <!-- End Framework -->
@@ -281,18 +289,18 @@
     </a>
     <ul id="attendance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-            <a href="charts-chartjs.html">
+            <a href="{{route('staff.student.list')}}">
                 <i class="bi bi-circle"></i><span>Student Class</span>
             </a>
         </li>
-        <li>
+        <!-- <li>
             <a href="charts-chartjs.html">
                 <i class="bi bi-circle"></i><span>Student Subject</span>
             </a>
-        </li>
+        </li> -->
         <li>
             <a href="{{route('student.attendance.form')}}">
-                <i class="bi bi-circle"></i><span>Student Attendance</span>
+                <i class="bi bi-circle"></i><span>Take Attendance</span>
             </a>
         </li>
         <li>
@@ -303,6 +311,16 @@
         <li>
             <a href="{{route('student.attendance.history')}}">
                 <i class="bi bi-circle"></i><span>Attendance History</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{--route('student.timetable')--}}">
+                <i class="bi bi-circle"></i><span>Student Timetable</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{--route('student.timetable')--}}">
+                <i class="bi bi-circle"></i><span>Student Invoice</span>
             </a>
         </li>
     </ul>

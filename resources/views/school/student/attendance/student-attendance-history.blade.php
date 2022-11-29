@@ -9,15 +9,15 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-4">
-                            <select type="text" name="category" class="form-control form-control-sm" id="formCategorySelect2" required>
+                            <select type="text" name="category" class="form-control form-control-sm mb-1" id="formCategorySelect2" required>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <select type="text" name="class" class="form-control form-control-sm" id="formClassSelect2">
+                            <select type="text" name="class" class="form-control form-control-sm mb-1" id="formClassSelect2">
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <select type="text" name="arm" class="form-control form-control-sm" id="formArmSelect2">
+                            <select type="text" name="arm" class="form-control form-control-sm mb-1" id="formArmSelect2">
                             </select>
                         </div>
                     </div>

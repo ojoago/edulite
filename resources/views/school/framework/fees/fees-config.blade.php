@@ -13,6 +13,9 @@
                 <button class="nav-link w-100" id="itemFeeAmount" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab">Item Fee Amount</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100" id="generateInvoiceTab" data-bs-toggle="tab" data-bs-target="#generatedInvoice" type="button" role="tab">School Invoice</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="itemConfig" data-bs-toggle="tab" data-bs-target="#class-arm" type="button" role="tab">Item Fee Config</button>
             </li>
         </ul>
@@ -39,14 +42,45 @@
             </div>
             <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
                 <!-- <div class="table-responsive mt-3"> -->
+                <!-- <div class="row"> -->
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-primary mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#FeeConfigModal">
+                        Fee Config
+                    </button>
+
+                </div>
+
+                <!-- </div> -->
+                <!--  -->
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="feeAmountTable">
+                    <thead>
+                        <tr>
+                            <th width="5%">S/N</th>
+                            <th>Class</th>
+                            <th>Fee Name</th>
+                            <th align="right">{!!NAIRA_UNIT!!} Amount</th>
+                            <!-- <th>Term</th>
+                            <th>Session</th> -->
+                            <th>Model</th>
+                            <th>Type</th>
+                            <th>Condition</th>
+                            <th width="5%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="generatedInvoice" role="tabpanel" aria-labelledby="profile-tab">
+                <!-- <div class="table-responsive mt-3"> -->
                 <div class="row">
                     <div class="col-md-4">
-                        <button type="button" class="btn btn-primary mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#FeeConfigModal">
-                            Fee Config
-                        </button>
-                        <button type="button" class="btn btn-primary mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#FeeConfigModal">
+                        <button type="button" class="btn btn-primary mb-3 btn-sm" id="generateInvoice">
                             Generate Invoice
                         </button>
+                        <!-- <button type="button" class="btn btn-primary mb-3 btn-sm" id="reGenerateInvoice">
+                            ReGenerate Invoice
+                        </button> -->
                     </div>
                     <div class="col-md-4">
                         <select name="session_pid" id="sessionFeeSelect2" class="form-control form-control-sm" style="width: 100%;">
@@ -58,19 +92,20 @@
                     </div>
                 </div>
                 <!--  -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="feeAmountTable">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="generatedInvoiceTable">
                     <thead>
                         <tr>
                             <th width="5%">S/N</th>
                             <th>Class</th>
-                            <th>Fee Name</th>
+                            <th>Reg No.</th>
+                            <th>Names</th>
+                            <th>Fee</th>
                             <th align="right">{!!NAIRA_UNIT!!} Amount</th>
                             <th>Term</th>
                             <th>Session</th>
-                            <th>Model</th>
                             <th>Type</th>
-                            <th>Condition</th>
-                            <th width="5%">Action</th>
+                            <th>Date</th>
+                            <!-- <th width="5%">Action</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -78,9 +113,9 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="class-arm" role="tabpanel" aria-labelledby="class-arm-tab">
-                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassArmModal">
+                <!-- <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassArmModal">
                     Event
-                </button>
+                </button> -->
                 <!-- <div class="table-responsive mt-3"> -->
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="FeeItemTable">
                     <thead>
@@ -161,10 +196,11 @@
                             <p class="text-danger category_error"></p>
                         </div>
                         <div class="col-md-2">
-                            <select name="type" id="type" class="form-control form-control-sm">
+                            <select name="type" id="feeType" class="form-control form-control-sm">
                                 <option disabled selected>Select Type</option>
                                 <option value="1">Compulsary</option>
-                                <option value="2">Optional</option>
+                                <option value="2">On-demand</option>
+                                <!-- <option value="3">Optional</option> -->
                             </select>
                             <p class="text-danger type_error"></p>
                         </div>
@@ -174,7 +210,7 @@
                                 <option value="1">Termly</option>
                                 <option value="2">Per Session</option>
                                 <option value="3">One Time</option>
-                                <!-- <option value="4">On Demand</option> -->
+                                <option value="4">On-Demand</option>
                             </select>
                             <p class="text-danger payment_model_error"></p>
                         </div>
@@ -255,8 +291,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="feeConfigBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="feeConfigBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -267,6 +303,61 @@
 <script>
     $(document).ready(function() {
 
+        // generate all invoice 
+        $('#generateInvoice').click(function() {
+            if (confirm("Are you sure you want to generate invoice for {{activeTermName()}} {{activeSessionName()}}")) {
+                $.ajax({
+                    url: "{{route('generate.all.invoice')}}", // generate invoice for active term
+                    type: "post",
+                    data: {
+                        _token: "{{csrf_token()}}",
+                    },
+                    beforeSend: function() {
+                        $('.overlay').show();
+                        $(this).prop('disabled', true);
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        if (data.status === 1) {
+                            alert_toast(data.message, 'success');
+                        } else {
+                            alert_toast(data.message, 'warning');
+                        }
+                        $(this).prop('disabled', false);
+                        $('.overlay').hide();
+                    },
+                    error: function(data) {
+                        $(this).prop('disabled', false);
+                        $('.overlay').hide();
+                        alert_toast('Something Went Wrong', 'error');
+                    }
+                });
+            }
+        });
+        // regenerate all invoice 
+        $('#reGenerateInvoice').click(function() {
+            $.ajax({
+                url: "{{route('re.generate.all.invoice')}}",
+                type: "post",
+                data: {
+                    _token: "{{csrf_token()}}",
+                },
+                beforeSend: function() {
+                    $('.overlay').show();
+                    $(this).prop('disabled', true);
+                },
+                success: function(data) {
+                    console.log(data);
+                    $(this).prop('disabled', false);
+                    $('.overlay').hide();
+                },
+                error: function(data) {
+                    $(this).prop('disabled', false);
+                    $('.overlay').hide();
+                    alert_toast('Something Went Wrong', 'error');
+                }
+            });
+        });
         $('#feeNameTable').DataTable({
             "processing": true,
             "serverSide": true,
@@ -303,7 +394,7 @@
             let term = $(this).val();
             let session = $('#sessionFeeSelect2').val();
             if (term != null && session != null) {
-                loadFeeAmount(term, session);
+                loadInvoice(term, session);
             }
         })
 
@@ -344,12 +435,12 @@
                     {
                         "data": "amount"
                     },
-                    {
-                        "data": "term"
-                    },
-                    {
-                        "data": "session"
-                    },
+                    // {
+                    //     "data": "term"
+                    // },
+                    // {
+                    //     "data": "session"
+                    // },
                     {
                         "data": "model",
                     },
@@ -361,6 +452,71 @@
                     },
                     {
                         "data": "action",
+                    },
+
+                ],
+            });
+        }
+
+
+        $('#generateInvoiceTab').click(function() {
+            loadInvoice()
+        })
+
+        function loadInvoice(term = null, session = null) {
+            $('#generatedInvoiceTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                destroy: true,
+                // type: "GET",
+                "ajax": {
+                    url: "{{route('load.student.invoice')}}",
+                    type: "POST",
+                    data: {
+                        _token: "{{csrf_token()}}",
+                        session_pid: session,
+                        term_pid: term,
+                        // arm_pid: arm,
+                    }
+                },
+
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                    },
+                    {
+                        "data": "arm"
+                    },
+                    {
+                        "data": "reg_number"
+                    },
+                    {
+                        "data": "fullname"
+                    },
+
+                    {
+                        "data": "fee_name"
+                    },
+                    {
+                        "data": "amount"
+                    },
+                    {
+                        "data": "term"
+                    },
+                    {
+                        "data": "session"
+                    },
+
+                    {
+                        "data": "type",
+                    },
+
+                    {
+                        "data": "date",
                     },
 
                 ],
@@ -487,6 +643,13 @@
                 $('#addMoreArm').hide(500)
                 $('.classParam').hide(500)
                 $('#conditional').show(500)
+            }
+        });
+
+        $('#feeType').change(function() {
+            let type = $(this).val();
+            if (type == 2) {
+                $('#payment_model').val(4).trigger('change').attr('readonly', true);
             }
         });
         // configure fee

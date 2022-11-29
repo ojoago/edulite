@@ -165,6 +165,7 @@ class StudentAttendanceController extends Controller
                                      "))
                 ->where($where)
                     ->groupBy('reg_number')
+                    ->groupBy('fullname')
                     // ->groupBy('a.status')
                     ->orderBy('date')
                     ->orderBy('a.updated_at')

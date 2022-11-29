@@ -75,6 +75,21 @@ class StudentController extends Controller
             })
             ->make(true);
     }
+
+
+    public function staffActiveStudent(Request $request){
+        $data = DB::table('students as s')->join('class_arms as a', 'a.pid', 's.current_class_pid')
+                ->join('staff_classes as c','c.arm_pid', 's.current_class_pid')
+                ->leftJoin('school_parents as p', 'p.pid', 's.parent_pid')
+                ->leftjoin('user_details as d', 'd.user_pid', 'p.user_pid')
+        ->where(['s.school_pid' => getSchoolPid(), 's.status' => 1,'c.teacher_pid'=>getSchoolUserPid()]) //active student
+        ->select('arm', 's.fullname', 'reg_number', 's.created_at', 'd.fullname as parent', 's.pid', 's.status')->orderByDesc('s.id')->get();
+        return $this->addDataTable($data);
+    }
+
+    private function loadStudentQuery($condition){
+
+    }
     public function studentProfile($pid){
         return view('school.lists.student.student-profile',compact('pid'));
     }
@@ -214,9 +229,7 @@ class StudentController extends Controller
             //log 
             return $student;
        } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
-
-            logError($error);
+            logError($e->getMessage());
        }
     }
 

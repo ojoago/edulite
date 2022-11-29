@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\School;
 
+use App\Models\SchoolUser;
 use Illuminate\Http\Request;
 use App\Models\School\School;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\School\Student\Student;
@@ -16,15 +18,10 @@ use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Parent\ParentController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\School\Rider\SchoolRiderController;
-use App\Models\SchoolUser;
 
 class SchoolController extends Controller
 {
    
-    public function __construct()
-    {
-        // $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -33,8 +30,13 @@ class SchoolController extends Controller
 
     public function index()
     {
-        $data = School::where('pid', getSchoolPid())->get();
-        return view('school.index',compact('data'));
+        $pid = getSchoolPid();
+        return view('school.create-school',compact('pid'));
+    }
+    public function loadSchoolDetailById()
+    {
+        $data = School::where('pid', getSchoolPid())->first();
+        return response()->json($data);
     }
     public function schoolLogin($id)
     {
@@ -118,11 +120,17 @@ class SchoolController extends Controller
             "type" => "required",
             "lga" => "required",
             "school_email" => "nullable|email",
-            "school_name" => "required|unique:schools",
+            "school_name" => ["required",
+                            Rule::unique('schools')->where(function($param){
+                                $param->where('pid','<>',getSchoolPid());
+                            })],
             "school_contact" => "required",
             "school_address" => "required|string",
             "school_moto" => "required",
-            "school_code" => "nullable|unique:schools",
+            "school_code" => ["nullable", 
+                Rule::unique('schools')->where(function ($param){
+                    $param->where('pid', '<>', getSchoolPid());
+                })],
             "school_logo" => "nullable|image|mimes:jpeg,png,jpg,gif",
         ],['school_code.unique'=> $request->school_code.' already exist, Enter a differnet one']);
 
@@ -136,19 +144,25 @@ class SchoolController extends Controller
                 "school_contact" => $request->school_contact,
                 "school_address" => $request->school_address,
                 "school_moto" => $request->school_moto,
-                "pid" => public_id(),
-                "user_pid" => getUserPid(),
-                'school_handle' => $this->schoolHandle(),
+                "pid" => getSchoolPid() ?? public_id(),
                 'school_code' => $request->school_code,
             ];
 
+            if(!$request->pid){
+                $data['user_pid'] = getUserPid();
+                $data['school_handle'] = $this->schoolHandle();
+            }
             if ($request->school_logo) {
                 $name = $data['school_name'] . '-logo';
                 $data['school_logo'] = saveImg($request->file('school_logo'), name: $name, path: 'logo');
             }
             try {
-               $result =  School::create($data);
+               $result =  School::updateOrCreate(['pid'=>getSchoolPid()],$data);
                if($result){
+                if($request->pid){
+                    setSchoolName($result->school_name);
+                    return response()->json(['status' => 1, 'message' => 'School Updated Successfully']);
+                }
                     // set school pid 
                     setSchoolPid($result->pid);
                    $data = [
@@ -162,8 +176,7 @@ class SchoolController extends Controller
                     return response()->json(['status' => 1, 'message' => 'School Created Successfully','code'=> base64Encode($result->pid)]);
                     }
                 } catch (\Throwable $e) {
-                    $error = $e->getMessage();
-                    logError($error);
+                    logError($e->getMessage());
                     return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
             }
 
@@ -275,7 +288,6 @@ class SchoolController extends Controller
             logError($error);
             return redirect()->back()->with('error', 'Error logged');
         }
-        dd($var);
     }
 
    

@@ -27,7 +27,8 @@
                             <!-- <th>S/N</th> -->
                             <th>Names</th>
                             <th>Reg Number</th>
-                            <!-- <th>Phone Number</th> -->
+                            <th>Status</th>
+                            <th>Note</th>
                             <!-- <th>Username</th>
                             <th>Email</th> -->
                             <th>Address</th>
@@ -94,12 +95,12 @@
                         {
                             "data": "reg_number"
                         },
-                        // {
-                        //     "data": "username"
-                        // },
-                        // {
-                        //     "data": "email"
-                        // },
+                        {
+                            "data": "status"
+                        },
+                        {
+                            "data": "note"
+                        },
                         {
                             "data": "address"
                         },

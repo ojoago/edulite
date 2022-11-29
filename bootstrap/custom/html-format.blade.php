@@ -1,4 +1,7 @@
 <?php
+
+use App\Http\Controllers\School\Student\StudentController;
+
 function formatStaff($row)
 {
     if ($row) {
@@ -11,8 +14,7 @@ function formatStaff($row)
                         <option disabled selected>Select Role</option>
                         <option value="200">Super Admin</option>
                         <option value="205">School Admin</option>
-                        <option value="500">Principal</option>
-                        <option value="505">Head Teacher</option>
+                        <option value="500">Principal/Head Teacher</option>
                         <option value="301">Form/Class Teacher</option>
                         <option value="300">Teacher</option>
                         <option value="303">Clerk</option>
@@ -249,7 +251,7 @@ function formatRiderProfile($row)
                                 <hr>
                                 Phone Number: ' . $row->gsm . '
                                 <hr>
-                                Number of student: ' . $row->count . '
+                                Number of student: ' . StudentController::countRiderStudent($row->pid) . '
                                 <hr>
                                 Email: ' . $row->email . '
                                 <hr>
@@ -349,6 +351,7 @@ function formatNotification($sql){
 ?>
 
 <?php function staffRoleOptions($sl = null) { 
+
        $roles = '<option disabled selected>Select Role</option>
         <option value="200">Super Admin</option>
         <option value="205">School Admin</option>

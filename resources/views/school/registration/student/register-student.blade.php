@@ -4,8 +4,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Register Student</h5>
-
+        <h5 class="card-title">Register Student for <span class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</span> </h5>
         <!-- Multi Columns Form -->
         <form class="row g-3" id="createStudentForm">
             @csrf
@@ -61,13 +60,29 @@
                 </select>
                 <p class="text-danger religion_error"></p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
+                <label for="type" class="form-label">Student Type</label>
+                <select name="type" class="form-control  form-control-sm" id="studentType" required>
+                    @if(getSchoolType()==1)
+                    <option value="1" selected>Day</option>
+                    @elseif(getSchoolType()==2)
+                    <option value="2" selected>Boarding</option>
+                    @else
+                    <option disabled selected>Select Type</option>
+                    <option value="2">Boarding</option>
+                    <option value="1">Day</option>
+                    <!-- <option value="3">Boarding & Day</option> -->
+                    @endif
+                </select>
+                <p class="text-danger type_error"></p>
+            </div>
+            <div class="col-md-3">
                 <label for="state" class="form-label small">State Of Origin</label>
                 <select id="stateSelect2" value="1" name="state" class="form-control form-control-sm" style="width: 100%;">
                 </select>
                 <p class="text-danger state_error"></p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="inputCity" class="form-label small">LGA</label>
                 <select id="lgaSelect2" value="1" name="lga" class="form-control form-control-sm select2" style="width: 100%;">
                 </select>
@@ -87,23 +102,8 @@
                 <textarea type="text" class="form-control form-control-sm" id="address" name="address" placeholder="e.g no 51  offeoke"></textarea>
                 <p class="text-danger address_error"></p>
             </div>
-            <div class="col-md-4">
-                <label for="type" class="form-label">Student Type</label>
-                <select name="type" class="form-control  form-control-sm" id="studentType" required>
-                    @if(getSchoolType()==1)
-                    <option value="1" selected>Day</option>
-                    @elseif(getSchoolType()==2)
-                    <option value="2" selected>Boarding</option>
-                    @else
-                    <option disabled selected>Select Type</option>
-                    <option value="2">Boarding</option>
-                    <option value="1">Day</option>
-                    <!-- <option value="3">Boarding & Day</option> -->
-                    @endif
-                </select>
-                <p class="text-danger type_error"></p>
-            </div>
-            <div class="col-md-4">
+
+            <!-- <div class="col-md-4">
                 <label for="state" class="form-label">Session </label>
                 <select name="session_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="sessionSelect2" required>
                 </select>
@@ -114,7 +114,7 @@
                 <select name="term_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="tmSelect2" required>
                 </select>
                 <p class="text-danger term_pid_error"></p>
-            </div>
+            </div> -->
             <div class="col-md-3">
                 <label for="category_pid" class="form-label">Category</label>
                 <select name="category_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="cateSelect2" required>

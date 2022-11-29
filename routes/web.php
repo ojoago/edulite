@@ -113,7 +113,8 @@ Route::post('update-user-detail', [UserController::class, 'updateUserDetail'])->
 Route::middleware('schoolAuth')->group(function(){
     // user create school 
     Route::get('school-dashboard', [SchoolController::class, 'mySchoolDashboard'])->name('my.school.dashboard');
-    Route::get('update-school/{id}', [SchoolController::class, 'update'])->name('update.school');
+    Route::get('update-school', [SchoolController::class, 'index'])->name('edit.school.info');
+    Route::post('load-school-info', [SchoolController::class, 'loadSchoolDetailById'])->name('load.school.info');
     Route::get('delete-school/{id}', [SchoolController::class, 'update'])->name('delete.school');
     // load school user
     Route::get('school-users', [SchoolUserController::class, 'index'])->name('school.users');
@@ -284,7 +285,10 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('fees-config', 'school.framework.fees.fees-config')->name('fee.config');
     Route::get('load-fee-items', [FeeItemController::class,'loadFeeItems'])->name('load.fee.items');
     Route::post('load-fee-amount', [FeeItemController::class, 'loadFeeAmount'])->name('load.fee.amount');
+    Route::post('load-student-invoice', [FeeItemController::class, 'loadStudentInvoice'])->name('load.student.invoice');
     Route::get('load-fee-config', [FeeItemController::class, 'loadFeeConfig'])->name('load.fee.config');
+    Route::post('generate-all-invoice', [FeeItemController::class, 'generateAllInvoice'])->name('generate.all.invoice');
+    Route::post('re-generate-all-invoice', [FeeItemController::class, 'reGenerateAllInvoice'])->name('re.generate.all.invoice');
 
     // payment collection and management by clert 
     Route::view('payment', 'school.payments.invoice')->name('fee.payment');
@@ -455,14 +459,22 @@ Route::middleware('schoolAuth')->group(function(){
 
 
     // student list 
-    Route::view('school-s-list', 'school.lists.student.student-list')->name('school.student.list');
+    Route::view('school-student-list', 'school.lists.student.student-list')->name('school.student.list');
     // load active student 
     Route::get('load-active-student', [StudentController::class, 'index'])->name('load.active.student.list');
     // load diabled student 
     Route::get('load-in-active-student', [StudentController::class, 'inActiveStudent'])->name('load.in.active.student');
     Route::get('load-ex-student', [StudentController::class, 'exStudent'])->name('load.ex.student');
     Route::get('update-student-status/{id}', [StudentController::class, 'updateStudentStatus'])->name('update.student.status');
-    // student list 
+    // staff student list 
+    Route::view('staff-student-list', 'school.lists.staff.staff-student-list')->name('staff.student.list');
+    // load active student 
+    Route::get('load-active-student', [StudentController::class, 'staffActiveStudent'])->name('load.staff.active.student.list');
+    // load diabled student 
+    Route::get('load-in-active-student', [StudentController::class, 'inActiveStudent'])->name('load.in.active.student');
+    Route::get('load-ex-student',[StudentController::class, 'exStudent'])->name('load.ex.student');
+    Route::get('update-student-status/{id}', [StudentController::class, 'updateStudentStatus'])->name('update.student.status');
+    // parent list 
     Route::view('parent-list', 'school.lists.parent.parent-list')->name('school.parent.list');
     Route::get('load-parent-list', [ParentController::class, 'index'])->name('load.school.parent.list');
     // student list 
@@ -490,15 +502,15 @@ Route::middleware('schoolAuth')->group(function(){
 
 
     //student attendance
-    Route::view('std-a-f', 'school.student.attendance.student-attendance-form')->name('student.attendance.form');
-    Route::post('std-a-f', [StudentAttendanceController::class, 'loadArmStudent']);
-    Route::post('std-a-f', [StudentAttendanceController::class, 'loadArmStudent'])->name('attendance.change.class');
+    Route::view('student-attendance-form', 'school.student.attendance.student-attendance-form')->name('student.attendance.form');
+    Route::post('student-attendance-form', [StudentAttendanceController::class, 'loadArmStudent']);
+    Route::post('student-attendance-form', [StudentAttendanceController::class, 'loadArmStudent'])->name('attendance.change.class');
     Route::post('submit-student-attendance', [StudentAttendanceController::class, 'submitStudentAttendance'])->name('submit.student.attendance');
     // student attendance 
     Route::post('student-attendance', [StudentAttendanceController::class, 'studentAttendance'])->name('student.attendance');
-    Route::view('std-a-history', 'school.student.attendance.student-attendance-history')->name('student.attendance.history');
+    Route::view('student-attendance-history', 'school.student.attendance.student-attendance-history')->name('student.attendance.history');
     Route::post('load-student-attendance-history', [StudentAttendanceController::class, 'loadStudentAttendanceHistory'])->name('load.student.attendance.history');
-    Route::view('std-a-count', 'school.student.attendance.student-attendance-count')->name('student.attendance.count');
+    Route::view('student-attendance-count', 'school.student.attendance.student-attendance-count')->name('student.attendance.count');
     Route::post('load-student-attendance-count', [StudentAttendanceController::class, 'loadStudentAttendanceCount'])->name('load.student.attendance.count');
 
     // student assessment 
@@ -524,6 +536,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('view-psychomotor-form', 'school.student.psychomotor.view-psychomotor-form')->name('view.psychomotor.form');
     Route::post('view-psychomotor-form', [RecordPsychomotorController::class, 'loadPsychomotoScore']);
     // affective domain 
+    // I dont think this route is still working 
     Route::view('student-ad-form', 'school.student.affective.affective-form')->name('affective.assessment.form');
     Route::post('student-ad-form', [AffectiveDomainController::class, 'loadAffecitveKeys']);
     Route::post('record-affective-score', [AffectiveDomainController::class, 'recordAffectiveDomainScore'])->name('record.affective.score');

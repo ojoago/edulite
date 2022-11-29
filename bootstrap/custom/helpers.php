@@ -86,6 +86,7 @@ use App\Http\Controllers\Auths\AuthController;
     function hasRole($role=false){
         return $role;
     }
+    
     function schoolTeacher(){
         $cn =['200','205','301','300','303','305','307','500'];
         return (in_array(getUserActiveRole(),$cn)|| hasRole());
@@ -178,7 +179,7 @@ use App\Http\Controllers\Auths\AuthController;
        return $role; 
     }
     function matchGender($gn){
-        $role =  match($gn){
+        $role =  match((string)$gn){
                 '2'=> 'Female',
                 '1'=> 'Male',
                 '3'=> 'Other',
@@ -187,7 +188,7 @@ use App\Http\Controllers\Auths\AuthController;
        return $role; 
     }
     function matchReligion($lg){
-        $role =  match($lg){
+        $role =  match((string)$lg){
                 '2'=> 'Christian',
                 '1'=> 'Muslim',
                 '3'=> 'Other',
@@ -205,7 +206,7 @@ use App\Http\Controllers\Auths\AuthController;
        return $model; 
     }
     function matchPaymentCategory($ctg){
-        $model =  match($ctg){
+        $model =  match((string)$ctg){
             '1'=>'Class base',
             "2"=>'General',
             "3"=>'Class Conditional',
@@ -215,15 +216,15 @@ use App\Http\Controllers\Auths\AuthController;
        return $model; 
     }
     function matchPaymentType($type){
-        $model =  match($type){
-                '2'=> 'Optional',
+        $model =  match((string)$type){
+                '2'=> 'On demand',
                 '1'=> 'Compulsary',
                 default=>''
                 };
        return $model; 
     }
     function matchStudentStatus($sts){
-        $role =  match($sts){
+        $role =  match((string)$sts){
                 '0'=> 'Disabled',
                 '1'=> 'Active Student',
                 '3'=> 'Left School',
@@ -233,11 +234,31 @@ use App\Http\Controllers\Auths\AuthController;
        return $role; 
     }
     function matchAccountStatus($sts){
-        $role =  match($sts){
+        $role =  match((string)$sts){
                 '0'=> 'Disabled',
                 '1'=> 'Active Account',
                 // '3'=> 'Left School',
                 '2'=> 'Suspended',
+                default=>''
+                };
+       return $role; 
+    }
+    function matchStudentRiderStatus($sts){
+        $role =  match((string)$sts){
+                '0'=> 'Disabled',
+                '1'=> 'Active',
+                // '3'=> 'Left School',
+                '2'=> 'Suspended',
+                default=>''
+                };
+       return $role; 
+    }
+    function matchSchoolPaymentModule($sts){
+        $role =  match((string)$sts){
+                '1'=> 'Per term/student',
+                '2'=> 'Per Session/Student',
+                '3'=> 'Anual',
+                '4'=> 'Buy off',
                 default=>''
                 };
        return $role; 
@@ -347,6 +368,9 @@ function date_diff_weekdays($from, $to)
 
     function justDate(){
         return date('Y-m-d');
+    }
+    function fullDate(){
+        return date('Y-m-d H:i:s');
     }
 
     function sendMail($param){

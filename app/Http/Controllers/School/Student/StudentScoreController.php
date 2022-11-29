@@ -299,7 +299,10 @@ class StudentScoreController extends Controller
         }
         return 'Error, Could not update status';
     }
-     
+    
+    private function getSubjectPidAndParamPid(){
+
+    }
 
     // view subject result goes here  
     public function viewStudentScore(Request $request)
@@ -361,8 +364,8 @@ class StudentScoreController extends Controller
         $active_sheet = $file->getActiveSheet();//->setTitle($name);//get the first shee
         $l  = $letters[$count+4];
         $active_sheet->setCellValue('A1', 'S/N'); //row 1
-        $active_sheet->setCellValue('B1', 'REG NUMBER'); //row 1
-        $active_sheet->setCellValue('C1', 'NAMES'); //row 1
+        $active_sheet->setCellValue('C1', 'REG NUMBER'); //row 1
+        $active_sheet->setCellValue('D1', 'NAMES'); //row 1
         for ($j = 'E',$i=0; $j < $l; $i++,$j++) {
             $active_sheet->setCellValue($j . 1, $title[$i]->title . ' [' . $title[$i]->score . ']'); //row 1
             $active_sheet->setCellValue($j . 2, $title[$i]->assessment_title_pid); //row 1

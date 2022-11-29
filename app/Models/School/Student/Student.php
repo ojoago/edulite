@@ -10,9 +10,9 @@ class Student extends Model
     use HasFactory;
     protected $fillable = [
         'reg_number', 'user_pid', 'pid', 'type', 'school_pid', 'status',
-        'passport', 'address', 'date', 'religion', 'title', 'fullname',
+        'passport', 'address', 'date', 'title', 'fullname',
         'admitted_class', 'current_session_pid', 'address', 'religion', 'session_pid','parent_pid',
-        'current_class_pid', 'admitted_term', 'admitted_session_pid'
+        'current_class_pid', 'admitted_term', 'admitted_session_pid','gender'
     ];
 
 

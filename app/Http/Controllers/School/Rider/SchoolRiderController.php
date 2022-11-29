@@ -71,11 +71,13 @@ class SchoolRiderController extends Controller
         if(!$validator->fails()){
             $schoolPid = getSchoolPid();
             $data = [
-                'email' => $request->email,
                 'gsm' => $request->gsm,
                 'password' => $this->pwd,
                 'username' => $request->username ?? AuthController::uniqueUsername($request->firstname),
             ];
+            if($request->email){
+                $data['email'] = $request->email;
+            }
             $user = AuthController::createUser($data);
             
             $userDetail = [
@@ -140,10 +142,12 @@ class SchoolRiderController extends Controller
         $data = DB::table('school_riders as r')
                     ->join('users as u','u.pid','r.user_pid')
                     ->join('user_details as d','d.user_pid','r.user_pid')
-                    ->join('student_pick_up_riders as p','p.rider_pid','r.pid')
+                    // ->join('student_pick_up_riders as p','p.rider_pid','r.pid')
                     ->where(['r.school_pid'=>getSchoolPid(),'r.pid'=>base64Decode($request->pid)])
-                    ->select(DB::raw('COUNT(p.student_pid) as count,gsm,email,username,fullname,address,dob,title,gender,religion,passport'))
-                    ->groupBy('r.pid')->first();
+                    ->select(DB::raw('gsm,email,username,fullname,address,dob,title,gender,religion,passport,r.pid'))
+                    // ->groupBy('r.pid')
+                    // ->groupBy('u.gsm')
+                    ->first();
         echo formatRiderProfile($data);
     }
     public function viewRiderStudent(Request $request){
@@ -152,11 +156,15 @@ class SchoolRiderController extends Controller
                         $data = DB::table('students as s')
                         ->join('student_pick_up_riders as p','p.student_pid','s.pid')
                         ->where(['s.school_pid'=>getSchoolPid(),'p.rider_pid'=>base64Decode($request->pid)])
-                        ->select('s.fullname','s.reg_number','p.updated_at','s.address')
+                        ->select('s.fullname','s.reg_number','p.created_at','s.address','p.status','note')
                         ->orderByDesc('s.fullname')->get();
                         logError($data);
-            return datatables($data)->editColumn('date',function($data){
-                return date('d F Y',strtotime($data->updated_at));
+            return datatables($data)
+            ->editColumn('date',function($data){
+                return date('d F Y',strtotime($data->created_at));
+            })
+            ->editColumn('status',function($data){
+                return matchStudentRiderStatus($data->status);
             })
             ->make(true);
     }

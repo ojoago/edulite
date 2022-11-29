@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('student_pick_up_riders', function (Blueprint $table) {
+        Schema::create('school_payment_arrangement_updates', function (Blueprint $table) {
             $table->id();
             $table->string('school_pid');
-            $table->string('student_pid');
-            $table->string('rider_pid');
-            $table->string('status')->default(1);//1 active, 0 disabled/suspended
-            $table->string('note')->nullable();
-            $table->string('staff_pid')->nullable();
+            $table->string('price');
+            $table->integer('module')->default(1)->comment('1: per term/student ,2 per session/student, 3 anuall, 4 one off');
+            $table->string('updated_by');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('student_pick_up_riders');
+        Schema::dropIfExists('school_payment_arrangement_updates');
     }
 };

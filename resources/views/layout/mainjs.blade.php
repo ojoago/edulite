@@ -10,6 +10,7 @@
             let tableId = $('.cardTable').attr('id');
             if ($(".cardTable").hasClass("card-able")) {
                 $(".colHeader").remove();
+                $(".table-striped").removeClass();
             } else {
                 var labels = [];
                 $(".cardTable thead th").each(function() {
@@ -251,29 +252,31 @@
         // load student on fee payment modal 
         multiSelect2('#apiStudentSelect2', 'acceptPaymentModal', 'student', 'Select Student');
         // 
-        $(document).on('change propertychange', '#apiStudentSelect2', function() {
+        $(document).on('change', '#apiStudentSelect2', function() {
             let pid = $(this).val();
-            loadStudentInvoice(pid)
+            // loadStudentInvoice(pid)
         });
 
-        function loadStudentInvoice(pid) {
-            alert(pid)
-        }
-        // find sudent by reg  
-        $('#findStudentByReg').click(async function() {
-            let reg = $('#studentReg').val();
-            if (reg != null) {
-                let params = {
-                    reg: reg,
-                    _token: "{{csrf_token()}}"
-                };
-                let route = "{{route('find.student.by.reg')}}";
-                let data = await loadDataAjax(route, params);
-                if (data && data.pid) {
-                    loadStudentInvoice(data.pid);
-                }
-            }
-        });
+        // function loadStudentInvoice(pid) {
+        //     alert('this alert'+pid)
+        // }
+        // // find sudent by reg  
+        // $('#findStudentByReg').click(async function() {
+        //     let reg = $('#studentReg').val();
+        //     if (reg != null) {
+        //         let params = {
+        //             reg: reg,
+        //             _token: "{{csrf_token()}}"
+        //         };
+        //         let route = "{{route('find.student.by.reg')}}";
+        //         let data = await loadDataAjax(route, params);
+        //         if (data && data.pid) {
+        //             loadStudentInvoice(data.pid);
+        //         }
+        //     }
+        // });
+
+
         // link rider to student  
         multiSelect2('#lstcrStudentSelect2', 'linkStudentToRiderModal', 'student', 'Select Student');
         multiSelect2('#lstcrRiderSelect2', 'linkStudentToRiderModal', 'rider', 'Select Care/Rider');
@@ -306,7 +309,7 @@
 
         // search staff 
         $('#searchExistingStaff').change(function() {
-            var key = $(this).val().replace('/', '@__@')
+            var key = $(this).val().replace('/', '@__@') // here i replaced / to @__@ because is a get request and / means params
             if (key != '') {
                 let route = "{{url('find-existing-user')}}";
                 $('.overlay').show();
@@ -363,7 +366,7 @@
         });
         // search student 
         $('#searchExistingStudent').change(function() {
-            var key = $(this).val().replace('/', '@__@')
+            var key = $(this).val().replace('/', '@__@') // here i replaced / to @__@ because is a get request and / means params
             if (key != '') {
                 let route = "{{url('find-existing-student')}}";
                 $('.overlay').show();
@@ -457,7 +460,6 @@
         $(document).on('click', '#linkUserToSchoolParent', function() {
             let pid = $(this).attr('pid');
             let token = "{{csrf_token()}}";
-            alert(pid);
             $('.overlay').show();
             $.ajax({
                 url: "{{route('link.existing.parent')}}",

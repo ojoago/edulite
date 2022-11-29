@@ -11,37 +11,37 @@
             @csrf
             <div class="col-md-6">
                 <label for="school_name">Name of School <span class="text-danger">*</span> </label>
-                <input type="text" name="school_name" class="form-control form-control-sm" placeholder="name of school" required><br>
+                <input type="text" name="school_name" id="school_name" class=" form-control form-control-sm" placeholder="name of school" required><br>
                 <p class="text-danger school_name_error"></p>
 
             </div>
             <div class="col-md-6">
                 <label for="school_email">School Email Address </label>
-                <input type="email" name="school_email" class="form-control form-control-sm" placeholder="school email" required><br>
+                <input type="email" name="school_email" id="school_email" class="form-control form-control-sm" placeholder="school email" required><br>
                 <p class="text-danger school_email_error"></p>
 
             </div>
             <div class="col-md-6">
                 <label for="school_contact">School Phone Number </label>
-                <input type="text" name="school_contact" class="form-control form-control-sm" placeholder="phone number" required>
+                <input type="text" name="school_contact" id="school_contact" class=" form-control form-control-sm" placeholder="phone number" required>
                 <p class="text-danger school_contact_error"></p>
 
             </div>
             <div class="col-md-4">
                 <label for="school_moto">School Moto </label>
-                <input type="text" name="school_moto" class="form-control form-control-sm" placeholder="e.g education is light hence EduLite" placeholder="school moto" required>
+                <input type="text" name="school_moto" id="school_moto" class=" form-control form-control-sm" placeholder="e.g education is light hence EduLite" placeholder="school moto" required>
                 <p class="text-danger school_moto_error"></p>
 
             </div>
             <div class="col-md-2">
                 <label for="school_handel">School Handle </label>
-                <input type="text" name="school_code" class="form-control form-control-sm" placeholder="School Abreviation" required><br>
+                <input type="text" name="school_code" id="school_code" class=" form-control form-control-sm" placeholder="School Abreviation" required><br>
                 <p class="text-danger school_code_error"></p>
 
             </div>
             <div class="col-md-4">
                 <label for="type" class="form-label">Student Type</label>
-                <select name="type" class="form-control form-control-sm" required>
+                <select name="type" id="schoolType" class="form-control form-control-sm" required>
                     <option disabled selected>Select Type</option>
                     <option value="2">Boarding</option>
                     <option value="1" selected>Day</option>
@@ -53,6 +53,7 @@
                 <label for="school_state">State </label>
                 <select type="text" name="state" id="stateSelect2" class="form-select form-select-sm" placeholder="" required>
                 </select>
+                <input type="hidden" name="pid" id="schoolpid">
                 <p class="text-danger state_error"></p>
             </div>
             <div class="col-md-4">
@@ -65,7 +66,7 @@
             </div>
             <div class="col-md-8">
                 <label for="school_state">School Address</label>
-                <textarea type="text" name="school_address" placeholder="address" class="form-control form-control-sm" required></textarea>
+                <textarea type="text" name="school_address" id="school_address" placeholder="address" class="form-control form-control-sm" required></textarea>
                 <p class="text-danger school_address_error"></p>
             </div>
             <div class="col-md-4">
@@ -77,7 +78,9 @@
             <div class="text-center">
                 <button type="button" class="btn btn-primary" id="createSchoolBtn">Create</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
+                @if(!isset($pid))
                 <a href="{{route('users.home')}}">Back to Home</a>
+                @endif
             </div>
         </form>
     </div>
@@ -132,6 +135,32 @@
             }
         });
 
+        let pid = "<?php echo $pid ?? '' ?>"
+        if (pid != '') {
+            $('#createSchoolBtn').text('Update')
+            $.ajax({
+                url: "{{route('load.school.info')}}",
+                dataType: "JSON",
+                data: {
+                    _token: "{{csrf_token()}}"
+                },
+                // cache: true,
+                type: "post",
+                success: function(data) {
+                    // console.log(data);
+                    $('#school_name').val(data.school_name);
+                    $('#school_email').val(data.school_email);
+                    $('#school_contact').val(data.school_contact);
+                    $('#school_moto').val(data.school_moto);
+                    $('#school_code').val(data.school_code) //.attr('disabled', true);
+                    $('#school_address').val(data.school_address);
+                    $('#schoolpid').val(data.pid);
+                    $('#schoolType').val(data.type).trigger('change');
+                    $('#stateSelect2').val(data.state).trigger('change');
+                    $('#lgaSelect2').val(data.lga).trigger('change');
+                }
+            });
+        }
     });
 </script>
 

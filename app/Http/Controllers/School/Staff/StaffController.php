@@ -16,6 +16,7 @@ use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Models\School\School;
 use App\Models\School\Staff\StaffRoleHistory;
+use App\Models\SchoolUser;
 use Illuminate\Validation\Rule;
 
 class StaffController extends Controller
@@ -424,8 +425,11 @@ class StaffController extends Controller
         ]);
         if(!$validator->fails()){
             try {
-                $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'pid' => $request->pid])->first();
-                $staff['role'] = $request->role;
+                $where = ['school_pid' => getSchoolPid(), 'pid' => $request->pid];
+                $staff = SchoolStaff::where($where)->first();
+                $staffLoginTable = SchoolUser::where($where)->first();
+                $staffLoginTable['role'] = $staff['role'] = $request->role;
+                $staffLoginTable->save();
                 $sts = $staff->save();
                 if($sts){
                     // log staff role update 

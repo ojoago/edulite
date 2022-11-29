@@ -29,7 +29,6 @@ class UserController extends Controller
         // ->join('schools as s','s.pid','t.school_pid')
         // ->where('t.user_pid', getUserPid())->get(['s.pid', 's.school_name']);
         $data = $this->loadUserSchools(); //['schools'=> $schools,'work'=>$office];
-       
         if(!getDefaultLanding()){
             if (count($data) === 1) {
                 $pid = $data[0]->pid;

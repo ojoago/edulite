@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\School\Student\Student;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Fees\FeeItem;
+use Yajra\DataTables\Html\Editor\Fields\Select;
 use App\Models\School\Framework\Fees\FeeItemAmount;
 use App\Models\School\Framework\Fees\FeeConfiguration;
+use App\Models\School\Framework\Fees\ClassInvoiceParam;
 use App\Http\Controllers\School\Framework\ClassController;
-use Yajra\DataTables\Html\Editor\Fields\Select;
+use App\Models\School\Framework\Fees\StudentInvoice;
 
 class FeeItemController extends Controller
 {
@@ -20,7 +23,7 @@ class FeeItemController extends Controller
         $data = FeeItem::where(['school_pid'=>getSchoolPid()])->get();
         return datatables($data)
         ->editColumn('status',function($data){
-            return $data->status== 1 ? 'Enabled' : 'Disabled';
+            return $data->status == 1 ? 'Enabled' : 'Disabled';
         })
         ->editColumn('date',function($data){
             return $data->created_at->diffForHumans();
@@ -32,21 +35,17 @@ class FeeItemController extends Controller
         ->make(true);
     }
 
-    public function loadFeeAmount(Request $request){
-        if(isset($request->session_pid) && isset($request->term_pid)){
-            $where = ['i.term_pid' => $request->term_pid, 'i.session_pid' => $request->session_pid, 'i.school_pid' => getSchoolPid()];
-        }else{
-            $where = ['i.term_pid' => activeTerm(), 'i.session_pid' => activeSession(), 'i.school_pid' => getSchoolPid()];
-        }
+    public function loadFeeAmount(){
+
         $data = DB::table('fee_configurations as c')
                     ->join('fee_items as f','f.pid','c.fee_item_pid')
                     ->join('fee_item_amounts as i','i.config_pid','c.pid')
                     ->join('class_arms as a','a.pid','i.arm_pid')
-                    ->join('terms as t','t.pid','i.term_pid')
-                    ->join('sessions as s','s.pid','i.session_pid')
-                    ->where($where)
-                    ->select('arm','amount','i.pid','term','session','fee_name','category','gender','religion','type','payment_model')
-                    ->orderBy('fee_name')->orderBy('arm')->orderBy('term')->get();
+                    ->where(['i.school_pid' => getSchoolPid()])
+                    ->select('arm','amount','i.pid',
+                    'fee_name','category','gender','religion','type','payment_model')
+                    ->orderBy('fee_name')->orderBy('arm')
+                    ->get();
         return datatables($data)
             ->editColumn('amount', function ($data) {
                 return number_format($data->amount,2);
@@ -97,6 +96,62 @@ class FeeItemController extends Controller
         ->addIndexColumn()
         ->make(true);
     }
+
+    // load student invoice 
+    public function loadStudentInvoice(Request $request)
+    {
+
+        if (isset($request->session_pid) && isset($request->term_pid)) {
+            $where = ['p.term_pid' => $request->term_pid, 'p.session_pid' => $request->session_pid, 'si.school_pid' => getSchoolPid()];
+        } else {
+            $where = ['p.term_pid' => activeTerm(), 'p.session_pid' => activeSession(), 'p.school_pid' => getSchoolPid()];
+        }
+
+        $data = DB::table('student_invoices as si')
+            ->join('fee_item_amounts as fa','fa.pid', 'si.item_amount_pid')
+            ->join('fee_configurations as fc', 'fa.config_pid', 'fc.pid')
+            ->join('students as st','st.pid','si.student_pid')
+            ->join('class_invoice_params as p','p.pid','si.param_pid')
+            ->join('fee_items as f', 'f.pid', 'fc.fee_item_pid')
+            ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+            ->join('terms as t','t.pid','p.term_pid')
+            ->join('sessions as s','s.pid','p.session_pid')
+            ->where($where)
+            ->select(
+                'reg_number',
+                'fullname',
+                'st.pid as spid',
+                'a.arm',
+                'si.amount',
+                'si.pid',
+                't.term',
+                's.session',
+                'fee_name',
+                'fc.type',
+                'si.created_at'
+            )
+            ->orderBy('fee_name')->orderBy('arm')
+            ->orderBy('fullname')
+            ->orderBy('fee_name')
+            ->get();
+        return datatables($data)
+            ->editColumn('amount', function ($data) {
+                return number_format($data->amount, 2);
+            })
+            ->editColumn('type', function ($data) {
+                return matchPaymentType($data->type);
+            })
+            ->editColumn('date', function ($data) {
+                return date('d F Y',strtotime($data->created_at));
+            })
+            // ->addColumn('action', function ($data) {
+            //     return view('school.framework.fees.fee-amount-action-button', ['data' => $data]);
+            // })
+            ->addIndexColumn()
+            ->make(true);
+    }
+
+    // create school fee names 
     public function createFeeName(Request $request){
         $validator = Validator::make($request->all(),[
             'fee_name'=>[
@@ -128,12 +183,11 @@ class FeeItemController extends Controller
         }
         return response()->json(['status'=>0,'error' => $validator->errors()->toArray()]);
     }
-
+    // create the name 
     private function updateOrCreateFeeName(array $data){
 
         return FeeItem::updateOrCreate(['pid'=>$data['pid'],'school_pid'=>$data['school_pid']],$data);
     }
-
 
 
     // fee and amount configuration goes here 
@@ -194,8 +248,8 @@ class FeeItemController extends Controller
         $data = [
             'school_pid' => getSchoolPid(),
             'config_pid' => $pid,
-            'term_pid' => activeTerm(),
-            'session_pid' => activeSession()
+            // 'term_pid' => activeTerm(),
+            // 'session_pid' => activeSession()
         ];
         if($param['category'] == 2 || $param['category'] == 4){
             $class = ClassController::loadAllClassArms();
@@ -225,6 +279,7 @@ class FeeItemController extends Controller
             return FeeItemAmount::updateOrCreate($dupParam, $data);
         } catch (\Throwable $e) {
             logError($e->getMessage());
+            return false;
         }
     }
     // this goes to fee configuration table 
@@ -233,7 +288,7 @@ class FeeItemController extends Controller
         unset($data['amount']);
         unset($data['fixed_amount']);
         try {
-            $pid = self::getFeeConfigPid(item_pid: $data['fee_item_pid'], type: $data['type'], category: $data['category']);
+            $pid = self::getFeeConfigPid(item_pid: $data['fee_item_pid'], type: $data['type'], category: $data['category'],model:$data['payment_model']);
             if ($pid) {
                 return $pid;
             }
@@ -242,20 +297,145 @@ class FeeItemController extends Controller
             return $result->pid;
         } catch (\Throwable $e) {
             logError($e->getMessage());
+            return false;
         }
     }
 
     // this return fee configuration pid 
-    public static function getFeeConfigPid($item_pid,$type,$category){
+    public static function getFeeConfigPid($item_pid,$type,$category,$model){
        try {
             return FeeConfiguration::where([
                                             'fee_item_pid' => $item_pid,
-                                            'type' => $type, 
+                                            // 'payment_model' => $model, 
+                                            // 'type' => $type, 
                                             'category' => $category,
                                             'school_pid'=>getSchoolPid()
                                         ])->pluck('pid')->first();
        } catch (\Throwable $e) {
             logError($e->getMessage());
-       }
+            return false;
+        }
+    }
+
+    // this methode initiate invoice generation for the class 
+    public function generateAllInvoice(Request $request){
+        $data = DB::table('fee_item_amounts as fa')->join('fee_configurations as fc', 'fa.config_pid', 'fc.pid')
+                    ->where(['fa.school_pid'=>getSchoolPid()])->where('type','<>',2)
+                    ->get(['fa.pid', 'amount', 'arm_pid','gender','religion','type','payment_model']);
+        if($data->isNotEmpty()){
+            $result = $this->prepareInvoice($data);
+            if($result){
+                return response()->json(['status' => 1, 'message' => ' Invoice generated for all classes based on configuration']);
+            }
+            return response()->json(['status' => 'error', 'message' => 'Invoice not completely generated']);
+        }
+        return response()->json(['status' => 'error', 'message' => 'No Fee item configured for any class']);
+        
+    }
+
+    public function reGenerateAllInvoice(Request $request){
+        $data = DB::table('fee_item_amounts as fa')->join('fee_configurations as fc', 'fa.config_pid', 'fc.pid')
+                    ->where(['fa.school_pid'=>getSchoolPid()])->where('type','<>',3)
+                    ->get(['fa.pid', 'amount', 'arm_pid','gender','religion','type','payment_model']);
+        $result = $this->prepareInvoice($data);
+        if($result){
+            return response()->json(['status' => 1, 'message' => $data->count().' Invoice(s) generated for all classes']);
+        }
+        
+        return response()->json(['status' => 0, 'message' => 'Something Went Wrong Y']);
+    }
+
+    private function prepareInvoice(array|null|object $params){
+        try {
+            $invoiceData = [];
+            $parents=[];
+            foreach ($params as $row) {
+                $param_pid = $this->createClassInvoiceParam($row->arm_pid);// create class param and return the pid to avoide repeation
+
+                $classStudent = $this->loadClassStudent($row->arm_pid,$row->gender,$row->religion);// load all student in a particular class arm
+                foreach($classStudent as $std){ //loop a each 
+                    $dupParam = [
+                        'school_pid' => getSchoolPid(),
+                        'student_pid'=>$std->pid,
+                        'item_amount_pid' => $row->pid, // this should be item pid
+                        'param_pid' => $param_pid,
+                    ];
+                    if($this->getStudentInvoice($dupParam)){ // check if the particular item invoice has been generated for the student 
+                        $result = true;
+                        continue; //if it exist continue 
+                    }
+                    $parents[]=$std->parent_pid; //save parent id in an array which will be used to send email later
+                    $data = $dupParam;
+                    $data['amount'] = $row->amount;
+                    $data['pid'] = public_id();
+                    $data['created_at'] = $data['updated_at'] = fullDate();
+                    $invoiceData[] = $data;
+                }
+                $result = $this->generateStudentInvoice($invoiceData);// generate invoice for all student in a class arm
+                $invoiceData = [];// set this to empty again an continue to the next class
+            }
+            return $result;
+
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+    // load student of a particular class arm 
+    private function loadClassStudent(string|null $arm_pid,null|int $gender,null|int $religion){// return current student in the selected class
+        try {
+            if($gender && $religion){
+                $where = ['school_pid'=>getSchoolPid(),'religion'=>$religion,'gender'=>$gender, 'current_class_pid' => $arm_pid];
+            }
+            elseif($gender || !$religion){
+                $where = ['school_pid' => getSchoolPid(), 'gender' =>$gender, 'current_class_pid' => $arm_pid];
+            }
+            elseif(!$gender || $religion){
+                $where = ['school_pid' => getSchoolPid(),'religion' => $religion,  'current_class_pid' => $arm_pid];
+            }
+            else{
+                $where = ['school_pid' => getSchoolPid(), 'current_class_pid' => $arm_pid];
+            }
+            $data = Student::where($where)->whereIn('status',[1,2])->get(['pid','parent_pid']);
+            return $data;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+    // create class param 
+    private function createClassInvoiceParam(string|null $arm_pid){// return pid
+        try {
+            $data = [
+                'arm_pid' => $arm_pid,
+                'school_pid' => getSchoolPid(),
+                'session_pid' => activeSession(),
+                'term_pid' => activeTerm(),
+            ];
+            $result = ClassInvoiceParam::where($data)->pluck('pid')->first();
+            if ($result) {
+                return $result;
+            }
+            $data['pid'] = public_id();
+            $result = ClassInvoiceParam::create($data);
+            return $result->pid;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+
+    // generate invoice 
+    private function generateStudentInvoice(array|null $data){
+        try {
+           return StudentInvoice::insert($data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+    // check if invoice exist for item for a particular student
+    private function getStudentInvoice(array|null $data){// return false or id
+        return StudentInvoice::where($data)->pluck('id')->first();
     }
 }

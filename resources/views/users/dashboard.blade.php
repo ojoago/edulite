@@ -17,13 +17,12 @@
     <h5>How to create a school <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#createSchoolVideoModal">Watch Video</button></h5>
 
     <div class="row">
-        <div class="col-md-6">
             <div class="card shadow-inner">
                 <div class="card-header">School You Work</div>
                 <div class="card-body p-1">
                     <div class="row">
                         @foreach($data as $row)
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <a href="{{route('login.school',[base64Encode($row->pid)])}}">
                                 <div class="card info-card sales-card">
                                     <div class="card-body shadow">
@@ -38,33 +37,9 @@
                 </div><!-- End Sales Card -->
                 @endforeach
             </div>
-        </div>
     </div>
 </div>
-<div class="col-md-6">
-    <div class="card shadow">
-        <div class="card-header">
-            School You Created --- Config
-        </div>
-        <div class="card-body shadow p-1">
-            <div class="row">
-                @foreach($data as $row)
-                <div class="col-md-6">
-                    <a href="{{route('login.school',[base64Encode($row->pid)])}}">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Click to login</h5>
-                                <div class="d-flex align-items-center">
-                                    {{$row->school_name}}
-                                    </span>
-                                </div>
-                    </a>
-                </div>
-            </div>
-        </div><!-- End Sales Card -->
-        @endforeach
-    </div>
-</div>
+
 </div>
 </div>
 </div>

@@ -5,12 +5,10 @@ namespace App\Models\School\Framework\Fees;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StudentInvoice extends Model
+class ClassInvoiceParam extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'school_pid','student_pid',
-        'item_amount_pid',// this should be item pid
-        'pid','status','amount','param_pid'
+        'school_pid','session_pid','term_pid','arm_pid','pid'
     ];
 }

@@ -174,20 +174,19 @@
             }
 
             var spid = $(this).attr('id'); // student pid 
-            var token = $("input[name='_token']").val();
             $.ajax({
                 url: "{{route('change.student.ca.student')}}",
                 type: "POST",
                 data: {
                     seated: seated,
                     student_pid: spid,
-                    _token: token,
+                    _token: "{{csrf_token()}}",
                 },
                 success: function(data) {
                     showTipMessage(data)
                 },
                 error: function(data) {
-                    showTipMessage('Last Score not saved!!!');
+                    showTipMessage('Failed to update Exam Status',3);
                 }
             });
         });

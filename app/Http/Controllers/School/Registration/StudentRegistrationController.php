@@ -58,8 +58,8 @@ class StudentRegistrationController extends Controller
             'religion'=>'required',
             'address'=>'required',
             'type'=>'required',
-            'session_pid'=> 'required_without:pid|string',
-            'term_pid'=>'required_without:pid|string',
+            // 'session_pid'=> 'required_without:pid|string',
+            // 'term_pid'=>'required_without:pid|string',
             'category_pid'=>'required_without:pid|string', 
             'class_pid'=>'required_without:pid|string',
             'arm_pid'=>'required_without:pid|string',
@@ -91,10 +91,12 @@ class StudentRegistrationController extends Controller
                 'account_status' => 1,
                 'password' => $this->pwd,
                 'username' => $request->username ?? AuthController::uniqueUsername($request->firstname),
-                'email' => $request->email,
                 'gsm' => $request->gsm,
                 'pid' => $request->user_pid,
             ];
+            if($request->email){ // do this check cos email comes as '' and cause dup, so if email is empty then ignore email column
+                $data['email'] = $request->email; 
+            }
             $detail = [
                 'firstname' => $request->firstname,
                 'lastname' => $request->lastname,
@@ -120,15 +122,15 @@ class StudentRegistrationController extends Controller
             ];
             if(!$request->pid){
                 $student['reg_number'] =  StudentController::studentUniqueId();
-                $student['session_pid'] =  $request->session_pid;
-                $student['term_pid'] =  $request->term_pid;
+                $student['session_pid'] =  activeSession();
+                $student['term_pid'] =  activeTerm();
                 $student['admitted_class'] =  $request->arm_pid;
                 $student['current_class_pid'] =  $request->arm_pid;
-                $student['current_session_pid'] =  $request->session_pid;
+                $student['current_session_pid'] =  activeSession();
             }
 
             $studentClass = [
-                'session_pid' => $request->session_pid,
+                'session_pid' => activeSession(),
                 'arm_pid' => $request->arm_pid,
                 'school_pid' => $student['school_pid'],
                 'staff_pid' => getSchoolUserPid(),
@@ -140,15 +142,15 @@ class StudentRegistrationController extends Controller
                     $detail['user_pid'] = $request->user_pid ?? $user->pid;// grt user pid and foreign key
                     // create user detail 
                     $userDetails = UserDetailsController::insertUserDetails($detail);
-                    
                     if ($userDetails) {
                         $student['fullname'] = $userDetails->fullname ?? UserDetailsController::getFullname($request->pid);//get student fullname and save along with student info
                         $student['user_pid'] = $request->user_pid ?? $user->pid;//get student user pid and save along with student info
                         // and prevent update if student leaves school 
                         if($request->passport){
-                            $name = ($request->reg_number ?? $student['reg_number']).'-resize';
+                            $name = ($request->reg_number ?? $student['reg_number']);
                             $student['passport'] = saveImg(image: $request->file('passport'),name:$name);
                         }
+
                         $studentDetails = SchoolController::createSchoolStudent($student);// create school student
                         if ($studentDetails) {
                             if($request->parent_pid){
