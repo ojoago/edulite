@@ -346,6 +346,33 @@ function formatNotification($sql){
     return $ntf;
 }
 
+    function formatStudentFees($data){
+        if($data->isNotEmpty()){
+            $total = 0;
+            $fmt = '<table class="table table-bordered">';
+            foreach($data as $row){
+                $total+=$row->amount;
+                $fmt .= '
+                    <tr>
+                        <td><input type="checkbox" name="'.$row->pid.'" class="invoicePidStatus" value="'. $row->amount.'"> </td>
+                        <td>'.$row->fee_name.'</td>
+                        <td align="right">'.number_format($row->amount,2).'</td>
+                    </tr>
+                ';
+            }
+             $fmt .= '
+                   
+                    <tr>
+                        <td colspan="2" align="right">Total </td>
+                        
+                        <td  align="right">'. NAIRA_UNIT.'<span id="totalAmountSelected">0</span> </td>
+                    </tr>
+                ';
+            $fmt .'</table>';
+            return $fmt;
+        }
+        return '<span class="text-danger">No invoice found</span>';
+    }
 
 
 ?>

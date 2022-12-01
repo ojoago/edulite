@@ -421,20 +421,20 @@
     </div>
 </div>
 <!-- student invoice payment -->
-<div class="modal fade" id="acceptPaymentModal" tabindex="-1">
+<div class="modal fade" id="processStudentInvoiceModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Accept Payment</h5>
+                <h5 class="modal-title">Process Payment</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" class="" id="acceptPaymentForm">
+                <form method="post" class="" id="processStudentInvoiceForm">
                     @csrf
                     <label for="hostel_pid" class="text-center">Student</label>
                     <div class="row">
                         <div class="col-md-6">
-                            <select name="student_pid" id="apiStudentSelect2" class="form-control form-control-sm">
+                            <select name="student_pid" id="psiStudentSelect2" class="form-control form-control-sm">
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -445,12 +445,12 @@
                         </div>
                     </div>
                     <p class="text-danger student_pid_error"></p>
-                    <div id="studentInvoices"></div>
+                    <div id="studentUnPaidInvoices"></div>
                 </form>
             </div>
             <div class="modal-footer">
                 <div class="text-center">
-                    <button class="btn btn-primary btn-sm" type="button" id="acceptPaymentBtn">Submit</button>
+                    <button class="btn btn-primary btn-sm" type="button" id="acceptPaymentBtn" style="display: none;">Submit</button>
                     <button type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                 </div>
             </div>
@@ -470,28 +470,28 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" class="" id="acceptPaymentForm">
+                <form method="post" class="" id="payDirectForm">
                     @csrf
                     <label for="hostel_pid" class="text-center">Student</label>
                     <div class="row">
                         <div class="col-md-6">
-                            <select name="student_pid" id="apiStudentSelect2" class="form-control form-control-sm">
+                            <select name="student_pid" id="apStudentSelect2" class="form-control form-control-sm">
                             </select>
                         </div>
                         <div class="col-md-6">
                             <div class="input-group">
-                                <input type="text" name="" id="studentReg" class="form-control form-control-sm">
+                                <input type="text" name="" id="stdReg" class="form-control form-control-sm">
                                 <span class="input-group-text pointer" id="findStudentByReg"> <i class="bi bi-search"></i> </span>
                             </div>
                         </div>
                     </div>
                     <p class="text-danger student_pid_error"></p>
-                    <div id="studentInvoices"></div>
+                    <!-- <div id="studentUnPaidInvoices"></div> -->
                 </form>
             </div>
             <div class="modal-footer">
                 <div class="text-center">
-                    <button class="btn btn-primary btn-sm" type="button" id="acceptPaymentBtn">Submit</button>
+                    <button class="btn btn-primary btn-sm" type="button" id="payDirectBtn">Submit</button>
                     <button type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                 </div>
             </div>

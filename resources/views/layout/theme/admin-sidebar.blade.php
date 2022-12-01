@@ -314,12 +314,12 @@
             </a>
         </li>
         <li>
-            <a href="{{--route('student.timetable')--}}">
+            <a href="{{route('view.timetable')}}">
                 <i class="bi bi-circle"></i><span>Student Timetable</span>
             </a>
         </li>
         <li>
-            <a href="{{--route('student.timetable')--}}">
+            <a href="{{route('student.invoice')}}">
                 <i class="bi bi-circle"></i><span>Student Invoice</span>
             </a>
         </li>
@@ -469,22 +469,22 @@
     </a>
     <ul id="payment-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-            <a data-bs-toggle="modal" data-bs-target="#acceptPaymentModal" class="pointer">
+            <a data-bs-toggle="modal" data-bs-target="#processStudentInvoiceModal" class="pointer">
                 <i class="bi bi-circle pointer"></i><span>Accept Payment</span>
             </a>
         </li>
         <li>
-            <a href="{{route('fee.payment')}}">
+            <a href="{{route('student.invoice')}}">
                 <i class="bi bi-circle"></i><span>Invoices</span>
             </a>
         </li>
         <li>
-            <a href="charts-apexcharts.html">
+            <a href="#">
                 <i class="bi bi-circle"></i><span>Payment</span>
             </a>
         </li>
         <li>
-            <a href="charts-echarts.html">
+            <a href="#">
                 <i class="bi bi-circle"></i><span>Payment Record</span>
             </a>
         </li>

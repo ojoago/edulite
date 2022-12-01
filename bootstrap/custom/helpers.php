@@ -16,7 +16,10 @@ use App\Http\Controllers\Auths\AuthController;
     Log::error(json_encode($error));
    }
    function public_id(){
-     return strtoupper(str_shuffle(date('YMDHism').time()));
+        return strtoupper(str_shuffle(date('YMDHism').time()));
+    }
+   function invoiceNumber(){
+        return strtoupper(date('yMd'));
     }
 
    function base64Encode($var){

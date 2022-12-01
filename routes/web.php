@@ -14,13 +14,13 @@ use App\Http\Controllers\Organisation\OrganisationController;
 use App\Http\Controllers\School\Upload\UploadRiderController;
 use App\Http\Controllers\School\Upload\UploadStaffController;
 use App\Http\Controllers\Organisation\OrgUserAccessController;
+use App\Http\Controllers\School\Admission\AdmissionController;
 use App\Http\Controllers\School\Upload\UploadParentController;
 use App\Http\Controllers\School\Student\StudentClassController;
 use App\Http\Controllers\School\Student\StudentScoreController;
 use App\Http\Controllers\School\Upload\UploadStudentController;
 use App\Http\Controllers\Organisation\OrganisationUserController;
-use App\Http\Controllers\School\Admission\AdmissionController;
-use App\Http\Controllers\School\Framework\Admission\AdmissionConfigController;
+use App\Http\Controllers\School\Framework\Fees\FeeItemController;
 use App\Http\Controllers\School\Framework\Hostel\HostelController;
 use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
 use App\Http\Controllers\School\Framework\Subject\SubjectController;
@@ -34,16 +34,16 @@ use App\Http\Controllers\School\Framework\Psycho\AffectiveDomainController;
 use App\Http\Controllers\School\Registration\StudentRegistrationController;
 use App\Http\Controllers\School\Student\Promotion\PromoteStudentController;
 use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
+use App\Http\Controllers\School\Framework\Admission\AdmissionConfigController;
 use App\Http\Controllers\School\Framework\Attendance\AttendanceTypeController;
-use App\Http\Controllers\School\Framework\Assessment\AssessmentTitleController;
 use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
-use App\Http\Controllers\School\Framework\Fees\FeeItemController;
+use App\Http\Controllers\School\Framework\Assessment\AssessmentTitleController;
 use App\Http\Controllers\School\Student\Attendance\StudentAttendanceController;
 use App\Http\Controllers\School\Framework\Psychomotor\PsychomotorBaseController;
 use App\Http\Controllers\School\Student\Results\Comments\CommentResultController;
 use App\Http\Controllers\School\Student\Results\Termly\StudentTermlyResultController;
 use App\Http\Controllers\School\Student\Result\Comments\PortalCommentResultController;
-use App\Http\Controllers\School\Student\Result\Comments\TeacherCommentResultController;
+use App\Http\Controllers\School\Student\Results\Comments\TeacherCommentResultController;
 use App\Http\Controllers\School\Student\Results\Cumulative\ViewCumulativeResultController;
 use App\Http\Controllers\School\Student\Assessment\Psychomotor\RecordPsychomotorController;
 
@@ -286,12 +286,19 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-fee-items', [FeeItemController::class,'loadFeeItems'])->name('load.fee.items');
     Route::post('load-fee-amount', [FeeItemController::class, 'loadFeeAmount'])->name('load.fee.amount');
     Route::post('load-student-invoice', [FeeItemController::class, 'loadStudentInvoice'])->name('load.student.invoice');
+    // load a particular student invoice for payment 
+    Route::post('load-student-piad-invoice', [FeeItemController::class, 'loadStudentPaidInvoice'])->name('load.student.paid.invoice');
     Route::get('load-fee-config', [FeeItemController::class, 'loadFeeConfig'])->name('load.fee.config');
     Route::post('generate-all-invoice', [FeeItemController::class, 'generateAllInvoice'])->name('generate.all.invoice');
     Route::post('re-generate-all-invoice', [FeeItemController::class, 'reGenerateAllInvoice'])->name('re.generate.all.invoice');
+    // class teacher view student invoices 
+    Route::view('student-invoice', 'school.fees.student-invoice')->name('student.invoice');
 
     // payment collection and management by clert 
     Route::view('payment', 'school.payments.invoice')->name('fee.payment');
+    Route::post('load-student-invoice-by-pid', [FeeItemController::class, 'loadStudentInvoiceByPid'])->name('load.student.invoice.by.pid');
+    Route::post('process-student-invoice', [FeeItemController::class, 'processStudentInvoice'])->name('process.student.invoice');
+
     Route::post('payment', [FeeItemController::class, 'loadAvailableFeeItem']);
     // admission config
     Route::view('admission-config', 'school.framework.admission.admission-config')->name('admission.config');
@@ -469,7 +476,7 @@ Route::middleware('schoolAuth')->group(function(){
     // staff student list 
     Route::view('staff-student-list', 'school.lists.staff.staff-student-list')->name('staff.student.list');
     // load active student 
-    Route::get('load-active-student', [StudentController::class, 'staffActiveStudent'])->name('load.staff.active.student.list');
+    Route::get('load-staff-active-student', [StudentController::class, 'staffActiveStudent'])->name('load.staff.active.student.list');
     // load diabled student 
     Route::get('load-in-active-student', [StudentController::class, 'inActiveStudent'])->name('load.in.active.student');
     Route::get('load-ex-student',[StudentController::class, 'exStudent'])->name('load.ex.student');

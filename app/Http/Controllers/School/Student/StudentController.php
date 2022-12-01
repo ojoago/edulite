@@ -192,7 +192,9 @@ class StudentController extends Controller
                             'students.reg_number', 
                             'students.fullname', 
                             'students.passport',
-                            'gender','dob', 'students.pid']);
+                            'user_details.gender',
+                            'dob','students.pid'
+                            ]);
 
         return $std;
     }

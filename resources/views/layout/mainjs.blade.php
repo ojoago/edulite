@@ -250,33 +250,71 @@
         });
 
         // load student on fee payment modal 
-        multiSelect2('#apiStudentSelect2', 'acceptPaymentModal', 'student', 'Select Student');
+        multiSelect2('#psiStudentSelect2', 'processStudentInvoiceModal', 'student', 'Select Student');
         // 
-        $(document).on('change', '#apiStudentSelect2', function() {
+        $('#psiStudentSelect2').change(function(e) {
+            e.preventDefault()
             let pid = $(this).val();
-            // loadStudentInvoice(pid)
+            if (pid) {
+                loadStudentInvoiceById(pid)
+            }
         });
 
-        // function loadStudentInvoice(pid) {
-        //     alert('this alert'+pid)
-        // }
-        // // find sudent by reg  
-        // $('#findStudentByReg').click(async function() {
-        //     let reg = $('#studentReg').val();
-        //     if (reg != null) {
-        //         let params = {
-        //             reg: reg,
-        //             _token: "{{csrf_token()}}"
-        //         };
-        //         let route = "{{route('find.student.by.reg')}}";
-        //         let data = await loadDataAjax(route, params);
-        //         if (data && data.pid) {
-        //             loadStudentInvoice(data.pid);
-        //         }
-        //     }
-        // });
+        function loadStudentInvoiceById(pid) {
+            $('.overlay').show();
+            $.ajax({
+                url: "{{route('load.student.invoice.by.pid')}}",
+                type: "post",
+                data: {
+                    pid: pid,
+                    _token: "{{csrf_token()}}"
+                },
+                success: function(data) {
+                    $('#studentUnPaidInvoices').html(data)
+                    $('#acceptPaymentBtn').show().prop('disabled', true);
+                    $('.overlay').hide();
+                },
+                error: function() {
+                    $('.overlay').hide();
+                }
+            })
+        }
+        // find sudent by reg  
+        $('#findStudentByReg').click(async function() {
+            let reg = $('#studentReg').val();
+            if (reg != null) {
+                let params = {
+                    reg: reg,
+                    _token: "{{csrf_token()}}"
+                };
+                let route = "{{route('find.student.by.reg')}}";
+                let data = await loadDataAjax(route, params);
+                if (data && data.pid) {
+                    loadStudentInvoiceById(data.pid);
+                }
+            }
+        });
+
+        // compute total fee ticked 
+        $(document).on('change', '.invoicePidStatus', function() {
+            let total = 0;
+            $('.invoicePidStatus').each(function(i, obj) {
+                if (obj.checked == true) {
+                    total += Number($(this).val());
+                }
+                if (total > 0) {
+                    $('#acceptPaymentBtn').prop('disabled', false);
+                } else {
+                    $('#acceptPaymentBtn').prop('disabled', true);
+                }
+                $('#totalAmountSelected').text(total.toFixed(2));
+            });
+        })
 
 
+        $('#acceptPaymentBtn').click(function() {
+            submitFormAjax('processStudentInvoiceForm', 'acceptPaymentBtn', "{{route('process.student.invoice')}}");
+        });
         // link rider to student  
         multiSelect2('#lstcrStudentSelect2', 'linkStudentToRiderModal', 'student', 'Select Student');
         multiSelect2('#lstcrRiderSelect2', 'linkStudentToRiderModal', 'rider', 'Select Care/Rider');
