@@ -95,7 +95,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <iframe width="420" height="315" src="https://youtu.be/FykOy8vwBkI">
+                <iframe width="420" height="315" src="https://www.youtube.com/embed/FykOy8vwBkI">
                 </iframe>
             </div>
             <div class="modal-footer">

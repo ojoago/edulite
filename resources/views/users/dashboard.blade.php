@@ -12,31 +12,31 @@
         </nav>
     </div>
     <!-- <a href="{{route('create.organisation')}}">create organisation</a><br> -->
-    <h4 class="text-danger p-3">Click on the button below to create a  school</h4>
+    <h4 class="text-danger p-3">Click on the button below to create a school</h4>
     <a href="{{route('create.school')}}"> <button class="btn btn-success btn-sm">Create School</button></a>
     <h5>How to create a school <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#createSchoolVideoModal">Watch Video</button></h5>
 
     <div class="row">
-            <div class="card shadow-inner">
-                <div class="card-header">School You Work</div>
-                <div class="card-body p-1">
-                    <div class="row">
-                        @foreach($data as $row)
-                        <div class="col-md-4">
-                            <a href="{{route('login.school',[base64Encode($row->pid)])}}">
-                                <div class="card info-card sales-card">
-                                    <div class="card-body shadow">
-                                        <h5 class="card-title">Click to login </span></h5>
-                                        <div class="d-flex align-items-center">
-                                            {{$row->school_name}}
-                                            </span>
-                                        </div>
-                            </a>
-                        </div>
+        <div class="card shadow-inner">
+            <div class="card-header">School You Work</div>
+            <div class="card-body p-1">
+                <div class="row">
+                    @foreach($data as $row)
+                    <div class="col-md-4">
+                        <a href="{{route('login.school',[base64Encode($row->pid)])}}">
+                            <div class="card info-card sales-card">
+                                <div class="card-body shadow">
+                                    <h5 class="card-title">Click to login </span></h5>
+                                    <div class="d-flex align-items-center">
+                                        {{$row->school_name}}
+                                        </span>
+                                    </div>
+                        </a>
                     </div>
-                </div><!-- End Sales Card -->
-                @endforeach
-            </div>
+                </div>
+            </div><!-- End Sales Card -->
+            @endforeach
+        </div>
     </div>
 </div>
 
@@ -54,7 +54,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <iframe width="420" height="315" src="https://youtu.be/FykOy8vwBkI">
+                <iframe width="420" height="315" src="https://www.youtube.com/embed/FykOy8vwBkI">
                 </iframe>
             </div>
             <div class="modal-footer">
