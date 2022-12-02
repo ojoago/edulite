@@ -619,7 +619,9 @@
         $('#loadNotifications').click(function() {
             loadMyNotification();
         })
-        countMyNotification();
+        <?php if(getSchoolPid()): ?>
+            countMyNotification();
+        <?php endif ?>
     })
 
     function FormMultiSelect2(idOrClass, route, plh, pre = null) {
@@ -655,11 +657,7 @@
         }).val(pre).trigger('change').trigger('focus');
     }
 
-    <?php
-
-    if (getSchoolPid()) {
-    ?>
-
+    <?php  if(getSchoolPid()): ?>
         function countMyNotification() {
             // load.my.notification.tip
             $.ajax({
@@ -670,10 +668,7 @@
                 }
             });
         }
-    <?php
-    }
-
-    ?>
+    <?php endif ?>
 
     function loadMyNotification() {
         $.ajax({

@@ -295,11 +295,11 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('student-invoice', 'school.fees.student-invoice')->name('student.invoice');
 
     // payment collection and management by clert 
-    Route::view('payment', 'school.payments.invoice')->name('fee.payment');
+    Route::view('payment-records', 'school.payments.payment-records')->name('payment.records');
+    Route::get('load-paid-invoice', [FeeItemController::class, 'loadInvoicePayment'])->name('load.paid.invoice');
     Route::post('load-student-invoice-by-pid', [FeeItemController::class, 'loadStudentInvoiceByPid'])->name('load.student.invoice.by.pid');
     Route::post('process-student-invoice', [FeeItemController::class, 'processStudentInvoice'])->name('process.student.invoice');
 
-    Route::post('payment', [FeeItemController::class, 'loadAvailableFeeItem']);
     // admission config
     Route::view('admission-config', 'school.framework.admission.admission-config')->name('admission.config');
     Route::post('admission-config', [AdmissionConfigController::class, 'setAdmissionClass'])->name('configure.admission');

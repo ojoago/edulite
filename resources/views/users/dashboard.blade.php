@@ -1,6 +1,15 @@
 @extends('layout.mainlayout')
 @section('title','User Dashboard')
 @section('content')
+
+<style>
+    .school-card {
+        background:url("{{asset('/files/thumbnail/teacher.jpeg')}}");
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 200px;
+    }
+</style>
 <div class="container">
     <div class="pagetitle">
         <!-- <h1>Dashboard</h1> -->
@@ -18,19 +27,17 @@
 
     <div class="row">
         <div class="card shadow-inner">
-            <div class="card-header">School You Work</div>
+            <div class="card-header">Click to any school name to login </div>
             <div class="card-body p-1">
                 <div class="row">
                     @foreach($data as $row)
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <a href="{{route('login.school',[base64Encode($row->pid)])}}">
-                            <div class="card info-card sales-card">
-                                <div class="card-body shadow">
-                                    <h5 class="card-title">Click to login </span></h5>
-                                    <div class="d-flex align-items-center">
-                                        {{$row->school_name}}
-                                        </span>
-                                    </div>
+                            <div class="card info-card ">
+                                <div class="card-header text-center"> {{$row->school_name}}</div>
+                                <div class="card-body shadow school-card">
+                                </div>
+                            </div>
                         </a>
                     </div>
                 </div>

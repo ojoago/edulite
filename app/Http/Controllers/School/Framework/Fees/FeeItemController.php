@@ -194,6 +194,30 @@ class FeeItemController extends Controller
             ->addIndexColumn()
             ->make(true);
     }
+
+
+    // payment record  
+    public function loadInvoicePayment(Request $request){
+        $data = DB::table('student_invoice_payments as ip')
+                        ->join('students as s','s.pid','ip.student_pid')
+                        ->select(DB::raw('s.fullname,s.reg_number,invoice_number,total,ip.created_at'))->where('ip.status',1)->get();
+        return $this->paymentDatable($data);
+    }
+    
+    private function paymentDatable($data){
+        return datatables($data)
+            ->editColumn('total', function ($data) {
+                return number_format($data->total, 2);
+            })
+            ->editColumn('date', function ($data) {
+                return date('d F Y', strtotime($data->created_at));
+            })
+            // ->addColumn('action', function ($data) {
+            //     return view('school.framework.fees.fee-amount-action-button', ['data' => $data]);
+            // })
+            ->addIndexColumn()
+            ->make(true);
+    }
     // create school fee names 
     public function createFeeName(Request $request){
         $validator = Validator::make($request->all(),[

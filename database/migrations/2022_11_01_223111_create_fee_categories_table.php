@@ -15,9 +15,12 @@ return new class extends Migration
     {
         Schema::create('fee_categories', function (Blueprint $table) {
             $table->id();
+            $table->string('school_pid');
             $table->string('category');
-            $table->string('status');
-            $table->integer('code');
+            $table->string('account_name')->nullable();
+            $table->string('account_number')->nullable();
+            $table->string('bank_name')->nullable();
+            $table->string('pid')->unique();
             $table->timestamps();
         });
     }

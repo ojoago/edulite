@@ -95,6 +95,11 @@
                     <select name="class_pid[]" multiple class="form-control form-control-sm" id="classSelect2">
                     </select>
                     <p class="text-danger class_pid_error"></p>
+
+                    <label for="">Admission Fee</label>
+                    <select name="fee" class="form-control form-control-sm" id="admissionFeeSelect2">
+                    </select>
+                    <p class="text-danger fee_error"></p>
                 </form>
             </div>
             <div class="modal-footer">

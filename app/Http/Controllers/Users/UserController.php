@@ -50,7 +50,7 @@ class UserController extends Controller
 
     public function loadUserSchools(){
         $account =  DB::table('school_users as u')->join('schools as s','s.pid','school_pid')
-                    ->where('u.user_pid', getUserPid())->get(['s.pid', 's.school_name','role']);
+                    ->where('u.user_pid', getUserPid())->distinct('u.school_pid')->get(['s.pid', 's.school_name','role']);
         return $account;
         // $schools = School::where('user_pid', getUserPid())->get(['pid', 'school_name']);
         // $office = DB::table('school_staff as t')

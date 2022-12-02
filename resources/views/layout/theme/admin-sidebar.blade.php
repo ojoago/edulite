@@ -479,7 +479,7 @@
             </a>
         </li>
         <li>
-            <a href="#">
+            <a href="{{route('payment.records')}}">
                 <i class="bi bi-circle"></i><span>Payment</span>
             </a>
         </li>
