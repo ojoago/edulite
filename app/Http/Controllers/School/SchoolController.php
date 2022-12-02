@@ -144,7 +144,7 @@ class SchoolController extends Controller
                 "school_contact" => $request->school_contact,
                 "school_address" => $request->school_address,
                 "school_moto" => $request->school_moto,
-                "pid" => getSchoolPid() ?? public_id(),
+                "pid" => $request->pid ?? public_id(),
                 'school_code' => $request->school_code,
             ];
 
@@ -157,12 +157,12 @@ class SchoolController extends Controller
                 $data['school_logo'] = saveImg($request->file('school_logo'), name: $name, path: 'logo');
             }
             try {
-               $result =  School::updateOrCreate(['pid'=>getSchoolPid()],$data);
+               $result =  School::updateOrCreate(['pid'=> $request->pid],$data);
                if($result){
-                if($request->pid){
-                    setSchoolName($result->school_name);
-                    return response()->json(['status' => 1, 'message' => 'School Updated Successfully']);
-                }
+                    if(isset($request->pid)){
+                        setSchoolName($result->school_name);
+                        return response()->json(['status' => 1, 'message' => 'School Updated Successfully']);
+                    }
                     // set school pid 
                     setSchoolPid($result->pid);
                    $data = [

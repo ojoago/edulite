@@ -34,15 +34,15 @@
                     <div class="col-md-3">
                         <a href="{{route('login.school',[base64Encode($row->pid)])}}">
                             <div class="card info-card ">
-                                <div class="card-header text-center"> {{$row->school_name}}</div>
+                                <div class="card-header text-center ellipsis-text"> {{$row->school_name}}</div>
                                 <div class="card-body shadow school-card">
                                 </div>
                             </div>
                         </a>
                     </div>
+                    @endforeach
                 </div>
             </div><!-- End Sales Card -->
-            @endforeach
         </div>
     </div>
 </div>

@@ -416,7 +416,6 @@ class FeeItemController extends Controller
         try {
             $invoiceData = [];
             $parents=[];
-            logError($params);
             foreach ($params as $row) {
                 $param_pid = $this->createClassInvoiceParam($row->arm_pid);// create class param and return the pid to avoide repeation
 

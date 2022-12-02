@@ -2,7 +2,6 @@
 use App\Mail\AuthMail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\Facades\Image;
@@ -29,12 +28,7 @@ use App\Http\Controllers\Auths\AuthController;
         return base64_decode(base64_decode($var));
    }
     function setSchoolPid($pid=null){ //set logged in school pid
-        if($pid){
-            session(['activeSchoolPid'=>base64Encode($pid)]); //get user pid
-        }else{
-            session(['activeSchoolPid'=>null]); //get user pid
-        }
-
+        session(['activeSchoolPid'=>base64Encode($pid)]); //get user pid
     }
     function getSchoolPid(){ //get logged in school pid
         if(getUserPid()){ //check if user is logged in
