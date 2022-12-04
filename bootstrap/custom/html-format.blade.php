@@ -320,7 +320,7 @@ function formatNotification($sql){
     $ntf = '
         <li class="dropdown-header">
             You have '.$sql->count(). ' new notifications
-            <a href="' . route("load.my.notification.details") . '"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
+            <a href="' . route("my.notification") . '"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
         </li>
         <li>
             <hr class="dropdown-divider">
@@ -341,7 +341,7 @@ function formatNotification($sql){
     }
        $ntf.= '
         <li class="dropdown-footer">
-            <a href="'.route("load.my.notification.details").'">Show all notifications</a>
+            <a href="'.route("my.notification").'">Show all notifications</a>
         </li>';
     return $ntf;
 }
