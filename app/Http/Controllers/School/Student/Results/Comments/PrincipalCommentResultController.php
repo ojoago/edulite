@@ -38,6 +38,7 @@ class PrincipalCommentResultController extends Controller
                         ->join('categories as c','c.pid','p.category_pid')
                         ->join('school_staff as s','s.pid','p.principal_pid')
                         ->join('user_details as d','d.user_pid','s.user_pid')
+                        ->where(['p.principal_pid'=>getSchoolUserPid(),'p.school_pid'=>getSchoolPid()])
                         ->select('p.min','p.max','p.comment','c.category','p.created_at','d.fullname')
                         ->orderBy('min')
                         ->get();

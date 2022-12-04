@@ -228,11 +228,11 @@ class StudentScoreController extends Controller
             StudentSubjectResult::updateOrCreate($dupParams, $data); //combine subject details
             $total = $this->sumStudentTotalScore($data['class_param_pid'], $data['student_pid']); //sum student total score
             $data = [
-                    'class_param_pid' => $data['class_param_pid'],
-                    'student_pid' => $data['student_pid'],
-                    'total' => $total,
-                    'school_pid' => getSchoolPid()
-                ];
+                'class_param_pid' => $data['class_param_pid'],
+                'student_pid' => $data['student_pid'],
+                'total' => $total,
+                'school_pid' => getSchoolPid()
+            ];
             return $this->recordStudentTotal($data);
         } catch (\Throwable $e) {
             logError($e->getMessage());

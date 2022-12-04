@@ -92,6 +92,16 @@
             width: 100%;
         }
 
+        .signature-base {
+            width: 60px !important;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .signature-base>img {
+            width: 100%;
+        }
+
 
         table {
             /* background: #fff; */
@@ -351,13 +361,13 @@
                             @php array_push($columnChart,[$row->subject,$row->total,$row->min,$row->avg,$row->max]) @endphp
                             <td>{{rtnGrade($row->total,$grades)}}</td>
                             <td>{{ordinalFormat($row->position)}}</td>
-                            <td>{{'tempnam'}}</td>
+                            <td>{{$row->subject_teacher}}</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
-
+                            <td>Total</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -411,25 +421,32 @@
         <div class="flex-row">
             <div class="section">
                 <div class="card-header">Principal/Head Teacher</div>
-                Name: {{$results->teacher}}<br>
+                Name: {{$results->principal}}<br>
                 Comment: {{$results->principal_comment}}<br>
-                @php $imgUrl = $results->signature ? asset("/files/images/".$results->signature) :'' @endphp
-                <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+                <div class="signature-base">
+                    @php $imgUrl = $results->signature ? asset("/files/images/".$results->signature) :'' @endphp
+                    <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+                </div>
             </div>
             <div class="section">
                 <div class="card-header">Class/Form Teacher</div>
-                Name: {{$results->teacher}}<br>
+                Name: {{$results->class_teacher}}<br>
                 Comment: {{$results->class_teacher_comment}}<br>
-                @php $imgUrl = $results->signature ? asset("/files/images/".$results->signature) :'' @endphp
-                <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+                <div class="signature-base">
+                    @php $imgUrl = $results->signature ? asset("/files/images/".$results->signature) :'' @endphp
+                    <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+                </div>
             </div>
             @if($results->type==2)
             <div class="section">
                 <div class="card-header">Class/Form Teacher</div>
                 Name: {{$results->teacher}}<br>
                 Comment: {{$results->portal_comment}}<br>
-                @php $imgUrl = $std->passport ? asset("/files/images/".$results->signature) :'' @endphp
-                <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+                <div class="signature-base">
+                    @php $imgUrl = $results->signature ? asset("/files/images/".$results->signature) :'' @endphp
+                    <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+                </div>
+
             </div>
             @endif
         </div>
