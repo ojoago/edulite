@@ -143,20 +143,25 @@ class StudentScoreController extends Controller
 
     // submit student CA on change from jquery 
     public function submitCaScore(Request $request){
-        $data = [
-            'score_param_pid'=> getActionablePid(),
-            'student_pid'=>$request->student_pid,
-            'ca_type_pid'=>$request->titlePid,
-            'school_pid'=> getSchoolPid(),
-            'score'=> $request->score
-        ];
-        // $dupParams = $data;
-        // $data['score'] = $request->score;
-       $result = $this->processStudentScore($data);
-       if($result){
-            return response()->json(['status' => 1, 'message' => 'Score Submitted']);
-       }
-        return response()->json(['status' => 0, 'message' => 'Score not Submitted']);
+        try {
+            $data = [
+                'score_param_pid' => getActionablePid(),
+                'student_pid' => $request->student_pid,
+                'ca_type_pid' => $request->titlePid,
+                'school_pid' => getSchoolPid(),
+                'score' => $request->score
+            ];
+            // $dupParams = $data;
+            // $data['score'] = $request->score;
+            $result = $this->processStudentScore($data);
+            if ($result) {
+                return response()->json(['status' => 1, 'message' => 'Score Submitted']);
+            }
+            return response()->json(['status' => 0, 'message' => 'Score not Submitted']);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 
     private function processStudentScore($data){
@@ -172,6 +177,7 @@ class StudentScoreController extends Controller
                 'subject_type' => $ca->subject_type,
                 'subject_pid' => session('subject'),
                 'total' => $ca->score,
+                'subject_param_pid' => getActionablePid(),
             ];
             return $this->studentSubjectScore($data);
         } catch (\Throwable $e) {
@@ -184,74 +190,136 @@ class StudentScoreController extends Controller
     // sum individual score to form combined score
     private static function sumStudentSubjectScore($pid, $student, $subject) //combined
     {
-        $subject_score = DB::table("student_score_sheets as s")
-        ->join("student_score_params AS p", 'p.pid', 's.score_param_pid')
-        ->where(['s.student_pid' => $student, 'p.subject_pid' => $subject, 'p.pid' => $pid])
-        ->groupBy('p.subject_type')
-        ->groupBy('p.class_param_pid')
-        ->select(DB::raw('(SUM(s.score)/COUNT(DISTINCT(s.score_param_pid))) as score,p.subject_type,p.class_param_pid'))->first();
-        return $subject_score;
+        try {
+            $subject_score = DB::table("student_score_sheets as s")
+            ->join("student_score_params AS p", 'p.pid', 's.score_param_pid')
+            ->where(['s.student_pid' => $student, 'p.subject_pid' => $subject, 'p.pid' => $pid])
+            ->groupBy('p.subject_type')
+            ->groupBy('p.class_param_pid')
+            ->select(DB::raw('(SUM(s.score)/COUNT(DISTINCT(s.score_param_pid))) as score,p.subject_type,p.class_param_pid'))->first();
+            return $subject_score;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 
     // subject result 
     private function studentSubjectScore(array $data){
-        $dupParams = $data;
-        unset($dupParams['total']);
-        SubjectTotal::updateOrCreate($dupParams,$data);// sum all ca as to individual score
-        unset($data['subject_pid']);
-        unset($dupParams['subject_pid']);
-        $data['total'] = $this->combinedScore($data);// take average of combined score as total and insert into subject type
-        StudentSubjectResult::updateOrCreate($dupParams,$data);
-        $total = $this->sumStudentTotalScore($data['class_param_pid'],$data['student_pid']);//sum student total score
-        $data = [
-            'class_param_pid'=>$data['class_param_pid'],
-            'student_pid'=>$data['student_pid'],
-            'total'=>$total,
-            'school_pid'=>getSchoolPid()
-        ];
-        return $this->recordStudentTotal($data);
+        try {
+            $dupParams = $data;
+            unset($dupParams['total']);
+            SubjectTotal::updateOrCreate($dupParams, $data); // sum all ca as to individual score
+            unset($data['subject_pid']);
+            unset($data['subject_param_pid']);
+            unset($dupParams['subject_pid']);
+            unset($dupParams['subject_param_pid']);
+            return $this->updateCombineSubject($data);
+        } catch (\Throwable $e) {
+           logError($e->getMessage());
+           return false;
+        }
     }
-
-    private function combinedScore($data){
-        $param = [
-            'class_param_pid'=>$data['class_param_pid'],
-            'student_pid'=>$data['student_pid'],
-            'subject_type'=>$data['subject_type'],
-            'school_pid' => getSchoolPid(),
-        ];
-        $total = SubjectTotal::where($param)->avg('total');
-        return $total;
+    private function updateCombineSubject($data){
+        try {
+            $dupParams = $data;
+            $data['total'] = $this->sumStudentCombinedScore($data); // take average of combined score as total and insert into subject type
+            unset($dupParams['total']);
+            StudentSubjectResult::updateOrCreate($dupParams, $data); //combine subject details
+            $total = $this->sumStudentTotalScore($data['class_param_pid'], $data['student_pid']); //sum student total score
+            $data = [
+                    'class_param_pid' => $data['class_param_pid'],
+                    'student_pid' => $data['student_pid'],
+                    'total' => $total,
+                    'school_pid' => getSchoolPid()
+                ];
+            return $this->recordStudentTotal($data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+    private function sumStudentCombinedScore($data){
+        try {
+            $param = [
+                'class_param_pid' => $data['class_param_pid'],
+                'student_pid' => $data['student_pid'],
+                'subject_type' => $data['subject_type'],
+                'school_pid' => getSchoolPid(),
+                'seated' => 1,
+            ];
+            $total = SubjectTotal::where($param)->avg('total');
+            return $total;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+        }
     }
     
     // get combine subject score 
     private function sumStudentTotalScore($pid,$student){
-        $student_total = StudentSubjectResult::where([
-                                            'class_param_pid'=>$pid,
-                                            'student_pid'=>$student,
-                                            'school_pid'=>getSchoolPid()
-                                            ])->sum('total');
-        return $student_total;
+        try {
+            $student_total = StudentSubjectResult::where([
+                'class_param_pid' => $pid,
+                'student_pid' => $student,
+                'school_pid' => getSchoolPid()
+            ])->sum('total');
+            return $student_total;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 
     // add subject score to total scroe  
     private function recordStudentTotal($data){
-        $dupParams = $data;
-        unset($dupParams['total']);
-        return StudentClassResult::updateOrCreate($dupParams,$data);
+        try {
+            $dupParams = $data;
+            unset($dupParams['total']);
+            return StudentClassResult::updateOrCreate($dupParams, $data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+
+    // update subject exam status 
+    public function changeSubjectResultStatus(Request $request)
+    {
+       try {
+            $status = SubjectTotal::where(['subject_param_pid' => getActionablePid(), 'student_pid' => $request->student_pid])->update(['seated' => $request->seated]);
+            if ($status) {
+                $sbj = SubjectTotal::where(['subject_param_pid' => getActionablePid(), 'student_pid' => $request->student_pid])->first();
+                $data = [
+                    'class_param_pid' => $sbj->class_param_pid,
+                    'student_pid' => $sbj->student_pid,
+                    'subject_type' => $sbj->subject_type,
+                    // 'subject_pid' => $sbj->subject_pid,
+                    'total' => $sbj->total,
+                    'school_pid' => getSchoolPid(),
+                    'seated' => 1,
+                ];
+                $this->updateCombineSubject($data);
+                return 'Status Updated';
+            }
+            return 'Error, Could not update status';
+       } catch (\Throwable $e) {
+            logError($e->getMessage());
+           return 'Something Went Wrong... error logged';
+       }
     }
     
+
     private function createScoreSheetParams(){
         $session =  session('session');
         $term =     session('term');
         $arm =      session('arm');
         $subject =  session('subject');
-       
         $teacher = StaffController::getSubjectTeacherPid(session:  $session,term: $term,subject: $subject);
-       
+        
         if(!$teacher){
             return false;
         }
-        
+
         $data = [
             'school_pid' => getSchoolPid(),
             'session_pid' => $session,
@@ -260,7 +328,7 @@ class StudentScoreController extends Controller
         ];
         $class_pid = ClassController::createClassParam($data);
         if(!$class_pid){
-            return 'no class';
+            return 'no class';// if class is not assigned to teacher
         }
         $subject_type = ClassController::GetClassArmSubjectType($subject);
         $pid = StudentScoreParam::where([
@@ -288,21 +356,6 @@ class StudentScoreController extends Controller
         return true;
     }
    
-    
-    public function changeSubjectResultStatus(Request $request){
-        $pid = getActionablePid();
-        $seated = $request->seated;
-        $student_pid = $request->student_pid;
-        $status = StudentSubjectResult::where(['assessment_pid'=>$pid,'student_pid'=>$student_pid])->update(['seated'=>$seated]);
-        if($status){
-            return 'Status Updated';
-        }
-        return 'Error, Could not update status';
-    }
-    
-    private function getSubjectPidAndParamPid(){
-
-    }
 
     // view subject result goes here  
     public function viewStudentScore(Request $request)
@@ -351,46 +404,51 @@ class StudentScoreController extends Controller
     
     // export student for score entering 
     public function exportStudentList(){
-        $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X ', 'Y', 'Z'];
-        $params = $this->loadStudentAndScoreSetting();
-        $class = $params['class'];
-        $count = $params['scoreParams']->count();
-        $title = $params['scoreParams'];
-        $data = $params['data'];
-        $name = $class->arm . ' ' . $class->subject;
-        $file = new Spreadsheet();
-        $file->getActiveSheet()->setTitle($name)->getColumnDimension('B')->setVisible(false);//->setTitle($name);//get the first shee
-        $file->getActiveSheet()->getRowDimension(2)->setVisible(false);//->setTitle($name);//get the first shee
-        $active_sheet = $file->getActiveSheet();//->setTitle($name);//get the first shee
-        $l  = $letters[$count+4];
-        $active_sheet->setCellValue('A1', 'S/N'); //row 1
-        $active_sheet->setCellValue('C1', 'REG NUMBER'); //row 1
-        $active_sheet->setCellValue('D1', 'NAMES'); //row 1
-        for ($j = 'E',$i=0; $j < $l; $i++,$j++) {
-            $active_sheet->setCellValue($j . 1, $title[$i]->title . ' [' . $title[$i]->score . ']'); //row 1
-            $active_sheet->setCellValue($j . 2, $title[$i]->assessment_title_pid); //row 1
-        }
-        $k=3;
-        $n=0;
-        foreach($data as $row){
-            $active_sheet->setCellValue('A' . $k, ++$n);
-            $active_sheet->setCellValue('B' . $k, $row->pid);
-            $active_sheet->setCellValue('C' . $k, $row->reg_number);
-            $active_sheet->setCellValue('D' . $k, $row->fullname);
-            $k++;
-        }
-        $path =  $name.' '.  activeTermName().  ' '. activeSessionName().".xlsx";
-        $fileName = str_replace('/','-',$path);
-        // Headers for download 
-        $writer = new Xlsx($file);
-        $writer->save($fileName);
-        ob_end_clean();
-        header("Content-Disposition: attachment; filename=\"$fileName\"");
-        header("Content-Type: application/vnd.ms-excel");
-        readFile($fileName);
-        // unlink($zipName);
-        unlink($fileName);
+        try {
+            $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X ', 'Y', 'Z'];
+            $params = $this->loadStudentAndScoreSetting();
+            $class = $params['class'];
+            $count = $params['scoreParams']->count();
+            $title = $params['scoreParams'];
+            $data = $params['data'];
+            $name = $class->arm . ' ' . $class->subject;
+            $file = new Spreadsheet();
+            $file->getActiveSheet()->setTitle($name)->getColumnDimension('B')->setVisible(false); //->setTitle($name);//get the first shee
+            $file->getActiveSheet()->getRowDimension(2)->setVisible(false); //->setTitle($name);//get the first shee
+            $active_sheet = $file->getActiveSheet(); //->setTitle($name);//get the first shee
+            $l  = $letters[$count + 4];
+            $active_sheet->setCellValue('A1', 'S/N'); //row 1
+            $active_sheet->setCellValue('C1', 'REG NUMBER'); //row 1
+            $active_sheet->setCellValue('D1', 'NAMES'); //row 1
+            for ($j = 'E', $i = 0; $j < $l; $i++, $j++) {
+                $active_sheet->setCellValue($j . 1, $title[$i]->title . ' [' . $title[$i]->score . ']'); //row 1
+                $active_sheet->setCellValue($j . 2, $title[$i]->assessment_title_pid); //row 1
+            }
+            $k = 3;
+            $n = 0;
+            foreach ($data as $row) {
+                $active_sheet->setCellValue('A' . $k, ++$n);
+                $active_sheet->setCellValue('B' . $k, $row->pid);
+                $active_sheet->setCellValue('C' . $k, $row->reg_number);
+                $active_sheet->setCellValue('D' . $k, $row->fullname);
+                $k++;
+            }
+            $path =  $name . ' ' .  activeTermName() .  ' ' . activeSessionName() . ".xlsx";
+            $fileName = str_replace('/', '-', $path);
+            // Headers for download 
+            $writer = new Xlsx($file);
+            $writer->save($fileName);
+            ob_end_clean();
+            header("Content-Disposition: attachment; filename=\"$fileName\"");
+            header("Content-Type: application/vnd.ms-excel");
+            readFile($fileName);
+            // unlink($zipName);
+            unlink($fileName);
 
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return redirect()->back()->with('error','Something Went Wrong');
+        }
     }
     // import students score after entering 
     public function importStudentScore(Request $request){
@@ -425,7 +483,6 @@ class StudentScoreController extends Controller
                     }
                    $n++;
                 }
-                
                 return response()->json(['status' => 1, 'message' => 'Score Upload Success','errors'=>$errors]);
             } catch (\Throwable $e) {
                 return response()->json(['status' =>'error', 'message' => 'Score upload Success']);
@@ -434,7 +491,6 @@ class StudentScoreController extends Controller
             }
         }
         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
-
     }
 }
 

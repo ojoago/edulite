@@ -158,7 +158,6 @@ class SchoolRiderController extends Controller
                         ->where(['s.school_pid'=>getSchoolPid(),'p.rider_pid'=>base64Decode($request->pid)])
                         ->select('s.fullname','s.reg_number','p.created_at','s.address','p.status','note')
                         ->orderByDesc('s.fullname')->get();
-                        logError($data);
             return datatables($data)
             ->editColumn('date',function($data){
                 return date('d F Y',strtotime($data->created_at));

@@ -558,7 +558,7 @@
 @endif--}}
 <!-- rider  -->
 @if(riderRole() || hasRole())
-<li class="nav-item">
+{{--<li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#rider-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
@@ -574,7 +574,7 @@
             </a>
         </li>
     </ul>
-</li>
+</li> --}}
 @endif
 @if(studentRole() || hasRole())
 <li class="nav-item">

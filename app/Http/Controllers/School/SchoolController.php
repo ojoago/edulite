@@ -108,7 +108,10 @@ class SchoolController extends Controller
         return view('school.dashboard.student-dashboard', compact('data'));
     }
     private function riderLogin(){
-        $data = Student::where(['school_pid' => getSchoolPid(), 'parent_pid' => getSchoolUserPid()])->get();
+        $data = SchoolRider::where(['school_pid' => getSchoolPid(), 'user_pid' => getUserPid()])->first(['pid']);//->dd();
+        if($data){
+            return redirect()->route('school.rider.profile', ['id' => base64Encode($data->pid)]);
+        }
         return view('school.dashboard.rider-dashboard', compact('data'));
     }
     public function createSchool(Request $request){
@@ -243,7 +246,6 @@ class SchoolController extends Controller
                 'user_pid' => $data['user_pid'],
                 'school_pid' => $data['school_pid'],
             ];
-            $data['rider_id'] = '';
             return SchoolRider::updateOrCreate($dupParams, $data);
         } catch (\Throwable $e) {
             $error =  $e->getMessage();
@@ -436,7 +438,6 @@ class SchoolController extends Controller
     }
     // link rider 
     public function linkExistingRiderToSchool(Request $request)  {
-
         $id = SchoolRider::where([
             'user_pid' => $request->pid,
             'school_pid' => getSchoolPid()
@@ -451,9 +452,10 @@ class SchoolController extends Controller
             'pid' => public_id(),
             'rider_id' => SchoolRiderController::riderUniqueId(),
         ];
-        $std = self::createSchoolRider($data);
-        if($std){
-            return 'Rider added to School, unique Id is '.$std->rider_id;
+      
+        $sts = self::createSchoolRider($data);
+        if($sts){
+            return 'Rider added to School, unique Id is '.$sts->rider_id;
         }
         return 'Failed to link parent to School';
     }

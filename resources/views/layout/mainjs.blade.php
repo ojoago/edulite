@@ -10,7 +10,6 @@
             let tableId = $('.cardTable').attr('id');
             if ($(".cardTable").hasClass("card-able")) {
                 $(".colHeader").remove();
-                $(".table-striped").removeClass();
             } else {
                 var labels = [];
                 $(".cardTable thead th").each(function() {
@@ -26,6 +25,7 @@
                         });
                 });
             }
+            $(".cardTable").removeClass('table-striped');
             $(".cardTable").toggleClass("card-able");
             $('tfoot').hide();
         }
@@ -272,7 +272,7 @@
                 let route = "{{route('find.student.by.reg')}}";
                 let data = await loadDataAjax(route, params);
                 if (data && data.pid) {
-                   await loadStudentInvoiceById(data.pid);
+                    await loadStudentInvoiceById(data.pid);
                 }
             }
         });
