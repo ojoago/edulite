@@ -95,4 +95,15 @@ class ParentController extends Controller
         $parent->save();
         return 'Status updated';
     }
+
+
+    public function wardLogin($pid){
+//         parent child operation
+// 1 pay fees
+// 2 view result
+// 3 view attendance
+// 4 view timebale
+// 5 view notification
+// 6 view rider
+    }
 }

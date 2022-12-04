@@ -537,7 +537,7 @@
 </li><!-- End Charts Nav -->
 @endif
 <!-- parent  -->
-@if(parentRole() || hasRole())
+{{--@if(parentRole() || hasRole())
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#guardian-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -555,7 +555,7 @@
         </li>
     </ul>
 </li>
-@endif
+@endif--}}
 <!-- rider  -->
 @if(riderRole() || hasRole())
 <li class="nav-item">

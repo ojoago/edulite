@@ -14,14 +14,10 @@ return new class extends Migration
     //principal defined comments
     public function up()
     {
-        Schema::create('principal_comments', function (Blueprint $table) {
-            $table->id();
-            $table->string('school_pid');
-            $table->float('min');
-            $table->float('max');
-            $table->string('comment');
-            $table->string('staff_pid')->comment('principal pid');
-            $table->timestamps();
+        Schema::table('principal_comments', function (Blueprint $table) {
+            $table->string('category_pid');
+            $table->string('comment')->change();
+            $table->renameColumn('staff_pid', 'principal_pid')->comment('principal pid');
         });
     }
 

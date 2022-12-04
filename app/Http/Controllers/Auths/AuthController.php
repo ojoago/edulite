@@ -81,7 +81,7 @@ class AuthController extends Controller
         if ($count == 0) {
             return $firstname;
         }
-        return $firstname.date('ym') . $count;
+        return strtolower($firstname).date('ym') . $count;
     }
 
     public static function findEmail($email){

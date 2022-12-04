@@ -39,9 +39,9 @@
             </div>
             <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
                 <!-- <div class="table-responsive mt-3"> -->
-                <button type="button" class="btn btn-primary mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#AdmissionConfigModal">
+                <!-- <button type="button" class="btn btn-primary mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#AdmissionConfigModal">
                     Admission Config
-                </button>
+                </button> -->
                 <!--  -->
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="admissionFeeTable">
                     <thead>
@@ -202,6 +202,7 @@
         // filter class subject 
         multiSelect2('#sessionSelect2', 'createAdmissionModal', 'session', 'Select Session');
         multiSelect2('#classSelect2', 'createAdmissionModal', 'all-class', 'Select Class');
+        multiSelect2('#admissionFeeSelect2', 'createAdmissionModal', 'on-demand-fee', 'Select Fee Amount');
         FormMultiSelect2('#categoryClassSubjectSelect2', 'category', 'Select Category');
         // multiSelect2('#admissionItem', 'admissionConfigModal', 'admission-items', 'Select Admission');
 

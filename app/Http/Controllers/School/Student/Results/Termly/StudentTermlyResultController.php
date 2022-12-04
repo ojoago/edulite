@@ -78,10 +78,11 @@ class StudentTermlyResultController extends Controller
         ];
     }
 
-    // student result 
+    // a particular student result 
     public function studentReportCard($param,$spid){ //class param & student pid
         
         $classParam = StudentClassScoreParam::where('pid',$param)->first(['session_pid','term_pid','arm_pid']);
+        // dd($classParam);
         // StudentScoreParam::join('student_score_sheets','score_param_pid','student_score_params.pid')->where('class_param_pid',$param)->get()->dd();
         if(!$classParam){
 
@@ -176,13 +177,13 @@ class StudentTermlyResultController extends Controller
                 $rank->on('sr.student_pid', '=', 'rn.student_pid');
             })->select(DB::raw(
                 'COUNT(subject_type) as count,
-            rn.total/COUNT(subject_type) as average,
-            rn.total,position,
-            rn.student_pid,reg_number,type,
-            fullname,rn.class_teacher_comment,
-            rn.principal_comment,rn.portal_comment,
-            rn.class_param_pid'))->groupBy('sr.student_pid')->orderBy('position')
-            ->where(['sr.class_param_pid' => $param, 'seated' => 1]);
+                rn.total/COUNT(subject_type) as average,
+                rn.total,position,
+                rn.student_pid,reg_number,type,
+                fullname,rn.class_teacher_comment,
+                rn.principal_comment,rn.portal_comment,
+                rn.class_param_pid'))->groupBy('sr.student_pid')->orderBy('position')
+            ->where(['sr.class_param_pid' => $param, 'seated' => 1]);//->get()->dd();
             $results = DB::table('student_class_results as r')
             ->join('student_class_score_params  as srp', 'srp.pid', 'r.class_param_pid')
             ->join('terms  as t', 't.pid', 'srp.term_pid')
@@ -218,6 +219,38 @@ class StudentTermlyResultController extends Controller
         }
         return view('school.student.result.termly-result.student-report-card', compact('subResult', 'std', 'scoreSettings','param','psycho','results','grades','school'));
 
+    }
+    // load a particular student result for student or parents 
+    public function viewStudentResult(Request $request)
+    {
+        $dtl = DB::table('student_class_results as r')
+        ->join('student_class_score_params as p', 'p.pid', 'r.class_param_pid')
+        ->join('terms as t', 't.pid', 'p.term_pid')
+        ->join('sessions as ss', 'ss.pid', 'p.session_pid')
+        ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
+        ->select(DB::raw('distinct(r.student_pid),
+                                r.class_param_pid,r.total,term,session,p.id'));
+        $rank = DB::table('student_class_results as r')
+        ->joinSub($dtl, 'dtl', function ($dt) {
+            $dt->on('r.student_pid', '=', 'dtl.student_pid');
+        })->select(DB::raw('r.student_pid,r.total,
+                                RANK() OVER (PARTITION BY dtl.class_param_pid ORDER BY r.total DESC) AS position,
+                                r.class_param_pid,term,session,dtl.id'));
+        $results = DB::table('students as s')
+        ->joinSub($rank, 'rank', function ($rnk) {
+            $rnk->on('s.pid', '=', 'rank.student_pid');
+        })->select(DB::raw('rank.*'))
+        ->orderBy('rank.id', 'DESC')
+            ->where(['rank.student_pid' => base64Decode($request->pid)])
+            ->get();
+        return datatables($results)
+            ->editColumn('position', function ($data) {
+                return ordinalFormat($data->position);
+            })->addIndexColumn()
+            ->addColumn('action', function ($data) {
+                return view('school.lists.student.result-action-buttons', ['data' => $data]);
+            })
+            ->make(true);
     }
 }
 

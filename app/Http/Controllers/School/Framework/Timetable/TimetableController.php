@@ -30,7 +30,7 @@ class TimetableController extends Controller
                     ])
                 ->select('arm', 'subject', 'exam_date', 'exam_time', 'tt.updated_at')->orderBy('arm')->get();
        }
-       if(isset($request->arm_pid) && isset($request->session_pid)){
+       elseif(isset($request->arm_pid) && isset($request->session_pid)){
             $data = DB::table("timetable_params as p")
                 ->join('timetables as tt', 'p.pid', 'tt.param_pid')
                 ->join('class_arm_subjects as cas', 'cas.pid', 'tt.subject_pid')
@@ -44,7 +44,7 @@ class TimetableController extends Controller
                 ])
                 ->select('arm', 'subject', 'exam_date', 'exam_time', 'tt.updated_at')->orderBy('arm')->get();
        }
-       if(isset($request->session_pid) && isset($request->term_pid)){
+       elseif(isset($request->session_pid) && isset($request->term_pid)){
             $data = DB::table("timetable_params as p")
             ->join('timetables as tt', 'p.pid', 'tt.param_pid')
             ->join('class_arm_subjects as cas', 'cas.pid', 'tt.subject_pid')
@@ -58,7 +58,7 @@ class TimetableController extends Controller
             ])
                 ->select('arm', 'subject', 'exam_date', 'exam_time', 'tt.updated_at')->orderBy('arm')->get();
        }
-       if(isset($request->arm_pid)){
+       elseif(isset($request->arm_pid)){
             $data = DB::table("timetable_params as p")
             ->join('timetables as tt', 'p.pid', 'tt.param_pid')
             ->join('class_arm_subjects as cas', 'cas.pid', 'tt.subject_pid')
@@ -80,6 +80,61 @@ class TimetableController extends Controller
                 ->join('class_arms as a', 'a.pid', 'p.arm_pid')
                 ->where([
                     // 'arm_pid' => $request->arm_pid,
+                    'p.session_pid' => activeSession(),
+                    'p.term_pid' => activeTerm(),
+                    'p.school_pid'=>getSchoolPid()
+                ])
+                ->select('arm', 'subject', 'exam_date', 'exam_time', 'tt.updated_at')->orderBy('arm')->get();
+       }
+        return datatables($data)
+                    ->editColumn('date',function($data){
+                        return date('d M Y',strtotime($data->updated_at));
+                    })
+                    ->editColumn('exam_time',function($data){
+                        return date('h:i A',strtotime($data->exam_time));
+                    })
+                    ->addIndexColumn()
+                    ->make(true);
+    }
+    // load a particular student timetable 
+    public function loadStudentTimetable(Request $request){
+       if(isset($request->session_pid) && isset($request->term_pid)){
+            $data = DB::table("timetable_params as p")
+                ->join('timetables as tt', 'p.pid', 'tt.param_pid')
+                ->join('students as std', 'std.current_class_pid', 'p.arm_pid')
+                ->join('class_arm_subjects as cas', 'cas.pid', 'tt.subject_pid')
+                ->join('subjects as s', 's.pid', 'cas.subject_pid')
+                ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+                ->where([
+                        'std.pid'=>base64Decode($request->pid),
+                        'p.session_pid'=>$request->session_pid,
+                        'p.term_pid'=>$request->term_pid,
+                        'p.school_pid' => getSchoolPid()
+                    ])
+                ->select('arm', 'subject', 'exam_date', 'exam_time', 'tt.updated_at')->orderBy('arm')->get();
+       }elseif(isset($request->term_pid)){
+            $data = DB::table("timetable_params as p")
+            ->join('students as std', 'std.current_class_pid', 'p.arm_pid')
+            ->join('timetables as tt', 'p.pid', 'tt.param_pid')
+            ->join('class_arm_subjects as cas', 'cas.pid', 'tt.subject_pid')
+            ->join('subjects as s', 's.pid', 'cas.subject_pid')
+            ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+            ->where([
+                'std.pid' => base64Decode($request->pid),
+                'p.session_pid' => activeSession(),
+                'p.term_pid' => $request->term_pid,
+                'p.school_pid' => getSchoolPid()
+            ])->select('arm', 'subject', 'exam_date', 'exam_time', 'tt.updated_at')->orderBy('arm')->get();
+       }
+       else{
+            $data = DB::table("timetable_params as p")
+                ->join( 'students as std', 'std.current_class_pid', 'p.arm_pid')
+                ->join('timetables as tt', 'p.pid', 'tt.param_pid')
+                ->join('class_arm_subjects as cas', 'cas.pid', 'tt.subject_pid')
+                ->join('subjects as s', 's.pid', 'cas.subject_pid')
+                ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+                ->where([
+                    'std.pid' => base64Decode($request->pid),
                     'p.session_pid' => activeSession(),
                     'p.term_pid' => activeTerm(),
                     'p.school_pid'=>getSchoolPid()

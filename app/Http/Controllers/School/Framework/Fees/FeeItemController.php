@@ -172,7 +172,6 @@ class FeeItemController extends Controller
             )
             ->orderBy('fee_name')->orderBy('arm')
             ->orderBy('fullname')
-            ->orderBy('fee_name')
             ->get();
         return $this->addDatatable($data);
     }
@@ -195,16 +194,79 @@ class FeeItemController extends Controller
             ->make(true);
     }
 
+    // load particular student invoice 
+    public function loadParticularStudentInvoice(Request $request)
+    {
+        if (isset($request->session_pid) && isset($request->term_pid)) {
+            $where = ['p.term_pid' => $request->term_pid, 'p.session_pid' => $request->session_pid, 'si.school_pid' => getSchoolPid(), 'si.status' =>0, 'si.student_pid' => base64Decode($request->pid)];
+        } else {
+            $where = ['p.term_pid' => activeTerm(), 'p.session_pid' => activeSession(), 'p.school_pid' => getSchoolPid(), 'si.status' => 0, 'si.student_pid'=>base64Decode($request->pid)];
+        }
+        $data = DB::table('student_invoices as si')
+        ->join('fee_item_amounts as fa', 'fa.pid', 'si.item_amount_pid')
+        ->join('fee_configurations as fc', 'fa.config_pid', 'fc.pid')
+        ->join('class_invoice_params as p', 'p.pid', 'si.param_pid')
+        ->join('fee_items as f', 'f.pid', 'fc.fee_item_pid')
+        ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+            ->join('terms as t', 't.pid', 'p.term_pid')
+            ->join('sessions as s', 's.pid', 'p.session_pid')
+            ->where($where)
+            ->select(
+                'a.arm',
+                'si.amount',
+                'si.pid',
+                't.term',
+                's.session',
+                'fee_name',
+                'fc.type',
+                'si.created_at'
+            )
+            ->orderBy('fee_name')->orderBy('arm')
+            ->get();
+        return $this->addDatatable($data);
+    }
+    // load particular student invoice 
+    public function loadParticularStudentPayment(Request $request)
+    {
+        // if (isset($request->session_pid) && isset($request->term_pid)) {
+        //     $where = ['p.term_pid' => $request->term_pid, 'p.session_pid' => $request->session_pid, 'si.school_pid' => getSchoolPid(), 'si.status' =>0, 'si.student_pid' => base64Decode($request->pid)];
+        // } else {
+        //     $where = ['p.term_pid' => activeTerm(), 'p.session_pid' => activeSession(), 'p.school_pid' => getSchoolPid(), 'si.status' => 0, 'si.student_pid'=>base64Decode($request->pid)];
+        // }
+        $data = DB::table('student_invoice_payments as sip')
+            ->where(['sip.student_pid'=>base64Decode($request->pid),'school_pid'=>getSchoolPid(),'sip.status'=>1])
+            ->select(
+                'sip.amount_paid',
+                'sip.total',
+                'sip.pid',
+                'sip.invoice_number',
+                'sip.created_at'
+            )
+            ->orderBy('created_at','DESC')
+            ->get();
+        return datatables($data)
+            ->editColumn('total', function ($data) {
+                return number_format($data->total, 2);
+            })
+            ->editColumn('paid', function ($data) {
+                return number_format($data->amount_paid, 2);
+            })
+            ->editColumn('date', function ($data) {
+                return date('d F Y', strtotime($data->created_at));
+            })
+            ->addIndexColumn()
+            ->make(true);
+    }
 
     // payment record  
     public function loadInvoicePayment(Request $request){
         $data = DB::table('student_invoice_payments as ip')
                         ->join('students as s','s.pid','ip.student_pid')
                         ->select(DB::raw('s.fullname,s.reg_number,invoice_number,total,ip.created_at'))->where('ip.status',1)->get();
-        return $this->paymentDatable($data);
+        return $this->paymentDataTable($data);
     }
     
-    private function paymentDatable($data){
+    private function paymentDataTable($data){
         return datatables($data)
             ->editColumn('total', function ($data) {
                 return number_format($data->total, 2);
@@ -448,7 +510,7 @@ class FeeItemController extends Controller
             return false;
         }
     }
-    // load student of a particular class arm 
+    // load student of a particular class arm based on configuration params
     private function loadClassStudent(string|null $arm_pid,null|int $gender,null|int $religion){// return current student in the selected class
         try {
             if($gender && $religion){

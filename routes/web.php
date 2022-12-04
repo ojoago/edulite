@@ -44,6 +44,7 @@ use App\Http\Controllers\School\Student\Results\Comments\CommentResultController
 use App\Http\Controllers\School\Student\Results\Termly\StudentTermlyResultController;
 use App\Http\Controllers\School\Student\Result\Comments\PortalCommentResultController;
 use App\Http\Controllers\School\Student\Results\Comments\TeacherCommentResultController;
+use App\Http\Controllers\School\Student\Results\Comments\PrincipalCommentResultController;
 use App\Http\Controllers\School\Student\Results\Cumulative\ViewCumulativeResultController;
 use App\Http\Controllers\School\Student\Assessment\Psychomotor\RecordPsychomotorController;
 
@@ -146,6 +147,8 @@ Route::middleware('schoolAuth')->group(function(){
     // create class arm 
     Route::post('create-class-timetable', [TimetableController::class, 'createClassTimetable'])->name('create.school.timetable');
     Route::post('load-class-timetable', [TimetableController::class, 'index'])->name('load.school.timetable');
+    // particular student timetable
+    Route::post('load-student-timetable', [TimetableController::class, 'loadStudentTimetable'])->name('load.student.timetable');
     // create class arm rep 
     Route::post('assign-class-arm-rep', [StudentClassController::class, 'assignClassRep'])->name('assign.class.arm.rep');
     // academic session
@@ -233,6 +236,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-available-psychomotors', [Select2Controller::class, 'loadAvailablePsychomotors']);
 // fee items 
     Route::post('load-available-fee-items', [Select2Controller::class, 'loadAvailableFeeItem']);
+
+    Route::post('load-available-on-demand-fee', [Select2Controller::class, 'loadAvailableOnDemandFee']);
 
     // subjects & subject type
     // load subject type page 
@@ -497,7 +502,9 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('view-student-class-history', [StudentController::class, 'viewStudentClassHistroy'])->name('load.student.class');
     
     Route::post('load-student-riders', [StudentController::class, 'loadStudentRiders'])->name('load.student.riders');
-    Route::post('view-student-results', [StudentController::class, 'viewStudentResult'])->name('load.student.result');
+    Route::post('view-student-results', [StudentTermlyResultController::class, 'viewStudentResult'])->name('load.student.result');
+    Route::post('load-particular-student-invoices', [FeeItemController::class, 'loadParticularStudentInvoice'])->name('load.particular.student.invoice');
+    Route::post('load-particular-student-payment', [FeeItemController::class, 'loadParticularStudentPayment'])->name('load.particular.student.payment');
     // student profile 
     Route::get('parent-profile/{id}', [ParentController::class, 'parentProfile']);
     Route::get('view-parent-profile', [ParentController::class, 'viewParentProfile'])->name('view.parent.profile');
@@ -568,13 +575,15 @@ Route::middleware('schoolAuth')->group(function(){
     // principal comment 
     Route::view('principal-comment-termly-result', 'school.student.result.comments.principal.principal-comment-form')->name('principal.comment.termly.result');
     // the view // princal-comment.blade.php
-    Route::post('principal-comment-termly-result', [CommentResultController::class, 'loadStudentResult']);
+    Route::post('principal-comment-termly-result', [PrincipalCommentResultController::class, 'loadStudentResult']);
      // pricinpal commenting 
-     Route::post('principal-commenting-termly-result', [CommentResultController::class, 'principalCommentStudentTermlyResult'])->name('comment.principal.student.termly.result');
+     Route::post('principal-commenting-termly-result', [PrincipalCommentResultController::class, 'principalCommentStudentTermlyResult'])->name('comment.principal.student.termly.result');
     // principal automated comment
-    Route::view('principal-automated-comment', 'school.student.result.comments.principal.principal-automated-comment-form')->name('principal.automated.comments');
+    Route::view('principal-automated-comment', 'school.student.result.comments.principal.principal-automated-comment')->name('principal.automated.comments');
+    // load principal comment
+    Route::get('load-principal-automated-comment', [PrincipalCommentResultController::class, 'loadPrincipalAutomatedComment'])->name('load.principal.automated.comments');
     // the view // princal-comment.blade.php
-    Route::post('principal-automated-comment', [CommentResultController::class, 'principalAutomatedComment']);
+    Route::post('principal-automated-comment', [PrincipalCommentResultController::class, 'principalAutomatedComment'])->name('principal.add.comment');
     // class teacher comment
     Route::view('teacher-comment-termly-result', 'school.student.result.comments.teacher.teacher-comment-form')->name('teacher.comment.termly.result');
     // load student result
@@ -583,9 +592,11 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('teacher-commenting-termly-result', [TeacherCommentResultController::class, 'teacherCommentStudentTermlyResult'])->name('comment.teacher.student.termly.result');
     
     // load student result
-    Route::view('teacher-automated-comment', 'school.student.result.comments.teacher.teacher-automated-comment-form')->name('teacher.automated.comments');
+    Route::view('teacher-automated-comment', 'school.student.result.comments.teacher.teacher-automated-comment')->name('teacher.automated.comments');
     // load student result
-    Route::post('teacher-automated-comment', [TeacherCommentResultController::class, 'loadStudentResult']);
+    Route::get('load-teacher-automated-comments', [TeacherCommentResultController::class, 'loadTeacherAutomatedComment'])->name('load.teacher.automated.comments');
+    // create comment  
+    Route::post('teacher-automated-comment', [TeacherCommentResultController::class, 'teacherAutomatedComment']);
     
     // class portal comment
     Route::view('portals-comment-termly-result', 'school.student.result.comments.portals.portals-comment-form')->name('portal.comment.termly.result');
@@ -605,6 +616,9 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('promote-student-form', 'school.student.promotion.promote-student-form')->name('promote.student.form');
     Route::post('promote-student-form', [PromoteStudentController::class, 'loadStudent']);
     Route::post('promote-student', [PromoteStudentController::class, 'promoteStudent'])->name('promote.student');
+
+    // parent activities 
+    Route::post('ward-login/{pid}', [ParentController::class, 'wardLogin'])->name('ward.login');
 
 });
 

@@ -271,7 +271,7 @@ class StaffController extends Controller
             try {
                 $data = [
                     'gsm' => $request->gsm,
-                    'email' => $request->email,
+                    'email' => $request->email ? $request->email : null,
                     'account_status' => 1,
                     'password' => $this->pwd,
                     'username' => $request->username ?? AuthController::uniqueUsername($request->firstname),
@@ -292,6 +292,7 @@ class StaffController extends Controller
                 ];
                 
                 $user = AuthController::createUser($data);
+                logError($user);
                 if ($user) {
                     $detail['user_pid'] = $data['pid'] ?? $user->pid;
                     $userDetails = UserDetailsController::insertUserDetails($detail);
@@ -331,7 +332,7 @@ class StaffController extends Controller
                     }
                 }
 
-                return response()->json(['status' => 1, 'message' => 'user account not completed, and not linked to school!! use ' . $data['gsm'] . ' or ' . $data['username'] . ' to link to school, and then update account details']);
+                return response()->json(['status' => 'error', 'message' => 'user account not created']);
 
             } catch (\Throwable $e) {
                 $error =  $e->getMessage();

@@ -678,7 +678,7 @@ class Select2Controller extends Controller
         return response()->json($data);
     }
 
-    // subject type 
+    // load fee name 
     public function loadAvailableFeeItem(Request $request)
     {
         $data = null;
@@ -697,6 +697,38 @@ class Select2Controller extends Controller
                 'id' => $row->pid,
                 'text' => $row->fee_name,
             ];
+        }
+        return response()->json($data);
+    }
+    public function loadAvailableOnDemandFee(Request $request)
+    {
+        $data = null;
+        if ($request->has('q'))
+        $result = $data = DB::table('fee_configurations as c')
+            ->join('fee_items as f', 'f.pid', 'c.fee_item_pid')
+            ->join('fee_item_amounts as i', 'i.config_pid', 'c.pid')
+            ->join('class_arms as a', 'a.pid', 'i.arm_pid')
+            ->where(['i.school_pid' => getSchoolPid(), 'type' => 2])->where('fee_name', 'like', '%' . $request->q . '%')
+            ->orderBy('fee_name')->limit($request->page_limit)->select('amount','i.pid','fee_name')->get(); //
+        else
+        $result = $data = DB::table('fee_configurations as c')
+        ->join('fee_items as f', 'f.pid', 'c.fee_item_pid')
+        ->join('fee_item_amounts as i', 'i.config_pid', 'c.pid')
+        ->join('class_arms as a', 'a.pid', 'i.arm_pid')
+        ->where(['i.school_pid' => getSchoolPid(),'type'=>2])
+            ->select('amount','i.pid','fee_name')
+            ->orderBy('fee_name')->orderBy('arm')
+            ->get();
+        if (!$result) {
+            $data[] = ['id' => null, 'text' => null];
+            return response()->json($data);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->amount,
+                'text' => $row->fee_name.' : ' .number_format($row->amount,2),
+            ];
+            
         }
         return response()->json($data);
     }

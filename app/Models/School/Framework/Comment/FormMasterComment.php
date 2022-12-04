@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FormMasterComment extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'school_pid','min','max','comment','teacher_pid','category_pid'
+    ];
 }

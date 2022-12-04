@@ -141,7 +141,7 @@ class StudentScoreController extends Controller
     }
 
 
-    // submit and student CA on change from jquery 
+    // submit student CA on change from jquery 
     public function submitCaScore(Request $request){
         $data = [
             'score_param_pid'=> getActionablePid(),

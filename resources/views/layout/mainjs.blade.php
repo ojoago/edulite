@@ -252,33 +252,15 @@
         // load student on fee payment modal 
         multiSelect2('#psiStudentSelect2', 'processStudentInvoiceModal', 'student', 'Select Student');
         // 
-        $('#psiStudentSelect2').change(function(e) {
+        $('#psiStudentSelect2').change(async function(e) {
             e.preventDefault()
             let pid = $(this).val();
             if (pid) {
-                loadStudentInvoiceById(pid)
+                await loadStudentInvoiceById(pid)
             }
         });
 
-        function loadStudentInvoiceById(pid) {
-            $('.overlay').show();
-            $.ajax({
-                url: "{{route('load.student.invoice.by.pid')}}",
-                type: "post",
-                data: {
-                    pid: pid,
-                    _token: "{{csrf_token()}}"
-                },
-                success: function(data) {
-                    $('#studentUnPaidInvoices').html(data)
-                    $('#acceptPaymentBtn').show().prop('disabled', true);
-                    $('.overlay').hide();
-                },
-                error: function() {
-                    $('.overlay').hide();
-                }
-            })
-        }
+
         // find sudent by reg  
         $('#findStudentByReg').click(async function() {
             let reg = $('#studentReg').val();
@@ -290,7 +272,7 @@
                 let route = "{{route('find.student.by.reg')}}";
                 let data = await loadDataAjax(route, params);
                 if (data && data.pid) {
-                    loadStudentInvoiceById(data.pid);
+                   await loadStudentInvoiceById(data.pid);
                 }
             }
         });
@@ -619,10 +601,39 @@
         $('#loadNotifications').click(function() {
             loadMyNotification();
         })
-        <?php if(getSchoolPid()): ?>
+        <?php if (getSchoolPid()) : ?>
             countMyNotification();
         <?php endif ?>
     })
+
+    // global functions 
+    function numberFormat(number, point = 2) {
+        return number.toFixed(point).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+    }
+
+    function loadStudentInvoiceById(pid) {
+        return new Promise((resolve, reject) => {
+            $('.overlay').show();
+            $.ajax({
+                url: "{{route('load.student.invoice.by.pid')}}",
+                type: "post",
+                data: {
+                    pid: pid,
+                    _token: "{{csrf_token()}}"
+                },
+                success: function(data) {
+                    $('#studentUnPaidInvoices').html(data)
+                    $('#acceptPaymentBtn').show().prop('disabled', true);
+                    $('.overlay').hide();
+                    resolve(true)
+                },
+                error: function() {
+                    $('.overlay').hide();
+                    reject(true)
+                }
+            })
+        });
+    }
 
     function FormMultiSelect2(idOrClass, route, plh, pre = null) {
         let pid = null
@@ -657,7 +668,8 @@
         }).val(pre).trigger('change').trigger('focus');
     }
 
-    <?php  if(getSchoolPid()): ?>
+    <?php if (getSchoolPid()) : ?>
+
         function countMyNotification() {
             // load.my.notification.tip
             $.ajax({

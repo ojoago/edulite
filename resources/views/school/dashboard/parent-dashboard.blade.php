@@ -11,11 +11,11 @@
     </nav>
 </div>
 <div class="container">
-    @if(isNotEmpty())
+    @if($data->isNotEmpty())
     <div class="row">
         @foreach($data as $row)
         <div class="col-md-4 ">
-            <a href="http://" target="_blank" rel="noopener noreferrer">
+            <a href="{{route('student.profile',['id'=>base64Encode($row->pid)])}}" rel="noopener noreferrer">
                 <div class="card shadow p-4" style="height: 420px;">
                     <div class="text-center" style="height:150px;">
                         <img src="{{asset('/files/images/'.$row->passport.'')}}" class="img img-responsive img-circle" style="width:auto;height:100%">
@@ -36,4 +36,6 @@
     <h3 class="bg-info">No Student is linked you Currently, please contact the school to link your ward(s)/child(ren)... </h3>
     @endif
 </div>
+<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
+
 @endsection

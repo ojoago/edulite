@@ -7,13 +7,13 @@
                  <img src="{{asset(getSchoolLogo())}}" alt="logo">
                  <span class="d-none d-lg-block ellipsis-text" id="schoolName">{{getSchoolName()}}</span>
              </a>
+             <i class="bi bi-list toggle-sidebar-btn"></i>
              @else
              <a href="{{route('users.home')}}" class="logo d-flex align-items-center">
                  <img src="{{asset(getSchoolLogo())}}" alt="">
                  <span class="d-none d-lg-block ellipsis-text" id="appName">{{env('APP_NAME', APP_NAME)}}</span>
              </a>
              @endif
-             <i class="bi bi-list toggle-sidebar-btn"></i>
          </div><!-- End Logo -->
 
          @if(getSchoolPid())

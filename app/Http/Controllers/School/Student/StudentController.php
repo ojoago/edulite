@@ -108,12 +108,27 @@ class StudentController extends Controller
             ->join('students as s', 's.user_pid', 'u.pid')
             ->join('class_arms as a', 's.current_class_pid', 'a.pid')
             ->where(['s.school_pid' => getSchoolPid(), 's.pid' => base64Decode($request->pid)])
-            ->select('gsm', 'email', 'username', 's.fullname','reg_number', 's.address', 'dob', 'gender', 's.religion', 's.passport','s.status','a.arm')->first();
+            ->select('gsm', 'email', 'username', 's.fullname','reg_number', 's.address', 'dob', 'd.gender', 's.religion', 's.passport','s.status','a.arm')->first();
          return response()->json(formatStudentProfile($data));
     }
 
 
     public function viewStudentclassHistroy(Request $request){
+        $data = StudentClass::where([
+                    'student_classes.school_pid' => getSchoolPid(),
+                     'student_classes.student_pid' => base64Decode($request->pid)
+                     ])
+                     ->leftjoin('class_arms', 'class_arms.pid', 'student_classes.arm_pid')
+                     ->join('sessions', 'sessions.pid', 'student_classes.session_pid')
+                     ->get(['session','arm','student_classes.updated_at']);
+            // logError($data);
+        return datatables($data)
+            ->editColumn('date',function($data){
+                return $data->updated_at->diffForHumans();
+            })
+            ->make(true);
+    }
+    public function viewStudentResult(Request $request){
         $data = StudentClass::where([
                     'student_classes.school_pid' => getSchoolPid(),
                      'student_classes.student_pid' => base64Decode($request->pid)

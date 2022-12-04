@@ -37,21 +37,26 @@ class AdmissionConfigController extends Controller
         ->editColumn('date', function ($data) {
             return date('d F Y',  strtotime($data->created_at));
         })
+        ->editColumn('amount', function ($data) {
+            return number_format($data->amount,2);
+        })
         ->addIndexColumn()
         ->make(true);
     }
 
     public function setAdmissionClass(Request $request){
         $validator = Validator::make($request->all(),[
-            'from'=>'required|date',
-            'to'=>'required|date',
+            'from'=> 'required|date|before_or_equal:to',
+            'to'=> 'required|date|after_or_equal:from',
             'session_pid'=>'required',
             'class_pid'=>'required',
         ],[
             'to.required'=>'closing date is required',
             'from.required'=>'start date is required',
             'class_pid.required'=>'Select 1 class at least',
-            'session_pid.required'=>'Select Session'
+            'session_pid.required'=>'Select Session',
+            'from.before_or_equal'=> 'start must be equal or less than closing date',
+            'to.before_or_equal'=> 'closing must be equal or greater than start date'
         ]);
 
         if(!$validator->fails()){
@@ -66,7 +71,7 @@ class AdmissionConfigController extends Controller
 
             $result = $this->setupAdmission($data);
             if($result){
-                $data = ['admission_pid'=>$result->pid,'class'=>$request->class_pid];
+                $data = ['admission_pid'=>$result->pid,'class'=>$request->class_pid,'amount'=>$request->fee];
                 $result = $this->setupAdmissionclass($data);
                 if($result){
 
@@ -91,7 +96,7 @@ class AdmissionConfigController extends Controller
         $setups = [];
         for ($i=0; $i < $count; $i++) { 
             $setup['class_pid'] = $data['class'][$i];
-            $setup['amount'] = $data['amount'][$i] ?? 0;
+            $setup['amount'] = $data['amount'] ?? 0;
             $setup['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s');
             // $result = AdmissionSetup::updateOrCreate($dupParam, $setup);
             $setups[] = $setup;
