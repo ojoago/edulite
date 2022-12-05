@@ -91,6 +91,7 @@
 
         .student-img>img {
             width: 100%;
+            height: auto;
         }
 
         .signature-base {
