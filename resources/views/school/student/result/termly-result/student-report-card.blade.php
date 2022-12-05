@@ -86,6 +86,7 @@
             align-items: center;
             justify-content: center;
             border: 1px solid #000;
+            max-height: 200px;
         }
 
         .student-img>img {
