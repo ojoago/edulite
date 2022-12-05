@@ -27,7 +27,6 @@
   <link href="{{asset('plugins/DataTables/datatables.min.css')}}" rel="stylesheet">
   <link href="{{asset('plugins/select2/css/select2.min.css')}}" rel="stylesheet">
   <link href="{{asset('themes/css/custom/style.css')}}" rel="stylesheet">
-  <link href="{{asset('themes/css/custom/report-card-style.css')}}" rel="stylesheet">
 
 </head>
 
