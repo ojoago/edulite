@@ -161,8 +161,8 @@ class StudentTermlyResultController extends Controller
 // individual student result and class position 
             $dtl = DB::table('student_class_results as r')
             ->join('student_class_score_params as p', 'p.pid', 'r.class_param_pid')
-            ->join('school_staff as stf', 'stf.pid', 'p.principal_pid')
-            ->join('user_details as d', 'd.user_pid', 'stf.user_pid')
+            ->leftjoin('school_staff as stf', 'stf.pid', 'p.principal_pid')
+            ->leftjoin('user_details as d', 'd.user_pid', 'stf.user_pid')
             ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
             ->join('students as s', 's.pid', 'r.student_pid')
             ->select(DB::raw('distinct(r.student_pid),reg_number,s.fullname as student_name,type,
