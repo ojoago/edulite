@@ -92,10 +92,10 @@ class StudentTermlyResultController extends Controller
             // query subject result 
             $subdtl = DB::table('student_subject_results as sr')
                         // the next 4 joins bring subject teahcer name 
-                        ->join('student_score_params AS ssp', 'ssp.class_param_pid', 'sr.class_param_pid')
-                        ->join('subject_totals AS st', 'ssp.pid', 'st.subject_param_pid')
-                        ->join('school_staff AS stf', 'ssp.subject_teacher', 'stf.pid')
-                        ->join('user_details AS d', 'd.user_pid', 'stf.user_pid')
+                        ->leftjoin('student_score_params AS ssp', 'ssp.class_param_pid', 'sr.class_param_pid')
+                        ->leftjoin('subject_totals AS st', 'ssp.pid', 'st.subject_param_pid')
+                        ->leftjoin('school_staff AS stf', 'ssp.subject_teacher', 'stf.pid')
+                        ->leftjoin('user_details AS d', 'd.user_pid', 'stf.user_pid')
                         // end of subject teacher name join 
                         ->join('subject_types AS s', 's.pid', 'sr.subject_type')
                         ->where([
@@ -197,8 +197,8 @@ class StudentTermlyResultController extends Controller
             ->join('terms  as t', 't.pid', 'srp.term_pid')
             ->join('sessions  as s', 's.pid', 'srp.session_pid')
             ->join('class_arms  as a', 'a.pid', 'srp.arm_pid')
-            ->join('school_staff  as st', 'st.pid', 'srp.teacher_pid')
-            ->join('user_details  as d', 'd.user_pid', 'st.user_pid')
+            ->leftjoin('school_staff  as st', 'st.pid', 'srp.teacher_pid')
+            ->leftjoin('user_details  as d', 'd.user_pid', 'st.user_pid')
             ->join('active_term_details  as atm',function($join){
                 $join->on('atm.term_pid','srp.term_pid')->on('atm.session_pid','srp.session_pid');
             })
