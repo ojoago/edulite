@@ -628,3 +628,7 @@ Route::middleware('schoolAuth')->group(function(){
 Route::get('admission/{id?}',[AdmissionController::class,'index'])->name('admission');
 // admission 
 Route::post('admission',[AdmissionController::class,'createAdmission']);
+
+
+// hireworthy 
+Route::view('hire-worthy','add-on.hire-worthy')->name('hire.worthy')->middleware('auth');

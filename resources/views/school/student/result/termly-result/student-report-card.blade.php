@@ -32,7 +32,6 @@
     <link href="{{asset('themes/css/style.css')}}" rel="stylesheet">
     <link href="{{asset('plugins/select2/css/select2.min.css')}}" rel="stylesheet">
     <link href="{{asset('themes/css/custom/style.css')}}" rel="stylesheet">
-    <link href="{{asset('themes/css/custom/report-card-style.css')}}" rel="stylesheet">
     <style>
         body {
             margin: 20px 160px;
@@ -149,12 +148,24 @@
 
         @media screen and (max-width:560px) {
             .student-img {
-                border: none;
+                border: none !important;
+                display: none !important;
+            }
+
+            .flex-container {
+                flex-direction: column !important;
+            }
+
+            .examTable{
+               width: 100% !important;
+            }
+
+            body {
+                margin: 1px;
             }
         }
 
         @media print {
-
             .header,
             #header,
             button {
@@ -310,12 +321,12 @@
             </div>
             <div class="img img-responsive student-img">
                 @php $imgUrl = $std->passport ? asset("/files/images/".$std->passport) :'' @endphp
-                <img src="{{$imgUrl}}" alt="" class="img img-responsive">
+                <img src="{{$imgUrl}}" alt="" class="img img-responsive" id="student-img">
             </div>
         </div>
         <div class="table table-responsive">
             <div class="flex-container">
-                <table class="table table-hover table-striped table-bordered" cellpadding="pixels">
+                <table class="table table-hover table-striped table-bordered examTable" cellpadding="pixels">
                     <thead>
                         <tr>
                             <th colspan="2"></th>

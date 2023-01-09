@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Http\Controllers\Auths\AuthController;
 
-    define('APP_NAME','EduLite');
-    define('NAIRA_UNIT', "&#8358;");//NAIRA sign
+
    function logError($error){
     Log::error(json_encode($error));
    }

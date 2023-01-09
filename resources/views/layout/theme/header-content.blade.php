@@ -129,6 +129,12 @@
                              <!-- <span>Web Designer</span> -->
                          </li>
                          <li>
+                             <a class="dropdown-item d-flex align-items-center" href="{{route('hire.worthy')}}">
+                                 <i class="bi bi-briefcase-fill"></i>
+                                 <span>Hireworthy</span>
+                             </a>
+                         </li>
+                         <li>
                              <hr class="dropdown-divider">
                          </li>
                          @if(getSchoolUserPid())
