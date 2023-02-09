@@ -40,7 +40,6 @@ use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 use App\Http\Controllers\School\Framework\Assessment\AssessmentTitleController;
 use App\Http\Controllers\School\Student\Attendance\StudentAttendanceController;
 use App\Http\Controllers\School\Framework\Psychomotor\PsychomotorBaseController;
-use App\Http\Controllers\School\Student\Results\Comments\CommentResultController;
 use App\Http\Controllers\School\Student\Results\Termly\StudentTermlyResultController;
 use App\Http\Controllers\School\Student\Result\Comments\PortalCommentResultController;
 use App\Http\Controllers\School\Student\Results\Comments\TeacherCommentResultController;
@@ -514,7 +513,9 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('view-rider-profile', [SchoolRiderController::class, 'viewRiderProfile'])->name('view.rider.profile');
     Route::post('load-rider-student', [SchoolRiderController::class, 'viewRiderStudent'])->name('load.rider.student');
 
-
+    // student assignment 
+    Route::view('class-assignment', 'school.assignment.assignments')->name('class.assignment.form');
+    // Route::post('class-assignment', 'school.assignment.assignment-form')->name('class.assignment.form');
 
     //student attendance
     Route::view('student-attendance-form', 'school.student.attendance.student-attendance-form')->name('student.attendance.form');

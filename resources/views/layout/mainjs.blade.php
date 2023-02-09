@@ -138,7 +138,6 @@
         // assigning portal to hostel is default to active term and session 
         // multiSelect2('#ahtpSessionSelect2', 'assignHostelToPortalModal', 'session', 'Select Session');
         // multiSelect2('#ahtpTermSelect2', 'assignHostelToPortalModal', 'term', 'Select Term');
-        multiSelect2('#ahtpPortalSelect2', 'assignHostelToPortalModal', 'portals', 'Select Portals');
         multiSelect2('#ahtpHostelSelect2', 'assignHostelToPortalModal', 'hostels', 'Select Hostels');
         // assign student portal 
         multiSelect2('#ahtsStudentSelect2', 'assignHostelToStudentModal', 'boarding-student', 'Select Student');
@@ -251,6 +250,14 @@
 
         // load student on fee payment modal 
         multiSelect2('#psiStudentSelect2', 'processStudentInvoiceModal', 'student', 'Select Student');
+
+        // hire me modal 
+        multiSelect2('#hireMeStateSelect2', 'hireMeModal', 'state', 'Select State');
+        $('#hireMeStateSelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#hireMeLgaSelect2', 'hireMeModal', 'state-lga', id, 'Select LGA');
+            multiSelect2Post('#areaSelect2', 'hireMeModal', 'lga', id, 'Select SUbject');
+        });
         // 
         $('#psiStudentSelect2').change(async function(e) {
             e.preventDefault()

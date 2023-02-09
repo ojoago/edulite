@@ -95,7 +95,6 @@ class HostelController extends Controller
     public function createHostel(Request $request)
     {
         $n = $request->name;
-            $request->name = strtoupper($request->name);
         $validator = Validator::make($request->all(),[
             'name'=>['required',Rule::unique('hostels')->where(function($param) use ($request){
                     $param->where('school_pid',getSchoolPid())->where('pid','!=',$request->pid);

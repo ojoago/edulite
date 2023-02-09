@@ -67,7 +67,7 @@ class AttendanceTypeController extends Controller
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
+           return false;
         }
     }
 
@@ -94,7 +94,7 @@ class AttendanceTypeController extends Controller
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
+           return false;
         }
     }
     /**

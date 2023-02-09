@@ -652,4 +652,80 @@
     </div>
 </div>
 
+
+<!-- hire me  -->
+<div class="modal fade" id="hireMeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-uppercase text-info">Open for Hire</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" id="hireMeForm">
+                    @csrf
+                    <div class="col-md-12">
+                        <label class="form-label">About</label>
+                        <textarea type="text" name="about" class="form-control form-control-sm" name="about" id="hireAbleAbout" placeholder="say something good about yourself"></textarea>
+                        <p class="text-danger about_error"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Highest Qualification</label>
+                        <input type="text" class="form-control form-control-sm" name="qualification" id="qualification" placeholder="COE">
+                        <p class="text-danger qualification_error"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Course of Study</label>
+                        <input type="text" class="form-control form-control-sm" name="course" id="course" placeholder="e.g Economic Social Studies">
+                        <p class="text-danger course_error"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Years of Expirence</label>
+                        <input type="number" class="form-control form-control-sm" name="years" id="course" placeholder="e.g 2">
+                        <p class="text-danger course_error"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Open For Employment?</label><br>
+                        Open <input type="radio" class="radio" name="status" id="status" value="1">
+                        Close <input type="radio" class="radio" name="status" id="status" value="0">
+                        <p class="text-danger status_error"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">State</label>
+                        <select name="state" id="hireMeStateSelect2" style="width: 100%;" class="form-control form-control-sm">
+                        </select>
+                        <p class="text-danger state_error"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">LGA</label>
+                        <select name="lga" id="hireMeLgaSelect2" multiple="multiple" style="width: 100%;" class="form-control form-control-sm">
+                        </select>
+                        <p class="text-danger state_error"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Area</label>
+                        <select name="area" id="hireMeStateSelect2" style="width: 100%;" class="form-control form-control-sm">
+                        </select>
+                        <p class="text-danger state_error"></p>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Area of interest</label>
+                        <select name="subject[]" id="areaSelect2" multiple="multiple" style="width: 100%;" class="form-control form-control-sm">
+                        </select>
+                        <p class="text-danger subject_error"></p>
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button class="btn btn-primary" type="button" id="hireMeBtn">Submit</button>
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- videos modals  -->

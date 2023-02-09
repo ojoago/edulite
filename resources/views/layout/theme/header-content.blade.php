@@ -129,9 +129,9 @@
                              <!-- <span>Web Designer</span> -->
                          </li>
                          <li>
-                             <a class="dropdown-item d-flex align-items-center" href="{{route('hire.worthy')}}">
+                             <a class="dropdown-item d-flex align-items-center pointer" data-bs-toggle="modal" data-bs-target="#hireMeModal">
                                  <i class="bi bi-briefcase-fill"></i>
-                                 <span>Hireworthy</span>
+                                 <span>Hire Me</span>
                              </a>
                          </li>
                          <li>

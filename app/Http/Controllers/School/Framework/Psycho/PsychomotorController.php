@@ -108,7 +108,7 @@ class PsychomotorController extends Controller
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
-            dd($error);
+             
         }
     }
     /**

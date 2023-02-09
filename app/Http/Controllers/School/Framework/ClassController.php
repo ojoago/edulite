@@ -158,6 +158,7 @@ class ClassController extends Controller
         } catch (\Throwable $e) {
             $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
             logError($error);
+            return false;
         }
     }
 
@@ -205,8 +206,8 @@ class ClassController extends Controller
             }
             return true;
         } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
-            logError($error);
+            logError($e->getMessage());
+            return false;
         }
     }
     public function createClassArm(Request $request)
@@ -259,6 +260,7 @@ class ClassController extends Controller
         } catch (\Throwable $e) {
             $error =  $e->getMessage();
             logError($error);
+            return false;
         }
     }
     

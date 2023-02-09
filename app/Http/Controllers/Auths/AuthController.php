@@ -113,17 +113,17 @@ class AuthController extends Controller
             'email'=>'required|email']);
             
         if(!$validator->fails()){
-            $user = User::where('email',$request->email)->first(['pid','email','reset_token','id','username']);
+            $user = User::where('email',$request->email)->first(['pid','email','id','username']);
             if($user){
                 $data = [
                     'email' => $request->email,
                     'name' => $user->username,
                     'blade' => 'reset',
-                    'url' => 'reset/' . base64Encode($user->pid),
+                    'url' => 'reset/' . base64Encode($user->pid .'||'. strtotime(now())),
                     'subject' => 'Password reset Link'
                 ];
                 if(sendMail($data)){
-                    $user->reset_token = strtotime(now());
+                    // $user->reset_token = strtotime(now());
                     $user->save();
                     return response()->json(['status'=>1,'message'=>'Password Reset link sent to your mail']);
                 }
@@ -136,7 +136,7 @@ class AuthController extends Controller
     }
     // open forget password when user click on link 
     public function resetPasswordForm($id){
-        session(['pid' => $id]);
+        session(['resetPasswordToken' => $id]);
         return view('auths.reset');
     }
 
@@ -145,8 +145,9 @@ class AuthController extends Controller
     {
         try {
             $request->validate(['password' => 'required|confirmed|min:6']);
-            $user = User::where('pid', base64Decode(session('pid')))->first(); // load user detail
-            $diff = strtotime(now()) - $user->reset_token; //compare token
+            list($pid, $token) = explode('||', base64Decode(session('resetPasswordToken')));
+            $user = User::where('pid', $pid)->first(); // load user detail
+            $diff = strtotime(now()) - $token; //compare token
             if (abs($diff / 86400) > 1) {
                 return redirect()->back()->with('warning', 'error|Reset Token has expired!');
             }

@@ -230,7 +230,7 @@
                     </tr>
                     <tr>
                         <td>
-                            Addmin No.
+                            Admin No.
                         </td>
                         <td>
                             {{$std->reg_number}}

@@ -53,8 +53,6 @@
                 </div>
             </div>
 
-
-
             <!-- End #main -->
 
             <div class="modal fade" id="forgetPwd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

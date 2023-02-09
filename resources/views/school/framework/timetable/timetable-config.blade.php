@@ -250,6 +250,7 @@
         // load page content  
         loadTimetable();
         // load school timetable
+        
         function loadTimetable(arm = null, session = null, term = null) {
             $('#timetableDatatable').DataTable({
                 "processing": true,

@@ -283,6 +283,8 @@
 @endif
 
 @if(classTeacher())
+
+<!-- End Charts Nav -->
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#attendance-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>My Student</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -298,6 +300,11 @@
                 <i class="bi bi-circle"></i><span>Student Subject</span>
             </a>
         </li> -->
+        <li>
+            <a href="{{route('class.assignment.form')}}">
+                <i class="bi bi-circle"></i><span>Assignment</span>
+            </a>
+        </li>
         <li>
             <a href="{{route('student.attendance.form')}}">
                 <i class="bi bi-circle"></i><span>Take Attendance</span>
