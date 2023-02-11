@@ -625,7 +625,7 @@ Route::middleware('schoolAuth')->group(function(){
     // swap student 
     Route::view('swap-student-form', 'school.student.promotion.swap-student-form')->name('swap.student.form');
     Route::post('swap-student-form', [PromoteStudentController::class, 'loadStudentByArm']);
-    Route::post('swap-student', [PromoteStudentController::class, 'promoteStudent'])->name('promote.student');
+    Route::post('swap-student', [PromoteStudentController::class, 'swapStudent'])->name('swap.student');
 
     // parent activities 
     Route::post('ward-login/{pid}', [ParentController::class, 'wardLogin'])->name('ward.login');

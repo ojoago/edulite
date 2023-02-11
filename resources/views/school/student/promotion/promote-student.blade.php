@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Promote Student</h5>
-            <p> <i class="bi bi-calendar-event-fill"></i> {{sessionName(session('session')) }} {{termName(session('term'))}}</p>
+            <p> <i class="bi bi-calendar-event-fill"> </i> {{getClassArmNameByPid(@$student[0]->current_class_pid)}} {{activeSessionName() }} {{activeTermName()}}</p>
             <table class="table table-bordered border-primary cardTable" id="scoreTable">
                 <thead>
                     <tr>
@@ -28,16 +28,19 @@
                             <td scope="col">
                                 <select name="" id="" class="form-control form-control-sm" required>
                                     <option disabled selected>Select Next Class</option>
-                                    @foreach($nextClass as $row)
-                                    <option value="{{$row->pid}}" @php echo $row->class_number==$currentClassNumber+1 ? 'selected':'' @endphp >{{$row->class}}</option>
+                                    @foreach($nextClass as $cls)
+                                    <option value="{{$cls->pid}}" @php echo $cls->class_number==$currentClassNumber+1 ? 'selected':'' @endphp >{{$cls->class}}</option>
                                     @endforeach
                                 </select>
+                                <input type="hidden" name="pid[]" value="{{$row->pid}}">
                             </td>
                             <td scope="col">
                                 <select name="next_class[]" id="" class="form-control form-control-sm" required>
                                     <option disabled selected>Select Class Arm</option>
-                                    @foreach($nextArm as $row)
-                                    <option value="{{$row->pid}}" @php echo $row->arm_number==$armNumber ? 'selected':'' @endphp>{{$row->arm}}</option>
+                                    @foreach($nextArm as $arm)
+                                    <option value="{{$arm->pid}}" <?php if ($arm->arm_number == $armNumber) {
+                                                                        echo 'selected';
+                                                                    } ?>>{{$arm->arm}}</option>
                                     @endforeach
                                 </select>
                             </td>
@@ -49,7 +52,7 @@
                         <td colspan="3">
                         </td>
                         <td colspan="2">
-                            <button type="submit" class="btn btn-primary">Confirm</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Confirm</button>
                         </td>
                     </tr>
                 </tbody>

@@ -9,6 +9,8 @@ use App\Models\School\Framework\Class\Category;
 use App\Models\School\Student\Student;
 use App\Models\School\Framework\Class\ClassArm;
 use App\Models\School\Framework\Class\Classes;
+use App\Models\School\Framework\Class\SwapClassHistory;
+use Illuminate\Support\Facades\Validator;
 
 class PromoteStudentController extends Controller
 {
@@ -74,7 +76,23 @@ class PromoteStudentController extends Controller
 
 
    public function promoteStudent(Request $request){
-    dd($request->all());
+        try{
+            $count = count($request->pid);
+            for ($i = 0; $i < $count; $i++) {
+                if (!isset($request['next_class'][$i])) {
+                    continue;
+                }
+                $data = ['student_pid' => $request['pid'][$i], 'arm' => $request['next_class'][$i]];
+                $result = $this->moveStudent($data);
+            }
+            if($result){
+                return redirect()->back()->with('success','Student promoted successfully...');
+            }
+            return redirect()->back()->with('warning','Something Went Wrong...');
+        }catch(\Throwable $e){
+            logError($e->getMessage());
+            return redirect()->back()->with('error','Something Went Wrong... error log');
+        }
    }
 
 
@@ -87,4 +105,56 @@ class PromoteStudentController extends Controller
         return view('school.student.promotion.swap-student',compact('data'));
    }
 
+   public function swapStudent(Request $request){
+        $validator = Validator::make($request->all(),[
+            'category'=>'required',
+            'class'=>'required',
+            'arm'=>'required',
+        ]);
+        if(!$validator->fails()){
+            try{
+                $data = ['student_pid'=>$request->pid,'arm'=>$request->arm];
+                $this->moveStudent($data);
+                return response(['status' => 1, 'message' => 'Student Swap']);
+            }catch(\Throwable $e){
+                logError($e->getMessage());
+                return response(['status'=>'error','message'=>'Something Went Wrong... error log']);
+            }
+        }
+        return response(['status'=>0,'message'=>'fill the form correctly','error'=>$validator->errors()->toArray()]);
+   }
+
+   private function moveStudent(array $data){
+        try{
+            $student = Student::where(['school_pid' => getSchoolPid(), 'pid' => $data['student_pid']])->first();
+            if ($student) {
+                $history = [
+                    'school_pid' => getSchoolPid(),
+                    'student_pid' => $data['student_pid'],
+                    'new_class' => $data['arm'],
+                    'previus_class' => $student->current_class_pid,
+                    'session_pid' => activeSession(),
+                    'term_pid' => activeTerm(),
+                    'created_by' => getSchoolUserPid()
+                ];
+                $student->current_class_pid = $data['arm'];
+                $result = $student->save();
+                if ($result) {
+                    return $this->saveHistory($history);
+                }
+                return false;
+            }
+        }catch(\Throwable $e){
+            logError($e->getMessage());
+            return false;
+        }
+   }
+   private function saveHistory(array $data){
+        try{
+            return SwapClassHistory::create($data);
+        }catch(\Throwable $e){
+            logError($e->getMessage());
+            return false;
+        }
+   }
 }

@@ -1,14 +1,15 @@
 <?php
 
-use App\Models\School\Framework\Events\SchoolNotification;
-use App\Models\School\Framework\Session\ActiveSession;
-use App\Models\School\Framework\Session\Session;
-use App\Models\School\Framework\Term\ActiveTerm;
+use App\Models\Users\UserDetail;
 use Illuminate\Support\Facades\DB;
 use App\Models\School\Framework\Term\Term;
-use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
+use App\Models\School\Framework\Class\ClassArm;
+use App\Models\School\Framework\Session\Session;
+use App\Models\School\Framework\Term\ActiveTerm;
+use App\Models\School\Framework\Session\ActiveSession;
+use App\Models\School\Framework\Events\SchoolNotification;
 use App\Models\School\Student\Assessment\Psychomotor\PsychomotorRecord;
-use App\Models\Users\UserDetail;
+use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
 
     function activeSession()
     {
@@ -82,6 +83,11 @@ function activeTermName()
     // $term = ActiveTerm::where('school_pid', getSchoolPid())->orderBy('id', 'DESC')->pluck('term_pid')->first();
     return $term;
 }
+
+    function getClassArmNameByPid($pid){
+        $arm = ClassArm::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->pluck('arm')->first();
+        return $arm;
+    }
     // psychomoter 
 
     function getPsychoKeyScore($student,$param,$key){
