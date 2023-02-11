@@ -13,7 +13,7 @@ use App\Models\School\Framework\Class\Classes;
 class PromoteStudentController extends Controller
 {
     public function __construct(){
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
@@ -76,4 +76,15 @@ class PromoteStudentController extends Controller
    public function promoteStudent(Request $request){
     dd($request->all());
    }
+
+
+//    swap 
+
+   public function loadStudentByArm(Request $request){
+        $data = DB::table('students as s')->join('class_arms as a','a.pid', 's.current_class_pid')
+                        ->where(['s.current_class_pid' => $request->arm,'s.school_pid'=>getSchoolPid()])
+                        ->get(['s.pid', 's.reg_number', 's.fullname', 's.passport', 'a.arm']);
+        return view('school.student.promotion.swap-student',compact('data'));
+   }
+
 }

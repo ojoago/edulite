@@ -10,9 +10,10 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\School\Admission\Admission;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\SchoolController;
+use App\Models\School\Admission\AdminssionHistory;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Student\StudentController;
-use App\Models\School\Admission\AdminssionHistory;
+use App\Models\School\Framework\Admission\ActiveAdmission;
 
 class AdmissionController extends Controller
 {
@@ -168,15 +169,21 @@ class AdmissionController extends Controller
         return $data->save();
     }
 
-    public function submitAdminssion(Request $request){
-        
+    public function submitAdmission(Request $request){
+        $params = DB::table('active_admissions as a')->join('admission_details as d', 'd.pid', 'a.admission_pid')->where(['a.school_pid' => getSchoolPid()])->first(['d.to','d.pid']);
+        if(!$params){
+            return response()->json(['status' => 'error', 'message' => 'there is no admission ongoing for now']);
+        }
+        if(today() > $params->to){
+            return response()->json(['status' => 'error', 'message' => 'Admission has closed on '.$params->to]);
+        }
         // logError(getInitials("ja n d ankpa"));
         $validator = Validator::make(
             $request->all(),
             [
-                'firstname' => 'required|string|min:3|regex:/^[a-zA-Z0-9\s]+$/',
-                'lastname' => 'required|string|min:3|regex:/^[a-zA-Z0-9\s]+$/',
-                'othername' => 'nullable|string|regex:/^[a-zA-Z0-9\s]+$/',
+                'firstname' => "required|string|min:3|regex:/^[a-zA-Z0-9'\s]+$/",
+                'lastname' => "required|string|min:3|regex:/^[a-zA-Z0-9'\s]+$/",
+                'othername' => "nullable|string|regex:/^[a-zA-Z0-9'\s]+$/",
                 'gsm' => [
                     'nullable', 'digits:11',
                     Rule::unique('admissions')->where(function ($param) use ($request) {
@@ -259,28 +266,48 @@ class AdmissionController extends Controller
                 'session_pid'=>activeSession(),
                 'term_pid'=>activeTerm(),
                 'staff_pid'=>getSchoolUserPid(),
+                'admission_pid'=>$params->pid,
             ];
             if ($request->parent_pid) {
                 $applicant['parent_pid'] = $request->parent_pid;
             }
             if (!$request->pid) {
                 $applicant['admission_number'] = self::applicantId();
+            }else{
+                $applicant['admission_number'] = $request->admission_number;
             }
             if ($request->passport) {
                 $name = ($request->admission_number ?? $applicant['admission_number']) . '-passport';
                 $applicant['passport'] = saveImg(image: $request->file('passport'), name: $name);
             }
             $applicant['fullname'] = self::concatFullname($applicant);
-            $sts = Admission::create($applicant);
+            $sts = $this->updateOrCreateAdmission($applicant);
             if($sts){
-                return response()->json(['status' => 1, 'message' => 'Applicatn admission created successfully!!!']);
+                return response()->json(['status' => 1, 'message' => 'Applicant admission created successfully!!!', 'admission_number'=> $applicant['admission_number']]);
             }
             return response()->json(['status' =>'error', 'message' => 'Something Went Wrong']);
         }
         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
 
     }
-
+    private function updateOrCreateAdmission(array $data){
+        try{
+            $result = Admission::updateOrCreate(['admission_number'=>$data['admission_number']],$data);
+            return $result;
+        }catch(\Throwable $e){
+            logError($e->getMessage());
+            return false;
+        }
+    }
+    public function admissionFeeForm(Request $request){
+        if ($request->has('param')) {
+            $applicantNumber = $request->input('param');
+        }
+        $data = DB::table('admissions as a')->join('admission_setups as s', 's.admission_pid', 'a.admission_pid')->leftJoin('school_parents as p','p.pid','a.parent_pid')
+                            ->where(['a.school_pid' => getSchoolPid(), 'admission_number'=> $applicantNumber])->first();
+        // $adm = Admission::where('admission_number',$applicantNumber)->first();
+        dd($data);
+    }
 
     public static function applicantId()
     {

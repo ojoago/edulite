@@ -16,10 +16,12 @@ class PsychomotorBaseController extends Controller
     public function index()
     {
         $data = DB::table('psychomotor_bases as b')
-                    ->join('school_staff as s','s.pid','b.staff_pid')
-                    ->join('users as u','u.pid','s.user_pid')
+                    // ->leftJoin('school_staff as s','s.pid','b.staff_pid')
+                    // ->leftjoin('users as u','u.pid','s.user_pid')
                     ->where(['b.school_pid' => getSchoolPid()])
-                    ->get(['b.pid', 'psychomotor', 'b.created_at', 'b.description', 'b.status', 'username']);
+                    ->get(['b.pid', 'psychomotor', 'b.created_at', 'b.description', 'b.status', 
+                    // 'username'
+                            ]);
         return datatables($data)
             ->editColumn('created_at', function ($data) {
                 return date('d F Y', strtotime($data->created_at));
@@ -35,16 +37,16 @@ class PsychomotorBaseController extends Controller
     {
         if(isset($request->pid)){
             $data = DB::table('psychomotor_keys as k')->join('psychomotor_bases as b', 'k.psychomotor_pid', 'b.pid')
-                ->join('school_staff as s', 's.pid', 'k.staff_pid')
-                ->join('users as u', 'u.pid', 's.user_pid')
+                // ->join('school_staff as s', 's.pid', 'k.staff_pid')
+                // ->join('users as u', 'u.pid', 's.user_pid')
                 ->where(['k.school_pid' => getSchoolPid(), 'k.psychomotor_pid'=>$request->pid])
-                ->get(['k.pid', 'psychomotor', 'title', 'k.created_at', 'k.status', 'username', 'max_score']);
+        ->get(['k.pid', 'psychomotor', 'title', 'k.created_at', 'k.status',  'max_score',/*'username',*/]);
         }else{
             $data = DB::table('psychomotor_keys as k')->join('psychomotor_bases as b', 'k.psychomotor_pid', 'b.pid')
-            ->join('school_staff as s', 's.pid', 'k.staff_pid')
-            ->join('users as u', 'u.pid', 's.user_pid')
+            // ->join('school_staff as s', 's.pid', 'k.staff_pid')
+            // ->join('users as u', 'u.pid', 's.user_pid')
                 ->where(['k.school_pid' => getSchoolPid()])
-                ->get(['k.pid', 'psychomotor', 'title', 'k.created_at', 'k.status', 'username', 'max_score']);
+                ->get(['k.pid', 'psychomotor', 'title', 'k.created_at', 'k.status', 'max_score',/*'username',*/]);
         }
         
         return datatables($data)
@@ -69,6 +71,7 @@ class PsychomotorBaseController extends Controller
                                 $param->where('school_pid',getSchoolPid())->where('pid','<>',$request->pid);
                             }
                         )],
+            'category'=>'required'
         ], [
             'psychomotor.max' => 'Maximum of 30 character',
             'psychomotor.unique' => $request->psychomotor.' Already Exist',
@@ -80,6 +83,7 @@ class PsychomotorBaseController extends Controller
                 'psychomotor' => $request->psychomotor,
                 'description' => $request->description,
                 // 'max_score' => $request->score,
+                'category_pid' => $request->category,
                 'pid' => public_id(),
                 'school_pid' => getSchoolPid(),
                 'staff_pid' => getSchoolUserPid()

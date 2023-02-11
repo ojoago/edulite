@@ -5,6 +5,7 @@ namespace App\Http\Controllers\School\Framework\Admission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\School\Framework\Admission\ActiveAdmission;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Admission\AdmissionSetup;
 use App\Models\School\Framework\Admission\AdmissionDetail;
@@ -72,9 +73,9 @@ class AdmissionConfigController extends Controller
             $result = $this->setupAdmission($data);
             if($result){
                 $data = ['admission_pid'=>$result->pid,'class'=>$request->class_pid,'amount'=>$request->fee];
+                $this->updateOrCreateActiveAdmission($result->pid);
                 $result = $this->setupAdmissionclass($data);
                 if($result){
-
                     return response()->json(['status'=>1,'message'=>'Admission Configration Successfully created']);
                 }
             }
@@ -85,6 +86,15 @@ class AdmissionConfigController extends Controller
 
     private function setupAdmission(array $data){
         return  AdmissionDetail::updateOrCreate(['session_pid'=>$data['session_pid']],$data);
+    }
+    private function updateOrCreateActiveAdmission(string|null $admission_pid){
+        $data = ['admission_pid'=> $admission_pid,'school_pid'=>getSchoolPid()];
+        try{
+            return  ActiveAdmission::updateOrCreate(['school_pid' => getSchoolPid()], $data);
+        }catch(\Throwable $e){
+            logError($e->getMessage());
+            return false;
+        }
     }
     private function setupAdmissionclass(array $data){
         $count = count($data['class']);

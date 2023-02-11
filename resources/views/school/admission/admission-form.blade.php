@@ -177,9 +177,15 @@
         });
 
         // term dropdown 
-        $('#createStudentBtn').click(function() {
+        $('#createStudentBtn').click(async function() {
             var route = "{{route('school.admission')}}";
-            submitFormAjax('createStudentForm', 'createStudentBtn', route);
+            data = await submitFormAjax('createStudentForm', 'createStudentBtn', route);
+            if (data) {
+                if ((data.status == 1) && data.admission_number) {
+                    let url = "admission-fee?param=" + data.admission_number;
+                    location.href = url;
+                }
+            }
         });
         // create school category 
         let pid = "<?php echo $pid ?? '' ?>"

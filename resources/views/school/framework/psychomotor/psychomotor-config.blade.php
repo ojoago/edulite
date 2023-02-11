@@ -29,7 +29,7 @@
                             <th>Description</th>
                             <th>Status</th>
                             <th>Date</th>
-                            <th>Created By</th>
+                            <!-- <th>Created By</th> -->
                         </tr>
                     </thead>
                 </table>
@@ -55,7 +55,7 @@
                             <th>Score</th>
                             <th>Status</th>
                             <th>Date</th>
-                            <th>Created By</th>
+                            <!-- <th>Created By</th> -->
                         </tr>
                     </thead>
 
@@ -94,6 +94,10 @@
             <div class="modal-body">
                 <form method="post" id="createPsychomotorBaseForm">
                     @csrf
+                    <label for="">School Category</label>
+                    <select type="text" name="category" class="form-control" id="cpbfCategorySelect2" required>
+                    </select>
+                    <p class="text-danger title_error"></p>
                     <label for="">Psychomotor Name</label>
                     <input type="text" name="psychomotor" class="form-control form-control-sm" placeholder="Create Base Psychomotor">
                     <p class="text-danger title_error"></p>
@@ -122,6 +126,9 @@
             <div class="modal-body">
                 <form method="post" id="createPsychomotorkeyForm">
                     @csrf
+                    <select type="text" name="category" class="form-control" id="cpkCategorySelect2" required>
+                    </select>
+                    <p class="text-danger category_error"></p>
                     <select name="psychomotor_pid" id="psychomotorkeySelect2" class="form-control form-control-sm">
                     </select>
                     <p class="text-danger psychomotor_pid_error"></p>
@@ -132,8 +139,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createPsychomotorkeyBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createPsychomotorkeyBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -184,6 +191,12 @@
 <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 <script>
     $(document).ready(function() {
+        multiSelect2('#cpbfCategorySelect2', 'createPsychomotorBaseModal', 'category', 'Select Category');
+        multiSelect2('#cpkCategorySelect2', 'createPsychomotorKeyModal', 'category', 'Select Category');
+        $('#cpkCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#psychomotorkeySelect2', 'createPsychomotorKeyModal', 'psychomotors', id, 'Select Psychomotor');
+        });
         // psychomotor-dataTable
         $('#psychomotorBaseDataTable').DataTable({
             "processing": true,
@@ -206,9 +219,9 @@
                 {
                     "data": "created_at"
                 },
-                {
-                    "data": "username"
-                },
+                // {
+                //     "data": "username"
+                // },
                 // {
                 //     "data": "action"
                 // },
@@ -267,47 +280,9 @@
             submitFormAjax('createPsychomotorkeyForm', 'createPsychomotorkeyBtn', "{{route('create.psychomotor.key')}}")
         });
 
-        FormMultiSelect2('#psychomotorBaseSelect2', 'psychomotors', 'Select Psychomotor name');
+        FormMultiSelect2('#psychomotorBaseSelect2', 'psychomotors-all', 'Select Psychomotor name');//load all psycho
         multiSelect2('#psychomotorkeySelect2', 'createPsychomotorKeyModal', 'psychomotors', 'Select Psychomotor name');
 
-        // create psychomotor  
-        $('#createEffectiveDomainBtn').click(function(e) {
-            e.preventDefault()
-            $('.overlay').show();
-            $.ajax({
-                url: "{{route('create.effective.domain')}}",
-                type: "POST",
-                data: new FormData($('#createEffectiveDomainForm')[0]),
-                dataType: "JSON",
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    $('#createEffectiveDomainForm').find('p.text-danger').text('');
-                    $('#createEffectiveDomainBtn').prop('disabled', true);
-                },
-                success: function(data) {
-                    // console.log(data);
-                    $('#createEffectiveDomainBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    if (data.status === 0) {
-                        alert_toast('Fill in form correctly Note (Specail Character is not allowed)', 'warning');
-                        $.each(data.error, function(prefix, val) {
-                            $('.' + prefix + '_error').text(val[0]);
-                        });
-                    } else if (data.status === 2) {
-                        alert_toast(data.message, 'warning');
-                    } else {
-                        alert_toast(data.message, 'success');
-                        $('#createEffectiveDomainForm')[0].reset();
-                    }
-                },
-                error: function(data) {
-                    $('#createEffectiveDomainBtn').prop('disabled', false);
-                    $('.overlay').hide();
-                    alert_toast('Something Went Wrong', 'error');
-                }
-            });
-        });
 
         // add more title 
         $('#addMore').click(function() {
@@ -377,9 +352,9 @@
                 {
                     "data": "created_at"
                 },
-                {
-                    "data": "username"
-                },
+                // {
+                //     "data": "username"
+                // },
                 // {
                 //     "data": "action"
                 // },

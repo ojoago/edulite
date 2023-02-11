@@ -12,9 +12,9 @@
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="setup-tab" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab">Admissions Fee</button>
             </li>
-            <!-- <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="class-arm-tab" data-bs-toggle="tab" data-bs-target="#class-arm" type="button" role="tab">Event</button>
-            </li> -->
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100" id="admission-session-tab" data-bs-toggle="tab" data-bs-target="#admission-session" type="button" role="tab">Admission Session</button>
+            </li>
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
@@ -44,6 +44,27 @@
                 </button> -->
                 <!--  -->
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="admissionFeeTable">
+                    <thead>
+                        <tr>
+                            <th width="5%">S/N</th>
+                            <th>Class</th>
+                            <th>Session</th>
+                            <th>Commence</th>
+                            <th>End</th>
+                            <th>Fee</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="admission-session" role="tabpanel" aria-labelledby="profile-tab">
+                <!-- <div class="table-responsive mt-3"> -->
+                <!-- <button type="button" class="btn btn-primary mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#AdmissionConfigModal">
+                    Admission Config
+                </button> -->
+                <!--  -->
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="admissionSessionTable">
                     <thead>
                         <tr>
                             <th width="5%">S/N</th>

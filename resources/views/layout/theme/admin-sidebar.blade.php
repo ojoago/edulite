@@ -344,7 +344,7 @@
             </a>
         </li>
         <li>
-            <a href="charts-apexcharts.html">
+            <a href="{{route('swap.student.form')}}">
                 <i class="bi bi-circle"></i><span>Swap student</span>
             </a>
         </li>

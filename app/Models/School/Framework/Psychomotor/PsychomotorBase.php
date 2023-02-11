@@ -9,7 +9,7 @@ class PsychomotorBase extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'psychomotor','obtainable_score','description','school_pid','pid','status','staff_pid'
+        'psychomotor','obtainable_score','description','school_pid','pid','status','staff_pid', 'category_pid'
     ];
 
     public function setPsychomotorAttribute($value){

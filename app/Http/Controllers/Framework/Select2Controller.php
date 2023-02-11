@@ -659,6 +659,27 @@ class Select2Controller extends Controller
     public function loadAvailablePsychomotors(Request $request){
         $data = null;
         if ($request->has('q'))
+            $result = PsychomotorBase::where(['school_pid' => getSchoolPid(), 'status' => 1,'category_pid'=>$request->pid])
+                                        ->where('psychomotor', 'like', '%' . $request->q . '%')
+                ->orderBy('psychomotor')->limit($request->page_limit)->get(['pid', 'psychomotor']); //
+        else
+            $result = PsychomotorBase::where(['school_pid' => getSchoolPid(),'status'=>1, 'category_pid' => $request->pid])
+                ->orderBy('psychomotor')->limit(10)->get(['pid', 'psychomotor']); //
+        if (!$result) {
+            $data[] = ['id' => null, 'text' => null];
+            return response()->json($data);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->psychomotor,
+            ];
+        }
+        return response()->json($data);
+    }
+    public function loadAvailableAllPsychomotors(Request $request){
+        $data = null;
+        if ($request->has('q'))
             $result = PsychomotorBase::where(['school_pid' => getSchoolPid(), 'status' => 1])
                                         ->where('psychomotor', 'like', '%' . $request->q . '%')
                 ->orderBy('psychomotor')->limit($request->page_limit)->get(['pid', 'psychomotor']); //

@@ -232,7 +232,10 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-available-portals', [Select2Controller::class, 'loadAvailablePortals']);
     
     // psychomotor 
+    // load psychomotor by school cateogry
     Route::post('load-available-psychomotors', [Select2Controller::class, 'loadAvailablePsychomotors']);
+    // load all psychomotor 
+    Route::post('load-available-psychomotors-all', [Select2Controller::class, 'loadAvailableAllPsychomotors']);
 // fee items 
     Route::post('load-available-fee-items', [Select2Controller::class, 'loadAvailableFeeItem']);
 
@@ -266,7 +269,7 @@ Route::middleware('schoolAuth')->group(function(){
 
     // Psychomotor, effective domain and grade key 
     // Psychomotor 
-    Route::view('school-confrence', 'school.framework.psychomotor.psychomotor-config')->name('school.psychomotor.config');
+    Route::view('extra-curricular', 'school.framework.psychomotor.psychomotor-config')->name('school.psychomotor.config');
 
     Route::view('timetable-config', 'school.framework.timetable.timetable-config')->name('timetable.config');
 
@@ -316,9 +319,10 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('configure-fee', [FeeItemController::class, 'feeConfigurationAndAmount'])->name('configure.fee');
     
     
-    // adminssion 
-    Route::view('school-admission', 'school.admission.admission-form')->name('school.admission');
-    Route::post('school-admission', [AdmissionController::class, 'submitAdminssion']);
+    // admission 
+    Route::view('admission-form', 'school.admission.admission-form')->name('school.admission');
+    Route::post('admission-form', [AdmissionController::class, 'submitAdmission']);
+    Route::get('admission-fee', [AdmissionController::class, 'admissionFeeForm'])->name('admission.fee');
     // admission list 
     Route::view('admission-list', 'school.admission.admission-list')->name('admission.list');
     Route::get('load-admission', [AdmissionController::class, 'loadAppliedAdmission'])->name('admission.request');
@@ -545,8 +549,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('view-student-score', [StudentScoreController::class, 'loadStudentScore'])->name('view.student.score');
 
     // psychomotor 
-    Route::view('student-psychomotor-form', 'school.student.psychomotor.psychomotor-form')->name('psychomotor.assessment.form');
-    Route::post('student-psychomotor-form', [RecordPsychomotorController::class, 'loadPsychomotoKeys']);
+    Route::view('psychomotor-form', 'school.student.psychomotor.psychomotor-form')->name('psychomotor.assessment.form');
+    Route::post('psychomotor-form', [RecordPsychomotorController::class, 'loadPsychomotoKeys']);
     Route::post('record-psychomotor-score', [RecordPsychomotorController::class, 'recordPsychomotorScore'])->name('record.psycomotor.score');
 
     Route::view('view-psychomotor-form', 'school.student.psychomotor.view-psychomotor-form')->name('view.psychomotor.form');
@@ -618,6 +622,10 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('promote-student-form', 'school.student.promotion.promote-student-form')->name('promote.student.form');
     Route::post('promote-student-form', [PromoteStudentController::class, 'loadStudent']);
     Route::post('promote-student', [PromoteStudentController::class, 'promoteStudent'])->name('promote.student');
+    // swap student 
+    Route::view('swap-student-form', 'school.student.promotion.swap-student-form')->name('swap.student.form');
+    Route::post('swap-student-form', [PromoteStudentController::class, 'loadStudentByArm']);
+    Route::post('swap-student', [PromoteStudentController::class, 'promoteStudent'])->name('promote.student');
 
     // parent activities 
     Route::post('ward-login/{pid}', [ParentController::class, 'wardLogin'])->name('ward.login');
