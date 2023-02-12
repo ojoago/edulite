@@ -15,7 +15,7 @@
                 <?php endif ?>
             </a>
         </li>
-        <li><a class="dropdown-item text-warning" href="{{route('edit.student.info',['id'=>base64Encode($data->pid)])}}">Edit Info</a></li>
+        <li><a class="dropdown-item text-warning" href="{{route('edit.admission',['id'=>base64Encode($data->pid)])}}">Edit Info</a></li>
 
     </ul>
 </div>

@@ -195,7 +195,7 @@ use App\Http\Controllers\Auths\AuthController;
     function matchPaymentModel($mdl){
         $model =  match((string)$mdl){
                 '2'=> 'Per Session',
-                '1'=> 'Termy',
+                '1'=> 'Termly',
                 '3'=> 'Once',
                 default=>''
                 };
@@ -255,6 +255,17 @@ use App\Http\Controllers\Auths\AuthController;
                 '2'=> 'Per Session/Student',
                 '3'=> 'Anual',
                 '4'=> 'Buy off',
+                default=>''
+                };
+       return $role; 
+    }
+
+    function matchSchoolAdmissionStatus($sts){
+        $role =  match((string)$sts){
+                '0'=> 'Pending Payment',
+                '1'=> 'Waiting Approval',
+                '2'=> 'Admission Granted',
+                '3'=> 'Admission Denied',
                 default=>''
                 };
        return $role; 

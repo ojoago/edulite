@@ -20,4 +20,7 @@ class Admission extends Model
     public function setEmailAttribute($value){
         $this->attributes['email'] = strtolower($value);
     }
+    public function setContactPersonAttribute($value){
+        $this->attributes['contact_person'] = ucwords($value);
+    }
 }

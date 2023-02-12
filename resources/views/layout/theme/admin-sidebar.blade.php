@@ -467,6 +467,11 @@
                 <i class="bi bi-circle"></i><span>Admission List</span>
             </a>
         </li>
+        <li>
+            <a href="{{route('admission.process')}}">
+                <i class="bi bi-circle"></i><span>Process Admission</span>
+            </a>
+        </li>
 
     </ul>
 </li><!-- End Charts Nav -->

@@ -322,9 +322,13 @@ Route::middleware('schoolAuth')->group(function(){
     // admission 
     Route::view('admission-form', 'school.admission.admission-form')->name('school.admission');
     Route::post('admission-form', [AdmissionController::class, 'submitAdmission']);
+    Route::get('adit-admission-form/{id?}', [AdmissionController::class, 'loadAdmissionByPid'])->name('edit.admission');
+    Route::post('load-admission-by-pid', [AdmissionController::class, 'loadAdmissionDetail'])->name('load.admission.by.pid');
     Route::get('admission-fee', [AdmissionController::class, 'admissionFeeForm'])->name('admission.fee');
     // admission list 
     Route::view('admission-list', 'school.admission.admission-list')->name('admission.list');
+    Route::get('process-admission',[AdmissionController::class, 'loadAppliedAllAdmission'])->name('admission.process');
+    Route::post('process-admission',[AdmissionController::class, 'batchAdmission']);
     Route::get('load-admission', [AdmissionController::class, 'loadAppliedAdmission'])->name('admission.request');
     Route::get('load-denied-admission', [AdmissionController::class, 'loadDeniedAdmission'])->name('denied.admission');
     Route::post('grant-admission', [AdmissionController::class, 'grantAdmission'])->name('grant.admission');

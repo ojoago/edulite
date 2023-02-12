@@ -38,7 +38,7 @@
                             <th>S/N</th>
                             <th>Names</th>
                             <th>Admission Number</th>
-                            <th>Phone Number</th>
+                            <th>Contacts Person</th>
                             <th>Contacts</th>
                             <th>Class</th>
                             <th>Arm</th>
@@ -56,7 +56,7 @@
                             <th>S/N</th>
                             <th>Names</th>
                             <th>Admission Number</th>
-                            <th>Phone Number</th>
+                            <th>Contacts Person</th>
                             <th>Contacts</th>
                             <th>Class</th>
                             <th>Arm</th>
@@ -104,7 +104,7 @@
                     "data": "admission_number"
                 },
                 {
-                    "data": "gsm"
+                    "data": "contact_person"
                 },
                 {
                     "data": "contact_gsm"
@@ -145,7 +145,7 @@
                     "data": "admission_number"
                 },
                 {
-                    "data": "gsm"
+                    "data": "contact_person"
                 },
                 {
                     "data": "contact_gsm"

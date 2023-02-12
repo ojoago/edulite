@@ -233,3 +233,9 @@ function activeTermName()
 
         return $ntfn;
     }
+
+    // load class arm by class pid 
+    function loadClassArms($pid){
+       $data = ClassArm::where(['school_pid'=>getSchoolPid(),'class_pid'=>$pid])->get(['pid','arm']);
+       return $data;
+    }

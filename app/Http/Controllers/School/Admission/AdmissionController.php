@@ -13,12 +13,14 @@ use App\Http\Controllers\School\SchoolController;
 use App\Models\School\Admission\AdminssionHistory;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Student\StudentController;
-use App\Models\School\Framework\Admission\ActiveAdmission;
+use App\Models\School\Framework\Admission\AdmissionSetup;
 
 class AdmissionController extends Controller
 {
     private $pwd = 654321;
-
+    public function index($code=null){
+        dd('continue working');
+    }
     public function loadAppliedAdmission(){
         $cnd = ['a.school_pid' => getSchoolPid(),'a.status'=>1];
         return $this->loadAdmission($cnd);
@@ -38,13 +40,9 @@ class AdmissionController extends Controller
     private function loadAdmission($cnd){
         $data = DB::table("admissions as a")->join('classes as c','c.pid','a.class_pid')
                                             ->join('class_arms as ca','ca.pid','a.arm_pid')
-                                            ->leftJoin('school_parents as p','p.pid','a.parent_pid')
-                                            ->leftJoin('user_details as d','d.user_pid','p.user_pid')
-                                            ->leftJoin('users as u','u.pid','p.user_pid')
                                             ->where($cnd)
                                             ->select('admission_number','a.pid','a.status','a.created_at', 'a.fullname',
-                                                    'a.gsm','contact_gsm','contact_person','contact_email','class','arm',
-                                                    'u.gsm as mobile','d.fullname as names')->get();
+                                                    'a.gsm','contact_gsm','contact_person','contact_email','class','arm')->get();
 
         return datatables($data)
                     ->editColumn('date',function($data){
@@ -57,6 +55,37 @@ class AdmissionController extends Controller
                     ->make(true);
     }
     
+    public function loadAppliedAllAdmission(){
+        $class = DB::table('classes as c')
+                ->join('admission_setups as s','s.class_pid', 'c.pid')
+                ->join('active_admissions as a','a.admission_pid','s.admission_pid')
+                ->where(['a.school_pid'=>getSchoolPid()])->get(['c.pid','c.class']);
+        $data = Admission::where(['school_pid'=>getSchoolPid(),'status'=>1])->get(['admission_number', 'fullname', 'arm_pid', 'class_pid', 'pid', 'created_at']);
+        return view('school.admission.process-admission',compact('data','class'));
+    }
+
+    public function batchAdmission(Request $request){
+        $count = count($request->pid);
+        if($count==0){
+            return redirect()->back()->with('info','No Applicant Selected');
+        }
+        $n=0;
+        for($i=0;$i<$count; $i++){
+            if(isset($request->pid[$i]) && isset($request->class[$i]) && isset($request->arm[$i])){
+                $data = DB::table('admissions')->where(['school_pid' => getSchoolPid(), 'pid' => $request->pid[$i]])->first();
+                $data->class_pid = $request->class[$i];
+                $data->arm_pid = $request->arm[$i];
+                $sts = $this->grantingAdmission($data);
+                if($sts){
+                    $n++;
+                }
+            }
+        }
+        if($n>0){
+            return redirect()->back()->with('success',$n.' Admission Processed successfully');
+        }
+        return redirect()->back()->with('info','Selected at one class and class arm');
+    }
 
     public function grantAdmission(Request $request){
         $data = Admission::where(['school_pid'=>getSchoolPid(),'pid'=>base64Decode($request->pid)])->first();
@@ -72,10 +101,17 @@ class AdmissionController extends Controller
             'account_status' => 1,
             'password' => $this->pwd,
             'username' => $info->username ? AuthController::uniqueUsername($info->username): AuthController::uniqueUsername($info->firstname),
-            'email' => AuthController::findEmail($info->email) ? null: $info->email,
-            'gsm' => AuthController::findGsm($info->gsm) ? null: $info->gsm,
             'pid' => public_id(),
         ];
+        // if email is not empty and it exist does not exist 
+        if(!empty($info->email) && !AuthController::findEmail($info->email)){
+            $data['email'] = $info->email;
+        }
+        
+        // if gsm is not empty and it exist does not exist 
+        if(!empty($info->gsm) && !AuthController::findGsm($info->gsm)){
+            $data['gsm'] =  $info->gsm;
+        }
         $detail = [
             'firstname' => $info->firstname,
             'lastname' => $info->lastname,
@@ -119,7 +155,7 @@ class AdmissionController extends Controller
             'session_pid'=>$info->session_pid, 
             'term_pid'=>$info->term_pid,
             'staff_pid'=>$info->staff_pid, 
-            'contact_person'=>$info->contaact_person, 
+            'contact_person'=>$info->contact_person, 
             'contact_gsm'=>$info->contact_gsm, 
             'contact_email'=>$info->contact_email
         ];
@@ -140,8 +176,14 @@ class AdmissionController extends Controller
                     if($studentDetails){
                         $history['student_pid'] = $studentClass['student_pid'] = $studentDetails->pid;
                         $this->createAdmissionHistory($history);
-                        $info->status = 2;
-                        $info->save();
+                        Admission::where(['school_pid'=>getSchoolPid(),'pid'=>$info->pid])->update(['status'=>2]);
+                        // dd($up);
+                        // $info->status = 2;
+                        // $info->save();
+                        // send mail to parent
+                        // if($info->contact_email){} 
+                        // if($info->email){} 
+                        //$data['contact_email']
                         return StudentController::createStudentClassRecord($studentClass);
                     }
                 }
@@ -169,6 +211,7 @@ class AdmissionController extends Controller
         return $data->save();
     }
 
+    // submit admission form 
     public function submitAdmission(Request $request){
         $params = DB::table('active_admissions as a')->join('admission_details as d', 'd.pid', 'a.admission_pid')->where(['a.school_pid' => getSchoolPid()])->first(['d.to','d.pid']);
         if(!$params){
@@ -202,9 +245,9 @@ class AdmissionController extends Controller
                         $param->where('pid', '!=', $request->pid)->where('school_pid', getSchoolPid());
                     })
                 ], //|||unique:users,email
-                'contact_gsm' => 'required_without:parent_pid|digits:11',
+                'contact_gsm' => 'required_without:parent_pid|nullable|digits:11',
                 'contact_email' => 'nullable|email',
-                'contact_person' => 'required_without:parent_pid|string',
+                'contact_person' => 'required_without:parent_pid|nullable|string',
                 'gender' => 'required|int',
                 'dob' => 'required|date',
                 'religion' => 'required',
@@ -242,6 +285,7 @@ class AdmissionController extends Controller
         );
 
         if(!$validator->fails()){
+            $amount = AdmissionSetup::where(['class_pid' => $request->class_pid,'admission_pid'=>$params->pid,'school_pid'=>getSchoolPid()])->pluck('amount')->first();
             $applicant = [
                 'school_pid'=>getSchoolPid(),
                 'pid'=>$request->pid ?? public_id(),
@@ -249,8 +293,8 @@ class AdmissionController extends Controller
                 'lastname'=>$request->lastname,
                 'othername'=>$request->othername,
                 'username' => $request->username ?? self::uniqueUsername($request->firstname),
-                'state'=>$request->state,
-                'lga'=>$request->lga,
+                // 'state'=>$request->state,
+                // 'lga'=>$request->lga,
                 'dob'=>$request->dob,
                 'gender'=> $request->gender,
                 'religion'=>$request->religion,
@@ -261,38 +305,86 @@ class AdmissionController extends Controller
                 'gsm'=>$request->gsm,
                 'email'=>$request->email,
                 'category_pid'=>$request->category_pid,
-                'class_pid'=>$request->class_pid,
-                'arm_pid'=>$request->arm_pid,
                 'session_pid'=>activeSession(),
                 'term_pid'=>activeTerm(),
                 'staff_pid'=>getSchoolUserPid(),
                 'admission_pid'=>$params->pid,
+                'status'=> ($amount > 0) ? 0:1,
             ];
             if ($request->parent_pid) {
                 $applicant['parent_pid'] = $request->parent_pid;
+                if (empty($applicant['contact_person'])) {
+                    $prnt = $this->loadParentData($applicant['parent_pid']);
+                    if($prnt){
+                        $applicant['contact_person']= $prnt->fullname;
+                        $applicant['contact_email']= $prnt->email;
+                        $applicant['contact_gsm']= $prnt->gsm;
+                    }
+                }
             }
+            $msg = 'Applicant admission created successfully!!!';
             if (!$request->pid) {
                 $applicant['admission_number'] = self::applicantId();
-            }else{
-                $applicant['admission_number'] = $request->admission_number;
+                $msg = 'Applicant admission updated successfully!!!';
+                $applicant['class_pid'] = $request->class_pid;
+                $applicant['arm_pid'] = $request->arm_pid;
+                $applicant['state'] = $request->state;
+                $applicant['lga'] = $request->lga;
+            } else{
+                // $applicant['admission_number'] = $request->admission_number;
+                $applicant['status'] = $this->getAdmissionStatus($request->pid);
+                if (isset($request->class_pid)) {
+                    $applicant['class_pid'] = $request->class_pid;
+                }
+                if (isset($request->arm_pid)) {
+                    $applicant['arm_pid'] = $request->arm_pid;
+                }
+
+                if (isset($request->state)) {
+                    $applicant['state'] = $request->state;
+                }
+                if (isset($request->lga)) {
+                    $applicant['lga'] = $request->lga;
+                }
             }
             if ($request->passport) {
-                $name = ($request->admission_number ?? $applicant['admission_number']) . '-passport';
+                $name = 'AP '.($applicant['admission_number'] ?? $applicant['pid']) . '-passport';
                 $applicant['passport'] = saveImg(image: $request->file('passport'), name: $name);
             }
             $applicant['fullname'] = self::concatFullname($applicant);
             $sts = $this->updateOrCreateAdmission($applicant);
             if($sts){
-                return response()->json(['status' => 1, 'message' => 'Applicant admission created successfully!!!', 'admission_number'=> $applicant['admission_number']]);
+                return response()->json(['status' => 1, 'message' => $msg, 'admission_number'=> $applicant['admission_number'] ?? $applicant['pid'] ]);
             }
             return response()->json(['status' =>'error', 'message' => 'Something Went Wrong']);
         }
         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
 
     }
+    private function loadParentData($pid){
+        try{
+            $data = DB::table('school_parents as p')
+            ->join('users as u', 'u.pid', 'p.user_pid')
+                ->join('user_details as d', 'd.user_pid', 'p.user_pid')
+                ->where(['p.school_pid' => getSchoolPid(), 'p.pid' => $pid])
+                ->first(['d.fullname', 'u.gsm', 'u.email']);
+            return $data;
+        }catch(\Throwable $e){
+            logError($e->getMessage());
+            return false;
+        }
+    }
+    private function getAdmissionStatus($pid){
+        try{
+            return Admission::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->pluck('status')->first();
+        }catch(\Throwable $e){
+            logError($e->getMessage());
+            return false;
+        }
+    }
     private function updateOrCreateAdmission(array $data){
         try{
-            $result = Admission::updateOrCreate(['admission_number'=>$data['admission_number']],$data);
+            $result = Admission::updateOrCreate(['pid'=>$data['pid']],$data);
             return $result;
         }catch(\Throwable $e){
             logError($e->getMessage());
@@ -303,11 +395,19 @@ class AdmissionController extends Controller
         if ($request->has('param')) {
             $applicantNumber = $request->input('param');
         }
-        $data = DB::table('admissions as a')->join('admission_setups as s', 's.admission_pid', 'a.admission_pid')->leftJoin('school_parents as p','p.pid','a.parent_pid')
-                            ->where(['a.school_pid' => getSchoolPid(), 'admission_number'=> $applicantNumber])->first();
-        // $adm = Admission::where('admission_number',$applicantNumber)->first();
-        dd($data);
+  
+        $data = DB::table('admissions as a')->join('admission_setups as s',function($join){
+                                            $join->on('s.admission_pid', 'a.admission_pid')->on('s.class_pid', 'a.class_pid');
+                                            })
+                            ->where([['a.school_pid', getSchoolPid()], ['admission_number', $applicantNumber]])
+                            ->orWhere([['a.school_pid' , getSchoolPid()], ['a.pid' , $applicantNumber]])
+                            ->first(['contact_person', 'a.fullname', 
+                                        'contact_email', 'admission_number', 'a.address', 'a.dob',
+                                        'amount','gender','religion', 'a.passport', 'a.contact_gsm', 'a.status','a.pid'
+                                    ]);
+        return view('school.admission.admission-payment',compact('data'));
     }
+
 
     public static function applicantId()
     {
@@ -326,7 +426,7 @@ class AdmissionController extends Controller
         if (empty($firstname)) {
             return;
         }
-        $rm = ['#', ' ', '`', "'", '#', '^', '%', '$', '', '*', '(', ')', ';', '"', '>', '<', '/', '?', '+', ',', ':', "|", '[', ']', '{', '}', '~'];
+        $rm = [' ',"'",];
         $firstname = str_replace($rm, '', trim($firstname));
         $count = Admission::where('username', 'like', '%' . $firstname . '%')
             ->count('id');
@@ -340,5 +440,18 @@ class AdmissionController extends Controller
     {
         $names =  $data['lastname'] . ' ' . $data['firstname'] . ' ' . $data['othername'];
         return ucwords(trim($names));
+    }
+
+
+    // load admission for editing 
+    public function loadAdmissionByPid($pid=null){
+        return view('school.admission.admission-form',compact('pid'));
+    }
+
+    public function loadAdmissionDetail(Request $request){
+        $data = DB::table('admissions')
+        ->where(['school_pid' => getSchoolPid(), 'pid' => base64Decode($request->pid)])
+            ->first();
+        return response()->json($data);
     }
 }

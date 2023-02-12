@@ -374,6 +374,7 @@ class Select2Controller extends Controller
         $result = DB::table('classes as c')
                         ->join('admission_setups as as','c.pid','as.class_pid')
                         ->join('admission_details as ad','ad.pid','as.admission_pid')
+                        ->join('active_admissions  as t', 't.admission_pid','as.admission_pid')
                         ->where(['ad.school_pid' => getSchoolPid()])
             ->where('class', 'like', '%' . $request->q . '%')
             ->limit(5)->orderBy('class')->get(['c.pid', 'c.class']); //
@@ -381,6 +382,7 @@ class Select2Controller extends Controller
         $result = DB::table('classes as c')
                     ->join('admission_setups as as', 'c.pid', 'as.class_pid')
                     ->join('admission_details as ad', 'ad.pid', 'as.admission_pid')
+                    ->join('active_admissions  as t', 't.admission_pid', 'as.admission_pid')
                     ->where(['ad.school_pid' => getSchoolPid()])
                     ->limit(5)->orderBy('class')->get(['c.pid', 'c.class']); //
         if (!$result) {

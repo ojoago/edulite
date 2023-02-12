@@ -4,7 +4,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">{{activeSessionName()}} Student Admission, {{activeTermName()}}</h5>
+        <h5 class="card-title">{{activeSessionName()}} Admission, {{activeTermName()}}</h5>
 
         <!-- Multi Columns Form -->
         <form class="row g-3" id="createStudentForm">
@@ -110,7 +110,6 @@
                 <select name="class_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="classSelect2" required>
                 </select>
                 <input name="pid" id="pid" type="hidden">
-                <input name="reg_number" id="reg_number" type="hidden">
                 <input name="user_pid" id="user_pid" type="hidden">
                 <p class="text-danger class_pid_error"></p>
             </div>
@@ -142,7 +141,7 @@
                 <p class="text-danger contact_email_error"></p>
             </div>
             <div class="text-center">
-                <button type="button" class="btn btn-primary" id="createStudentBtn">Create</button>
+                <button type="button" class="btn btn-primary " id="createStudentBtn">Create</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
             </div>
         </form>
@@ -163,12 +162,13 @@
         FormMultiSelect2('#stateSelect2', 'state', 'Select State of Origin')
         FormMultiSelect2('#parentSelect2', 'parent', 'Select Parent/Guardian')
 
-        FormMultiSelect2('#classSelect2', 'admission-class', 'Select Class')
 
         $('#stateSelect2').change(function() {
             var id = $(this).val();
             FormMultiSelect2Post('#lgaSelect2', 'state-lga', id, 'Select Lga of Origin')
         });
+
+        FormMultiSelect2('#classSelect2', 'admission-class', 'Select Class')
 
         // class arm dropdown 
         $('#classSelect2').change(function() {
@@ -182,7 +182,7 @@
             data = await submitFormAjax('createStudentForm', 'createStudentBtn', route);
             if (data) {
                 if ((data.status == 1) && data.admission_number) {
-                    let url = "admission-fee?param=" + data.admission_number;
+                    let url = "{{URL::to('/admission-fee?param=')}}" + data.admission_number;
                     location.href = url;
                 }
             }
@@ -190,16 +190,10 @@
         // create school category 
         let pid = "<?php echo $pid ?? '' ?>"
         if (pid != '') {
-            $('#createStudentBtn').text('Update')
-            Swal.fire({
-                icon: 'info',
-                title: '',
-                text: 'Please note that update will not affect student class details',
-                footer: '<b class="text-danger">So, Skip that Part<b>'
-            })
+            $('.overlay').show();
             $('.readOnlyProp').attr('readonly', true);
             $.ajax({
-                url: "{{route('load.student.details.by.id')}}",
+                url: "{{route('load.admission.by.pid')}}",
                 dataType: "JSON",
                 data: {
                     pid: pid,
@@ -208,7 +202,6 @@
                 // cache: true,
                 type: "post",
                 success: function(data) {
-                    // console.log(data);
                     $('#firstname').val(data.firstname);
                     $('#lastname').val(data.lastname);
                     $('#othername').val(data.othername);
@@ -219,13 +212,17 @@
                     $('#address').val(data.address);
                     $('#user_pid').val(data.user_pid);
                     $('#pid').val(data.pid);
-                    $('#reg_number').val(data.reg_number);
+                    $('#contact_person').val(data.contact_person);
+                    $('#contact_gsm').val(data.contact_gsm);
+                    $('#contact_email').val(data.contact_email);
                     $('#gender').val(data.gender).trigger('change');
                     // $('#titleSelect2').val(data.title).trigger('change');
                     $('#religion').val(data.religion).trigger('change');
                     $('#studentType').val(data.type).trigger('change');
                     $('#stateSelect2').val(data.state).trigger('change');
                     $('#lgaSelect2').val(data.lga).trigger('change');
+                    $('#createStudentBtn').text('Update').addClass('btn-warning text-white');
+                    $('.overlay').hide();
                 }
             });
         }
