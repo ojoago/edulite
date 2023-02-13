@@ -18,8 +18,8 @@ class AuthController extends Controller
     // }
     public function signUp(Request $request){
         $request->validate([
-            'email'=>'required|email|unique:users,email',
-            'username'=>'required|unique:users,username',
+            'email'=>'required|email|unique:users,email|regex:/^[a-zA-Z0-9\s]+$/',
+            'username'=> 'required|unique:users,username|regex:/^[a-zA-Z0-9\s]+$/',
             'password'=>'required|min:4|confirmed'
         ]);
         $data = [

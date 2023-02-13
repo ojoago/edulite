@@ -225,6 +225,7 @@ use App\Http\Controllers\Auths\AuthController;
                 '1'=> 'Active Student',
                 '3'=> 'Left School',
                 '4'=> 'Suspended',
+                '2'=> 'Graduated',
                 default=>''
                 };
        return $role; 
@@ -253,7 +254,7 @@ use App\Http\Controllers\Auths\AuthController;
         $role =  match((string)$sts){
                 '1'=> 'Per term/student',
                 '2'=> 'Per Session/Student',
-                '3'=> 'Anual',
+                '3'=> 'Annual',
                 '4'=> 'Buy off',
                 default=>''
                 };

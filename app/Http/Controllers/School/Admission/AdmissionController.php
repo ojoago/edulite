@@ -324,7 +324,7 @@ class AdmissionController extends Controller
             }
             $msg = 'Applicant admission created successfully!!!';
             if (!$request->pid) {
-                $applicant['admission_number'] = self::applicantId();
+                $applicant['admission_number'] = strtoupper(self::applicantId());
                 $msg = 'Applicant admission updated successfully!!!';
                 $applicant['class_pid'] = $request->class_pid;
                 $applicant['arm_pid'] = $request->arm_pid;
@@ -354,12 +354,32 @@ class AdmissionController extends Controller
             $applicant['fullname'] = self::concatFullname($applicant);
             $sts = $this->updateOrCreateAdmission($applicant);
             if($sts){
+                if (!$request->pid) {
+                    $account = [
+                        'pid' => $applicant['pid'],
+                        'username' => $applicant['admission_number'],
+                    ];
+                    $this->createApplicantLogin($account);
+                }
                 return response()->json(['status' => 1, 'message' => $msg, 'admission_number'=> $applicant['admission_number'] ?? $applicant['pid'] ]);
             }
             return response()->json(['status' =>'error', 'message' => 'Something Went Wrong']);
         }
         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
 
+    }
+
+    private function createApplicantLogin(array $data){
+        try{
+            $userData = ['username'=>$data['username'], 'password'=>$this->pwd,'account_status'=>1];
+            $user = AuthController::createUser($userData);
+            if($user){
+               return SchoolController::createSchoolUser(userId:$user->pid,pid:$data['pid'],role:601);
+            }
+        }catch(\Throwable $e){
+            logError($e->getMessage());
+            return false;
+        }
     }
     private function loadParentData($pid){
         try{

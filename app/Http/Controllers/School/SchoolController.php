@@ -89,8 +89,12 @@ class SchoolController extends Controller
         ->join('students as s', 's.parent_pid', 'p.pid')
             ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->distinct('p.pid')->count('p.id');
         $data = ['staff' => $staff, 'students' => $students, 'riders' => $riders, 'parents' => $parents];
+        
+        // dd($this->growthStatistics());
         return view('school.dashboard.admin-dashboard', compact('data'));
     }
+
+
     private function parentLogin(){
         $data = DB::table('students as s')->join('class_arms as a','a.pid','s.current_class_pid')
                                         ->join('sessions as i','i.pid','current_session_pid')
@@ -460,7 +464,38 @@ class SchoolController extends Controller
         return 'Failed to link parent to School';
     }
 
-    
+    // statistics for graph 
+    private function studentStatistics()
+    {
+        $sts = DB::table('students as s')->join('user_details as d', 'd.user_pid', 's.user_pid')
+        ->join('class_arms as a', 'a.pid', 's.current_class_pid')
+        ->join('classes as c', 'c.pid', 'a.class_pid')
+        ->select(DB::raw('COUNT(s.id) AS count,c.class,d.gender'))
+        ->where(['s.school_pid' => getSchoolPid()])->whereIn('s.status', [1, 4])->groupBy(['c.class', 'd.gender'])->get();
+        return $sts;
+    }
+    private function growthStatistics()
+    {
+        $sts = DB::table('students as s')
+        ->select(DB::raw('COUNT(s.id) AS count,YEAR(created_at) AS year'))
+        ->where(['school_pid' => getSchoolPid()])->groupBy(DB::raw('YEAR(created_at)'))->orderBy('created_at')->get();
+        return $sts;
+    }
+
+    // form master 
+    private function staffClasses(){
+
+    }
+    private function staffSubjects(){
+
+    }
+
+    // parent 
+
+
+    // student 
+
+    // rider 
 }
 
    

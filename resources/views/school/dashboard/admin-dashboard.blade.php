@@ -100,10 +100,17 @@
                 </div>
             </a>
         </div>
-
     </div>
 
 
+</div>
+<div class="row">
+    <div class="col-md-7">
+        column C
+    </div>
+    <div class="col-md-5">
+        trend C
+    </div>
 </div>
 <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
