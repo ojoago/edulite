@@ -73,6 +73,7 @@ class SchoolRiderController extends Controller
             $data = [
                 'gsm' => $request->gsm,
                 'password' => $this->pwd,
+                'account_status' => 1,
                 'username' => $request->username ?? AuthController::uniqueUsername($request->firstname),
             ];
             if($request->email){

@@ -17,10 +17,10 @@ use App\Http\Controllers\School\Student\StudentController;
 class StudentRegistrationController extends Controller
 {
     private  $pwd = 654321;
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -38,18 +38,18 @@ class StudentRegistrationController extends Controller
     public function registerStudent(Request $request){
          
         $validator = Validator::make($request->all(),[
-            'firstname'=> 'required|string|min:3|regex:/^[a-zA-Z0-9\s]+$/',
-            'lastname'=> 'required|string|min:3|regex:/^[a-zA-Z0-9\s]+$/',
-            'othername'=> 'nullable|string|regex:/^[a-zA-Z0-9\s]+$/',
+            'firstname'=> "required|string|min:3|regex:/^[a-zA-Z0-9'\s]+$/",
+            'lastname'=> "required|string|min:3|regex:/^[a-zA-Z0-9'\s]+$/",
+            'othername'=> "nullable|string|regex:/^[a-zA-Z0-9'\s]+$/",
             'gsm'=>['nullable','digits:11',
                                 Rule::unique('users')->where(function($param) use ($request){
                                     $param->where('pid', '<>', $request->user_pid);
                                 })],
-            'username'=>['nullable', 'string', 'min:3', 
+            'username'=>['nullable', 'string', 'min:3', "regex:/^[a-zA-Z0-9\s]+$/", 
                                 Rule::unique('users')->where(function ($param) use ($request) {
                                         $param->where('pid','<>', $request->user_pid);
                                     })],
-            'email'=>['nullable', 'string', 'email', 
+            'email'=>['nullable', 'string', 'email', "regex:/^[a-zA-Z0-9\s]+$/",
                                 Rule::unique('users')->where(function ($param) use ($request) {
                                         $param->where('pid', '<>', $request->user_pid);
                                     })],//|||unique:users,email

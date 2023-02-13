@@ -634,6 +634,9 @@ Route::middleware('schoolAuth')->group(function(){
     // parent activities 
     Route::post('ward-login/{pid}', [ParentController::class, 'wardLogin'])->name('ward.login');
 
+
+    // payment receipt 
+
 });
 
 
@@ -645,3 +648,5 @@ Route::post('admission',[AdmissionController::class,'createAdmission']);
 
 // hireworthy 
 Route::view('hire-worthy','add-on.hire-worthy')->name('hire.worthy')->middleware('auth');
+// available for hire
+Route::view('hire-me','add-on.hire-worthy')->name('hire.me')->middleware('auth');

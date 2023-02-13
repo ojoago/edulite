@@ -13,14 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('applicant_invoices', function (Blueprint $table) {
+        Schema::create('awards', function (Blueprint $table) {
             $table->id();
-            $table->string('school_pid')->nullable();
-            $table->string('applicant_pid');
-            $table->string('pid')->unique();
-            $table->float('amount')->default(0);
-            $table->integer('status')->comment('0 not paid,1 paid, 2 processing')->default(0);
-            $table->string('applicant_pid');
             $table->timestamps();
         });
     }
@@ -32,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('applicant_invoices');
+        Schema::dropIfExists('awards');
     }
 };
