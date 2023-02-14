@@ -59,9 +59,17 @@ use App\Http\Controllers\Auths\AuthController;
             session(['schoolName'=>null]); //to school name to null
         }
     }
+
     function getSchoolName(){ // get school name
         return session('schoolName');
     }
+    function setSchoolCode($name = null){ //set school code to session
+        session(['schoolCode' => $name]); 
+    }
+    function getSchoolCode(){ //set school code to session
+        return session('schoolCode');
+    }
+
      function setSchoolLogo($logo=null){ //set school logo
         session(['schoolLogo'=>$logo]); 
     }

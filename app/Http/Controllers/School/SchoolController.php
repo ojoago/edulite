@@ -57,6 +57,8 @@ class SchoolController extends Controller
         setSchoolLogo($schoolUser->school_logo);
         setDefaultLanding(true);
         setUserActiveRole($schoolUser->role);
+        $code = self::getSchoolCode() ?? self::getSchoolHandle();
+        setSchoolCode($code);
         // dd(getUserActiveRole());
         // check user role and redirect to a corresponding dashboard
         return redirect()->route('my.school.dashboard');

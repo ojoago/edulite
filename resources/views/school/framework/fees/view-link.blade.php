@@ -1,0 +1,1 @@
+<a href="{{route('payment.invoice.receipt',['invoice'=>($data->invoice_number)])}}">{{$data->invoice_number}}</a>

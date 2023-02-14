@@ -13,8 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('awards', function (Blueprint $table) {
+        Schema::create('award_keys', function (Blueprint $table) {
             $table->id();
+            $table->string('award');
+            $table->string('pid')->unique();
+            $table->string('school_pid');
+            $table->foreign('school_pid')->references('pid')->on('schools');
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }
@@ -26,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('awards');
+        Schema::dropIfExists('award_keys');
     }
 };

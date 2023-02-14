@@ -307,6 +307,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-paid-invoice', [FeeItemController::class, 'loadInvoicePayment'])->name('load.paid.invoice');
     Route::post('load-student-invoice-by-pid', [FeeItemController::class, 'loadStudentInvoiceByPid'])->name('load.student.invoice.by.pid');
     Route::post('process-student-invoice', [FeeItemController::class, 'processStudentInvoice'])->name('process.student.invoice');
+    Route::get('payment-receipt/{invoice?}', [FeeItemController::class, 'loadPaymentInvoice'])->name('payment.invoice.receipt');
 
     // admission config
     Route::view('admission-config', 'school.framework.admission.admission-config')->name('admission.config');

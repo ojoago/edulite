@@ -301,8 +301,12 @@
         })
 
 
-        $('#acceptPaymentBtn').click(function() {
-            submitFormAjax('processStudentInvoiceForm', 'acceptPaymentBtn', "{{route('process.student.invoice')}}");
+        $('#acceptPaymentBtn').click(async function() {
+            data = await submitFormAjax('processStudentInvoiceForm', 'acceptPaymentBtn', "{{route('process.student.invoice')}}");
+            if (data.status === 1) {
+                let url = "{{URL::to('payment-receipt')}}/" + data.invoice_number;
+                location.href = url;
+            }
         });
         // link rider to student  
         multiSelect2('#lstcrStudentSelect2', 'linkStudentToRiderModal', 'student', 'Select Student');
