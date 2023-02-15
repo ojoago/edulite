@@ -162,9 +162,11 @@
 <section class="basic_section">
     <div class="basic">
         <h1><span class="ed-color">Edu</span><span class="lite-color">Lite</span></h1>
-        <p>Upgrade your school with edulite suite, and ease the stress of school manual process at less cost. get accurate and accessible information about students, staff remotely. Allow guardian/parent keep track of their childrens performance easily and at their own time and convenience. EduLite manage school process such as report card, performance charts, attendance, student promotion, automated principal comment, hostel/portals, student pick up rider, event notification such as holidays, notify parent student exam timetable</p>
+        <p>Upgrade your school with EduLite, and ease the stress of school manual process at less cost. get accurate and accessible information about students, staff remotely. 
+            Allow guardian/parent keep track of their childrens performance easily and at their own time and convenience. EduLite manage school process such as report card,
+             performance charts, attendance, student promotion, automated principal comment, hostel/portals, student pick up rider, event notification such as holidays, notify parent student exam timetable</p>
         <p>
-            Edulite help school manage various tasks of school staff (admin, teacher, portal, hostel, Student pick up rider), parent, student.
+            EduLite help school manage various tasks of school staff (admin, teacher, portal, hostel, Student pick up rider), parent, student.
             it helps to generate and organize reports, monitor activities etc.
 
         <ul>
@@ -185,6 +187,9 @@
             </li>
             <li>
                 Event, Birthday, holiday etc
+            </li>
+            <li>
+                Student Awards
             </li>
         </ul>
         </p>

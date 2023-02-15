@@ -22,10 +22,10 @@ use Illuminate\Validation\Rule;
 class StaffController extends Controller
 {
     private $pwd = 1234567;
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -75,9 +75,9 @@ class StaffController extends Controller
     }
     
     public function loadStaffProfile(Request $request){
-        $data = DB::table('users as u')->join('user_details as d','d.user_pid','u.pid')
+        $data = DB::table('users as u')->leftjoin('user_details as d','d.user_pid','u.pid')
                         ->join('school_staff as s','s.user_pid','u.pid')
-                        ->where(['school_pid'=>getSchoolPid(),'s.pid'=>base64Decode($request->pid)])
+                        ->where(['s.school_pid'=>getSchoolPid(),'s.pid'=>base64Decode($request->pid)])
                         ->select('gsm','email','username','fullname','address','title','dob','gender','religion','lga','state','role', 'passport','signature','stamp','staff_id')->first();
         return response()->json(formatStaffProfile($data));
     }
@@ -393,8 +393,8 @@ class StaffController extends Controller
 
 
     public static function staffUniqueId(){
-        $id = self::countStaff() + 1;
-        $id =strlen($id) == 1 ? '0'.$id : $id;
+        $id = sprintNumber(self::countStaff() + 1);
+        // $id =strlen($id) == 1 ? '0'.$id : $id;
         return  (SchoolController::getSchoolCode() ?? SchoolController::getSchoolHandle()) .'/'.strtoupper(date('yM')).$id;
     }
     

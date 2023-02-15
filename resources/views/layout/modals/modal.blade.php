@@ -679,18 +679,20 @@
                         <input type="text" class="form-control form-control-sm" name="course" id="course" placeholder="e.g Economic Social Studies">
                         <p class="text-danger course_error"></p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label class="form-label">Years of Expirence</label>
                         <input type="number" class="form-control form-control-sm" name="years" id="course" placeholder="e.g 2">
                         <p class="text-danger course_error"></p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label class="form-label">Open For Employment?</label><br>
                         Open <input type="radio" class="radio" name="status" id="status" value="1">
                         Close <input type="radio" class="radio" name="status" id="status" value="0">
                         <p class="text-danger status_error"></p>
                     </div>
-                    <div class="col-md-4">
+                    
+                    <label for="" class="text-center">Prefered state/Area you want to be employed</label>
+                    <div class="col-md-6">
                         <label class="form-label">State</label>
                         <select name="state" id="hireMeStateSelect2" style="width: 100%;" class="form-control form-control-sm">
                         </select>
@@ -702,14 +704,9 @@
                         </select>
                         <p class="text-danger state_error"></p>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Area</label>
-                        <select name="area" id="hireMeStateSelect2" style="width: 100%;" class="form-control form-control-sm">
-                        </select>
-                        <p class="text-danger state_error"></p>
-                    </div>
+                    
                     <div class="col-md-12">
-                        <label class="form-label">Area of interest</label>
+                        <label class="form-label">Subject of interest</label>
                         <select name="subject[]" id="areaSelect2" multiple="multiple" style="width: 100%;" class="form-control form-control-sm">
                         </select>
                         <p class="text-danger subject_error"></p>

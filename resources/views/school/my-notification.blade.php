@@ -12,7 +12,7 @@
                         <tr>
                             <th width="5%">S/N</th>
                             <th>Message</th>
-                            <th>time</th>
+                            <th>When (Time)</th>
                         </tr>
                     </thead>
                     <tbody>

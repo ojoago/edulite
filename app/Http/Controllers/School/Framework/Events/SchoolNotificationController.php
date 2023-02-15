@@ -39,7 +39,7 @@ class SchoolNotificationController extends Controller
     }
     public function myNotification(){
         $notification = loadRecentNotification();
-        return view('school.notification',compact('notification'));
+        return view('school.my-notification',compact('notification'));
     }
 
     public function createSchoolNotification(Request $request){
