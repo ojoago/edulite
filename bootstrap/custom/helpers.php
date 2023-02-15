@@ -269,6 +269,15 @@ use App\Http\Controllers\Auths\AuthController;
        return $role; 
     }
 
+    function matchInvoiceStatus($sts){
+        $role =  match((string)$sts){
+                '0'=> 'Pending Payment',
+                '1'=> 'Paid',
+                '2'=> 'Incomplete payment',
+                default=>''
+                };
+       return $role; 
+    }
     function matchSchoolAdmissionStatus($sts){
         $role =  match((string)$sts){
                 '0'=> 'Pending Payment',
@@ -382,6 +391,9 @@ function date_diff_weekdays($from, $to)
     return '';
     }
 
+    function sprintNumber($num,$pre=3){
+       return trim(sprintf("%0{$pre}d\n", $num));
+    }
     function justDate(){
         return date('Y-m-d');
     }

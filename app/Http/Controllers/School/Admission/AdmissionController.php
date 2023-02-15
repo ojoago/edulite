@@ -21,6 +21,10 @@ class AdmissionController extends Controller
     public function index($code=null){
         dd('continue working');
     }
+    public function loadIncompletAdmission(){
+        $cnd = ['a.school_pid' => getSchoolPid(),'a.status'=>0];
+        return $this->loadAdmission($cnd);
+    }
     public function loadAppliedAdmission(){
         $cnd = ['a.school_pid' => getSchoolPid(),'a.status'=>1];
         return $this->loadAdmission($cnd);
@@ -415,7 +419,6 @@ class AdmissionController extends Controller
         if ($request->has('param')) {
             $applicantNumber = $request->input('param');
         }
-  
         $data = DB::table('admissions as a')->join('admission_setups as s',function($join){
                                             $join->on('s.admission_pid', 'a.admission_pid')->on('s.class_pid', 'a.class_pid');
                                             })
@@ -431,9 +434,9 @@ class AdmissionController extends Controller
 
     public static function applicantId()
     {
-        $id = self::countStudent() + 1;
-        $id = strlen($id) == 1 ? '0' . $id : $id;
-        return (SchoolController::getSchoolCode() ?? SchoolController::getSchoolHandle()) . '/' . strtoupper(date('y')) . $id; // concatenate shool handle with student id
+        $id = sprintNumber(self::countStudent() + 1);
+        // $id = strlen($id) == 1 ? '0' . $id : $id;
+        return (SchoolController::getSchoolCode() ?? SchoolController::getSchoolHandle()) . '/' . strtoupper(date('y')) . $id; // concatenate school handle with student id
     }
     public static function countStudent()
     {

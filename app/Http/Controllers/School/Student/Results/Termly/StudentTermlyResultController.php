@@ -195,12 +195,12 @@ class StudentTermlyResultController extends Controller
                     ->where(['sr.class_param_pid' => $param, 'seated' => 1]); //->get()->dd();
                 $results = DB::table('student_class_results as r')
                     ->join('student_class_score_params  as srp', 'srp.pid', 'r.class_param_pid')
-                    ->join('terms  as t', 't.pid', 'srp.term_pid')
-                    ->join('sessions  as s', 's.pid', 'srp.session_pid')
-                    ->join('class_arms  as a', 'a.pid', 'srp.arm_pid')
-                    ->leftjoin('school_staff  as st', 'st.pid', 'srp.teacher_pid')
-                    ->leftjoin('user_details  as d', 'd.user_pid', 'st.user_pid')
-                    ->join('active_term_details  as atm', function ($join) {
+                    ->join('terms as t', 't.pid', 'srp.term_pid')
+                    ->join('sessions as s', 's.pid', 'srp.session_pid')
+                    ->join('class_arms as a', 'a.pid', 'srp.arm_pid')
+                    ->leftjoin('school_staff as st', 'st.pid', 'srp.teacher_pid')
+                    ->leftjoin('user_details as d', 'd.user_pid', 'st.user_pid')
+                    ->join('active_term_details as atm', function ($join) {
                         $join->on('atm.term_pid', 'srp.term_pid')->on('atm.session_pid', 'srp.session_pid');
                     })
                     // ->leftJoin('attendances as ad','')

@@ -7,7 +7,7 @@
         <h5 class="card-title">{{activeSessionName()}} Admission, {{activeTermName()}}</h5>
 
         <!-- Multi Columns Form -->
-        <form class="row g-3" id="createStudentForm">
+        <form class="row g-3" id="createStudentForm" name="createStudentForm">
             @csrf
             <div class="col-md-4">
                 <label for="firstname" class="form-label">First-Name</label>
@@ -141,8 +141,8 @@
                 <p class="text-danger contact_email_error"></p>
             </div>
             <div class="text-center">
-                <button type="button" class="btn btn-primary " id="createStudentBtn">Create</button>
-                <button type="reset" class="btn btn-secondary">Reset</button>
+                <button type="button" class="btn btn-primary " id="createStudentBtn">Submit</button>
+                <button type="reset" class="btn btn-secondary" form="createStudentForm">Reset</button>
             </div>
         </form>
         <!-- End Multi Columns Form -->

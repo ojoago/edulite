@@ -271,8 +271,8 @@ class StudentController extends Controller
 
     public static function studentUniqueId()
     {
-        $id = self::countStudent() + 1;
-        $id = strlen($id) == 1 ? '0' . $id : $id;
+        $id = sprintNumber(self::countStudent() + 1);
+        // $id = strlen($id) == 1 ? '0' . $id : $id;
         return (SchoolController::getSchoolCode() ?? SchoolController::getSchoolHandle()) . '/' . strtoupper(date('yM')) . $id; // concatenate shool handle with student id
     }
     public static function getStudentDetailBypId($pid)

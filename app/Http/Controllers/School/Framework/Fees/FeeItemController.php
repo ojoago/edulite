@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\School\Framework\Fees;
 
 use Illuminate\Http\Request;
+use App\Models\School\School;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -654,21 +655,33 @@ class FeeItemController extends Controller
         $count = StudentInvoicePayment::where('school_pid',getSchoolPid())
                                         ->where('invoice_number', 'like', '%' . $invoiceNumber . '%')
                                         ->count('id');
-        return getSchoolCode(). $invoiceNumber . $count+1;
+        return getSchoolCode(). $invoiceNumber . sprintNumber($count+1);
     }
 
     public function loadPaymentInvoice($id){
-        $invoice = StudentInvoicePayment::where(['invoice_number'=>$id,'school_pid'=>getSchoolPid()])->first();
+        $invoiceDetails = DB::table('student_invoice_payments as p')
+                        ->join('students as st','st.pid','p.student_pid')
+                        ->join('schools as s','s.pid','p.school_pid')
+                        ->join('student_invoices as si','p.pid','si.invoice_pid')
+                        ->join('class_invoice_params as pi','pi.pid','si.param_pid')
+                        ->join('class_arms as a', 'a.pid', 'pi.arm_pid')
+                        ->join('terms as t', 't.pid', 'pi.term_pid')
+                        ->join('sessions as ss', 'ss.pid', 'pi.session_pid')
+                        ->select('p.invoice_number', 'p.total', 'p.amount_paid', 'p.status', 'p.created_at',
+                                's.school_email', 's.school_website', 's.school_logo', 's.school_moto', 's.school_address', 's.school_contact',
+                                'fullname','reg_number','term','arm','session')->where(['p.invoice_number' => $id, 'p.school_pid' => getSchoolPid()])->first();
+
         $list = DB::table('student_invoices as s')->join('student_invoice_payments as p','p.pid','s.invoice_pid')
                                                 ->join('fee_item_amounts as fa','fa.pid', 's.item_amount_pid')
                                                 ->join('fee_configurations as c', 'c.pid', 'fa.config_pid')
                                                 ->join('fee_items as f', 'f.pid', 'c.fee_item_pid')
-                                                ->join('class_invoice_params as pi', 'pi.pid', 's.param_pid')
-                                                ->join('class_arms as a', 'a.pid', 'pi.arm_pid')
-                                                ->join('terms as t', 't.pid', 'pi.term_pid')
-                                                ->join('sessions as ss', 'ss.pid', 'pi.session_pid')
-                                                ->select('s.pid', 's.amount', 's.status', 's.paid_date', 'fee_name','term','arm','session')
-                                                ->where(['p.invoice_number'=>$id,'p.school_pid'=>getSchoolPid()])->get()->dd();
-        dd($invoice);
+                                                // no need to include term and session if payment is based on term 
+                                                // ->join('class_invoice_params as pi', 'pi.pid', 's.param_pid')
+                                                // ->join('class_arms as a', 'a.pid', 'pi.arm_pid')
+                                                // ->join('terms as t', 't.pid', 'pi.term_pid')
+                                                // ->join('sessions as ss', 'ss.pid', 'pi.session_pid')
+                                                ->select('s.pid', 's.amount', 's.status', 's.paid_date', 'fee_name')
+                                                ->where(['p.invoice_number'=>$id,'p.school_pid'=>getSchoolPid()])->get();
+        return view('school.payments.payment-receipt',compact('list', 'invoiceDetails'));
     }
 }

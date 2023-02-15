@@ -10,9 +10,10 @@
         <!-- Multi Columns Form -->
         <div class="section  min-vh-50 d-flex flex-column align-items-center justify-content-center py-4">
 
+            @if(!empty($data))
             <div class="card-body shadow">
                 <div class="text-center">
-                    <img src="{{ public_path() . '/files/images/' . $data->passport}}" class="img img-responsive">
+                    <img src="{{ asset('/files/images/' . $data->passport)}}" class="img img-responsive">
                 </div>
                 <h3 class="card-title">Name: {{$data->fullname}}</h3>
                 <hr>
@@ -42,6 +43,15 @@
                 <hr>
                 Contact Email: {{$data->contact_email}}
             </div>
+            @else
+            <div class="card-body shadow">
+                <div class="text-center">
+                    Data not loaded correctly
+                </div>
+
+            </div>
+            @endif()
+
         </div>
 
         <!-- End Multi Columns Form -->
