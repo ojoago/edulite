@@ -251,13 +251,6 @@
         // load student on fee payment modal 
         multiSelect2('#psiStudentSelect2', 'processStudentInvoiceModal', 'student', 'Select Student');
 
-        // hire me modal 
-        multiSelect2('#hireMeStateSelect2', 'hireMeModal', 'state', 'Select State');
-        $('#hireMeStateSelect2').on('change', function(e) {
-            var id = $(this).val();
-            multiSelect2Post('#hireMeLgaSelect2', 'hireMeModal', 'state-lga', id, 'Select LGA');
-            multiSelect2Post('#areaSelect2', 'hireMeModal', 'lga', id, 'Select SUbject');
-        });
         // 
         $('#psiStudentSelect2').change(async function(e) {
             e.preventDefault()
@@ -586,7 +579,7 @@
                     $('.overlay').show();
                 },
                 success: function(data) {
-                    console.log(data);
+                    // console.log(data);
                     $('.overlay').hide();
                     if (data) {
                         $('#updateAccountFirstname').val(data.firstname);
@@ -609,6 +602,51 @@
             var route = "{{route('update.user.detail')}}";
             submitFormAjax('updateAccountForm', 'updateAccountBtn', route);
         });
+
+        // hire me process 
+        // load user account details  
+        $('#hireMeConfig').click(function() {
+            $.ajax({
+                url: "{{route('load.hire.config')}}",
+                dataType: "json",
+                beforeSend: function() {
+                    $('.overlay').show();
+                },
+                success: function(data) {
+                    // console.log(data);
+                    $('.overlay').hide();
+                    if (data) {
+                        $('#hireAbleAbout').val(data.about);
+                        $('#qualification').val(data.qualification);
+                        $('#course').val(data.course);
+                        $('#years').val(data.years);
+                        $("[name=status]").val(data.status);
+                        $('#hireMeLgaSelect2').val(data.lga).trigger('change');
+                        $('#hireMeStateSelect2').val(data.state).trigger('change');
+                        $('#areaSubjectSelect2').val(data.subjects).trigger('change');
+                    }
+                },
+                error: function() {
+                    $('.overlay').hide();
+                }
+            });
+            $('#hireMeModal').modal('show');
+        })
+        // hire me modal 
+        multiSelect2('#hireMeStateSelect2', 'hireMeModal', 'state', 'Select State');
+        $('#hireMeStateSelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#hireMeLgaSelect2', 'hireMeModal', 'state-lga', id, 'Select LGA');
+            multiSelect2Post('#areaSubjectSelect2', 'hireMeModal', 'all-state-subjects', id, 'Select Subject');
+        });
+
+        $('#hireMeBtn').click(function() {
+            var route = "{{route('hire.me.config')}}";
+            submitFormAjax('hireMeForm', 'hireMeBtn', route);
+        })
+
+        // hire me stop here 
+
         $('#loadNotifications').click(function() {
             loadMyNotification();
         })

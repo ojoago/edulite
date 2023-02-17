@@ -154,7 +154,6 @@ class StudentController extends Controller
                     ->select('gsm','d.fullname','d.address','username','r.status','r.pid','p.updated_at')
                     ->where(['p.student_pid'=>base64Decode($request->pid),'p.school_pid'=>getSchoolPid()])
                     ->get();
-        logError($data);
         return datatables($data)
             ->editColumn('date', function ($data) {
                 return date('d F Y',strtotime($data->updated_at));

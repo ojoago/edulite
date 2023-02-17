@@ -654,11 +654,11 @@
 
 
 <!-- hire me  -->
-<div class="modal fade" id="hireMeModal" tabindex="-1">
+<div class="modal fade" id="hireMeModal" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-uppercase text-info">Open for Hire</h5>
+                <h5 class="modal-title text-uppercase text-info text-center">Open for Hire</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -666,7 +666,7 @@
                     @csrf
                     <div class="col-md-12">
                         <label class="form-label">About</label>
-                        <textarea type="text" name="about" class="form-control form-control-sm" name="about" id="hireAbleAbout" placeholder="say something good about yourself"></textarea>
+                        <textarea type="text" name="about" class="form-control form-control-sm" id="hireAbleAbout" placeholder="say something good about yourself"></textarea>
                         <p class="text-danger about_error"></p>
                     </div>
                     <div class="col-md-6">
@@ -681,8 +681,8 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Years of Expirence</label>
-                        <input type="number" class="form-control form-control-sm" name="years" id="course" placeholder="e.g 2">
-                        <p class="text-danger course_error"></p>
+                        <input type="number" class="form-control form-control-sm" name="years" id="years" placeholder="e.g 2">
+                        <p class="text-danger years_error"></p>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Open For Employment?</label><br>
@@ -690,7 +690,7 @@
                         Close <input type="radio" class="radio" name="status" id="status" value="0">
                         <p class="text-danger status_error"></p>
                     </div>
-                    
+
                     <label for="" class="text-center">Prefered state/Area you want to be employed</label>
                     <div class="col-md-6">
                         <label class="form-label">State</label>
@@ -704,10 +704,10 @@
                         </select>
                         <p class="text-danger state_error"></p>
                     </div>
-                    
+
                     <div class="col-md-12">
                         <label class="form-label">Subject of interest</label>
-                        <select name="subject[]" id="areaSelect2" multiple="multiple" style="width: 100%;" class="form-control form-control-sm">
+                        <select name="subject[]" id="areaSubjectSelect2" multiple="multiple" style="width: 100%;" class="form-control form-control-sm">
                         </select>
                         <p class="text-danger subject_error"></p>
                     </div>

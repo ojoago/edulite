@@ -756,4 +756,31 @@ class Select2Controller extends Controller
         return response()->json($data);
     }
 
+
+    // hire me 
+    public function loadAllStateSchoolSubject(Request $request)
+    {
+        $data = null;
+        if ($request->has('q'))
+        $result = DB::table('subjects as b')->join('schools as s', 's.pid', 'b.school_pid')
+            ->where(['s.state' => $request->pid,'b.status'=>1])
+            ->where('subject', 'like', '%' . $request->q . '%')
+            ->limit($request->page_limit)->orderBy('subject')
+            ->get(['b.pid', 'subject']); //
+        else
+        $result = DB::table('subjects as b')->join('schools as s', 's.pid', 'b.school_pid')
+            ->where(['s.state' => $request->pid, 'b.status' => 1])
+            ->limit(10)->orderBy('subject')->get(['b.pid', 'subject']); //
+        if (!$result) {
+            return response()->json(['id' => null, 'text' => null]);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->subject,
+            ];
+        }
+        return response()->json($data);
+    }
+
 }

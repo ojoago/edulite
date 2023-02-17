@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Users\HireAble;
 use App\Models\Users\UserDetail;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use phpDocumentor\Reflection\Types\This;
-use PhpParser\Node\Stmt\TryCatch;
+
 
 class HireAbleController extends Controller
 {
-    public function openForHire(Request $request){
+    public function hireMeConfig(Request $request){
 
+        logError($request->all());
+        if(!$this->confirmDetail()){
+            return response(['status' => 'error', 'message' => 'Update your user details first!!!']);
+        }
         $validator = Validator::make($request->all(),[
             'about'=>'required|string|max:250',
             'qualification'=>'required|string|max:100',
@@ -33,6 +37,7 @@ class HireAbleController extends Controller
                 'state' => $request->state,
                 'lga' => $request->lga,
                 'area' => $request->area,
+                'years' => $request->years,
                 'subjects' => json_encode($request->subject),
                 'user_pid' => getUserPid(),
             ];
@@ -41,7 +46,7 @@ class HireAbleController extends Controller
             }
             $result = $this->updateOrCreateHireMeDetail($data);
             if($result){
-
+                logError($data);
                 return response(['status'=>1,'message'=>'Details Updated']);
             }
             return response(['status'=>'error','message'=>'Something Went Wrong...']);
@@ -61,10 +66,32 @@ class HireAbleController extends Controller
 
     private function updateAbout(string $about){
         try{
-            $dtl = UserDetail::where(['user_pid' => getUserPid()])->update('about', $about);
+            $dtl = UserDetail::where(['user_pid' => getUserPid()])->update(['about'=>$about]);
             return $dtl;
         }catch(\Throwable $e){
+            logError($e->getMessage());
             return false;
+        }
+    }
+
+    private function confirmDetail(){
+        try {
+            return UserDetail::where(['user_pid' => getUserPid()])->first(['id']);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+
+
+    public function loadHireMeConfig(){
+        try {
+            $data = DB::table('user_details as d')->leftJoin('hire_ables as h', 'd.user_pid', 'h.user_pid')
+                ->where('d.user_pid', getUserPid())->select('h.*', 'd.about')->first();
+            return $data;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return [];
         }
     }
 }

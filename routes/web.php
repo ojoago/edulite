@@ -46,6 +46,7 @@ use App\Http\Controllers\School\Student\Results\Comments\TeacherCommentResultCon
 use App\Http\Controllers\School\Student\Results\Comments\PrincipalCommentResultController;
 use App\Http\Controllers\School\Student\Results\Cumulative\ViewCumulativeResultController;
 use App\Http\Controllers\School\Student\Assessment\Psychomotor\RecordPsychomotorController;
+use App\Http\Controllers\Users\HireAbleController;
 
 // port 8400
 Route::view('/','welcome')->middleware('guest');
@@ -104,6 +105,8 @@ Route::get('school-sign-in/{id}', [SchoolController::class, 'schoolLogin'])->nam
 Route::post('load-available-state', [Select2Controller::class, 'loadStates'])->name('load.available.state');
 //load school states
 Route::post('load-available-state-lga', [Select2Controller::class, 'loadStatesLga'])->name('load.available.state.lga');
+// load all the subject of every school in a state 
+Route::post('load-available-all-state-subjects', [Select2Controller::class, 'loadAllStateSchoolSubject'])->name('load.available.all.state.subject');
 
 
 Route::get('load-user-detail', [UserController::class, 'loadUserDetail'])->name('load.user.detail');
@@ -638,6 +641,16 @@ Route::middleware('schoolAuth')->group(function(){
 
     // payment receipt 
 
+
+
+    // hireworthy 
+    Route::view('hire-worthy', 'add-on.hire-worthy')->name('hire.worthy')->middleware('auth');
+    // available for hire
+    Route::view('hire-me', 'add-on.hire-worthy')->name('hire.me')->middleware('auth');
+    Route::post('hire-me-config',[HireAbleController::class, 'hireMeConfig'])->name('hire.me.config');
+
+    Route::get('load-me-config', [HireAbleController::class, 'loadHireMeConfig'])->name('load.hire.config');
+
 });
 
 
@@ -646,8 +659,3 @@ Route::get('admission/{id?}',[AdmissionController::class,'index'])->name('admiss
 // admission 
 Route::post('admission',[AdmissionController::class,'createAdmission']);
 
-
-// hireworthy 
-Route::view('hire-worthy','add-on.hire-worthy')->name('hire.worthy')->middleware('auth');
-// available for hire
-Route::view('hire-me','add-on.hire-worthy')->name('hire.me')->middleware('auth');

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('pid')->unique();
             $table->float('amount')->default(0);
             $table->integer('status')->comment('0 not paid,1 paid, 2 processing')->default(0);
-            $table->string('applicant_pid');
+            // $table->string('applicant_pid');
             $table->timestamps();
         });
     }

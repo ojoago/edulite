@@ -75,10 +75,14 @@ class StaffController extends Controller
     }
     
     public function loadStaffProfile(Request $request){
-        $data = DB::table('users as u')->leftjoin('user_details as d','d.user_pid','u.pid')
-                        ->join('school_staff as s','s.user_pid','u.pid')
-                        ->where(['s.school_pid'=>getSchoolPid(),'s.pid'=>base64Decode($request->pid)])
-                        ->select('gsm','email','username','fullname','address','title','dob','gender','religion','lga','state','role', 'passport','signature','stamp','staff_id')->first();
+        // $data = DB::table('users as u')->leftjoin('user_details as d','d.user_pid','u.pid')
+        //                 ->join('school_staff as s','s.user_pid','u.pid')
+        //                 ->where(['s.school_pid'=>getSchoolPid(),'s.pid'=>base64Decode($request->pid)])
+        //                 ->select('gsm','email','username','fullname','address','title','dob','gender','religion','lga','state','role', 'passport','signature','stamp','staff_id')->first();
+        $data = DB::table('users as u')->join('user_details as d', 'd.user_pid', 'u.pid')
+            ->join('school_staff as s', 's.user_pid', 'u.pid')
+            ->where(['school_pid' => getSchoolPid(), 's.pid' => base64Decode($request->pid)])
+            ->select('gsm', 'email', 'username', 'fullname', 'address', 'title', 'dob', 'gender', 'religion', 'lga', 'state', 'role', 'passport', 'signature', 'stamp', 'staff_id')->first();
         return response()->json(formatStaffProfile($data));
     }
 
@@ -292,7 +296,6 @@ class StaffController extends Controller
                 ];
                 
                 $user = AuthController::createUser($data);
-                logError($user);
                 if ($user) {
                     $detail['user_pid'] = $data['pid'] ?? $user->pid;
                     $userDetails = UserDetailsController::insertUserDetails($detail);
