@@ -491,6 +491,30 @@ class Select2Controller extends Controller
         }
         return response()->json($data);
     }
+    public function loadAllSchoolSubject(Request $request)
+    {
+        $data = null;
+        if ($request->has('q'))
+            $result = Subject::where(['school_pid' => getSchoolPid(), 'status' =>1])
+                                   ->where('subject', 'like', '%' . $request->q . '%')
+                                    ->limit($request->page_limit)->orderBy('subject')
+                                    ->get(['pid', 'subject']); //
+        else
+            $result = Subject::where(['school_pid' => getSchoolPid(), 'status' => 1])
+            // ->where('subject', 'like', '%' . $request->q . '%')
+                ->limit(10)->orderBy('subject')
+                ->get(['pid', 'subject']); //
+        if (!$result) {
+            return response()->json(['id' => null, 'text' => null]);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row-> subject,
+            ];
+        }
+        return response()->json($data);
+    }
 
 
     // load all classes based on what is assigned to form/class teacher 

@@ -288,14 +288,18 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $role; 
     }
-function getInitials($string = null)
-{
-    $string = preg_split("/[\s,_-]+/",$string);
-        $ret = '';
-        foreach ($string as $word)
-            $ret .= $word[0];
-        return $ret;
-}
+    
+    function removeThis($str,$chr = ','){
+       return rtrim($str, $chr);
+    }
+    function getInitials($string = null)
+    {
+        $string = preg_split("/[\s,_-]+/",$string);
+            $ret = '';
+            foreach ($string as $word)
+                $ret .= $word[0];
+            return $ret;
+    }
     function dateToAge($date){
         return Carbon::parse($date)->age;
     // $date = new DateTime($date);

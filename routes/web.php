@@ -239,7 +239,14 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-available-psychomotors', [Select2Controller::class, 'loadAvailablePsychomotors']);
     // load all psychomotor 
     Route::post('load-available-psychomotors-all', [Select2Controller::class, 'loadAvailableAllPsychomotors']);
-// fee items 
+
+
+
+
+
+
+
+    // fee items 
     Route::post('load-available-fee-items', [Select2Controller::class, 'loadAvailableFeeItem']);
 
     Route::post('load-available-on-demand-fee', [Select2Controller::class, 'loadAvailableOnDemandFee']);
@@ -641,10 +648,16 @@ Route::middleware('schoolAuth')->group(function(){
 
     // payment receipt 
 
+    // school hire process 
+    // Route::view()->name('hire.config');
 
+    Route::view('hire-config', 'school.framework.hire.hire-config')->name('hire.config');
+    Route::post('load-hire-able', [HireAbleController::class, 'loadPotentialApplicantHireConfig'])->name('hire.hire.able');
+    Route::post('load-available-all-school-subject', [Select2Controller::class, 'loadAllSchoolSubject']);
+    Route::post('school-recruitment', [HireAbleController::class, 'submitRecruitment']);
 
     // hireworthy 
-    Route::view('hire-worthy', 'add-on.hire-worthy')->name('hire.worthy')->middleware('auth');
+    // Route::view('hire-worthy', 'add-on.hire-worthy')->name('hire.worthy')->middleware('auth');
     // available for hire
     Route::view('hire-me', 'add-on.hire-worthy')->name('hire.me')->middleware('auth');
     Route::post('hire-me-config',[HireAbleController::class, 'hireMeConfig'])->name('hire.me.config');

@@ -686,8 +686,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Open For Employment?</label><br>
-                        Open <input type="radio" class="radio" name="status" id="status" value="1">
-                        Close <input type="radio" class="radio" name="status" id="status" value="0">
+                        <input type="checkbox" class="checkbox" name="status" id="status" value="1">
                         <p class="text-danger status_error"></p>
                     </div>
 

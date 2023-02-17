@@ -8,6 +8,7 @@ use App\Models\School\Framework\Session\Session;
 use App\Models\School\Framework\Term\ActiveTerm;
 use App\Models\School\Framework\Session\ActiveSession;
 use App\Models\School\Framework\Events\SchoolNotification;
+use App\Models\School\Framework\Subject\Subject;
 use App\Models\School\Student\Assessment\Psychomotor\PsychomotorRecord;
 use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
 
@@ -238,4 +239,8 @@ function activeTermName()
     function loadClassArms($pid){
        $data = ClassArm::where(['school_pid'=>getSchoolPid(),'class_pid'=>$pid])->get(['pid','arm']);
        return $data;
+    }
+
+    function getSubjectNameByPid($pid){
+        return Subject::where(['pid'=>$pid])->pluck('subject')->first();
     }

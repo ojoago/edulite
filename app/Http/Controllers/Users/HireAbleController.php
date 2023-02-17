@@ -14,7 +14,6 @@ class HireAbleController extends Controller
 {
     public function hireMeConfig(Request $request){
 
-        logError($request->all());
         if(!$this->confirmDetail()){
             return response(['status' => 'error', 'message' => 'Update your user details first!!!']);
         }
@@ -38,15 +37,15 @@ class HireAbleController extends Controller
                 'lga' => $request->lga,
                 'area' => $request->area,
                 'years' => $request->years,
-                'subjects' => json_encode($request->subject),
+                // 'subjects' => json_encode($request->subject),
                 'user_pid' => getUserPid(),
             ];
             if(isset($request->about)){
                 $this->updateAbout($request->about);
             }
+            $data['subjects'] = $this->getSubjectName($request->subject);
             $result = $this->updateOrCreateHireMeDetail($data);
             if($result){
-                logError($data);
                 return response(['status'=>1,'message'=>'Details Updated']);
             }
             return response(['status'=>'error','message'=>'Something Went Wrong...']);
@@ -94,4 +93,52 @@ class HireAbleController extends Controller
             return [];
         }
     }
+
+    // school recruitment 
+    public function submitRecruitment(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'qualification' => 'required|string|max:100',
+            'course' => 'nullable|max:64',
+            'years' => 'int|nullable',
+            'status' => 'int|required',
+            'note' => 'nullable|string'
+        ]);
+
+        if(!$validator->fails()){
+            $data = [
+                'qualification' => $request->qualification,
+                'course' => $request->course,
+                'years' => $request->years,
+                'status' => $request->status,
+                'note' => $request->note
+            ];
+            
+        }
+
+    }
+
+    // load avaible hire for school 
+    public function loadPotentialApplicantHireConfig(Request $request){
+        $data = DB::table('user_details as d')->join('users as u','u.pid','d.user_pid')
+                    ->join('hire_ables as h', 'd.user_pid', 'h.user_pid')
+                    ->leftJoin('states as s','s.id','d.state')->leftJoin('state_lgas as lg','lg.id','d.lga')
+        ->where('h.status',1)
+        ->select('qualification', 'course', 'd.about', 'years','status','subjects','d.fullname','u.gsm')->get();
+        return datatables($data)
+        ->editColumn('years', function ($data) {
+            return $data->years . ' year (s)';
+        })
+        ->addIndexColumn()
+            ->make(true);
+    }
+
+    private function getSubjectName(array $data){
+        $sbj = '';
+        foreach ($data as $row) {
+           $sbj.= getSubjectNameByPid($row) .', ';
+        }
+        return removeThis(trim($sbj));
+    }
+
 }

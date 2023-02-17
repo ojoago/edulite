@@ -620,7 +620,9 @@
                         $('#qualification').val(data.qualification);
                         $('#course').val(data.course);
                         $('#years').val(data.years);
-                        $("[name=status]").val(data.status);
+                        if (data.status !== null) {
+                            $("[name=status]").val(data.status);
+                        }
                         $('#hireMeLgaSelect2').val(data.lga).trigger('change');
                         $('#hireMeStateSelect2').val(data.state).trigger('change');
                         $('#areaSubjectSelect2').val(data.subjects).trigger('change');
