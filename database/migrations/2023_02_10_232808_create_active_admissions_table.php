@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('active_admissions', function (Blueprint $table) {
             $table->id();
             $table->string('admission_pid');
-            $table->string('admission_pid')->references('pid')->on(' admission_details');
+            $table->foreign('admission_pid')->references('pid')->on(' admission_details');
             $table->string('school_pid');
             $table->foreign('school_pid')->references('pid')->on('schools');
             $table->timestamps();
