@@ -4,10 +4,21 @@
 
 <style>
     .school-card {
-        background:url("{{asset('/files/thumbnail/teacher.jpeg')}}");
+        /* background:url("{{asset('/files/thumbnail/teacher.jpeg')}}");
         background-size: cover;
-        background-repeat: no-repeat;
+        background-repeat: no-repeat; */
         height: 200px;
+        width: auto;
+        padding-left: auto;
+        padding-right: auto;
+    }
+
+    .school-image {
+        height: 100%;
+        display: block;
+        width: auto;
+        margin-left: auto;
+        margin-right: auto;
     }
 </style>
 <div class="container">
@@ -36,6 +47,7 @@
                             <div class="card info-card ">
                                 <div class="card-header text-center ellipsis-text"> {{$row->school_name}}</div>
                                 <div class="card-body shadow school-card">
+                                    <img src="{{$row->school_logo ? asset('/files/logo/'.$row->school_logo) : asset('/files/thumbnail/teacher.jpeg')}}" alt="" class="school-image">
                                 </div>
                             </div>
                         </a>

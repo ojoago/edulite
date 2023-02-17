@@ -37,7 +37,7 @@ class UserController extends Controller
             }
         }
         AuthController::clearAuthSession();
-        return view('users.dashboard', compact('data'));
+        return view('users.users-home', compact('data'));
     }
     public function dashboard()
     {
@@ -45,12 +45,12 @@ class UserController extends Controller
         AuthController::clearAuthSession();
         $data = $this->loadUserSchools();//['schools'=> $schools,'work'=>$office];
         // $data =['schools'=> $schools,'work'=>$office];
-        return view('users.dashboard', compact('data'));
+        return view('users.users-home', compact('data'));
     }
 
     public function loadUserSchools(){
         $account =  DB::table('school_users as u')->join('schools as s','s.pid','school_pid')
-                    ->where('u.user_pid', getUserPid())->distinct('u.school_pid')->get(['s.pid', 's.school_name','role']);
+                    ->where('u.user_pid', getUserPid())->distinct('u.school_pid')->get(['s.pid', 's.school_name','role','school_logo']);
         return $account;
         // $schools = School::where('user_pid', getUserPid())->get(['pid', 'school_name']);
         // $office = DB::table('school_staff as t')
