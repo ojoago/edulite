@@ -149,6 +149,9 @@
              <a href="{{route('login')}}"><button class="login">Login</button>
              </a>
              <a href="{{route('sign.up')}}"><button class="join">Sign Up</button></a>
+             <a class="nav-link nav-icon pointer badge bg-danger" href="{{route('helps')}}">
+                 <span class="">Help</span>
+             </a>
          </div>
      </div>
  </section>

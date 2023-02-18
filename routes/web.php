@@ -653,8 +653,9 @@ Route::middleware('schoolAuth')->group(function(){
 
     Route::view('hire-config', 'school.framework.hire.hire-config')->name('hire.config');
     Route::post('load-hire-able', [HireAbleController::class, 'loadPotentialApplicantHireConfig'])->name('hire.hire.able');
+    Route::get('load-recruitment', [HireAbleController::class, 'loadRecruitmentConfig'])->name('load.school.recruitment');
     Route::post('load-available-all-school-subject', [Select2Controller::class, 'loadAllSchoolSubject']);
-    Route::post('school-recruitment', [HireAbleController::class, 'submitRecruitment']);
+    Route::post('school-recruitment', [HireAbleController::class, 'submitRecruitment'])->name('school.recruitment');
 
     // hireworthy 
     // Route::view('hire-worthy', 'add-on.hire-worthy')->name('hire.worthy')->middleware('auth');
@@ -671,4 +672,8 @@ Route::middleware('schoolAuth')->group(function(){
 Route::get('admission/{id?}',[AdmissionController::class,'index'])->name('admission');
 // admission 
 Route::post('admission',[AdmissionController::class,'createAdmission']);
+
+// public hiring 
+Route::get('hiring',[HireAbleController::class,'index'])->name('hiring');
+Route::get('apply-job',[HireAbleController::class,'index'])->name('apply.school.job');
 

@@ -7,7 +7,71 @@
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">Help</h5>
-
+        @guest
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        System flow
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <strong>Create School</strong><br> Click on create school and fill the form with school details then click on create, wait for few seconds if everything is entered correctly, your school will be created.
+                        school component
+                        <ol>
+                            <li>Sign up</li>
+                            <li>Verify Account</li>
+                            <li>Login</li>
+                            <li>Create A school</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        How to Sign Up
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <strong>Sign up & Verification Step by step guide.</strong>
+                        <iframe width="420" height="315" src="https://www.youtube.com/embed/hnT04nynb7Y">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        How to Login
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <strong>Login Step by step guide.</strong>
+                        <iframe width="420" height="315" src="https://www.youtube.com/embed/_kFTF09sgBk">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingCreateSchool">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#createSchool" aria-expanded="false" aria-controls="createSchool">
+                        How to Create A School
+                    </button>
+                </h2>
+                <div id="createSchool" class="accordion-collapse collapse" aria-labelledby="createSchool" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <strong>Creating School step by step guide.</strong>
+                        <iframe width="420" height="315" src="https://www.youtube.com/embed/g6eyJnMsuZ8">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endguest
         @if(getUserActiveRole() == 205)
         <!-- Admin help/guide  -->
         <div class="accordion" id="accordionExample">

@@ -7,11 +7,22 @@ use App\Models\Users\HireAble;
 use App\Models\Users\UserDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\School\Framework\Hire\SchoolRecruitment;
 use Illuminate\Support\Facades\Validator;
 
 
 class HireAbleController extends Controller
 {
+
+    public function index(){
+        $data = DB::table('school_recruitments as r')->join('schools as s','s.pid','r.school_pid')
+                    ->leftJoin('states as t','t.id','s.state')
+                    ->leftJoin('state_lgas as l','l.id','s.lga')
+                    ->select('t.state', 'l.lga', 'r.subjects', 'school_name', 'qualification', 'years', 'end_date',
+                     'note', 'school_logo', 'school_address', 'course','r.pid')->get();//->dd();
+        return view('hiring',compact('data'));
+    }
+
     public function hireMeConfig(Request $request){
 
         if(!$this->confirmDetail()){
@@ -96,7 +107,6 @@ class HireAbleController extends Controller
 
     // school recruitment 
     public function submitRecruitment(Request $request){
-
         $validator = Validator::make($request->all(), [
             'qualification' => 'required|string|max:100',
             'course' => 'nullable|max:64',
@@ -111,13 +121,38 @@ class HireAbleController extends Controller
                 'course' => $request->course,
                 'years' => $request->years,
                 'status' => $request->status,
-                'note' => $request->note
+                'note' => $request->note,
+                'pid' => $request->pid ?? public_id(),
+                'school_pid' => getSchoolPid()
             ];
-            
+            $data['subjects'] = $this->getSubjectName($request->subject);
+            $result = $this->updateOrCreateSchoolRecruitment($data);
+            if($result){
+                return response(['status' => 1, 'message' => 'Submitted Successful']);
+            }
+            return response(['status' => 'error', 'message' => 'Something Went Wrong']);
         }
+        return response(['status' => 0, 'message' => 'Fill the form Correctly', 'error' => $validator->errors()->toArray()]);
 
     }
 
+    public function loadRecruitmentConfig(){
+        $data = SchoolRecruitment::where(['school_pid' => getSchoolPid()])->get();
+        return datatables($data)
+            ->editColumn('years', function ($data) {
+                return $data->years . ' year (s)';
+            })
+            ->addIndexColumn()
+            ->make(true);
+    }
+    private function updateOrCreateSchoolRecruitment(array $data){
+        try {
+            return SchoolRecruitment::updateOrCreate(['pid'=>$data['pid']],$data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
     // load avaible hire for school 
     public function loadPotentialApplicantHireConfig(Request $request){
         $data = DB::table('user_details as d')->join('users as u','u.pid','d.user_pid')
@@ -133,8 +168,11 @@ class HireAbleController extends Controller
             ->make(true);
     }
 
-    private function getSubjectName(array $data){
+    private function getSubjectName(array|null $data){
         $sbj = '';
+        if($data ==null){
+            return '';
+        }
         foreach ($data as $row) {
            $sbj.= getSubjectNameByPid($row) .', ';
         }

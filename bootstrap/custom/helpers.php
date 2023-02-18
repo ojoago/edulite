@@ -411,7 +411,7 @@ function date_diff_weekdays($from, $to)
 function saveImg($image,$path='images',$name=null)
 {
     // $image = $request->file('image');
-$name = str_replace('/', '-', $name . ' edulite.' .'.png' /*$image->extension()*/);
+$name = str_replace('/', '-', $name . ' edlt' .'.png' /*$image->extension()*/);
 
     // $input['imagename'] = time() . '.' . $image->extension();
 
@@ -435,7 +435,7 @@ $name = str_replace('/', '-', $name . ' edulite.' .'.png' /*$image->extension()*
     if(!$name){
         $name = getSchoolPid() . '-' . public_id();
     }
-    $name = str_replace('/','-',$name.' edulite.'. $image->extension());
+    $name = str_replace('/','-',$name.' edlt.'. $image->extension());
     $height = Image::make($image)->height();//get image width
     $width = Image::make($image)->width();
     $new_width = $width * $percent;
@@ -457,7 +457,7 @@ function _saveImg($image,$path='images',$name=null)
     if(!$name){
         $name = getSchoolPid() . '-' . public_id();
     }
-    $name = str_replace('/','-',$name.' edulite.'. $image->extension());
+    $name = str_replace('/','-',$name.' edlt.'. $image->extension());
     $height = Image::make($image)->height();//get image width
     $width = Image::make($image)->width();
     $new_width = $width * $percent;

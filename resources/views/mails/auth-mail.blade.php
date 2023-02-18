@@ -16,8 +16,8 @@
                                     <br>
                                 <p class="text-red">Please click on the button below to verify your Account</p>
                                 <p class="button-hover-center text-center" style="text-align:center !important">
-                                    <a class="btn" href="{{URL::to('/')}}/{{$param['url']}}" style="font-size: 15px !important;font-weight: 600 !important;background: #00AFF0 !important; color: #FFF !important; text-decoration: none !important; padding: 9px 16px !important; border-radius: 28px !important;">
-                                        CLICK ME
+                                    <a class="btn" href="{{URL::to('/')}}/{{$param['url']}}" style="font-size: 15px !important;font-weight: 700 !important;background: #00AFF0 !important; color: #FFF !important; text-decoration: none !important; padding: 9px 16px !important; border-radius: 28px !important;">
+                                        CLICK HERE TO VERIFY
                                     </a>
                                 </p>
                                 <b class="ed-color">Have any questions/suggesstion or need more information? </b> <b class="lite-color">info@edulite.ng</b>

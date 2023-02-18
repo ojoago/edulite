@@ -5,33 +5,33 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Hire</h5>
+        <h5 class="card-title">Recruitment</h5>
         <!-- Default Tabs -->
         <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100 active" id="hire-tab" data-bs-toggle="tab" data-bs-target="#hire-home" type="button" role="tab">Notification</button>
+                <button class="nav-link w-100 active" id="hire-tab" data-bs-toggle="tab" data-bs-target="#hire-home" type="button" role="tab">Advert</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="applicant-tab" data-bs-toggle="tab" data-bs-target="#applicant" type="button" role="tab">Notification History</button>
+                <button class="nav-link w-100" id="applicant-tab" data-bs-toggle="tab" data-bs-target="#applicant" type="button" role="tab">Applied</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="available-tab" data-bs-toggle="tab" data-bs-target="#available" type="button" role="tab">Event</button>
+                <button class="nav-link w-100" id="available-tab" data-bs-toggle="tab" data-bs-target="#available" type="button" role="tab">Available Applicant</button>
             </li>
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="hire-home" role="tabpanel" aria-labelledby="home-tab">
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#hieConfigModal">
-                    Create Notification
+                    Create Advert
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="notificationTable">
                     <thead>
                         <tr>
-                            <th>S/N</th>
-                            <th>Message</th>
-                            <th>type</th>
-                            <th>start date</th>
-                            <th>end date</th>
+                            <th width="5%">S/N</th>
+                            <th>Qualification</th>
+                            <th>Field</th>
+                            <th>Expirence</th>
+                            <th>Subjects</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,7 +101,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create School Category</h5>
+                <h5 class="modal-title">Create School Recruitment</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -136,7 +136,7 @@
                         </div>
                         <div class="col-md-12">
                             <label class="form-label">Note</label>
-                            <textarea name="note" id="hireNote" class="form-control form-control-sm"> </textarea>
+                            <textarea name="note" placeholder="Recruitment note" id="hireNote" class="form-control form-control-sm"></textarea>
                             <p class="text-danger note_error"></p>
                         </div>
                     </div>
@@ -159,14 +159,6 @@
         // load dropdown on 
         multiSelect2('#hireSubjectSelect2', 'hieConfigModal', 'all-school-subject', 'Select Subject');
 
-        // filter class subject 
-        // FormMultiSelect2('#categoryClassSubjectSelect2', 'category', 'Select Category');
-        // FormMultiSelect2('#categoryClassSubjectSelect2', 'category', 'Select Category');
-        // create school class arm
-        // $('#createClassArmBtn').click(function() {
-        //     submitFormAjax('createClassArmForm', 'createClassArmBtn', "{{route('create.school.class.arm')}}");
-        // });
-
         // availableHire
         $('#available-tab').click(function() {
             loadAvaibleForHire()
@@ -174,7 +166,7 @@
 
         // create school class arm
         $('#createRecruitmentBtn').click(function() {
-            submitFormAjax('hireApplicantForm', 'createRecruitmentBtn', "{{route('create.school.notification')}}");
+            submitFormAjax('hireApplicantForm', 'createRecruitmentBtn', "{{route('school.recruitment')}}");
         });
         // create school class arm
         $('#createNotificationBtn').click(function() {
@@ -243,31 +235,33 @@
                 },
                 responsive: true,
                 destroy: true,
+                url: "{{route('load.school.recruitment')}}",
                 // type: "GET",
                 "ajax": {
-                    url: "{{route('load.school.notification')}}",
-                    type: "post",
-                    data: {
-                        _token: "{{csrf_token()}}",
-                        session_pid: session,
-                        term_pid: term,
-                    },
+                    url: "{{route('load.school.recruitment')}}",
+                    type: "get",
+                    // data: {
+                    //     _token: "{{csrf_token()}}",
+                    //     session_pid: session,
+                    //     term_pid: term,
+                    // },
                 },
                 "columns": [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                     },
                     {
-                        "data": "message"
+                        "data": "qualification"
                     },
                     {
-                        "data": "type"
+                        "data": "course"
                     },
                     {
-                        "data": "begin"
+                        "data": "years"
                     },
+
                     {
-                        "data": "end",
+                        "data": "subjects"
                     },
 
                 ],
