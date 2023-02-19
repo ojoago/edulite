@@ -114,11 +114,11 @@ class StudentScoreController extends Controller
             'term_pid' => $term,
             'arm_pid' => $arm,
         ];
-        $class_param_pid = ClassController::createClassParam($data);
+        $class_param_pid = ClassController::createClassParam($data);// create class param key and return the pid
 
         ScoreSettingsController::createClassSoreSetting(param_pid: $class_param_pid,class_pid:$class); //copy score setting from base score setting
        
-        GradeKeyController::createClassGradeKey(param_pid: $class_param_pid,class_pid:$class); //copy score setting from base score setting
+        GradeKeyController::createClassGradeKey(param_pid: $class_param_pid,class_pid:$class); //copy grade setting from base score setting
 
         $scoreParams = ScoreSettingsController::loadClassScoreSettings($class_param_pid);// load class score seetting 
         

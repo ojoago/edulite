@@ -60,13 +60,33 @@ class UserController extends Controller
     }
     public static function loadUserInfo($id)
     {
-        $user = UserDetail::where('pid', $id)->first(['gender', 'dob', 'religion', 'state', 'lga', 'address']);
-        return $user;
+        try {
+            $user = UserDetail::where('pid', $id)->first(['gender', 'dob', 'religion', 'state', 'lga', 'address']);
+            return $user;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return [];
+        }
     }
     public function loadUserDetail()
     {
-        $user = UserDetail::where('user_pid', getUserPid())->first(['gender', 'dob', 'religion', 'state', 'lga', 'address','firstname','lastname','othername','about']);
-        return response()->json($user);
+        try {
+            $user = UserDetail::where('user_pid', getUserPid())->first(['gender', 'dob', 'religion', 'state', 'lga', 'address', 'firstname', 'lastname', 'othername', 'about']);
+            return response()->json($user);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return response()->json([]);
+        }
+    }
+    public static function getUserDetail($pid)
+    {
+        try {
+            $data = DB::table('users as u')->join('user_details as d', 'd.user_pid', 'u.pid')->where('u.pid', $pid)->first(['u.email', 'd.fullname', 'd.gender', 'u.gsm']);
+            return $data;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return [];
+        }
     }
     public function updateUserDetail(Request $request)
     {

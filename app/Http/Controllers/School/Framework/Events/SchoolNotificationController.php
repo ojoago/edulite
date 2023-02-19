@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\School\Parent\ParentController;
 use App\Http\Controllers\School\Rider\SchoolRiderController;
+use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Student\StudentController;
 use Illuminate\Support\Facades\Validator;
@@ -163,6 +164,8 @@ class SchoolNotificationController extends Controller
             */
             if($param['user']->email){
                 // send mail 
+                $schoolData = SchoolController::loadSchoolNotificationDetail(getSchoolPid());
+                self::sendSchoolMail($schoolData,$param['user'], $param['message']);
             }
             return true;
         }
@@ -220,7 +223,7 @@ class SchoolNotificationController extends Controller
         ->join('users as u', 'p.user_pid', 'u.pid')
         ->join('user_details as d', 'd.user_pid', 'u.pid')
         ->join('students as s', 's.parent_pid', 'p.pid')
-            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email','<>',null)->distinct('p.pid')->get(['d.fullname','email']);
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email','<>',null)->distinct('p.pid')->get(['d.fullname','email','gender']);
 
         return $parents;
     }
@@ -228,7 +231,7 @@ class SchoolNotificationController extends Controller
     private function loadActiveStudent(){
         $students = DB::table('students as s')
         ->join('users as u', 's.user_pid', 'u.pid')
-            ->where(['s.school_pid' => getSchoolPid(), 's.status' => 1])->where('email', '<>', null)->get(['fullname', 'email']);
+            ->where(['s.school_pid' => getSchoolPid(), 's.status' => 1])->where('email', '<>', null)->get(['fullname','email', 'gender']);
 
         return $students;
     }
@@ -237,7 +240,7 @@ class SchoolNotificationController extends Controller
         $riders = DB::table('school_riders as r')
             ->join('users as u', 'r.user_pid', 'u.pid')
             ->join('user_details as d', 'd.user_pid', 'u.pid')
-            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email', '<>', null)->get(['fullname', 'email']);
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email', '<>', null)->get(['fullname','email', 'gender']);
 
         return $riders;
     }
@@ -246,8 +249,26 @@ class SchoolNotificationController extends Controller
         $staff = DB::table('school_staff as t')
             ->join('users as u', 't.user_pid', 'u.pid')
             ->join('user_details as d', 'd.user_pid', 'u.pid')
-            ->where(['p.school_pid' => getSchoolPid(), 't.status' => 1])->where('email', '<>', null)->get(['fullname', 'email']);
+            ->where(['p.school_pid' => getSchoolPid(), 't.status' => 1])->where('email', '<>', null)->get(['fullname','email', 'gender']);
 
         return $staff;
+    }
+
+    public static function sendSchoolMail($schoolData,$userData,$message,$subject='Notification'){
+        try {
+            $data = [
+                'email' => $userData->email,
+                'name' => matchGenderTitle($userData->gender) . ' ' . $userData->fullname,
+                'blade' => 'school-mail',
+                'message' => $message,
+                // 'url' => 'verify/' . base64Encode($user->pid),
+                'subject' => $subject,
+                'school' => $schoolData,
+            ];
+            return sendMail($data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 }

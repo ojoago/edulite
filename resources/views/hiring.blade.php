@@ -29,7 +29,8 @@
                 <div class="row">
                     @foreach($data as $row)
                     <div class="col-md-4 col-lg-3">
-                        <a href="{{route('apply.school.job',[base64Encode($row->pid)])}}"> <!-- the pid here is job pid -->
+                        <button class="btn btn-success btn-sm apply-job mb-1" pid="{{$row->pid}}">Apply</button>
+                        <a href="{{route('apply.school.job',['id'=>base64Encode($row->pid)])}}"> <!-- the pid here is job pid -->
 
                             <div class="card info-card ">
                                 <div class="card-header text-center ellipsis-text"> {{$row->school_name}}</div>
@@ -72,5 +73,34 @@
 
 
 <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
-
+<script>
+    $(document).ready(function() {
+        $('.apply-job').click(function() {
+            let pid = $(this).attr('pid');
+            $.ajax({
+                url: "{{route('apply.school.job')}}",
+                type: "post",
+                data: {
+                    pid: pid,
+                    _token: "{{csrf_token()}}"
+                },
+                beforeSend: function() {
+                    $('.overlay').show()
+                },
+                success: function(data) {
+                    alert(data.message);
+                    if(data.status === 0){
+                        let route = "{{route('login')}}";
+                        location.href = route;
+                    }
+                    $('.overlay').hide()
+                },
+                error: function(data) {
+                    $('.overlay').hide()
+                    alert('something Went Wrong')
+                }
+            })
+        })
+    })
+</script>
 @endsection

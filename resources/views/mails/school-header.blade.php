@@ -29,7 +29,15 @@
                                         <td class="inner-td">
                                             <table class="content">
                                                 <tr>
-                                                    <img src="{{asset('files/edulite/edulite logo.png')}}" alt="{{env('APP_NAME',APP_NAME)}}">
+                                                    <td>
+                                                        <h4>{{$param['school']->school_name}}</h4>
+                                                        <h6>{{$param['school']->school_address}}</h6>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p>{{$param['school']->school_contact}}</p>
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -38,23 +46,17 @@
                             </div>
                             <!-- first column  -->
                             <div class="section">
-                                <!-- <table width="100%">
+                                <table width="100%">
                                     <tr>
                                         <td class="inner-td">
                                             <table class="content">
                                                 <tr>
-                                                    <div class="" id="callout">
-                                                        <ul class="social">
-                                                            <li><a href="#"><img src="asset('files/edulite/svg/facebook.svg')" alt=""></a></li>
-                                                            <li><a href="#">Instagram</a></li>
-                                                            <li><a href="#"><img src="asset('files/edulite/svg/YouTube.svg')" alt=""></a></li>
-                                                        </ul>
-                                                    </div>
+                                                    <img src="{{$param['school']->school_logo ? asset('/files/logo/'.$param['school']->school_logo) : asset('/files/thumbnail/teacher.jpeg')}}" alt="{{$param['school']->school_name}} logo">
                                                 </tr>
                                             </table>
                                         </td>
                                     </tr>
-                                </table> -->
+                                </table>
                             </div>
                             <!-- first column  -->
                         </td>
@@ -73,9 +75,7 @@
                         <span>Leading Tomorrow</span>
                     </h1>
                     <p>
-                        Dear parent, guadian, teacher elders,
-                        it is our collective duty to give our children (the next generation)
-                        the best education they deserve in-order to make this world a better and safe place.
+                        {{"TEACHERS DON'T TEACH FOR THE INCOME. TEACHERS TEACH FOR THE OUTCOME We saying a big thank you to all teachers..."}}
                     </p>
 
                 </td>

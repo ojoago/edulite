@@ -7,15 +7,17 @@ use App\Models\Users\HireAble;
 use App\Models\Users\UserDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\School\Framework\Hire\SchoolRecruitment;
+use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 use Illuminate\Support\Facades\Validator;
+use App\Models\School\Framework\Hire\SchoolAdvert;
+use App\Models\School\Framework\Hire\SchoolJobApplied;
 
 
 class HireAbleController extends Controller
 {
 
     public function index(){
-        $data = DB::table('school_recruitments as r')->join('schools as s','s.pid','r.school_pid')
+        $data = DB::table('school_adverts as r')->join('schools as s','s.pid','r.school_pid')
                     ->leftJoin('states as t','t.id','s.state')
                     ->leftJoin('state_lgas as l','l.id','s.lga')
                     ->select('t.state', 'l.lga', 'r.subjects', 'school_name', 'qualification', 'years', 'end_date',
@@ -23,6 +25,76 @@ class HireAbleController extends Controller
         return view('hiring',compact('data'));
     }
 
+    public function applyJob(Request $request){
+       if(!empty(getUserPid()) && getUserPid() !== null){
+            try {
+                $job = SchoolAdvert::where('pid', $request->pid)->first();
+                if ($job->status === 1) {
+                    $applied = SchoolJobApplied::where(['job_pid' => $request->pid, 'user_pid' => getUserPid()])->first();
+                    if (!$applied) {
+                        $result = SchoolJobApplied::create(['job_pid' => $request->pid, 'user_pid' => getUserPid()]);
+                        if ($result) {
+                            $userData = UserController::getUserDetail(getUserPid());
+                            $schoolData = $this->getSchoolDetailsByJobPid($request->pid);
+                            $message = 'Your Application for '.$schoolData->title.' has been submitted, the school management will contact you when necessary.';
+                            SchoolNotificationController::sendSchoolMail($schoolData,$userData,$message, $schoolData->title.' Application Sent');
+                            return response()->json(['status' => 1, 'message' => 'You have successfully Applied']);
+                        }
+                    }
+                    return response()->json(['status'=>2,'message'=>'You already applied for the job']);
+                }
+            } catch (\Throwable $e) {
+                logError($e->getMessage());
+
+                return response()->json(['status'=>2,'message'=>'Something Went Wrong... error logged']);
+            }
+
+            return response()->json(['status'=>2,'message'=>'Job is no longer available']);
+       }
+
+       return response()->json(['status'=>0,'message'=>'Login First','login'=>1]);
+    }
+
+    private function getSchoolDetailsByJobPid($pid){
+        try {
+            $data = DB::table('school_adverts as r')->join('schools as s', 's.pid', 'r.school_pid')->where(['r.pid' => $pid])
+            ->select(
+                'r.subjects',
+                'school_name',
+                'title',
+                'school_logo',
+                'school_address',
+                'school_contact'
+            )->first();
+            return $data;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return [];
+        }
+    }
+
+    public function jobDetail($id){
+       $session = ['apply'=>true,'job_id'=>$id];
+       $this->middleware('auth');
+        $data = DB::table('school_adverts as r')->join('schools as s', 's.pid', 'r.school_pid')
+        ->leftJoin('states as t', 't.id', 's.state')
+        ->leftJoin('state_lgas as l', 'l.id', 's.lga')->where(['r.pid'=>base64Decode($id)])
+            ->select(
+                't.state',
+                'l.lga',
+                'r.subjects',
+                'school_name',
+                'qualification',
+                'years',
+                'end_date',
+                'note',
+                'school_logo',
+                'school_address',
+                'course',
+                'r.pid'
+            )->first();
+        return view('', compact('data'));
+    }
     public function hireMeConfig(Request $request){
 
         if(!$this->confirmDetail()){
@@ -106,18 +178,20 @@ class HireAbleController extends Controller
     }
 
     // school recruitment 
-    public function submitRecruitment(Request $request){
+    public function submitAdvert(Request $request){
         $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:100',
             'qualification' => 'required|string|max:100',
             'course' => 'nullable|max:64',
             'years' => 'int|nullable',
             'status' => 'int|required',
             'note' => 'nullable|string'
-        ]);
+        ],['qualification.required'=>'Enter Job minimum Qualification','title.required'=>'Enter Job Title']);
 
         if(!$validator->fails()){
             $data = [
                 'qualification' => $request->qualification,
+                'title' => $request->title,
                 'course' => $request->course,
                 'years' => $request->years,
                 'status' => $request->status,
@@ -136,18 +210,29 @@ class HireAbleController extends Controller
 
     }
 
-    public function loadRecruitmentConfig(){
-        $data = SchoolRecruitment::where(['school_pid' => getSchoolPid()])->get();
+    public function loadAdvertConfig(){
+        $data = SchoolAdvert::where(['school_pid' => getSchoolPid()])->get();
         return datatables($data)
             ->editColumn('years', function ($data) {
-                return $data->years . ' year (s)';
+                return $data->years ? $data->years . ' year (s)' : '';
             })
+            ->addIndexColumn()
+            ->make(true);
+    }
+    public function loadJobApplicant(Request $request){
+        $data = DB::table('school_adverts as sa')->join('school_job_applieds as ja','ja.job_pid','sa.pid')
+                                                ->join('user_details as d','d.user_pid','ja.user_pid')
+                                                ->leftJoin('hire_ables as h','h.user_pid','d.user_pid')->where(['sa.school_pid'=>getSchoolPid()])->select('h.qualification','sa.title','d.fullname')->get();
+        return datatables($data)
+            // ->editColumn('years', function ($data) {
+            //     return $data->years . ' year (s)';
+            // })
             ->addIndexColumn()
             ->make(true);
     }
     private function updateOrCreateSchoolRecruitment(array $data){
         try {
-            return SchoolRecruitment::updateOrCreate(['pid'=>$data['pid']],$data);
+            return SchoolAdvert::updateOrCreate(['pid'=>$data['pid']],$data);
         } catch (\Throwable $e) {
             logError($e->getMessage());
             return false;

@@ -28,6 +28,7 @@
                     <thead>
                         <tr>
                             <th width="5%">S/N</th>
+                            <th>Title</th>
                             <th>Qualification</th>
                             <th>Field</th>
                             <th>Expirence</th>
@@ -40,15 +41,16 @@
             </div>
             <div class="tab-pane fade" id="applicant" role="tabpanel" aria-labelledby="profile-tab">
                 <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="Table">
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="applicantTable">
                     <thead>
                         <tr>
-                            <th>Category</th>
-                            <th>Class</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Created By</th>
-                            <th>Action</th>
+                            <th width="5%">S/N</th>
+                            <th>Title</th>
+                            <th>Fullname</th>
+                            <th>Qualification</th>
+                            <!-- <th>Field</th>
+                            <th>Expirence</th>
+                            <th>Subjects</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -108,6 +110,11 @@
                 <form action="" method="post" class="" id="hireApplicantForm">
                     @csrf
                     <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Job Title</label>
+                            <input type="text" class="form-control form-control-sm" name="title" id="job_title" placeholder="e.g teacher">
+                            <p class="text-danger title_error"></p>
+                        </div>
                         <div class="col-md-6">
                             <label class="form-label">Qualification</label>
                             <input type="text" class="form-control form-control-sm" name="qualification" id="qualification" placeholder="COE">
@@ -251,8 +258,12 @@
                         name: 'DT_RowIndex',
                     },
                     {
+                        "data": "title"
+                    },
+                    {
                         "data": "qualification"
                     },
+
                     {
                         "data": "course"
                     },
@@ -263,6 +274,58 @@
                     {
                         "data": "subjects"
                     },
+
+                ],
+            });
+        }
+        $('#applicant-tab').click(function() {
+            loadApplicant()
+        })
+        // load school Applicant
+        function loadApplicant(session = null, term = null) {
+            $('#applicantTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                destroy: true,
+                // url: "{{route('load.school.recruitment')}}",
+                // type: "GET",
+                "ajax": {
+                    url: "{{route('load.job.applicant')}}",
+                    type: "post",
+                    data: {
+                        _token: "{{csrf_token()}}",
+                        session_pid: session,
+                        term_pid: term,
+                    },
+                },
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                    },
+                    {
+                        "data": "title"
+                    },
+                    {
+                        "data": "fullname"
+                    },
+                    {
+                        "data": "qualification"
+                    },
+
+                    // {
+                    //     "data": "course"
+                    // },
+                    // {
+                    //     "data": "years"
+                    // },
+
+                    // {
+                    //     "data": "subjects"
+                    // },
 
                 ],
             });

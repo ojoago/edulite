@@ -96,11 +96,11 @@
             </a>
         </li>
         @endif
-        <!-- <li>
-            <a href="{{route('hire.config')}}">
-                <i class="bi bi-circle"></i><span>Hire</span>
+        <li>
+            <a href="{{route('student.award.config')}}">
+                <i class="bi bi-circle"></i><span>Award</span>
             </a>
-        </li> -->
+        </li>
         <li>
             <a href="{{route('edit.school.info')}}">
                 <i class="bi bi-circle"></i><span>
@@ -115,7 +115,7 @@
 <!-- End Recruitment -->
 <li class="nav-item">
     <a class="nav-link collapsed" href="{{route('hire.config')}}">
-        <i class="bi bi-layers-fill"></i><span>Recruitment</span><i class="bi bi-chevron-right ms-auto"></i>
+        <i class="bi bi-layers-fill"></i><span>Advert</span><i class="bi bi-chevron-right ms-auto"></i>
     </a>
 </li>
 <!-- End Framework -->

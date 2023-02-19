@@ -191,6 +191,15 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $role; 
     }
+    function matchGenderTitle($lg){
+        $role =  match((string)$lg){
+                '2'=> 'Mss',
+                '1'=> 'Mr.',
+                // '3'=> 'Other',
+                default=>''
+                };
+       return $role; 
+    }
     function matchReligion($lg){
         $role =  match((string)$lg){
                 '2'=> 'Christian',
@@ -406,7 +415,12 @@ function date_diff_weekdays($from, $to)
     }
 
     function sendMail($param){
-       return Mail::to($param['email'])->send(new AuthMail($param));
+       try {
+        return Mail::to($param['email'])->send(new AuthMail($param));
+       } catch (\Throwable $e) {
+        logError($e->getMessage());
+        return false;
+       }
     }
 function saveImg($image,$path='images',$name=null)
 {

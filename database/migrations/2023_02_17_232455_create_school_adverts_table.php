@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('school_recruitments', function (Blueprint $table) {
+        Schema::create('school_adverts', function (Blueprint $table) {
             $table->id();
             $table->string('school_pid');
             $table->foreign('school_pid')->references('pid')->on('schools');
             $table->string('pid')->unique();
+            $table->string('title')->default('teacher');
             $table->string('qualification')->nullable();
             $table->string('course')->nullable();
             $table->text('note')->nullable();

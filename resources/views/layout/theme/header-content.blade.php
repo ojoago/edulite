@@ -129,9 +129,15 @@
                              <!-- <span>Web Designer</span> -->
                          </li>
                          <li>
-                             <a class="dropdown-item d-flex align-items-center pointer"  id="hireMeConfig">
+                             <a class="dropdown-item d-flex align-items-center pointer" id="hireMeConfig">
                                  <i class="bi bi-briefcase-fill"></i>
                                  <span>Hire Me</span>
+                             </a>
+                         </li>
+                         <li>
+                             <a class="dropdown-item d-flex align-items-center pointer" href="{{route('hiring')}}">
+                                 <i class="bi bi-briefcase-fill"></i>
+                                 <span>Apply for Job</span>
                              </a>
                          </li>
                          <li>

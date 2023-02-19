@@ -278,6 +278,16 @@ class SchoolController extends Controller
     {
         return School::where(['pid' => getSchoolPid()])->pluck('school_code')->first();
     }
+
+    public static function loadSchoolNotificationDetail($pid){
+        try {
+            $data = DB::table('schools')->where('pid', $pid)->first(['school_name', 'school_logo', 'school_address', 'school_contact']);
+            return $data;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return [];
+        }
+    }
     /**
      * Update the specified resource in storage.
      *
