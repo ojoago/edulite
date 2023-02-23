@@ -5,7 +5,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Recruitment</h5>
+        <h5 class="card-title">Adverts</h5>
         <!-- Default Tabs -->
         <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
             <li class="nav-item flex-fill" role="presentation">

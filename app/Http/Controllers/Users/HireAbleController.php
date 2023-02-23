@@ -222,7 +222,8 @@ class HireAbleController extends Controller
     public function loadJobApplicant(Request $request){
         $data = DB::table('school_adverts as sa')->join('school_job_applieds as ja','ja.job_pid','sa.pid')
                                                 ->join('user_details as d','d.user_pid','ja.user_pid')
-                                                ->leftJoin('hire_ables as h','h.user_pid','d.user_pid')->where(['sa.school_pid'=>getSchoolPid()])->select('h.qualification','sa.title','d.fullname')->get();
+                                                ->leftJoin('hire_ables as h','h.user_pid','d.user_pid')
+                                                ->where(['sa.school_pid'=>getSchoolPid()])->select('h.qualification','sa.title','d.fullname')->get();
         return datatables($data)
             // ->editColumn('years', function ($data) {
             //     return $data->years . ' year (s)';

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\School\SchoolController;
+use App\Http\Controllers\Users\HireAbleController;
 use App\Http\Controllers\Framework\Select2Controller;
 use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Parent\ParentController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\Organisation\OrganisationUserController;
 use App\Http\Controllers\School\Framework\Fees\FeeItemController;
 use App\Http\Controllers\School\Framework\Hostel\HostelController;
 use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
+use App\Http\Controllers\School\Framework\Result\AwardKeyController;
 use App\Http\Controllers\School\Framework\Subject\SubjectController;
 use App\Http\Controllers\School\Framework\Term\SchoolTermController;
 use App\Http\Controllers\School\Framework\Subject\SubjectTypeController;
@@ -46,7 +48,6 @@ use App\Http\Controllers\School\Student\Results\Comments\TeacherCommentResultCon
 use App\Http\Controllers\School\Student\Results\Comments\PrincipalCommentResultController;
 use App\Http\Controllers\School\Student\Results\Cumulative\ViewCumulativeResultController;
 use App\Http\Controllers\School\Student\Assessment\Psychomotor\RecordPsychomotorController;
-use App\Http\Controllers\Users\HireAbleController;
 
 // port 8400
 Route::view('/','welcome')->middleware('guest');
@@ -330,6 +331,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('configure-fee', [FeeItemController::class, 'feeConfigurationAndAmount'])->name('configure.fee');
     // award 
     Route::view('student-award-config', 'school.framework.award.award-config')->name('student.award.config');
+    Route::get('load-student-award', [AwardKeyController::class, 'index'])->name('load.student.award');
+    Route::post('create-student-award', [AwardKeyController::class, 'createStudentAward'])->name('create.student.award');
     
     // admission 
     Route::view('admission-form', 'school.admission.admission-form')->name('school.admission');
