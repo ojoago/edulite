@@ -45,19 +45,10 @@ use App\Http\Controllers\Auths\AuthController;
         // bruteLogout();
     }
     function setSchoolUserPid($pid=null){ //set pid key of the table to be acted upone
-        if($pid){
-            session(['schoolUserPid'=>base64Encode($pid)]); //get user pid
-        }else{
-            session(['schoolUserPid'=>null]); //get user pid
-        }
-
+        session(['schoolUserPid'=>base64Encode($pid)]); //get user pid
     }
     function setSchoolName($name=null){ //set school to session
-        if($name){
-            session(['schoolName'=>$name]); //get user name
-        }else{
-            session(['schoolName'=>null]); //to school name to null
-        }
+        session(['schoolName'=>$name]); //get user name
     }
 
     function getSchoolName(){ // get school name
@@ -70,10 +61,10 @@ use App\Http\Controllers\Auths\AuthController;
         return session('schoolCode');
     }
 
-     function setSchoolLogo($logo=null){ //set school logo
+    function setSchoolLogo($logo=null){ //set school logo
         session(['schoolLogo'=>$logo]); 
     }
-     function getSchoolLogo(){ //set school logo
+    function getSchoolLogo(){ //set school logo
         $path = session('schoolLogo') ? '/files/logo/'. session('schoolLogo') : 'files/edulite/edulite logo.png'; //'files/edulite/edulite logo.png'
         return $path; 
     }
