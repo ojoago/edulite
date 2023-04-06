@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\School\Student\Student;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Fees\FeeItem;
-use App\Http\Controllers\School\SchoolController;
+// use App\Http\Controllers\School\SchoolController;
 use App\Models\School\Framework\Fees\FeeItemAmount;
 use App\Models\School\Framework\Fees\StudentInvoice;
 use App\Models\School\Framework\Fees\FeeConfiguration;
