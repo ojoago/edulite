@@ -18,8 +18,8 @@ class AuthController extends Controller
     // }
     public function signUp(Request $request){
         $request->validate([
-            'email'=>'required|email|unique:users,email|regex:/^[a-zA-Z0-9.@\s]+$/',
-            'username'=> "required|unique:users,username|regex:/^[a-zA-Z0-9_\s]+$/",
+            'email'=>'required|email|unique:users,email|regex:/^[a-zA-Z0-9.@\s]+$/',// added regex
+            'username'=> "required|unique:users,username|regex:/^[a-zA-Z0-9_\s]+$/",//added regex
             'password'=>'required|min:4|confirmed'
         ]);
         $data = [
@@ -32,7 +32,7 @@ class AuthController extends Controller
         // send email
         if($user){
             $data = [
-                    'email'=>$request->email,
+                    'email'=>$user->email,
                     'name'=>$user->username,
                     'blade'=>'auth',
                     'url'=> 'verify/'. base64Encode($user->pid),
