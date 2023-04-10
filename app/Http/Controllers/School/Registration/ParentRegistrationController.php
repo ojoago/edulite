@@ -4,6 +4,7 @@ namespace App\Http\Controllers\School\Registration;
 
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 use App\Http\Controllers\School\Parent\ParentController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\School\Student\StudentController;
@@ -28,14 +29,14 @@ class ParentRegistrationController extends Controller
     public function registerParent(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'firstname'=> 'required|string|min:3|regex:/^[a-zA-Z0-9\s]+$/',
-            'lastname'=> 'required|string|min:3|regex:/^[a-zA-Z0-9\s]+$/',
-            // 'othername'=>'required',
+            'firstname'=> "required|string|min:3|regex:/^[a-zA-Z0-9'\s]+$/",
+            'lastname'=> "required|string|min:3|regex:/^[a-zA-Z0-9'\s]+$/",
+            'othername'=>"nullable|string|regex:/^[a-zA-Z0-9'\s]+$/",
             'gsm'=>'required|min:11|max:11|unique:users,gsm',
-            'username'=>'string|nullable|unique:users,username',
+            'username'=> "string|nullable|unique:users,username|regex:/^[a-zA-Z0-9'\s]+$/",
             'email'=>'string|email|nullable|unique:users,email',
             'gender'=>'required',
-            // 'dob'=>'',
+            'dob'=> 'nullable|before:' . confrimYear(),
             // 'religion'=>'required|string|',
             'state'=>'required',
             'lga'=>'required',
@@ -49,6 +50,7 @@ class ParentRegistrationController extends Controller
             'gsm.min'=> 'Phone Number is 11 Digit',
             'gsm.max'=> 'Phone Number is 11 Digit',
             'address.required'=> 'Enter Parent Address',
+            'dob.before' => 'Parent must be 18 years/above',
         ]);
         
         if(!$validator->fails()){
@@ -56,9 +58,12 @@ class ParentRegistrationController extends Controller
                 'password'=>$this->pwd,
                 'gsm'=>$request->gsm,
                 'username'=>$request->username ?? AuthController::uniqueUsername($request->firstname),
-                'email'=>$request->email,
+                // 'email'=>$request->email,
                 'account_status'=> 1,
             ];
+            if ($request->email) {
+                $data['email'] = $request->email;
+            }
             $userDetail = [
                 'firstname' => $request->firstname,
                 'lastname' => $request->lastname,
@@ -91,6 +96,11 @@ class ParentRegistrationController extends Controller
                                 foreach($request->student_pid as $pid){
                                     StudentController::linkParentToStudent($pid, $parentData->pid);
                                 }
+                                if ($request->email) {
+                                    $msg = "Your registration is successfull, your user username: {$user->username}, and your password is {$this->pwd}. You can always reset your password anytime anywhere. NB. you can login with either your username, phone number or email along with your password";
+                                    $this->mailNotification(pid: $parentData->pid, msg: $msg);
+                                }
+                                
                                 return response()->json(['status'=>1,'message'=> 'Parent account created successfully and linked to Student']);
                             }
                             return response()->json(['status'=>1,'message'=> 'Parent account created successfully!!!']);
@@ -111,4 +121,11 @@ class ParentRegistrationController extends Controller
 
     }
 
+    // $msg = "Your registration is successfull, your user username: {$user->username}, and your password is {$this->pwd}. You can always reset your password anytime anywhere. NB. you can login with either your username, phone number or email with along with your password";
+    //                             $this->mailNotification(pid:$parentData->pid,msg:$msg);
+    private function mailNotification($msg,$pid){
+        $user = ParentController::getParentDetailBypId(pid: $pid);
+        $schoolData = SchoolController::loadSchoolNotificationDetail(getSchoolPid());
+        SchoolNotificationController::sendSchoolMail($schoolData, $user, $msg);
+    }
 }

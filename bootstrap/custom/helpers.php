@@ -1,6 +1,6 @@
 <?php 
+use Carbon\Carbon;
 use App\Mail\AuthMail;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -148,7 +148,12 @@ use App\Http\Controllers\Auths\AuthController;
         return redirect()->route('login')->with('danger', 'Your Session has expired');
     }
 
-   
+   function confrimYear($year=18){
+    // $dt = new Carbon();
+    // $before = $dt->subYears($year)->format('Y-m-d');
+        return now()->subYears($year)->toDateString();
+
+   }
     function matchStaffRole($role){
         $role =  match($role){
                 '200'=> 'School Super Admin',
@@ -230,7 +235,7 @@ use App\Http\Controllers\Auths\AuthController;
     function matchStudentStatus($sts){
         $role =  match((string)$sts){
                 '0'=> 'Disabled',
-                '1'=> 'Active Student',
+                '1'=> 'Active',
                 '3'=> 'Left School',
                 '4'=> 'Suspended',
                 '2'=> 'Graduated',

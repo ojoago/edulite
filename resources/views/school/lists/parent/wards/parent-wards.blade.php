@@ -5,14 +5,14 @@
 <div class="card">
     <div class="card-body shadow">
         @if(!$data->isEmpty())
-        
+
         <h5 class="card-title text-success">Parent/Guardian Ward(s)</h5>
         <a class="text-center h4" href="{{route('school.parent.profile',['id'=>base64Encode($data[0]->parent_pid)])}}">Parent/Guardian Profile</a>
         <div class="row">
             @foreach($data as $row)
             <div class="col-md-4 ">
-                <div class="card shadow p-4" style="height: 600px;">
-                    <a href="http://" target="_blank" rel="noopener noreferrer">
+                <div class="card shadow p-4" style="height: 650px;">
+                    <a href="{{route('student.profile',['id'=>base64Encode($row->pid)])}}" target="_blank" rel="noopener noreferrer">
                         <div class="text-center" style="height:150px;">
                             <img src="{{asset('/files/images/'.$row->passport.'')}}" class="img img-responsive img-circle" style="width:auto;height:100%">
                         </div>

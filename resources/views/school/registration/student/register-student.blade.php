@@ -9,12 +9,12 @@
         <form class="row g-3" id="createStudentForm">
             @csrf
             <div class="col-md-4">
-                <label for="firstname" class="form-label">First-Name</label>
+                <label for="firstname" class="form-label">First-Name <small class="text-danger">*</small></label>
                 <input type="text" class="form-control form-control-sm" id="firstname" name="firstname" placeholder="e.g OJOago" required>
                 <p class="text-danger firstname_error"></p>
             </div>
             <div class="col-md-4">
-                <label for="lastname" class="form-label">Last-Name</label>
+                <label for="lastname" class="form-label">Last-Name <small class="text-danger">*</small></label>
                 <input type="text" class="form-control form-control-sm" id="lastname" name="lastname" placeholder="e.g Otteh" required>
                 <p class="text-danger lastname_error"></p>
             </div>
@@ -37,7 +37,7 @@
                 <input type="email" class="form-control form-control-sm" id="email" name="email" placeholder="e.g eulite@gmail.com">
             </div>
             <div class="col-md-4">
-                <label for="gender" class="form-label">Gender</label>
+                <label for="gender" class="form-label">Gender <small class="text-danger">*</small></label>
                 <select id="gender" name="gender" class="form-control  form-control-sm">
                     <option disabled selected>Select Gender</option>
                     <option value="2">Female</option>
@@ -46,12 +46,12 @@
                 <p class="text-danger gender_error"></p>
             </div>
             <div class="col-md-4">
-                <label for="dob" class="form-label">Date Of Birth</label>
+                <label for="dob" class="form-label">Date Of Birth <small class="text-danger">*</small></label>
                 <input type="date" class="form-control form-control-sm" id="dob" onkeydown="return false" name="dob" required>
                 <p class="text-danger dob_error"></p>
             </div>
             <div class="col-md-4">
-                <label for="religion" class="form-label">Religion</label>
+                <label for="religion" class="form-label">Religion <small class="text-danger">*</small></label>
                 <select id="religion" name="religion" class="form-control form-control-sm">
                     <option disabled selected>Select Religion</option>
                     <option value="2">Christian</option>
@@ -61,7 +61,7 @@
                 <p class="text-danger religion_error"></p>
             </div>
             <div class="col-md-2">
-                <label for="type" class="form-label">Student Type</label>
+                <label for="type" class="form-label">Student Type <small class="text-danger">*</small></label>
                 <select name="type" class="form-control  form-control-sm" id="studentType" required>
                     @if(getSchoolType()==1)
                     <option value="1" selected>Day</option>
@@ -77,13 +77,13 @@
                 <p class="text-danger type_error"></p>
             </div>
             <div class="col-md-3">
-                <label for="state" class="form-label small">State Of Origin</label>
+                <label for="state" class="form-label small">State Of Origin <small class="text-danger">*</small></label>
                 <select id="stateSelect2" value="1" name="state" class="form-control form-control-sm" style="width: 100%;">
                 </select>
                 <p class="text-danger state_error"></p>
             </div>
             <div class="col-md-3">
-                <label for="inputCity" class="form-label small">LGA</label>
+                <label for="inputCity" class="form-label small">LGA <small class="text-danger">*</small></label>
                 <select id="lgaSelect2" value="1" name="lga" class="form-control form-control-sm select2" style="width: 100%;">
                 </select>
                 <p class="text-danger lga_error"></p>
@@ -98,7 +98,7 @@
                 <p class="text-danger parent_pid_error"></p>
             </div>
             <div class="col-md-12">
-                <label for="address" class="form-label">Address</label>
+                <label for="address" class="form-label">Address <small class="text-danger">*</small></label>
                 <textarea type="text" class="form-control form-control-sm" id="address" name="address" placeholder="e.g no 51  offeoke"></textarea>
                 <p class="text-danger address_error"></p>
             </div>
@@ -116,13 +116,13 @@
                 <p class="text-danger term_pid_error"></p>
             </div> -->
             <div class="col-md-3">
-                <label for="category_pid" class="form-label">Category</label>
+                <label for="category_pid" class="form-label">Category <small class="text-danger">*</small></label>
                 <select name="category_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="cateSelect2" required>
                 </select>
                 <p class="text-danger category_pid_error"></p>
             </div>
             <div class="col-md-3">
-                <label for="class_pid" class="form-label">Class</label>
+                <label for="class_pid" class="form-label">Class <small class="text-danger">*</small></label>
                 <select name="class_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="classSelect2" required>
                 </select>
                 <input name="pid" id="pid" type="hidden">
@@ -131,7 +131,7 @@
                 <p class="text-danger class_pid_error"></p>
             </div>
             <div class="col-md-3">
-                <label for="arm_pid" class="form-label">Class Arm</label>
+                <label for="arm_pid" class="form-label">Class Arm <small class="text-danger">*</small></label>
                 <select name="arm_pid" class="form-select form-select-sm readOnlyProp" style="width: 100%;" id="armSelect2" required>
                 </select>
                 <p class="text-danger arm_pid_error"></p>

@@ -11,6 +11,7 @@ use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Student\StudentController;
+use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 
 class SchoolRiderController extends Controller
 {
@@ -46,14 +47,14 @@ class SchoolRiderController extends Controller
     public function submitSchoolRiderForm(Request $request){
         // return response()->json(['status' => 5, 'mr' => $request->all()]);
         $validator = Validator::make($request->all(),[
-            'firstname'=> 'required|regex:/^[a-zA-Z0-9\s]+$/',
-            'lastname'=> 'required|regex:/^[a-zA-Z0-9\s]+$/',
-            'othername'=> 'nullable|regex:/^[a-zA-Z0-9\s]+$/',
+            'firstname'=> "required|regex:/^[a-zA-Z0-9'\s]+$/",
+            'lastname'=> "required|regex:/^[a-zA-Z0-9'\s]+$/",
+            'othername'=> "nullable|regex:/^[a-zA-Z0-9'\s]+$/",
             'gsm'=>'required|min:11|max:11|unique:users,gsm',
-            'username'=>'nullable|unique:users,username',
+            'username'=> "nullable|unique:users,username|regex:/^[a-zA-Z0-9\s]+$/",
             'email'=>'nullable|unique:users,email|email',
             'gender'=>'required',
-            // 'dob',
+            'dob'=> 'nullable|before:' . confrimYear(15),
             'religion'=>'required',
             'state'=>'required',
             'lga'=>'required',
@@ -66,6 +67,7 @@ class SchoolRiderController extends Controller
             'gsm.max'=>'Phone Number is 11 Digit',
             'firstname.regex'=>'Special character is not allowed',
             'lasttname.regex'=>'Special character is not allowed',
+            'dob.before'=> 'Pick up must be 15 years/above',
         ]);
 
         if(!$validator->fails()){
@@ -119,6 +121,11 @@ class SchoolRiderController extends Controller
                                     $data['student_pid'] = $pid;
                                     StudentController::linkPickUperRiderToStudent($data);
                                 }
+                                if ($request->email) {
+                                    $msg = "Your registration is successfull, your user username: {$user->username}, and your password is {$this->pwd}. You can always reset your password anytime anywhere. NB. you can login with either your username, phone number or email along with your password";
+                                    $this->mailNotification(pid: $rider->pid, msg: $msg);
+                                }
+                                
                                 return response()->json(['status' => 1, 'message' => 'Account created Successfully & selected student\'s linked!!!']);
                             }
                             return response()->json(['status' => 1, 'message' => 'School Rider Pick up Rider Account created Successfully!!!']);
@@ -135,6 +142,15 @@ class SchoolRiderController extends Controller
             return response()->json(['status'=>'error','message'=>'Something Went Wrong']);
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+    }
+
+    // $msg = "Your registration is successfull, your user username: {$user->username}, and your password is {$this->pwd}. You can always reset your password anytime anywhere. NB. you can login with either your username, phone number or email with along with your password";
+    //                             $this->mailNotification(pid:$parentData->pid,msg:$msg);
+    private function mailNotification($msg, $pid)
+    {
+        $user = self::getRiderDetailBypId(pid: $pid);
+        $schoolData = SchoolController::loadSchoolNotificationDetail(getSchoolPid());
+        SchoolNotificationController::sendSchoolMail($schoolData, $user, $msg);
     }
     public function riderProfile($pid){
         return view('school.lists.rider.rider-profile',compact('pid'));

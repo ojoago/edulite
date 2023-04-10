@@ -1,12 +1,12 @@
 <form class="row g-3" id="createParentForm">
     @csrf
     <div class="col-md-4">
-        <label for="firstname" class="form-label">First-Name</label>
+        <label for="firstname" class="form-label">First-Name <small class="text-danger">*</small></label>
         <input type="text" class="form-control form-control-sm" id="firstname" name="firstname" placeholder="e.g OJOago" required>
         <p class="text-danger firstname_error"></p>
     </div>
     <div class="col-md-4">
-        <label for="lastname" class="form-label">Last-Name</label>
+        <label for="lastname" class="form-label">Last-Name <small class="text-danger">*</small></label>
         <input type="text" class="form-control form-control-sm" id="lastname" name="lastname" placeholder="e.g Otteh" required>
         <p class="text-danger lastname_error"></p>
     </div>
@@ -15,7 +15,7 @@
         <input type="text" class="form-control form-control-sm" id="othername" name="othername" placeholder="e.g oceje">
     </div>
     <div class="col-md-4">
-        <label for="gsm" class="form-label">Phone Number</label>
+        <label for="gsm" class="form-label">Phone Number <small class="text-danger">*</small></label>
         <input type="text" class="form-control form-control-sm" maxlength="11" id="gsm" name="gsm" placeholder="e.g 070-XX-XX-XX-XX" required>
         <p class="text-danger gsm_error"></p>
     </div>
@@ -30,7 +30,7 @@
         <p class="text-danger email_error"></p>
     </div>
     <div class="col-md-4">
-        <label for="gender" class="form-label">Gender</label>
+        <label for="gender" class="form-label">Gender <small class="text-danger">*</small></label>
         <select id="gender" name="gender" class="form-control  form-control-sm">
             <option disabled selected>Select Gender</option>
             <option value="2">Female</option>
@@ -54,13 +54,13 @@
         <p class="text-danger religion_error"></p>
     </div>
     <div class="col-md-4 formS" style="display: none;">
-        <label for="state" class="form-label small">State Of Origin</label>
+        <label for="state" class="form-label small">State Of Origin <small class="text-danger">*</small></label>
         <select id="stateSelect2" name="state" class="form-select form-select-sm parentStateSelect2" style="width: 100%;">
         </select>
         <p class="text-danger state_error"></p>
     </div>
     <div class="col-md-4 formS" style="display: none;">
-        <label for="inputCity" class="form-label small">LGA</label>
+        <label for="inputCity" class="form-label small">LGA <small class="text-danger">*</small></label>
         <select id="lgaSelect2" name="lga" class="form-select form-select-sm parentLgaSelect2" style="width: 100%;">
         </select>
         <p class="text-danger lga_error"></p>
@@ -68,13 +68,13 @@
 
     <!-- // -->
     <div class="col-md-4 modalS">
-        <label for="state" class="form-label small">State Of Origin</label>
+        <label for="state" class="form-label small">State Of Origin <small class="text-danger">*</small></label>
         <select id="parentStateSelect2" name="state" class="form-select form-select-sm parentStateSelect2" style="width: 100%;">
         </select>
         <p class="text-danger state_error"></p>
     </div>
     <div class="col-md-4 modalS">
-        <label for="inputCity" class="form-label small">LGA</label>
+        <label for="inputCity" class="form-label small">LGA <small class="text-danger">*</small></label>
         <select id="parentLgaSelect2" name="lga" class="form-select form-select-sm parentLgaSelect2" style="width: 100%;">
         </select>
         <p class="text-danger lga_error"></p>
@@ -88,7 +88,7 @@
     </div>
 
     <div class="col-md-8">
-        <label for="address" class="form-label">Address</label>
+        <label for="address" class="form-label">Address <small class="text-danger">*</small></label>
         <textarea type="text" class="form-control form-control-sm" id="address" name="address" placeholder="e.g no 51  offeoke"></textarea>
         <p class="text-danger address_error"></p>
     </div>

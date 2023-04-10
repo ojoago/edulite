@@ -246,6 +246,7 @@ class StaffController extends Controller
             ->make(true);
     }
 
+    // create staff account 
     public function createStaff(Request $request){
         $validator = Validator::make($request->all(),[
             'firstname'=>'required|string|min:3|max:25',
@@ -263,24 +264,27 @@ class StaffController extends Controller
                                     $param->where('pid', '!=', $request->pid);
                                 })],
             'gender'=>'required',
-            'dob'=>'required|date',
+            'dob'=> 'required|date|before:'. confrimYear(),
             'role'=>'required',
             'address'=>'required|string',
             'passport'=> 'nullable|image|mimes:jpeg,png,jpg,gif',
             'signature'=>'nullable|image|mimes:jpeg,png,jpg,gif',
             'stamp'=>'nullable|image|mimes:jpeg,png,jpg,gif',
-        ],['gsm.required'=>'Enter Phone Number','dob.required'=>'Enter staff date of birth']);
+        ],['gsm.required'=>'Enter Phone Number','dob.required'=>'Enter staff date of birth','dob.before'=>'Staff must 18 years & above']);
         
         if(!$validator->fails()){
             try {
                 $data = [
                     'gsm' => $request->gsm,
-                    'email' => $request->email ? $request->email : null,
+                    // 'email' => !empty($request->email) ? $request->email : null,
                     'account_status' => 1,
                     'password' => $this->pwd,
                     'username' => $request->username ?? AuthController::uniqueUsername($request->firstname),
                     'pid' => $request->pid
                 ];
+                if ($request->email) {
+                    $data['email'] = $request->email;
+                }
                 $detail = [
                     'firstname' => $request->firstname,
                     'lastname' => $request->lastname,

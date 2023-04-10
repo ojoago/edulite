@@ -6,13 +6,13 @@ function formatStaff($row)
 {
     if ($row) {
         $email = $row->email ? ' <hr><p>Email ' .  $row->email  . '</p>' : '';
+        // <option value="200">Super Admin</option>
         return '
              
                 <label class="text-info m-2">Primary Role</label>
                   <div class="input-group mb-3">
                     <select id="staffRole" name="role" class="form-select form-select-sm " required>
                         <option disabled selected>Select Role</option>
-                        <option value="200">Super Admin</option>
                         <option value="205">School Admin</option>
                         <option value="500">Principal/Head Teacher</option>
                         <option value="301">Form/Class Teacher</option>
@@ -379,8 +379,8 @@ function formatNotification($sql){
 
 <?php function staffRoleOptions($sl = null) { 
 
+    // <option value="200">Super Admin</option>
        $roles = '<option disabled selected>Select Role</option>
-        <option value="200">Super Admin</option>
         <option value="205">School Admin</option>
         <option value="500">Principal/Head Teacher</option>
         <option value="301">Form/Class Teacher</option>
