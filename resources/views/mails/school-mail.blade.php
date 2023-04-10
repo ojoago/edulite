@@ -11,8 +11,9 @@
                                 <p class="text">
                                     {{$param['message']}}
                                     <br>
+                                    <br>
 
-                                    <b class="ed-color">Have any questions/suggesstion or need more information? </b> <b class="lite-color">info@edulite.ng</b>
+                                <p><b class="ed-color">Have any questions/suggesstion or need more information? </b> <b class="lite-color">info@edulite.ng</b></p>
                                 <p>Feel free to reach out to us on how <b class="ed-color">We</b> can work together, and we shall response as soon as possible.</p>
                                 <b class="ed-color">For we are ready to provide bespoke Service.</b>
                                 <p>{{$param['school']->school_name}}</p>

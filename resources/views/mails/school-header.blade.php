@@ -30,8 +30,8 @@
                                             <table class="content">
                                                 <tr>
                                                     <td>
-                                                        <h4>{{$param['school']->school_name}}</h4>
-                                                        <h6>{{$param['school']->school_address}}</h6>
+                                                        <h3>{{$param['school']->school_name}}</h3>
+                                                        <h4>{{$param['school']->school_address}}</h4>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -75,7 +75,8 @@
                         <span>Leading Tomorrow</span>
                     </h1>
                     <p>
-                        {{"TEACHERS DON'T TEACH FOR THE INCOME. TEACHERS TEACH FOR THE OUTCOME We saying a big thank you to all teachers..."}}
+                        {{"TEACHERS DON'T TEACH FOR THE INCOME. TEACHERS TEACH FOR THE OUTCOME."}} <br>
+                        @{{env('APP_NAME',APP_NAME)}}, We saying a big thank you to all teachers...
                     </p>
 
                 </td>

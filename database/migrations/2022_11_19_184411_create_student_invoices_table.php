@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('student_pid');
             $table->string('item_amount_pid')->comment('a particular fee item');
             $table->string('pid')->unique();
-            $table->float('amount')->default(0);
+            $table->float('amount')->default(0);// this is it
             $table->string('param_pid');
             $table->integer('status')->comment('0 not paid,1 paid, 2 processing')->default(0);
             $table->timestamps();

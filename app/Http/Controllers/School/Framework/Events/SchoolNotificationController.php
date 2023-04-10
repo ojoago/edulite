@@ -223,7 +223,7 @@ class SchoolNotificationController extends Controller
         ->join('users as u', 'p.user_pid', 'u.pid')
         ->join('user_details as d', 'd.user_pid', 'u.pid')
         ->join('students as s', 's.parent_pid', 'p.pid')
-            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email','<>',null)->distinct('p.pid')->get(['d.fullname','email','gender']);
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email','<>',null)->distinct('p.pid')->get(['d.fullname','email','d.gender']);
 
         return $parents;
     }
