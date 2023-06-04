@@ -15,6 +15,7 @@ use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Models\School\School;
+use App\Models\School\Staff\StaffAccess;
 use App\Models\School\Staff\StaffRoleHistory;
 use App\Models\SchoolUser;
 use Illuminate\Validation\Rule;
@@ -473,21 +474,63 @@ class StaffController extends Controller
        }
        return $sts;
     }
-    public function staffAccessRight($pid){
-        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->first(['id', 'status']);
-        try {
-            if ($staff) {
-                $staff->status = 0;
-                // send notification mail 
-                $staff->save();
-                return 'staff Account updated';
+    public function staffAccessRight(Request $request){
+       
+        $validator = Validator::make($request->all(), [
+            'pid' => 'required',
+            'access' => 'required',
+        ], [
+            'pid.required' => 'Logout login again...',
+            'access.required' => 'Tick on role at least',
+        ]);
+        if (!$validator->fails()) {
+            try {
+                $data = [
+                    'school_pid' => getSchoolPid(),
+                    'access' => json_encode($request->access),
+                    'staff_pid' => $request->pid,
+                ];
+                // logError($data);
+                $msg = 'The following class has been assigned to you<br>';
+                // if (count($request->arm_pid) == 1) {
+                //     $msg = '';
+                // }
+                // $n = 0;
+                // foreach ($request->arm_pid as $row) {
+                //     $msg .= ++$n . ' ' . ClassController::getClassArmNameByPid($row) . '<br>';
+                //     $dupParams['arm_pid'] = $data['arm_pid'] = $row;
+                // }
+                $result = StaffAccess::updateOrCreate(['staff_pid'=>$request->pid,'school_pid'=>$data['school_pid']], $data);
+                if ($result) {
+                    // $message = $msg;
+                    // SchoolNotificationController::notifyIndividualStaff(message: $message, pid: $request->pid);
+                    return response()->json(['status' => 1, 'message' => "Staff Access updated"]);
+                }
+                return response()->json(['status' => 'error', 'message' => 'Something Went Wrong']);
+            } catch (\Throwable $e) {
+                $error = $e->getMessage();
+                logError($error);
+                return response()->json(['status' => 'error', 'message' => 'Something Went Wrong.. error logged']);
             }
-            return 'Wrong Id provided, make sure your session is still active';
-        } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
         }
+        return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+       
     }
+    // public function staffAccessRight($pid){
+    //     $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->first(['id', 'status']);
+    //     try {
+    //         if ($staff) {
+    //             $staff->status = 0;
+    //             // send notification mail 
+    //             $staff->save();
+    //             return 'staff Account updated';
+    //         }
+    //         return 'Wrong Id provided, make sure your session is still active';
+    //     } catch (\Throwable $e) {
+    //         $error = $e->getMessage();
+    //         logError($error);
+    //     }
+    // }
 
 
     public function assignClassToStaff(Request $request){

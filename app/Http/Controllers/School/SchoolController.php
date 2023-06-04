@@ -42,8 +42,10 @@ class SchoolController extends Controller
     {
         $id=base64Decode($id);
         $schoolUser = DB::table('school_users as u')->join('schools as s','s.pid','u.school_pid')
+                                                ->leftJoin('staff_accesses as a','a.staff_pid','u.pid')
                         ->where(['u.school_pid' => $id, 'u.user_pid' => getUserPid()])
-                        ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'u.status']);
+                        ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'u.status','access']);
+        // dd($schoolUser);
         if(!$schoolUser){
             return redirect()->back()->with('error','you are doing it wrong');
         }
@@ -55,9 +57,10 @@ class SchoolController extends Controller
         setSchoolUserPid($schoolUser->pid);
         setSchoolName($schoolUser->school_name);
         setSchoolLogo($schoolUser->school_logo);
+        setUserAccess(json_decode($schoolUser->access) ?? null);// get staff adon roles
         setDefaultLanding(true);
-        setUserActiveRole($schoolUser->role);
-        $code = self::getSchoolCode() ?? self::getSchoolHandle();
+        setUserActiveRole($schoolUser->role);// get staff primary role
+        $code = self::getSchoolCode() ?? self::getSchoolHandle();// get school handle or code
         setSchoolCode($code);
         // dd(getUserActiveRole());
         // check user role and redirect to a corresponding dashboard
@@ -82,7 +85,10 @@ class SchoolController extends Controller
         } 
         
     }
-
+    public function switchRole($role){
+        setUserActiveRole($role); // get staff primary role
+        return response()->json(['status' => 1, 'message' => 'role switched']);
+    }
     private function staffLogin(){
         $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
         $students = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();

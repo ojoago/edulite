@@ -5,7 +5,7 @@
     </a>
 </li><!-- End Dashboard Nav -->
 <!-- school admin section  -->
-@if(getUserActiveRole() =="200" || getUserActiveRole()=="205" || hasRole())
+@if(getUserActiveRole() =="200" || getUserActiveRole()=="205")
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#framework" data-bs-toggle="collapse" href="#">
         <i class="bi bi-menu-button-wide"></i><span>Framework</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -390,7 +390,7 @@
 @endif
 
 
-@if(getUserActiveRole() =="301" || hasRole())
+@if(getUserActiveRole() =="301")
 
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#psychomotor-nav" data-bs-toggle="collapse" href="#">
@@ -413,7 +413,7 @@
 </li><!-- End Tables Nav -->
 @endif
 <!-- view student result  -->
-@if(getUserActiveRole() == "301" || getUserActiveRole() == "500" || getUserActiveRole() == "200" || getUserActiveRole() == "205" || hasRole())
+@if(getUserActiveRole() == "301" || getUserActiveRole() == "500" || getUserActiveRole() == "200" || getUserActiveRole() == "205")
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#result-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>Student Result</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -440,7 +440,7 @@
 @endif
 
 <!-- admission and payment section form clark n secretary  -->
-@if(getUserActiveRole() == "303" || getUserActiveRole() == "305" || getUserActiveRole() == "500" || hasRole())
+@if(getUserActiveRole() == "303" || getUserActiveRole() == "305" || getUserActiveRole() == "500")
 <!-- <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>Activities</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -521,7 +521,7 @@
         <i class="bi bi-bar-chart"></i><span>Comment</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="comment-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        @if(getUserActiveRole() == "500" || hasRole())
+        @if(getUserActiveRole() == "500")
         <li>
             <a href="{{route('principal.comment.termly.result')}}">
                 <i class="bi bi-circle"></i><span>Principal </span>
@@ -533,7 +533,7 @@
             </a>
         </li>
         @endif
-        @if(getUserActiveRole() == "301" || hasRole())
+        @if(getUserActiveRole() == "301")
         <li>
             <a href="{{route('teacher.comment.termly.result')}}">
                 <i class="bi bi-circle"></i><span>Teacher</span>
@@ -545,7 +545,7 @@
             </a>
         </li>
         @endif
-        @if(getUserActiveRole() == "307" || hasRole())
+        @if(getUserActiveRole() == "307")
         <li>
             <a href="{{route('portal.comment.termly.result')}}">
                 <i class="bi bi-circle"></i><span>Portals</span>
@@ -561,7 +561,7 @@
 </li><!-- End Charts Nav -->
 @endif
 <!-- parent  -->
-{{--@if(parentRole() || hasRole())
+{{--@if(parentRole())
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#guardian-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -581,7 +581,7 @@
 </li>
 @endif--}}
 <!-- rider  -->
-@if(riderRole() || hasRole())
+@if(riderRole())
 {{--<li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#rider-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -600,7 +600,7 @@
     </ul>
 </li> --}}
 @endif
-@if(studentRole() || hasRole())
+@if(studentRole())
 <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#student-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -626,6 +626,22 @@
                 <i class="bi bi-circle"></i><span>Timetable</span>
             </a>
         </li>
+    </ul>
+</li>
+@endif
+@if(getUserAccess())
+<li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#roles-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bar-chart"></i><span>Switch Role</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="roles-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        @foreach(getUserAccess() as $role)
+        <li>
+            <a class="switchRole pointer" id="{{$role}}">
+                <i class="bi bi-circle"></i><span>{{staffRoles($role)}}</span>
+            </a>
+        </li>
+        @endforeach
     </ul>
 </li>
 @endif

@@ -17,6 +17,7 @@
         height: 100%;
         display: block;
         width: auto;
+        max-width: 99%;
         margin-left: auto;
         margin-right: auto;
     }

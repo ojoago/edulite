@@ -162,9 +162,9 @@
 <section class="basic_section">
     <div class="basic">
         <h1><span class="ed-color">Edu</span><span class="lite-color">Lite</span></h1>
-        <p>Upgrade your school with EduLite, and ease the stress of school manual process at less cost. get accurate and accessible information about students, staff remotely. 
+        <p>Upgrade your school with EduLite, and ease the stress of school manual process at less cost. get accurate and accessible information about students, staff remotely.
             Allow guardian/parent keep track of their childrens performance easily and at their own time and convenience. EduLite manage school process such as report card,
-             performance charts, attendance, student promotion, automated principal comment, hostel/portals, student pick up rider, event notification such as holidays, notify parent student exam timetable</p>
+            performance charts, attendance, student promotion, automated principal comment, hostel/portals, student pick up rider, event notification such as holidays, notify parent student exam timetable</p>
         <p>
             EduLite help school manage various tasks of school staff (admin, teacher, portal, hostel, Student pick up rider), parent, student.
             it helps to generate and organize reports, monitor activities etc.
@@ -222,7 +222,7 @@
             <div class="card-secction">
                 <img src="{{asset('files/edulite/svg/height meter-amico.svg')}}" alt="student" />
                 <h3>Parents</h3>
-                <p>Track childrens performance easily and at you their own time and convenience</p>
+                <p>Track childrens performance easily anytime, anywhere conveniently</p>
             </div>
         </div>
         <div class="col-md-3 mb-3">
@@ -230,6 +230,15 @@
                 <img src="{{asset('files/edulite/svg/ride-amico.svg')}}" alt="student" />
                 <h3>Portals/Pick up riders</h3>
                 <p>Manage student hostel activities. <br> Parent/school keep track of who take children to/from school</p>
+            </div>
+        </div>
+        <div class="col-md-12 mb-3">
+            <div class="card-secctio">
+                <!-- <img src="{{asset('files/edulite/svg/ride-amico.svg')}}" alt="student" />
+                <h3>Portals/Pick up riders</h3> -->
+                <p>We've spent time building this thing with blood, sweat, and lots of resources.</p>
+                <p>Real-life Human Beings
+                    Tech veterans, geeks, and nerds are all standing by to optimize your experience.</p>
             </div>
         </div>
 

@@ -62,6 +62,30 @@
             var route = "{{route('update.staff.role')}}";
             submitFormAjax('roleform' + id, 'id', route);
         });
+        // update staff role  
+        $(document).on('click', '.updateStaffAccess', function() {
+            let id = $(this).attr('id');
+            var route = "{{route('school.staff.access')}}";
+            submitFormAjax('accessForm' + id, 'id', route);
+        });
+
+        // switch role 
+        $('.switchRole').click(function() {
+            let role = $(this).attr('id')
+            $('.overlay').show();
+            $.ajax({
+                url: "switch-role/" + role,
+                success: function(data) {
+                    $('.overlay').hide();
+                    let url = "{{URL::to('school-dashboard')}}";
+                    location.href = url;
+                },
+                error: function() {
+                    $('.overlay').hide();
+                    alert_toast('Something Went Wrong', 'error');
+                }
+            });
+        })
         // update status account status
         $(document).on('click', '.toggleStaffStatus', function() {
             let pid = $(this).attr('pid');
@@ -70,7 +94,7 @@
             $.ajax({
                 url: url, //"{{route('create.school.score.settings')}}",
                 success: function(data) {
-                    console.log(data);
+                    // console.log(data);
                     $('.overlay').hide();
                     if (data == 'staff Account updated') {
                         alert_toast(data, 'success');
@@ -875,7 +899,7 @@
             $('.overlay').show();
 
             $.ajax({
-                url: route, //"{{route('create.school.score.settings')}}",
+                url: route, //"url,
                 type: "POST",
                 data: new FormData($('#' + formId)[0]),
                 dataType: "JSON",

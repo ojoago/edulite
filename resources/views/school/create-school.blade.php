@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','lite')
+@section('title','Create School')
 @section('content')
 
 <div class="card p-4">

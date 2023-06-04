@@ -78,7 +78,7 @@
             </div>
             <div class="modal-footer">
                 <div class="text-center">
-                    <button class="btn btn-primary updateStaffRole" type="button" id="{{$data->pid}}">Submit</button>
+                    <button class="btn btn-primary updateStaffAccess" type="button" id="{{$data->pid}}">Submit</button>
                     <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                 </div>
             </div>

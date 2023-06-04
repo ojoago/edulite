@@ -252,6 +252,7 @@ class StudentScoreController extends Controller
             return $total;
         } catch (\Throwable $e) {
             logError($e->getMessage());
+            return false;
         }
     }
     
@@ -485,7 +486,7 @@ class StudentScoreController extends Controller
                 }
                 return response()->json(['status' => 1, 'message' => 'Score Upload Success','errors'=>$errors]);
             } catch (\Throwable $e) {
-                return response()->json(['status' =>'error', 'message' => 'Score upload Success']);
+                return response()->json(['status' =>'error', 'message' => 'Failed to upload']);
                 $error = $e->getMessage();
                 logError($error);
             }

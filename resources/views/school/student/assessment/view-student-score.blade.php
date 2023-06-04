@@ -20,7 +20,7 @@
                         <th scope="col">{{$row->title}} <small>/[{{$row->score}}]</small></th>
                         @endforeach
                         <th scope="col">Total
-                            <!--[100]-->
+                            /[100]
                         </th>
                     </tr>
                 </thead>

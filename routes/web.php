@@ -398,13 +398,17 @@ Route::middleware('schoolAuth')->group(function(){
     // load staff details for editing 
     Route::post('load-staff-detal-by-id', [StaffController::class, 'loadStaffDetailsById'])->name('load.staff.detail.by.id');
     // Route::post('school-staff-role/{id}', [StaffController::class, 'staffRole'])->name('school.staff.role');
-    Route::post('school-staff-access/{id}', [StaffController::class, 'staffAccessRight'])->name('school.staff.access');
+    // Route::post('school-staff-access/{id}', [StaffController::class, 'staffAccessRight'])->name('school.staff.access');
     Route::post('school-staff-class', [StaffController::class, 'assignClassToStaff'])->name('school.staff.class');
     Route::post('school-staff-subject', [StaffController::class, 'staffSubject'])->name('school.staff.subject');
     // update staff images 
     Route::post('update-staff-images', [StaffController::class, 'updateStaffImages'])->name('update.staff.image');
     // update role 
     Route::post('update-staff-role', [StaffController::class, 'updateStaffRole'])->name('update.staff.role');
+    // update staff access
+    Route::post('school-staff-access', [StaffController::class, 'staffAccessRight'])->name('school.staff.access');
+    // switch role
+    Route::get('switch-role/{role}', [SchoolController::class, 'switchRole'])->name('switch.role');
     // update status 
     Route::get('update-staff-status/{id}', [StaffController::class, 'updateStaffStatus'])->name('update.staff.status');
 

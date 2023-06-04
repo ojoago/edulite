@@ -74,6 +74,36 @@ use App\Http\Controllers\Auths\AuthController;
     function setUserActiveRole($code=null){
         session(['userActiveRole'=>$code]); //user role
     }
+    function setUserAccess($access=null){
+        session(['userAccess'=>$access]); //user role
+    }
+    function getUserAccess(){
+       return session('userAccess'); //user role
+    }
+    function staffRoles($role){
+        $role =  match ($role) {
+            '200' => 'School Super Admin',
+            '205' => 'School Admin',
+            '300' => 'Teacher',
+            '301' => 'Form/Class Teacher',
+            '303' => 'Clerk',
+            '305' => 'Secretary',
+            '307' => 'Portals',
+            '400' => 'Office Assisstnace',
+            '405' => 'Security',
+            '500' => 'Principal/Head Teacher',
+            '1'=> 'Manage result',
+            '600' => 'Student',
+            '601' => 'Applicant',
+            '605' => 'Parent/Guardian',
+            '610' => 'Rider',
+            '700' => 'Agent/Referer',
+            '710' => 'Partners',
+            '10' => 'App Admin',
+            default => ''
+        };
+        return $role;
+    }
    
     function getUserActiveRole(){
         return session('userActiveRole'); 

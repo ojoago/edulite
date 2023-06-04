@@ -247,5 +247,6 @@ class AuthController extends Controller
         setSchoolLogo();
         setUserActiveRole();
         setSchoolCode();
+        setUserAccess();
     }
 }
