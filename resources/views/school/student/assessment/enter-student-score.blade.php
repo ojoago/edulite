@@ -102,7 +102,7 @@
             <h3 class="card-title bg-warning text-center">No Student Assign to {{$class->arm}} in {{sessionName(session('session'))}} , Please contact the School Admin...</h3>
             @endif
             @else
-            <h3 class="card-title bg-warning text-center">Score Settings for {{termName(session('term'))}} {{sessionName(session('session'))}} Has not been set, Please contact the School Admin...</h3>
+            <h3 class="card-title bg-warning text-center">Please Contact school admin to set Score Settings for {{--termName(session('term'))--}} {{--sessionName(session('session'))--}} for {{$class->arm}} </h3>
             @endif
             <!-- End Primary Color Bordered Table -->
 
@@ -186,7 +186,7 @@
                     showTipMessage(data)
                 },
                 error: function(data) {
-                    showTipMessage('Failed to update Exam Status',3);
+                    showTipMessage('Failed to update Exam Status', 3);
                 }
             });
         });

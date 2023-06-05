@@ -86,6 +86,9 @@ class SchoolController extends Controller
         
     }
     public function switchRole($role){
+        if(!in_array(getUserActiveRole(), getUserAccess())){
+            array_push(getUserAccess(),getUserActiveRole());
+        }
         setUserActiveRole($role); // get staff primary role
         return response()->json(['status' => 1, 'message' => 'role switched']);
     }

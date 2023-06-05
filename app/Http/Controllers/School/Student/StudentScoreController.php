@@ -95,7 +95,7 @@ class StudentScoreController extends Controller
             if($this->createScoreSheetParams()==='no class'){
                 return redirect()->route('student.assessment.form')->with('error', ClassController::getClassArmNameByPid(session('arm')). '  not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')));
             }
-            return redirect()->route('student.assessment.form')->with('error', 'Subject not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')));
+            return redirect()->route('student.assessment.form')->with('error', 'Subject not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')).' & make sure proper term/ session is set');
         }
        
         return view('school.student.assessment.enter-student-score', compact('data', 'scoreParams','class'));
@@ -316,7 +316,7 @@ class StudentScoreController extends Controller
         $arm =      session('arm');
         $subject =  session('subject');
         $teacher = StaffController::getSubjectTeacherPid(session:  $session,term: $term,subject: $subject);
-        
+        // dd($teacher, $session, $term, $subject);
         if(!$teacher){
             return false;
         }

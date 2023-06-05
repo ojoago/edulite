@@ -254,7 +254,7 @@
                     </tr>
                 </table>
             </div>
-
+{{dd($results)}}
             <div class="flex-col">
                 <table class="table table-hover table-striped table-bordered">
                     <tr>

@@ -16,6 +16,7 @@ class UploadStudentController extends Controller
     private $header = ['firstname', 'surname', 'othername', 'gsm', 'dob', 'username', 'email', 'address', 'religion', 'gender','type'];
     public function importStudent(Request $request)
     {
+        // logError($request->all());
         $validator = Validator::make(
             $request->all(),
             ['file' => 'required|file|mimes:xlsx,xls,csv|max:30|min:9',
@@ -44,22 +45,26 @@ class UploadStudentController extends Controller
                 $header = $resource['header'];
                 $data = $resource['data'];
                 $errors = [];
-                $k = 1;
+                $k = 1;$n=0;
                 if ((($header === $this->header))) {
                     foreach ($data as $row) {
                         if (!empty($row[0]) && !empty($row[1])) {
                             $username = $row[6] ?? '';
+                            $email = $row[5] ?? '';
                             $gsm = $row[3]=='' ? false : AuthController::findGsm($row[3]);
                             if (!$gsm) {
                                 $data = [
                                     'gsm' => ($row[3]),
-                                    'email' => AuthController::findEmail($username) ? null : $username,
+                                    // 'email' => AuthController::findEmail($username) ? null : $username,
                                     'account_status' => 1,
                                     'password' => $this->pwd,
                                     'username' =>  $username ? AuthController::uniqueUsername($username) : AuthController::uniqueUsername($row[0]),
                                 ];
+                                if($email){
+                                    logError($email);
+                                    $data['email'] = AuthController::findEmail($email) ? null : $email;
+                                }
                                 $user = AuthController::createUser($data);
-                                // dd($user, $data);
                                 $detail = [
                                     'firstname' => $row[0],
                                     'lastname' => $row[1],
@@ -102,12 +107,13 @@ class UploadStudentController extends Controller
                                         'staff_pid' => getSchoolUserPid(),
                                     ];
                                     $studentDetails = SchoolController::createSchoolStudent($student);
-                                    if (!$studentDetails) {
+                                    if ($studentDetails) {
                                         $studentClass['student_pid'] = $studentDetails->pid;
                                         StudentController::createStudentClassRecord($studentClass);
+                                        $n++;
+                                    }else{
                                         $errors[] = 'Student on row ' . $k . ' not Linked to School';
                                     }
-                                    $k++;
                                 } else {
                                     $errors[] = 'Student on row ' . $k . ' partially created use edit to completed it please';
                                 }
@@ -117,16 +123,16 @@ class UploadStudentController extends Controller
                         } else {
                             $errors[] = 'Student on row ' . $k . ' not inserted because of either firstname, surname or gsm is empty';
                         }
-                       
+                       $k++;
                     }
-                    $msg = $k - count($errors) . ' Student(s) uploaded successfully';
+                    $msg = $n. ' Student(s) uploaded successfully... & '.count($errors).' error(s)';
                     return response()->json(['status' => 1, 'message' => $msg, 'errors' => $errors]);
                 }
                 return response()->json(['status' => 'error', 'message' => 'use the template without change it please.']);
             } catch (\Throwable $e) {
-                $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+                // $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
 
-                logError($error);
+                logError($e->getMessage());
                 return response()->json(['status' => 'error', 'message' => 'upload stop on row ' . $k, 'errors' => $errors]);
             }
         }
