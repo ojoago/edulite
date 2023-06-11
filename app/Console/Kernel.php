@@ -13,9 +13,13 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
+    protected $commands = [
+        Commands\SeasonalGreeting::class,
+    ];
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // $schedule->command('seasonal:greeting')->everyMinute();
+        $schedule->command('seasonal:greeting')->yearlyOn(6, 11, '07:45');
     }
 
     /**

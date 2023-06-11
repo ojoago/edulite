@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Users\UserController;
 use App\Models\School\Registration\SchoolParent;
 use App\Http\Controllers\School\Staff\StaffController;
-use App\Http\Controllers\School\Parent\ParentController;
+// use App\Http\Controllers\School\Parent\ParentController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\School\Rider\SchoolRiderController;
 

@@ -33,7 +33,9 @@ class AuthMail extends Mailable
             return $this->subject($this->param['subject'])->view('mails.auth-mail');
         elseif($this->param['blade'] == 'reset')
             return $this->subject($this->param['subject'])->view('mails.reset-mail');
-        elseif($this->param['blade'] == 'school-mail')
+        elseif($this->param['blade'] == 'school')
             return $this->subject($this->param['subject'])->view('mails.school-mail');
+        elseif($this->param['blade'] == 'greeting')
+            return $this->subject($this->param['subject'])->view('mails.greeting-mail');
     }
 }

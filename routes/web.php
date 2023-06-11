@@ -48,7 +48,7 @@ use App\Http\Controllers\School\Student\Results\Comments\TeacherCommentResultCon
 use App\Http\Controllers\School\Student\Results\Comments\PrincipalCommentResultController;
 use App\Http\Controllers\School\Student\Results\Cumulative\ViewCumulativeResultController;
 use App\Http\Controllers\School\Student\Assessment\Psychomotor\RecordPsychomotorController;
-
+// school achievment display
 // port 8400
 Route::view('/','welcome')->middleware('guest');
 // Route::view('/401','welcome')->name('401')->middleware('guest');
@@ -254,11 +254,11 @@ Route::middleware('schoolAuth')->group(function(){
 
     // subjects & subject type
     // load subject type page 
-    Route::view('school-subject-type', 'school.framework.subject.subjects')->name('school.subject.type');
+    Route::view('subjects', 'school.framework.subject.subjects')->name('school.subject.type');
     // load subject type 
     Route::get('load-subject-type', [SubjectTypeController::class, 'index'])->name('load.school.subject.type');
     // create subject type 
-    Route::post('school-subject-type', [SubjectTypeController::class, 'createSubjectType'])->name('create.school.subject.type');
+    Route::post('subjects', [SubjectTypeController::class, 'createSubjectType'])->name('create.school.subject.type');
     // load subjects 
     Route::post('load-school-subject', [SubjectController::class, 'index'])->name('load.school.subject');
     // create school category subject 

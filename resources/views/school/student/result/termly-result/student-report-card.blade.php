@@ -254,7 +254,6 @@
                     </tr>
                 </table>
             </div>
-{{dd($results)}}
             <div class="flex-col">
                 <table class="table table-hover table-striped table-bordered">
                     <tr>
@@ -402,7 +401,7 @@
                             </tr>
                             @endforeach
                             <tr>
-                                <td>NA</td>
+                                <td>ND</td>
                                 <td>Not Defined</td>
                             </tr>
                         </tbody>

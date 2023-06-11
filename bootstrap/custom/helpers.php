@@ -373,7 +373,7 @@ use App\Http\Controllers\Auths\AuthController;
                 if($num >=$val->min_score && $num <= $val->max_score)
                  return $val->grade;
         }
-        return 'NA';
+        return 'ND';
     }
    
 function date_diff_weekdays($from, $to)

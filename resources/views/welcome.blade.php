@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','login')
+@section('title','welcome')
 @section('content')
 
 <style>

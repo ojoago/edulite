@@ -21,9 +21,10 @@ class SubjectTypeController extends Controller
     public function index()
     {
         $data = SubjectType::join('school_staff', 'school_staff.pid','subject_types.staff_pid')
-                            ->join('users','users.pid','school_staff.user_pid')
+                            ->leftJoin('users','users.pid','school_staff.user_pid')
                             ->where(['subject_types.school_pid'=>getSchoolPid()])
                             ->get(['subject_types.pid','subject_type', 'subject_types.created_at', 'subject_types.description','username']);
+        logError([$data,getSchoolPid()]);
         return datatables($data)
             ->addColumn('action', function ($data) {
                 return view('school.framework.subject.subject-type-action-buttons', ['data' => $data]);
