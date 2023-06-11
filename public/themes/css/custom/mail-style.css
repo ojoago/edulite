@@ -36,6 +36,7 @@
         .header {
             background-color: #00AFF0;
             border-bottom: 3px solid #FCBA03;
+            width: 100% !important;
         }
 
         p {
@@ -172,7 +173,7 @@
                 padding: 10px;
                 text-align: justify;
                 color: #FFF !important;
-                border-bottom: solid #FCBA03 5px;
+                /* border-bottom: solid #FCBA03 5px; */
             }
 
          .top-banner>h1 {

@@ -16,10 +16,7 @@
                                         Reset PASSWORD NOW
                                     </a>
                                 </p>
-                                <p>We're always ready to help.</p>
-                                <b class="lite-color">{{env('APP_NAME',APP_NAME)}} TEAM</b>
-                                </p>
-                                <br>
+                                
                             </td>
                         </tr>
                     </table>

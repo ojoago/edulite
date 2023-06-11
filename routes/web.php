@@ -56,7 +56,7 @@ Route::view('/','welcome')->middleware('guest');
 // sign up 
 Route::get('/mail',function(){
     
-    return view('mails.school-mail');
+    return view('mails.greeting-mail');
 });
 // sign up form 
 // Route::view('sign-up/{id?}', [AuthController::class, 'signUpForm'])->name('sign.up')->middleware('guest');
