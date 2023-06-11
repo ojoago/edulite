@@ -20,7 +20,7 @@
                                 <tr>
                                     <td class="header" style=" background-color: #00AFF0;color:#fff !important;border-bottom: 3px solid #FCBA03;width:100% !important">
                                         <p style="text-align: center;padding: 1%;font-weight: 900;font-size: 11px;text-transform: uppercase;color:#fff !important;">
-                                            <a href="#">Education is light, hence {{env('APP_NAME',APP_NAME)}}</a>
+                                            <a href="#" style="color:#fff !important;">Education is light, hence {{env('APP_NAME',APP_NAME)}}</a>
                                         </p>
                                     </td>
                                 </tr>

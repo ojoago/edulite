@@ -18,8 +18,8 @@ class Kernel extends ConsoleKernel
     ];
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('seasonal:greeting')->everyMinute();
-        // $schedule->command('seasonal:greeting')->yearlyOn(6, 11, '06:45');
+        // $schedule->command('seasonal:greeting')->everyMinute();
+        $schedule->command('seasonal:greeting')->yearlyOn(6, 12, '06:45');
     }
 
     /**
