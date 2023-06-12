@@ -17,7 +17,7 @@ class SeasonalGreetingController extends Controller
 
 Let us strive for unity amidst our diversity, embracing dialogue and peaceful coexistence as we work towards a better Nigeria. Together, we can overcome challenges, bridge divides, and foster an environment where every Nigerian can thrive.
 
-Happy Democracy Day Nigerianss💚! ',
+Happy Democracy Day Nigerians💚! ',
             'blade' => 'greeting',
             'subject' => 'Democracy Day',
             // 'name' => 'Hassan',
