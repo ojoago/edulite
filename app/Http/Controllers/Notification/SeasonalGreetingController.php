@@ -12,7 +12,12 @@ class SeasonalGreetingController extends Controller
     {
         $users = DB::table('users as u')->select('email','username')->where('email','<>',null)->get();
         $data = [
-            'message' => 'Today is the day when we remember the years before and look at the possibilities before us in order to strive for an even better future. We should remember not to leave the faith of our country in the hands of our leaders alone, as it is the responsibility of everyone to make it greater. Have faith in Nigeria and happy Democracy Day! ',
+            'message' => 'Democracy is not just a system of governance; it is a shared commitment to upholding the values of equality, inclusivity, and respect for fundamental human rights. 
+            It is an opportunity for every Nigerian voice to be heard and every citizen to contribute to the nation’s growth.
+
+Let us strive for unity amidst our diversity, embracing dialogue and peaceful coexistence as we work towards a better Nigeria. Together, we can overcome challenges, bridge divides, and foster an environment where every Nigerian can thrive.
+
+Happy Democracy Day Nigerianss💚! ',
             'blade' => 'greeting',
             'subject' => 'Democracy Day',
             // 'name' => 'Hassan',
