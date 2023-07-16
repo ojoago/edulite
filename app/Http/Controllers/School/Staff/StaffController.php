@@ -44,6 +44,7 @@ class StaffController extends Controller
                     ]);
         return $this->useDataTable($data);
     }
+    // disabled staff 
     public function inActiveStaff()
     {
         // $cnd = ['school_staff.school_pid'=>getSchoolPid()];
@@ -201,9 +202,10 @@ class StaffController extends Controller
                 ->join('class_arms as a', 'a.pid', 'as.arm_pid')
                 ->join('terms as t', 't.pid', 'sb.term_pid')
                 ->join('sessions as s', 's.pid', 'sb.session_pid')
-                ->join('school_staff as st', 'st.pid', 'sb.staff_pid')
+                ->join('school_staff as st', 'st.pid', 'sb.teacher_pid')
                 ->join('user_details as d', 'd.user_pid', 'st.user_pid')
-                ->select('term', 'session', 'j.subject', 'sb.updated_at', 'a.arm', 'fullname')
+                ->join('users as u', 'd.user_pid', 'u.pid')
+                ->select('term', 'session', 'j.subject', 'sb.updated_at', 'a.arm','fullname', 'username')
                 ->where(['sb.school_pid' => getSchoolPid(),
                         'sb.term_pid'=>$request->term,
                         'sb.session_pid'=>$request->session
@@ -215,21 +217,23 @@ class StaffController extends Controller
                 ->join('class_arms as a', 'a.pid', 'as.arm_pid')
                 ->join('terms as t', 't.pid', 'sb.term_pid')
                 ->join('sessions as s', 's.pid', 'sb.session_pid')
-                ->join('school_staff as st', 'st.pid', 'sb.staff_pid')
+                ->join('school_staff as st', 'st.pid', 'sb.teacher_pid')
                 ->join('user_details as d', 'd.user_pid', 'st.user_pid')
-                ->select('term', 'session', 'j.subject', 'sb.updated_at', 'a.arm', 'fullname')
+                ->join('users as u', 'd.user_pid', 'u.pid')
+                ->select('term', 'session', 'j.subject', 'sb.updated_at', 'a.arm','fullname', 'username')
                 ->where(['sb.school_pid' => getSchoolPid(), 'sb.term_pid' => $request->term])
                 ->orWhere(['sb.school_pid' => getSchoolPid(), 'sb.term_pid' => $request->session])
                 ->orderBy('arm')->get();
-        }else{
-            $data = DB::table('staff_subjects as sb')->join('class_arm_subjects as as', 'as.pid', 'sb.arm_subject_pid')
-                    ->join('subjects as j', 'j.pid', 'as.subject_pid')
-                    ->join('class_arms as a', 'a.pid', 'as.arm_pid')
-                    ->join('terms as t', 't.pid', 'sb.term_pid')
-                    ->join('sessions as s', 's.pid', 'sb.session_pid')
-                    ->join('school_staff as st', 'st.pid', 'sb.staff_pid')
-                    ->join('user_details as d', 'd.user_pid', 'st.user_pid')
-                    ->select('term', 'session', 'j.subject', 'sb.updated_at', 'a.arm', 'fullname')
+            }else{
+                $data = DB::table('staff_subjects as sb')->join('class_arm_subjects as as', 'as.pid', 'sb.arm_subject_pid')
+                ->join('subjects as j', 'j.pid', 'as.subject_pid')
+                ->join('class_arms as a', 'a.pid', 'as.arm_pid')
+                ->join('terms as t', 't.pid', 'sb.term_pid')
+                ->join('sessions as s', 's.pid', 'sb.session_pid')
+                ->join('school_staff as st', 'st.pid', 'sb.teacher_pid')
+                ->join('user_details as d', 'd.user_pid', 'st.user_pid')
+                ->join('users as u', 'd.user_pid', 'u.pid')
+                    ->select('term', 'session', 'j.subject', 'sb.updated_at', 'a.arm', 'fullname','username')
                     ->where(['sb.school_pid' => getSchoolPid()])
             ->orderBy('arm')->get();
         }
@@ -246,6 +250,7 @@ class StaffController extends Controller
             ->addIndexColumn()
             ->make(true);
     }
+   
 
     // create staff account 
     public function createStaff(Request $request){
@@ -536,15 +541,15 @@ class StaffController extends Controller
     public function assignClassToStaff(Request $request){
         $validator = Validator::make($request->all(),[
             'arm_pid'=>'required',
-            'term_pid'=>'required',
-            'session_pid'=>'required',
+            // 'term_pid'=>'required',
+            // 'session_pid'=>'required',
             'teacher_pid'=>'required',
             'category_pid'=>'required',
             'class_pid'=>'required',           
             ],[
                 'arm_pid.required'=>'Select at least one class Arm from the list',
-                'term_pid.required'=>'Select Term from the list',
-                'session_pid.required'=>'Select Session from the list',
+                // 'term_pid.required'=>'Select Term from the list',
+                // 'session_pid.required'=>'Select Session from the list',
                 'teacher_pid.required'=>'Select Staff',
                 'class_pid.required'=>'Class is Required',
                 'category_pid.required'=> 'Category is Required',
@@ -553,8 +558,8 @@ class StaffController extends Controller
                 try {
                     $dupParams =   $data = [
                         'school_pid'=>getSchoolPid(),
-                        'term_pid'=>$request->term_pid,
-                        'session_pid'=>$request->session_pid,
+                        'term_pid'=>activeTerm(),
+                        'session_pid'=>activeSession(),
                     ];
                     $data['teacher_pid']=$request->teacher_pid;
                         // 'arm_pid'=>'',
@@ -587,17 +592,17 @@ class StaffController extends Controller
             $validator = Validator::make($request->all(),[
             'category_pid'=>'required',
             'class_pid'=> 'required',
-            // 'arm_pid'=> 'required',
-            'session_pid'=> 'required',
-            'term_pid'=> 'required',
+            'arm_pid'=> 'required',
+            // 'session_pid'=> 'required',
+            // 'term_pid'=> 'required',
             'teacher_pid'=> 'required',
             'subject_pid'=> 'required',
         ],[
             'category_pid.required'=>'Select Category to get the corresponding classes',
             'class_pid.required'=>'Select Class to get the corresponding Arms',
-            // 'arm_pid.required'=>'Select class Arm to get the corresponding Subjects',
-            'term_pid.required'=>'Select Term',
-            'session_pid.required'=>'Select Session',
+            'arm_pid.required'=>'Select class Arm to get the corresponding Subjects',
+            // 'term_pid.required'=>'Select Term',
+            // 'session_pid.required'=>'Select Session',
             'teacher_pid.required'=>'Select Teacher',
             'subject_pid.required'=>'Select at least 1 Subject',
         ]);
@@ -605,8 +610,8 @@ class StaffController extends Controller
         if(!$validator->fails()){
             $data = [
                 'school_pid'=>getSchoolPid(),
-                'term_pid'=> $request->term_pid,
-                'session_pid'=> $request->session_pid,
+                'term_pid'=> activeTerm(),
+                'session_pid'=> activeSession(),
                 'teacher_pid'=> $request->teacher_pid,
                 'subject_pid'=> $request->subject_pid,
                 'staff_pid'=> getSchoolUserPid(),
@@ -616,6 +621,7 @@ class StaffController extends Controller
             //     $data['arm_pid'] = $row;
             // }
             $result= $this->assignClassArmSubjectToTeacher($data);
+            
             if($result){
                 return response()->json(['status'=>1,'message'=>'Selected Subject (s) assigned to staff!!!']);
             }
@@ -631,12 +637,13 @@ class StaffController extends Controller
             'session_pid'=>$data['session_pid']
         ];
         try {
+            $r=false;
             foreach ($data['subject_pid'] as $row) {
                 $data['pid'] = public_id();
                 $dupParams['arm_subject_pid'] = $data['arm_subject_pid'] = $row;
-                StaffSubject::updateOrCreate($dupParams, $data);
+                $r= StaffSubject::updateOrCreate($dupParams, $data);
             }
-            return true;
+            return $r;
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);

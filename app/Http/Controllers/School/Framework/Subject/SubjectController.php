@@ -29,9 +29,10 @@ class SubjectController extends Controller
             ->get(['subjects.pid','subject', 'subjects.status','subject_type', 'subjects.created_at', 'subjects.description', 'username']);
         return datatables($data)
             ->addColumn('action', function ($data) {
+                // <i class="bi bi-tools"></i>
             return '
                     <button type="button" class="btn btn-primary btn-sm edit-subject" pid="'.$data->pid.'">
-                        <i class="bi bi-tools"></i>
+                        Edit
                     </button>
             ';
             })

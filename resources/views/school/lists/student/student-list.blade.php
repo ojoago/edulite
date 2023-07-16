@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Student Lists</h5>
+        <h5 class="card-title">Student Lists <a href="{{route('school.registration.student.form')}}"> <button class="btn btn-primary ml-3 btn-sm">New Student</button> </a></h5>
 
         <!-- Default Tabs -->
         <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">

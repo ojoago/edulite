@@ -16,25 +16,25 @@ class StudentClassController extends Controller
 
     public function assignClassRep(Request $request){
         $validator = Validator::make($request->all(),[
-            'session_pid'=>'required',
-            'term_pid' => 'required',
+            // 'session_pid'=>'required',
+            // 'term_pid' => 'required',
             'arm_pid' => 'required',
             'student_pid' => 'required',
             'category_pid' => 'required',
             'class_pid' => 'required',
         ],[
-            'session_pid.required'=>'Select Session',
-            'term_pid.required'=>'Select Term',
+            // 'session_pid.required'=>'Select Session',
+            // 'term_pid.required'=>'Select Term',
             'arm_pid.required'=>'Select class Arm',
             'student_pid.required'=>'Select class rep',
-            'session_pid.required'=>'Category is required',
+            'category_pid.required'=>'Category is required',
             'class_pid.required'=>'Class is required',
         ]);
         
         if(!$validator->fails()){
             $data = [
-                'session_pid' => $request->session_pid,
-                'term_pid' => $request->term_pid,
+                'session_pid' =>activeSession(),
+                'term_pid' => activeTerm(),
                 'arm_pid' => $request->arm_pid,
                 'student_pid' => $request->student_pid,
                 'school_pid'=>getSchoolPid()

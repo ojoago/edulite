@@ -27,19 +27,23 @@ class UploadParentController extends Controller
                 $header = $resource['header'];
                 $data = $resource['data'];
                 $errors = [];
-                $k = 1;
+                $k = 2;
                 if ((($header === $this->header))) {
+                    $n=0;
                     foreach ($data as $row) {
                         if (!empty($row[0]) && !empty($row[1]) && !empty($row[3])) {
-                            $username = $row[5] ?? '';
+                            $username = $row[4] ?? '';
                             if (!AuthController::findGsm($row[3])) {
                                 $data = [
                                     'gsm' => ($row[3]),
-                                    'email' => AuthController::findEmail($username) ? null : $username,
+                                    // 'email' => AuthController::findEmail($username) ? null : $username,
                                     'account_status' => 1,
                                     'password' => $this->pwd,
                                     'username' =>  $username ? AuthController::uniqueUsername($username) : AuthController::uniqueUsername($row[0]),
                                 ];
+                                if ($row[5]) {
+                                    $data['email'] = AuthController::findEmail($row[5]) ? null : $row[5];
+                                }
                                 $user = AuthController::createUser($data);
                                 if($user){
                                     // dd($user, $data);
@@ -47,9 +51,9 @@ class UploadParentController extends Controller
                                         'firstname' => $row[0],
                                         'lastname' => $row[1],
                                         'othername' => $row[2],
-                                        'gender' => (int) $row[8],
+                                        'gender' => GENDER[(int) $row[8]],
                                         'dob' => $row[3],
-                                        'religion' => (int) $row[7],
+                                        'religion' => RELIGION[(int) $row[7]],
                                         'state' => null,
                                         'lga' => null,
                                         'address' => $row[6],
@@ -63,10 +67,11 @@ class UploadParentController extends Controller
                                     $dtl = UserDetailsController::insertUserDetails($userDetail);
                                     if($dtl){
                                         $sts = SchoolController::createSchoolParent($parent);
-                                        if (!$sts) {
+                                        if ($sts) {
+                                            $n++;
+                                        }else{
                                             $errors[] = 'Parent on row ' . $k . ' not linked to school';
                                         }
-                                        $k++;
                                     }else{
 
                                         $errors[] = 'parent on row ' . $k . ' partially created use edit to completed it please';
@@ -81,15 +86,14 @@ class UploadParentController extends Controller
                         } else {
                             $errors[] = 'Parent on row ' . $k . ' not inserted because of either firstname, surname or gsm is empty';
                         }
-                        
+                        $k++;
                     }
-                    $msg = $k - count($errors) . ' parent(s) uploaded successfully';
+                    $msg = $n . ' parent(s) uploaded successfully... & ' . count($errors) . ' error(s)';
                     return response()->json(['status' => 1, 'message' => $msg, 'errors' => $errors]);
                 }
                 return response()->json(['status' => 'error', 'message' => 'use the template without change it please.']);
             } catch (\Throwable $e) {
-                $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
-
+                $error = ['error' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__];
                 logError($error);
                 return response()->json(['status' => 'error', 'message' => 'upload stop on row ' . $k, 'errors' => $errors]);
             }

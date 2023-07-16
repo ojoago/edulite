@@ -70,11 +70,11 @@ class PsychomotorController extends Controller
     public function createPsychomotor(Request $request){
 
         $validator = Validator::make($request->all(),[
-            'title'=> 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
+            'title'=> "required|max:30|regex:/^[a-zA-Z0-9,'\s]+$/",
             'score'=> 'required|int|digits_between:1,5'
         ],[
             'title.max'=>'Maximum of 30 character',
-            'title.regex'=>'only number and text is allowed',
+            'title.regex'=>'Special character  is not allowed',
             'score.required'=>'Enter Obtainable Score',
             'score.digits_between'=> 'Obtainable Score 5 Maximum',
         ]);

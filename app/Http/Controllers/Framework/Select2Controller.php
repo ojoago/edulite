@@ -439,28 +439,101 @@ class Select2Controller extends Controller
         }
         return response()->json($data);
     }
+
     public function loadAvailableClassArmSubject(Request $request)
     {
         $data = null;
-        if ($request->has('q'))
-            $result = ClassArmSubject::join('class_arms','class_arms.pid','arm_pid')
-                                   ->join('subjects','subjects.pid', 'subject_pid')
-                                   ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' =>$request->pid])
-                                   ->where('subject', 'like', '%' . $request->q . '%')
-                                    ->limit($request->page_limit)->orderBy('arm')
-                                    ->get(['class_arm_subjects.pid', 'arm','subject']); //
-        else 
-            $result = ClassArmSubject::join('class_arms','class_arms.pid','arm_pid')
-                                   ->join('subjects','subjects.pid', 'subject_pid')
-                                   ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' =>$request->pid])
-                                   ->limit(10)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm','subject']); //
+        if (schoolAdmin()){
+            if ($request->has('q'))
+                $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
+                    ->join('subjects', 'subjects.pid', 'subject_pid')
+                    ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' => $request->pid])
+                    ->where('subject', 'like', '%' . $request->q . '%')
+                    ->limit($request->page_limit)->orderBy('arm')
+                    ->get(['class_arm_subjects.pid', 'arm', 'subject']); //
+            else
+                $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
+                    ->join('subjects', 'subjects.pid', 'subject_pid')
+                    ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' => $request->pid])
+                    ->limit(10)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm', 'subject']); //
+        }
+        else{
+            if ($request->has('q')){
+                // load subject classes assigend  to class teacher 
+                $class = DB::table('class_arm_subjects as cas')->join('class_arms as ca', 'ca.pid', 'arm_pid')
+                ->join('subjects as s', 'subjects.pid', 'subject_pid')
+                ->join('staff_classes as sc', 'sc.arm_pid', 'ca.pid')
+                ->where([
+                    'ca.school_pid' => getSchoolPid(), 
+                    'cas.arm_pid' => $request->pid,
+                    'sc.teacher_pid'=>getSchoolUserPid(),
+                    'sc.term_pid'=>activeTerm(),
+                    'sc.session_pid'=>activeSession(),'s.status'=>1])
+                    ->where('subject', 'like', '%' . $request->q . '%')
+                    ->limit($request->page_limit)->orderBy('arm')
+                    ->get(['cas.pid', 'arm', 'subject']); //
+                // load class subject assigned to teacher 
+                $sbj = DB::table('class_arm_subjects as cas')->join('class_arms as ca', 'ca.pid', 'arm_pid')
+                ->join('subjects as s', 's.pid', 'cas.subject_pid')
+                ->join('staff_subjects as sb', 'sb.arm_subject_pid', 'ca.pid')
+                ->where([
+                    'ca.school_pid' => getSchoolPid(),
+                    'cas.arm_pid' => $request->pid,
+                    'sb.teacher_pid' => getSchoolUserPid(),
+                    'sb.term_pid' => activeTerm(),
+                    'sb.session_pid' => activeSession(), 's.status' => 1
+                ])
+                    ->where('subject', 'like', '%' . $request->q . '%')
+                    ->limit($request->page_limit)->orderBy('arm')
+                    ->get(['cas.pid', 'arm', 'subject']); //
+                    // merge to avoid duplicate 
+                $result = $class->merge($sbj);
+            }else{
+                // load subject classes assigend  to class teacher 
+                $class = DB::table('class_arm_subjects as cas')->join('class_arms as ca', 'ca.pid', 'arm_pid')
+                    ->join('subjects as s', 's.pid', 'cas.subject_pid')
+                    ->join('staff_classes as sc', 'sc.arm_pid', 'ca.pid')
+                    ->where([
+                        'ca.school_pid' => getSchoolPid(),
+                        'cas.arm_pid' => $request->pid,
+                        'sc.teacher_pid' => getSchoolUserPid(),
+                        'sc.term_pid' => activeTerm(),
+                        'sc.session_pid' => activeSession(), 's.status' => 1
+                    ])
+                    // ->where('subject', 'like', '%' . $request->q . '%')
+                    ->limit($request->page_limit)->orderBy('arm')
+                    ->get(['cas.pid', 'arm', 's.subject']); //
+                // load class subject assigned to teacher 
+                $sbj = DB::table('class_arm_subjects as cas')->join('class_arms as ca', 'ca.pid', 'arm_pid')
+                    ->join('subjects as s', 's.pid', 'cas.subject_pid')
+                    ->join('staff_subjects as sb', 'sb.arm_subject_pid', 'cas.pid')
+                    ->where([
+                        'ca.school_pid' => getSchoolPid(),
+                        'cas.arm_pid' => $request->pid,
+                        'sb.teacher_pid' => getSchoolUserPid(),
+                        'sb.term_pid' => activeTerm(),
+                        'sb.session_pid' => activeSession(),
+                         's.status' => 1
+                    ])
+                    // ->where('subject', 'like', '%' . $request->q . '%')
+                    ->limit($request->page_limit)->orderBy('arm')
+                    ->get(['cas.pid', 'arm', 's.subject']); //
+                // merge to avoid duplicate 
+                $result = $class->merge($sbj);
+            }
+                // $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
+                //     ->join('subjects', 'subjects.pid', 'subject_pid')
+                //     ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' => $request->pid])
+                //     ->limit(10)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm', 'subject']); //
+        }
+        
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }
         foreach ($result as $row) {
             $data[] = [
                 'id' => $row->pid,
-                'text' => $row-> subject . ' - ' . $row->arm,
+                'text' => $row->subject . ' - ' . $row->arm,
             ];
         }
         return response()->json($data);
@@ -530,18 +603,60 @@ class Select2Controller extends Controller
                 $result = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1, 'class_pid' => $request->pid])
                     ->limit(10)->orderBy('arm')->get(['pid', 'arm']); //
         }else{
-            if ($request->has('q'))
-                $result = DB::table('class_arms as c')->join('staff_classes as s','s.arm_pid','c.pid')
-                                ->where(['s.teacher_pid'=> getSchoolUserPid(),'s.school_pid'=>getSchoolPid(),'c.status'=>1, 'c.class_pid' => $request->pid])
-                                ->where('c.arm', 'like', '%' . $request->q . '%')
-                                ->limit(10)->orderBy('c.arm')
-                                ->get(['c.pid', 'c.arm']);
-            else
-            $result = DB::table('class_arms as c')->join('staff_classes as s', 's.arm_pid', 'c.pid')
-            ->where(['s.teacher_pid' => getSchoolUserPid(), 's.school_pid' => getSchoolPid(), 'c.status' => 1, 'c.class_pid' => $request->pid])
-           ->limit(10)->orderBy('c.arm')
-                ->get(['c.pid', 'c.arm']);//
+            if ($request->has('q')){
+                $class = DB::table('class_arms as c')->join('staff_classes as s','s.arm_pid','c.pid')
+                ->where(['s.teacher_pid'=> getSchoolUserPid(),
+                's.school_pid'=>getSchoolPid(),
+                'c.status'=>1, 
+                'c.class_pid' => $request->pid, 
+                's.term_pid' => activeTerm(),
+                's.session_pid' => activeSession()])
+                ->where('c.arm', 'like', '%' . $request->q . '%')
+                ->limit(10)->orderBy('c.arm')
+                ->get(['c.pid', 'c.arm']);
+
+                $sbj = DB::table('class_arms as ca')->join('class_arm_subjects as cas','cas.arm_pid','ca.pid')
+                                                    ->join('staff_subjects as sb', 'cas.pid', 'sb.arm_subject_pid')
+                ->where(['sb.teacher_pid' => getSchoolUserPid(),
+                        'sb.term_pid'=>activeTerm(),
+                        'sb.session_pid'=>activeSession(),
+                        'ca.school_pid' => getSchoolPid(), 
+                        'ca.class_pid' => $request->pid,
+                        'cas.status' => 1])
+                        ->where('c.arm', 'like', '%' . $request->q . '%')
+                ->limit(10)->orderBy('ca.arm')
+                ->get(['ca.pid', 'ca.arm']);
+                $result = $class->merge($sbj);
+            }
+            else{
+                $class = DB::table('class_arms as c')->join('staff_classes as s', 's.arm_pid', 'c.pid')
+                ->where([
+                    's.teacher_pid' => getSchoolUserPid(), 
+                    's.school_pid' => getSchoolPid(), 
+                    'c.status' => 1, 
+                    'c.class_pid' => $request->pid,
+                    's.term_pid' => activeTerm(),
+                    's.session_pid' => activeSession(),
+                    ])
+                ->limit(10)->orderBy('c.arm')
+                ->get(['c.pid', 'c.arm']); //
+
+                $sbj = DB::table('class_arms as ca')->join('class_arm_subjects as cas', 'cas.arm_pid', 'ca.pid')
+                ->join('staff_subjects as sb', 'cas.pid', 'sb.arm_subject_pid')
+                ->where([
+                    'sb.teacher_pid' => getSchoolUserPid(),
+                    'sb.term_pid' => activeTerm(),
+                    'sb.session_pid' => activeSession(),
+                    'ca.school_pid' => getSchoolPid(),
+                    'ca.class_pid' => $request->pid,
+                    'cas.status' => 1
+                ])
+                ->limit(10)->orderBy('ca.arm')
+                ->get(['ca.pid', 'ca.arm']);
+                $result = $class->merge($sbj);
+            }
         }
+        logError($result);
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }

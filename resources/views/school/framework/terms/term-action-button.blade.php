@@ -1,5 +1,6 @@
     <button type="button" class="btn btn-primary btn-sm dropdown-toggle pointer" data-bs-toggle="modal" data-bs-target="#modal{{$data->pid}}">
-        <i class="bi bi-tools"></i>
+        <!-- <i class="bi bi-tools"></i> -->
+        Edit
     </button>
 
     <!-- create school term modal  -->

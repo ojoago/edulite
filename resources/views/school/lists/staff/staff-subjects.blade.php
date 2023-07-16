@@ -23,6 +23,7 @@
                 <thead>
                     <tr>
                         <th width="5%">S/N</th>
+                        <th>Username</th>
                         <th>Names</th>
                         <th>Class Subjects</th>
                         <th>Session</th>
@@ -80,6 +81,9 @@
                         name: 'DT_RowIndex',
                         // orderable: false,
                         // searchable: false
+                    },
+                    {
+                        "data": "username"
                     },
                     {
                         "data": "fullname"

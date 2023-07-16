@@ -104,7 +104,7 @@
                     <thead>
                         <tr>
                             <th>Session</th>
-                            <th>CLass</th>
+                            <th>Class</th>
                             <th>Subject</th>
                             <th>Status</th>
                             <th>Date</th>
@@ -145,8 +145,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createClassCategoryBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createClassCategoryBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -176,16 +176,9 @@
                             <div class="input-group mb-3">
                                 <select name="class_number[]" id="classNumberSelect" class="form-control form-control-sm">
                                     <option disabled selected>Select Class Number</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                    <option value="4">Four</option>
-                                    <option value="5">Five</option>
-                                    <option value="6">Six</option>
-                                    <option value="7">Seven</option>
-                                    <option value="8">Eight</option>
-                                    <option value="9">Nine</option>
-                                    <option value="10">Ten</option>
+                                    @foreach(CLASS_NUMBER as $key=> $nm)
+                                    <option value="{{$key}}"> {{$nm}}</option>
+                                    @endforeach
                                 </select>
                                 <i class="bi bi-x-circle-fill text-white m-2"></i>
                             </div>
@@ -197,8 +190,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createClassBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createClassBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -242,16 +235,9 @@
                             <div class="input-group mb-3">
                                 <select name="arm_number[]" id="classNumberSelect" class="form-control form-control-sm">
                                     <option disabled selected>Select Class Number</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                    <option value="4">Four</option>
-                                    <option value="5">Five</option>
-                                    <option value="6">Six</option>
-                                    <option value="7">Seven</option>
-                                    <option value="8">Eight</option>
-                                    <option value="9">Nine</option>
-                                    <option value="10">Ten</option>
+                                    @foreach(CLASS_NUMBER as $key=> $nm)
+                                    <option value="{{$key}}"> {{$nm}}</option>
+                                    @endforeach
                                 </select>
                                 <i class="bi bi-x-circle-fill text-white m-2 removeRowBtn"></i>
                             </div>
@@ -262,8 +248,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createClassArmBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createClassArmBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -302,8 +288,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createClassArmSubjectBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createClassArmSubjectBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -325,16 +311,9 @@
                             <div class="input-group mb-3">
                                 <select name="class_number[]" id="classNumberSelect" class="form-control form-control-sm">
                                 <option disabled selected>Select Class Number</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                                <option value="4">Four</option>
-                                <option value="5">Five</option>
-                                <option value="6">Six</option>
-                                <option value="7">Seven</option>
-                                <option value="8">Eight</option>
-                                <option value="9">Nine</option>
-                                <option value="10">Ten</option>
+                                @foreach(CLASS_NUMBER as $key=> $nm)
+                                        <option value="{{$key}}"> {{$nm}}</option>
+                                    @endforeach
                             </select>
                             <i class="bi bi-x-circle-fill text-danger pointer m-2 removeRowBtn"></i>
                             </div>
@@ -365,16 +344,9 @@
                             <div class="input-group mb-3">
                                 <select name="arm_number[]" id="classNumberSelect2" class="form-control form-control-sm">
                                     <option disabled selected>Arm serial number</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                    <option value="4">Four</option>
-                                    <option value="5">Five</option>
-                                    <option value="6">Six</option>
-                                    <option value="7">Seven</option>
-                                    <option value="8">Eight</option>
-                                    <option value="9">Nine</option>
-                                    <option value="10">Ten</option>
+                                    @foreach(CLASS_NUMBER as $key=> $nm)
+                                    <option value="{{$key}}">{{$nm}}</option>
+                                    @endforeach
                                 </select>
                                 <i class="bi bi-x-circle-fill text-danger m-2 removeRowccaBtn pointer"></i>
                             </div>
@@ -545,11 +517,15 @@
                 loadSubject(id);
             }
         });
+
+        multiSelect2('#assignClassToteacherSelect2', 'createArmTeacherModal', 'school-teachers', 'Select Class Teacher');
         // createArmTeacherModal
         multiSelect2('#termSelect24t', 'createArmTeacherModal', 'term', 'Select Term');
         multiSelect2('#sessionSelect24t', 'createArmTeacherModal', 'session', 'Select Session');
         multiSelect2('#sessionSelect2', 'createArmSubjectModal', 'session', 'Select Session');
         multiSelect2('#classCategorySelect2', 'createClassModal', 'category', 'Select Category');
+        multiSelect2('#editClassCategorySelect2', 'createClassModal', 'category', 'Select Category');
+
         multiSelect2('.ccaCategorySelect2', 'createClassArmModal', 'category', 'Select Category');
         $('#ccaCategorySelect2').on('change', function(e) {
             var id = $(this).val();

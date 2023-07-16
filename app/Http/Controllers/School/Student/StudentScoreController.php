@@ -35,6 +35,12 @@ class StudentScoreController extends Controller
             'term'=>'required',
             'session'=>'required',
        ]);
+
+       if(!$this->mySubjects($request->subject)){
+            $cl = ClassController::GetClassSubjectAndName($request->subject);
+            return redirect()->back()->with('warning',$cl->subject.' '.$cl->arm.' is not assigned to YOU');
+       }
+        
         // retrieve form data 
     session([
         'category'=> $request->category,
@@ -50,6 +56,13 @@ class StudentScoreController extends Controller
         // self::useClassArmSubjectToGetSubjectScroe();
     return redirect()->route('enter.student.score');
     }
+    private function mySubjects($pid){
+        if(schoolAdmin()){
+            return true;
+        }
+        return DB::table('staff_subjects')->where(['arm_subject_pid'=>$pid,'teacher_pid'=>getSchoolUserPid(),'term_pid'=>activeTerm(),'session_pid'=>activeSession(),'school_pid'=>getSchoolPid()])->exists();
+    }
+
 
     // switch to another subject from the blade
     public function changeSubject(Request $request){
@@ -79,6 +92,7 @@ class StudentScoreController extends Controller
             'arm'=>$request->arm,
         ]);
         setActionablePid(); //set assessment pid to null
+       
             // self::useClassArmSubjectToGetSubjectScroe();
         return redirect()->route('view.student.score');
     }

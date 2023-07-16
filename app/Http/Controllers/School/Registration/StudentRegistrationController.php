@@ -53,13 +53,11 @@ class StudentRegistrationController extends Controller
                                 Rule::unique('users')->where(function ($param) use ($request) {
                                         $param->where('pid', '<>', $request->user_pid);
                                     })],//|||unique:users,email
-            'gender'=>'required|int',
+            'gender'=>'required',
             'dob'=>'required|date',
             'religion'=>'required',
             'address'=>'required',
             'type'=>'required',
-            // 'session_pid'=> 'required_without:pid|string',
-            // 'term_pid'=>'required_without:pid|string',
             'category_pid'=>'required_without:pid|string', 
             'class_pid'=>'required_without:pid|string',
             'arm_pid'=>'required_without:pid|string',
@@ -171,9 +169,10 @@ class StudentRegistrationController extends Controller
                     return response()->json(['status'=>1,'message'=>'account created completely but student profile not created, so please use '.$user->username.' link to school']);
                 }
                 return response()->json(['status'=>1,'message'=>'account created but not completed, so please use '.$user->username.' to update details and link to school']);
-             } catch (\Throwable $e) {
+            } catch (\Throwable $e) {
                 $error = $e->getMessage();
                 logError($error);
+                return response()->json(['status'=>'error','message'=>'Something went Wrong... error logged']);
              }
             
         }

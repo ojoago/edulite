@@ -33,7 +33,7 @@ class PsychoGradeKeyController extends Controller
     public function createPsychoGrade(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'grade.*' => 'required|max:30|regex:/^[a-zA-Z0-9\s]+$/',
+            'grade.*' => "required|max:30|regex:/^[a-zA-Z0-9,'\s]+$/",
             'score.*' => 'required|int||max:5|min:1'
         ], [
             'grade.max' => 'Maximum of 30 character',

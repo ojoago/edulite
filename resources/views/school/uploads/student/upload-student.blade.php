@@ -3,15 +3,14 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Upload Student</h5>
-        <!-- Multi Columns Form -->
+        <h5 class="card-title">Upload Student for <span class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</span> </h5>
         <form class="row g-3" id="uploadStudentForm">
             <div class="col-12">
                 <p>Click on the button below to download template</p>
                 <a href="{{asset('files/excel-template/student-template.xlsx')}}"> <button type="button" class="btn btn-sm btn-success">download</button> </a>
             </div>
             @csrf
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
                 <label for="state" class="form-label">Session </label>
                 <select name="session_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="sessionSelect2" required>
                 </select>
@@ -22,7 +21,7 @@
                 <select name="term_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="tmSelect2" required>
                 </select>
                 <p class="text-danger term_pid_error"></p>
-            </div>
+            </div> -->
             <div class="col-md-4">
                 <label for="category_pid" class="form-label">Category</label>
                 <select name="category_pid" style="width: 100%;" class="form-select form-select-sm readOnlyProp" id="cateSelect2" required>

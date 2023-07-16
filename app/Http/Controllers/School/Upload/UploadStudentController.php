@@ -20,8 +20,8 @@ class UploadStudentController extends Controller
         $validator = Validator::make(
             $request->all(),
             ['file' => 'required|file|mimes:xlsx,xls,csv|max:30|min:9',
-                'session_pid' => 'required|string',
-                'term_pid' => 'required|string',
+                // 'session_pid' => 'required|string',
+                // 'term_pid' => 'required|string',
                 'category_pid' => 'required|string',
                 'class_pid' => 'required|string',
                 'arm_pid' => 'required|string',
@@ -30,8 +30,8 @@ class UploadStudentController extends Controller
                 'file.max' => 'Please do not upload more than 100 recored at a time',
                 'address.required' => 'Enter Student Residence Address',
                 // 'type.required' => 'Select Student Type',
-                'session_pid.required_without' => 'Select Session for Student',
-                'term_pid.required_without' => 'Select Term for Student',
+                // 'session_pid.required_without' => 'Select Session for Student',
+                // 'term_pid.required_without' => 'Select Term for Student',
                 'category_pid.required_without' => 'Select Category for Student',
                 'class_pid.required_without' => 'Select Class for Student',
                 'arm_pid.required_without' => 'Select Class Arm for Student',
@@ -45,7 +45,7 @@ class UploadStudentController extends Controller
                 $header = $resource['header'];
                 $data = $resource['data'];
                 $errors = [];
-                $k = 1;$n=0;
+                $k = 2;$n=0;
                 if ((($header === $this->header))) {
                     foreach ($data as $row) {
                         if (!empty($row[0]) && !empty($row[1])) {
@@ -61,7 +61,6 @@ class UploadStudentController extends Controller
                                     'username' =>  $username ? AuthController::uniqueUsername($username) : AuthController::uniqueUsername($row[0]),
                                 ];
                                 if($email){
-                                    logError($email);
                                     $data['email'] = AuthController::findEmail($email) ? null : $email;
                                 }
                                 $user = AuthController::createUser($data);
@@ -79,9 +78,9 @@ class UploadStudentController extends Controller
                                     'user_pid' => $user->pid
                                 ];
                                 $student = [
-                                    'gender' => (int) $row[9],
+                                    'gender' => GENDER[(int) $row[9]],
                                     'dob' => $row[4],
-                                    'religion' => (int) $row[8],
+                                    'religion' => RELIGION[(int) $row[8]],
                                     'state' => null,
                                     'lga' => null,
                                     'address' => $row[7],
@@ -91,17 +90,17 @@ class UploadStudentController extends Controller
                                     'school_pid' => getSchoolPid(),
                                     'user_pid' => $user->pid,
                                     'reg_number' =>  StudentController::studentUniqueId(),
-                                    'session_pid' =>  $request->session_pid,
-                                    'term_pid' =>  $request->term_pid,
+                                    'session_pid' =>  activeSession(),
+                                    'term_pid' =>  activeTerm(),
                                     'admitted_class' =>  $request->arm_pid,
                                     'current_class_pid' =>  $request->arm_pid,
-                                    'current_session_pid' =>  $request->session_pid,
+                                    'current_session_pid' => activeSession(),
                                 ];
                                 $userDetails = UserDetailsController::insertUserDetails($detail);
                                 if ($userDetails) {
                                     $student['fullname'] = $userDetails->fullname; //get student fullname and save along with student info
                                     $studentClass = [
-                                        'session_pid' => $request->session_pid,
+                                        'session_pid' => activeSession(),
                                         'arm_pid' => $request->arm_pid,
                                         'school_pid' => $student['school_pid'],
                                         'staff_pid' => getSchoolUserPid(),
@@ -130,9 +129,7 @@ class UploadStudentController extends Controller
                 }
                 return response()->json(['status' => 'error', 'message' => 'use the template without change it please.']);
             } catch (\Throwable $e) {
-                // $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
-
-                logError($e->getMessage());
+                logError(['error'=>$e->getMessage(),'file'=> __FILE__]);
                 return response()->json(['status' => 'error', 'message' => 'upload stop on row ' . $k, 'errors' => $errors]);
             }
         }

@@ -21,6 +21,7 @@ class ClassController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+   
     public function loadCategory()
     {
         $data = Category::join('school_staff', 'school_staff.pid', 'categories.staff_pid')
@@ -51,7 +52,7 @@ class ClassController extends Controller
         ->join('users', 'users.pid', 'school_staff.user_pid')
         ->join('categories', 'categories.pid', 'classes.category_pid')
         ->where(['classes.school_pid' => getSchoolPid()])
-            ->get(['classes.pid', 'category', 'classes.created_at', 'class', 'classes.status','username']);
+            ->get(['classes.pid', 'category', 'classes.created_at', 'class', 'classes.status','username', 'classes.category_pid','class_number']);
         return datatables($data)
             ->addColumn('action', function ($data) {
                 return view('school.framework.class.class-action-buttons',['data'=>$data]);
@@ -72,7 +73,7 @@ class ClassController extends Controller
         ->join('school_staff', 'school_staff.pid', 'classes.staff_pid')
         ->join('users', 'users.pid', 'school_staff.user_pid')
         ->where(['class_arms.school_pid' => getSchoolPid()])
-            ->get(['class_arms.pid', 'class','arm', 'class_arms.created_at', 'class_arms.status','username']);
+            ->get(['class_arms.pid', 'class','arm', 'class_arms.created_at', 'class_arms.status','username','arm_number','category_pid','class_pid']);
         return datatables($data)
             ->addColumn('action', function ($data) {
                 return view('school.framework.class.class-arm-action-buttons', ['data' => $data]);
@@ -156,7 +157,7 @@ class ClassController extends Controller
         try {
             return Category::updateOrCreate(['school_pid'=>$data['school_pid'],'pid'=>$data['pid']],$data);
         } catch (\Throwable $e) {
-            $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+            $error = ['error' => $e->getMessage(), 'file' => __FILE__,'line' => __LINE__];
             logError($error);
             return false;
         }
@@ -351,7 +352,13 @@ class ClassController extends Controller
         return $arm;
     }
 
-
+    // public static function getClassSubjectByPid($pid){
+    //     $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
+    //         ->join('subjects', 'subjects.pid', 'subject_pid')
+    //         ->where(['class_arms.school_pid' => getSchoolPid(), 'class_arm_subjects.pid' => $pid])
+    //         ->first(['arm', 'subject']);
+    //     return $result;
+    // }
     public static function createClassParam(array $data)
     {
         // $teacher = $data['teacher_pid'];

@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('seasonal_greetings', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->longText('message');
+            $table->string('path')->nullable();
+            $table->string('date', 20);
+            $table->string('time', 20)->nullable();
+            $table->string('created_by')->nullable();
             $table->timestamps();
         });
     }

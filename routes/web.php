@@ -399,14 +399,14 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-staff-detal-by-id', [StaffController::class, 'loadStaffDetailsById'])->name('load.staff.detail.by.id');
     // Route::post('school-staff-role/{id}', [StaffController::class, 'staffRole'])->name('school.staff.role');
     // Route::post('school-staff-access/{id}', [StaffController::class, 'staffAccessRight'])->name('school.staff.access');
-    Route::post('school-staff-class', [StaffController::class, 'assignClassToStaff'])->name('school.staff.class');
-    Route::post('school-staff-subject', [StaffController::class, 'staffSubject'])->name('school.staff.subject');
+    Route::post('staff-class', [StaffController::class, 'assignClassToStaff'])->name('school.staff.class');
+    Route::post('staff-subject', [StaffController::class, 'staffSubject'])->name('school.staff.subject');
     // update staff images 
     Route::post('update-staff-images', [StaffController::class, 'updateStaffImages'])->name('update.staff.image');
     // update role 
     Route::post('update-staff-role', [StaffController::class, 'updateStaffRole'])->name('update.staff.role');
     // update staff access
-    Route::post('school-staff-access', [StaffController::class, 'staffAccessRight'])->name('school.staff.access');
+    Route::post('staff-access', [StaffController::class, 'staffAccessRight'])->name('school.staff.access');
     // switch role
     Route::get('switch-role/{role}', [SchoolController::class, 'switchRole'])->name('switch.role');
     // update status 
@@ -425,7 +425,7 @@ Route::middleware('schoolAuth')->group(function(){
 
     Route::view('register-parent', 'school.registration.parent.register-parent')->name('school.parent.registration.form');
 
-    Route::post('school-parent-registration', [ParentRegistrationController::class, 'registerParent'])->name('school.register.parent');
+    Route::post('parent-registration', [ParentRegistrationController::class, 'registerParent'])->name('school.register.parent');
 
     Route::post('change-parent-status', [ParentController::class, 'toggleParentStatus'])->name('toggle.parent.status');
     Route::post('parent-profile/{id}', [ParentController::class, 'myProfile'])->name('school.parent.profile');
@@ -433,8 +433,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('parents-ward/{id}', [ParentController::class, 'myWards'])->name('school.parent.child');
 
     // parent assistance 
-    Route::view('create-school-rider-form', 'school.registration.rider.register-rider')->name('school.rider.form');
-    Route::post('create-school-rider', [SchoolRiderController::class, 'submitSchoolRiderForm'])->name('create.school.rider');
+    Route::view('create-rider-form', 'school.registration.rider.register-rider')->name('school.rider.form');
+    Route::post('create-rider', [SchoolRiderController::class, 'submitSchoolRiderForm'])->name('create.school.rider');
     // link Rider to student 
     Route::post('link-student-to-rider', [SchoolRiderController::class, 'linkStudentToRider'])->name('link.student.to.rider');
 
@@ -474,7 +474,7 @@ Route::middleware('schoolAuth')->group(function(){
 
     // list 
     // list school staff 
-    Route::view('school-staff-list', 'school.lists.staff.staff-list')->name('school.staff.list');
+    Route::view('staff-list', 'school.lists.staff.staff-list')->name('school.staff.list');
 
     // load staff 
     // load active staff 
@@ -485,7 +485,7 @@ Route::middleware('schoolAuth')->group(function(){
     // load all staff classes goes here 
     Route::post('load-all-staff-classes', [StaffController::class, 'loadAllStaffClasses'])->name('load.all.staff.classes');
     // all staff subjects goes here view 
-    Route::view('all-staff-subjects', 'school.lists.staff.staff-subjects')->name('all.staff.subjects');
+    Route::view('staff-subjects', 'school.lists.staff.staff-subjects')->name('all.staff.subjects');
     // load all staff subjects goes here 
     Route::post('load-all-staff-subjects', [StaffController::class, 'loadAllStaffSubjects'])->name('load.all.staff.subjects');
 
@@ -498,7 +498,7 @@ Route::middleware('schoolAuth')->group(function(){
 
 
     // student list 
-    Route::view('school-student-list', 'school.lists.student.student-list')->name('school.student.list');
+    Route::view('student-list', 'school.lists.student.student-list')->name('school.student.list');
     // load active student 
     Route::get('load-active-student', [StudentController::class, 'index'])->name('load.active.student.list');
     // load diabled student 
@@ -560,7 +560,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('student-subject-score-form', 'school.student.assessment.student-subject-score-form')->name('student.assessment.form');
     Route::post('student-subject-score-form', [StudentScoreController::class, 'enterStudentScoreRecord']);
     Route::post('change-arm-subject', [StudentScoreController::class, 'changeSubject'])->name('change.arm.subject');
-    Route::get('student-score-entering', [StudentScoreController::class, 'enterStudentScore'])->name('enter.student.score');
+    Route::get('enter-student-score', [StudentScoreController::class, 'enterStudentScore'])->name('enter.student.score');
     Route::post('submit-student-ca', [StudentScoreController::class, 'submitCaScore'])->name('submit.student.ca');
     Route::post('change-student-ca-student', [StudentScoreController::class, 'changeSubjectResultStatus'])->name('change.student.ca.student');
     // export student list 

@@ -1,5 +1,6 @@
 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editSubjectModal{{$data->pid}}">
-    <i class="bi bi-tools"></i>
+    <!-- <i class="bi bi-tools"></i> -->
+    Edit
 </button>
 <div class="modal fade form-modal" id="editSubjectModal{{$data->pid}}" tabindex="-1">
     <div class="modal-dialog">
@@ -19,8 +20,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary createSubjectTypeBtn" id="{{$data->pid}}">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm createSubjectTypeBtn" id="{{$data->pid}}">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

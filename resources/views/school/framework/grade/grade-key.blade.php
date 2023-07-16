@@ -41,6 +41,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="class-grade" role="tabpanel">
+                <small>This is will be computed by system when school enter student termly score</small>
                 <div class="row mb-3 mt-2">
                     <div class="col-md-3">
                         <select name="category_pid" id="classGradeKeyCategorySelect2" class="form-control form-control-sm">
@@ -158,8 +159,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createGradeKeyBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createGradeKeyBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

@@ -15,4 +15,8 @@ class Classes extends Model
     public function setClassAttribute($value){
         $this->attributes['class'] = strtoupper($value);
     }
+    public function classArms()
+    {
+        return $this->hasMany(ClassArm::class, 'class_pid', 'pid');
+    }
 }

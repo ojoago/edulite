@@ -40,8 +40,8 @@
                 <label for="gender" class="form-label">Gender <small class="text-danger">*</small></label>
                 <select id="gender" name="gender" class="form-control  form-control-sm">
                     <option disabled selected>Select Gender</option>
-                    <option value="2">Female</option>
-                    <option value="1">Male</option>
+                    <option>Female</option>
+                    <option>Male</option>
                 </select>
                 <p class="text-danger gender_error"></p>
             </div>
@@ -54,9 +54,9 @@
                 <label for="religion" class="form-label">Religion <small class="text-danger">*</small></label>
                 <select id="religion" name="religion" class="form-control form-control-sm">
                     <option disabled selected>Select Religion</option>
-                    <option value="2">Christian</option>
-                    <option value="1">Muslim</option>
-                    <option value="3">Other</option>
+                    <option >Christian</option>
+                    <option >Muslim</option>
+                    <option >Other</option>
                 </select>
                 <p class="text-danger religion_error"></p>
             </div>

@@ -12,9 +12,9 @@
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="in-active-staff-tab" data-bs-toggle="tab" data-bs-target="#in-active-staff" type="button" role="tab" aria-controls="in-active" aria-selected="false">In-Active Staff</button>
             </li>
-            <li class="nav-item flex-fill" role="presentation">
+            <!-- <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="admin-user-tab" data-bs-toggle="tab" data-bs-target="#admin-user" type="button" role="tab" aria-controls="admin" aria-selected="false">Admin User</button>
-            </li>
+            </li> -->
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="active-staff" role="tabpanel" aria-labelledby="home-tab">

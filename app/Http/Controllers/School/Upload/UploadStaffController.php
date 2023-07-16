@@ -26,28 +26,32 @@ class UploadStaffController extends Controller
                 $header = $resource['header'];
                 $data = $resource['data'];
                 $errors = [];
-                $k = 1;
+                $k = 2;
                 if ((($header === $this->header))) {
+                    $n = 0;
                     foreach ($data as $row) {
                         if (!empty($row[0]) && !empty($row[1]) && !empty($row[3])) {
-                            $username = $row[6] ?? '';
+                            $username = $row[5] ?? null;
                             if (!AuthController::findGsm($row[3])) {
                                 $data = [
                                     'gsm' => ($row[3]),
-                                    'email' => AuthController::findEmail($username) ? null : $username,
+                                    // 'email' => AuthController::findEmail($username) ? null : $username,
                                     'account_status' => 1,
                                     'password' => $this->pwd,
                                     'username' =>  $username ? AuthController::uniqueUsername($username) : AuthController::uniqueUsername($row[0]),
                                 ];
+                                if($row[5]){
+                                    $data['email'] = AuthController::findEmail($row[5]) ? null : $row[5];
+                                }
                                 $user = AuthController::createUser($data);
                                 // dd($user, $data);
                                 $detail = [
                                     'firstname' => $row[0],
                                     'lastname' => $row[1],
                                     'othername' => $row[2],
-                                    'gender' => (int) $row[9],
+                                    'gender' => GENDER[(int) $row[9]],
                                     'dob' => $row[4],
-                                    'religion' => (int) $row[8],
+                                    'religion' => RELIGION[(int) $row[8]],
                                     'state' => null,
                                     'lga' => null,
                                     'address' => $row[7],
@@ -62,29 +66,30 @@ class UploadStaffController extends Controller
                                         'staff_id' => StaffController::staffUniqueId()
                                     ];
                                     $sts = SchoolController::createSchoolStaff($staff);
-                                    if (!$sts) {
+                                    if ($sts) {
+                                        $n++;
+                                    }else{
                                         $errors[] = 'Staff on row ' . $k . ' not Linked to School';
                                     }
-                                    $k++;
-                               }else{
-                                    $errors[] = 'Staff on row ' . $k . ' partially created use edit to completed it please';
-
-                               }
+                                }else{
+                                    $errors[] = 'Staff on row ' . $k . ' partially created, use edit to completed it please';
+                                }
                             } else {
                                 $errors[] = 'Staff on row ' . $k . ' not inserted because, Phone number already exists';
                             }
                         } else {
                             $errors[] = 'Staff on row ' . $k . ' not inserted because of either firstname, surname or gsm is empty';
                         }
+                        $k++;
                         
                     }
-                    $msg = $k - count($errors) . ' Staff uploaded successfully';
+                    $msg = $n . ' Staff uploaded successfully... & ' . count($errors) . ' error(s)';
                     return response()->json(['status'=>1,'message'=>$msg,'errors'=>$errors]);
                 }
                 return response()->json(['status'=>'error','message'=>'use the template without change it please.']);
             
             } catch (\Throwable $e) {
-                $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+                $error = ['error' => $e->getMessage(), 'file' => __FILE__];
 
                 logError($error);
                 return response()->json(['status' => 'error', 'message' => 'upload stop on row ' . $k,'errors'=>$errors]);

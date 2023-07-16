@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Assign Class Arm Subject to Teacher</h5>
+                <h5 class="modal-title">Assign Class Arm Subject to Teacher for<small class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</small></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -16,24 +16,24 @@
                             </select>
                             <p class="text-danger category_pid_error"></p>
                         </div>
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <label for="session_pid">Session</label>
                             <select name="session_pid" id="sessionSelect2s" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
                             </select>
                             <p class="text-danger session_pid_error"></p>
-                        </div>
+                        </div> -->
                         <div class="col-md-6">
                             <label for="class_pid">Class</label>
                             <select name="class_pid" id="classSelect2s" placeholder="select" class="classSelect2 form-control form-control-sm" style="width: 100%;">
                             </select>
                             <p class="text-danger class_pid_error"></p>
                         </div>
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <label for="term_pid">Term</label>
                             <select name="term_pid" id="termSelect2s" placeholder="select" class="termSelect2 form-control form-control-sm" style="width: 100%;">
                             </select>
                             <p class="text-danger term_pid_error"></p>
-                        </div>
+                        </div> -->
                     </div>
                     <!-- no need to select class cos subject already belong to class  -->
                     <label for="arm_pid">Arm</label>
@@ -51,8 +51,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createArmSubjectTeacherBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createArmSubjectTeacherBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -62,7 +62,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Choose Class Arm Rep</h5>
+                <h5 class="modal-title">Choose Class Arm Rep for<small class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</small></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -73,18 +73,18 @@
                     <select name="category_pid" id="ccarCategorySelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger category_pid_error"></p>
-                    <label for="session_pid">Session</label>
+                    <!-- <label for="session_pid">Session</label>
                     <select name="session_pid" id="ccarSessionSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>
-                    <p class="text-danger session_pid_error"></p>
+                    <p class="text-danger session_pid_error"></p> -->
                     <label for="class_pid">Class</label>
                     <select name="class_pid" id="ccarClassSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger class_pid_error"></p>
-                    <label for="term_pid">Term</label>
+                    <!-- <label for="term_pid">Term</label>
                     <select name="term_pid" id="ccarTermSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>
-                    <p class="text-danger term_pid_error"></p>
+                    <p class="text-danger term_pid_error"></p> -->
                     <label for="arm_pid">Arm</label>
                     <select name="arm_pid" id="ccarArmSelect2" placeholder="select" class="form-control form-control-sm" style="width: 100%;">
                     </select>
@@ -97,8 +97,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="assignArmToRepBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="assignArmToRepBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -108,21 +108,21 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Assign Class Arm To Teacher</h5>
+                <h5 class="modal-title">Assign Class Arm To Teacher for<small class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</small></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="" method="post" class="" id="createArmTeacherForm">
                     @csrf
-                    <label for="session_pid">Session</label>
+                    <!-- <label for="session_pid">Session</label>
                     <select name="session_pid" id="sessionSelect24t" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger session_pid_error"></p>
                     <label for="session_pid">Term</label>
                     <select name="term_pid" id="termSelect2" placeholder="select" class="termSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
-                    <p class="text-danger term_pid_error"></p>
-                    <label for="session_pid">Category</label>
+                    <p class="text-danger term_pid_error"></p> -->
+                    <label for="category_pid">Category</label>
                     <select name="category_pid" id="categorySelect2" placeholder="select" class="categorySelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
                     <p class="text-danger category_pid_error"></p>
@@ -133,7 +133,7 @@
                     <label for="arm_pid">Arm</label>
                     <select name="arm_pid[]" id="armSelect2" multiple="multiple" placeholder="select" class="armSelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
-                    <p class="text-danger session_pid_error"></p>
+                    <p class="text-danger arm_pid_error"></p>
                     <label for="teacher_pid">Teacher</label>
                     <select name="teacher_pid" id="teacherSelect2" style="width: 100%;" class="teacherSelect2 form-control form-control-sm">
                     </select>
@@ -141,8 +141,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createArmSubjectBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createArmSubjectBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -166,8 +166,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="linkStudentParentDynamicBtn">Link</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="linkStudentParentDynamicBtn">Link</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

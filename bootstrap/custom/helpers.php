@@ -80,6 +80,8 @@ use App\Http\Controllers\Auths\AuthController;
     function getUserAccess(){
        return session('userAccess'); //user role
     }
+
+   
     function staffRoles($role){
         $role =  match ($role) {
             '200' => 'School Super Admin',
@@ -213,7 +215,7 @@ use App\Http\Controllers\Auths\AuthController;
                 '2'=> 'Female',
                 '1'=> 'Male',
                 '3'=> 'Other',
-                default=>''
+                default=> $gn
                 };
        return $role; 
     }
@@ -231,7 +233,7 @@ use App\Http\Controllers\Auths\AuthController;
                 '2'=> 'Christian',
                 '1'=> 'Muslim',
                 '3'=> 'Other',
-                default=>''
+                default=> $lg
                 };
        return $role; 
     }

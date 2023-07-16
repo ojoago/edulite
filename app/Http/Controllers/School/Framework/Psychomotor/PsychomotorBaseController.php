@@ -66,7 +66,7 @@ class PsychomotorBaseController extends Controller
             'psychomotor' => [
                             'required',
                             'max:30',
-                            'regex:/^[a-zA-Z0-9\s]+$/',
+                            "regex:/^[a-zA-Z0-9,'\s]+$/",
                             Rule::unique('psychomotor_bases')->where(function($param) use ($request){
                                 $param->where('school_pid',getSchoolPid())->where('pid','<>',$request->pid);
                             }
@@ -121,7 +121,7 @@ class PsychomotorBaseController extends Controller
                         [
                             'required',
                             'max:30',
-                            'regex:/^[a-zA-Z0-9\s]+$/',
+                            "regex:/^[a-zA-Z0-9,'\s]+$/",
                             Rule::unique('psychomotor_keys')->where(function($param) use($request){
                                 $param->where([
                                             'school_pid'=>getSchoolPid(),
@@ -131,7 +131,7 @@ class PsychomotorBaseController extends Controller
             'score' => 'required|int|digits_between:1,5'
         ], [
             'title.max' => 'Maximum of 30 character',
-            'title.regex' => 'only number and text is allowed',
+            'title.regex' => 'Special character is not allowed',
             'title.unique' => $request->title.' already Exist',
             'score.required' => 'Enter Obtainable Score',
             'score.digits_between' => 'Obtainable Score 5 Maximum',

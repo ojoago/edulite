@@ -16,14 +16,38 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                @if($data->categoryClass->isNotEmpty())
                 <strong>{{$data->category}}</strong>
-                @foreach($data->categoryClass() as $row)
-                <p>{{$row->class}} | {{$row->class_number}}</p>
-                <hr>
-                @endforeach
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Class</th>
+                            <th>Class Number</th>
+                            <th>Class Arms</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($data->categoryClass as $row)
+                        <tr>
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$row->class}}</td>
+                            <td>{{$row->class_number}}</td>
+                            <td>
+                                @foreach($row->classArms as $arm)
+                                {{$arm->arm}}, &nbsp;
+                                @endforeach
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @else
+                 No class created under <strong>{{$data->category}}</strong> category
+                @endif
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

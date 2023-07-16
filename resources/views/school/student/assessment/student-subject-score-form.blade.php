@@ -9,7 +9,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="pt-4 pb-2">
-                            <p class="text-center small">load Student Assessment</p>
+                            <p class="text-center small">load Student Assessment for <span class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</span></p>
+
                         </div>
                         <form class="row g-3 needs-validation" method="post">
                             @csrf
@@ -64,8 +65,8 @@
 <script>
     $(document).ready(function() {
 
-        FormMultiSelect2('#formSessionSelect2', 'session', 'Select Session');
-        FormMultiSelect2('#formTermSelect2', 'term', 'Select Term');
+        // FormMultiSelect2('#formSessionSelect2', 'session', 'Select Session');
+        // FormMultiSelect2('#formTermSelect2', 'term', 'Select Term');
         FormMultiSelect2('#formCategorySelect2', 'category', 'Select Category');
         $('#formCategorySelect2').on('change', function(e) {
             var id = $(this).val();

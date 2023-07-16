@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','lite G S')
+@section('title','School Subject')
 @section('content')
 
 <div class="card">
@@ -89,8 +89,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary createSubjectTypeBtn" id="createSubjectTypeForm">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm createSubjectTypeBtn" id="createSubjectTypeForm">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -121,8 +121,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createSubjectBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createSubjectBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -215,6 +215,7 @@
         multiSelect2('#createSubjectSubjectTypeSelect2', 'createSubjectModal', 'subject-type', 'Select Subject Type');
         multiSelect2('#createSubjectCategorySelect2', 'createSubjectModal', 'category', 'Select Category');
         FormMultiSelect2('#categorySubjectSelect2', 'category', 'Select Category');
+        multiSelect2('#subjectTeacherSelect2', 'createClassSubjectToTeacherModal', 'school-teachers', 'Select Subject Teacher');
 
         $(document).on('click', '.edit-subject', function() {
             var pid = $(this).attr('pid');

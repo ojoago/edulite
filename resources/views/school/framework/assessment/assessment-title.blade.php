@@ -66,11 +66,11 @@
             <div class="modal-body">
                 <form method="post" id="createAssessmentForm">
                     @csrf
-                    <input type="text" name="title" class="form-control form-control-sm" placeholder="ass title">
+                    <input type="text" name="title" class="form-control form-control-sm" placeholder="Assessment title">
                     <p class="text-danger title_error"></p>
                     <select type="number" name="category" class="form-control form-control-sm">
                         <option disabled selected>Select Category</option>
-                        <option value="1">General</option>
+                        <option value="1" selected>General</option>
                         <option value="2">Mid Term</option>
                     </select>
                     <p class="text-danger category_error"></p>
@@ -79,8 +79,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createAssessmentBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createAssessmentBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

@@ -199,6 +199,7 @@
         if (class_pid != null) {
             getClassArms(class_pid)
         }
+
         // $('#formClassSelect2').on('change', function(e) {
         //     var id = $(this).val();
         //     FormMultiSelect2Post('#formArmSelect2', 'class-arm', id, 'Select Class Arm');
@@ -213,7 +214,7 @@
         });
 
         function getClassArms(id) {
-            FormMultiSelect2Post('#formArmSelect2', 'class-arm', id, 'Select Class Arm');
+            FormMultiSelect2Post('#formArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
         }
 
         function getArmSubject(id) {
