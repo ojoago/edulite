@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','Enter Student Scores')
+@section('title','View Subject  Scores')
 @section('content')
 
 <div class="container-fluid">
@@ -13,11 +13,11 @@
                     <tr>
                         <th scope="col">S/N</th>
                         <th scope="col">
-                            <!-- Reg-Number -->
+                            Reg-Number
                         </th>
                         <th scope="col">Names</th>
                         @foreach($scoreParams as $row)
-                        <th scope="col">{{$row->title}} <small>/[{{$row->score}}]</small></th>
+                        <th scope="col">{{$row->title}}/[{{$row->score}}]</th>
                         @endforeach
                         <th scope="col">Total
                             /[100]

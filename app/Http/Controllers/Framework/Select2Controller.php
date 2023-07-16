@@ -656,7 +656,6 @@ class Select2Controller extends Controller
                 $result = $class->merge($sbj);
             }
         }
-        logError($result);
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }

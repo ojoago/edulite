@@ -333,8 +333,8 @@ class StaffController extends Controller
                             if($request->pid){
                                 return response()->json(['status' => 1, 'message' => 'Staff Detail updated  Successfully & username is ' . $data['username']]);
                             }
-                            $message = 'Your account has been created, Staff Id: ' . $staff['staff_id']  . ' & username is ' . $data['username'].' and Password: '.$this->pwd;
-                            $message .= ' Your primary Role is ' .matchStaffRole($request->role);
+                            $message = '{your} Account has been created, Staff Id: ' . $staff['staff_id']  . ' & username is ' . $data['username'].' and Password: '.$this->pwd;
+                            $message .= ' <br> Primary Role is ' .matchStaffRole($request->role);
 
                             SchoolNotificationController::notifyIndividualStaff(message: $message, pid: $result->pid ?? $request->pid);
 
@@ -419,9 +419,12 @@ class StaffController extends Controller
         try {
             $staff = SchoolStaff::where(['school_pid' => getSchoolPid(),'pid' => base64Decode($pid)])->first(['id','status']);
             if ($staff) {
-                $staff->status = $staff->status == 1 ? 0 : 1;
+                $staff->status= $sts = $staff->status == 1 ? 0 : 1;
                 // send notification mail 
                 $staff->save();
+                $message = '{your} Account status has being '. ACCOUNT_STATUS[$sts];
+                SchoolNotificationController::notifyIndividualStaff(message: $message, pid: base64Decode($pid));
+
                 return 'staff Account updated';
             }
             return 'Something Went Wrong';
@@ -446,6 +449,9 @@ class StaffController extends Controller
                 $staffLoginTable->save();
                 $sts = $staff->save();
                 if($sts){
+                    //send notification
+                    $message = 'The role of '. STAFF_ROLE[$request->role].' has being assigned to {you}';
+                    SchoolNotificationController::notifyIndividualStaff(message: $message, pid: $request->pid);
                     // log staff role update 
                     $this->staffRoleHistory(role: $request->role,pid: $request->pid);
                     if($request->role==200){
@@ -474,7 +480,7 @@ class StaffController extends Controller
         ];
        $sts =  StaffRoleHistory::create($roleHistry);
        if($sts){
-            $message ='You have been assigned '. matchStaffRole($role).' Role';
+            $message ='{you} have been assigned '. matchStaffRole($role).' Role';
             SchoolNotificationController::notifyIndividualStaff(message: $message, pid: $pid);
        }
        return $sts;
@@ -485,7 +491,7 @@ class StaffController extends Controller
             'pid' => 'required',
             'access' => 'required',
         ], [
-            'pid.required' => 'Logout login again...',
+            'pid.required' => 'Logout, login again...',
             'access.required' => 'Tick on role at least',
         ]);
         if (!$validator->fails()) {
@@ -562,19 +568,18 @@ class StaffController extends Controller
                         'session_pid'=>activeSession(),
                     ];
                     $data['teacher_pid']=$request->teacher_pid;
-                        // 'arm_pid'=>'',
-                    $msg = 'The following class has been assigned to you<br>';
-                    if(count($request->arm_pid)==1){
-                        $msg = '';
-                    }
+                // 'arm_pid'=>'',
+                    $message = 'The following class(es) has been assigned to {you} <br>';
+                    // if(count($request->arm_pid)==1){
+                    //     $msg = '';
+                    // }
                     $n=0;
                     foreach($request->arm_pid as $row){
-                        $msg .=++$n.' '. ClassController::getClassArmNameByPid($row).'<br>';
+                    $message .=++$n.': '. ClassController::getClassArmNameByPid($row).'<br>';
                         $dupParams['arm_pid'] = $data['arm_pid'] = $row;
                         $result = StaffClass::updateOrCreate($dupParams,$data);
                     }
                     if ($result) {
-                        $message = $msg;
                         SchoolNotificationController::notifyIndividualStaff(message:$message,pid: $request->teacher_pid);
                         return response()->json(['status'=>1,'message'=> count($request->arm_pid)." Class(es) Assigned to Staff"]);
                     }
@@ -588,6 +593,7 @@ class StaffController extends Controller
             return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
         
     }
+    // assign subject to staff 
     public function StaffSubject(Request $request){
             $validator = Validator::make($request->all(),[
             'category_pid'=>'required',
@@ -623,6 +629,14 @@ class StaffController extends Controller
             $result= $this->assignClassArmSubjectToTeacher($data);
             
             if($result){
+                // GetClassSubjectAndName
+                $msg = 'The following class subject(s) has been assigned to {you} <br>';
+                $n = 0;
+                foreach ($request->subject_pid as $row) {
+                    $csb = ClassController::GetClassSubjectAndName($row);
+                    $msg .= ++$n . ': '. $csb->arm .' '. $csb->subject . '<br>';
+                }
+                SchoolNotificationController::notifyIndividualStaff(message: $msg, pid: $request->teacher_pid);
                 return response()->json(['status'=>1,'message'=>'Selected Subject (s) assigned to staff!!!']);
             }
             return response()->json(['status'=>'error','message'=>'Something Went Wrong from the Back!']);

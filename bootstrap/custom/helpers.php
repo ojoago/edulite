@@ -114,6 +114,9 @@ use App\Http\Controllers\Auths\AuthController;
         return $role;
     }
     
+    function matchPid($pid){
+     return getSchoolUserPid() === $pid;
+    }
     function schoolTeacher(){
         $cn =['200','205','301','300','303','305','307','500'];
         return (in_array(getUserActiveRole(),$cn)|| hasRole());

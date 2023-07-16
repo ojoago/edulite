@@ -17,10 +17,27 @@ class SchoolNotificationController extends Controller
 {
 
     public function loadMyNotificationHistories(){
-        $data = SchoolNotification::where(['school_pid'=>getSchoolPid()])->orderByDesc('created_at')->get();
+        $data = DB::table('school_notifications as n')->leftJoin('school_users as u', 'n.notifyee','u.pid')
+                                                        ->leftJoin('user_details as d','d.user_pid','u.user_pid')
+                                                        ->select('message', 'begin','end', 'fullname', 'title', 'type', 'notifyee')
+                                                        ->where(['n.school_pid' => getSchoolPid(), 'n.session_pid'=>activeSession(),'n.term_pid'=>activeTerm()])
+                                                        ->orderByDesc('n.id')->get();
         return datatables($data)
-                    ->addIndexColumn()
-                    ->make(true);
+            ->addIndexColumn()
+            ->editColumn('message', function ($data) {
+                if(matchPid($data->notifyee)){
+                    $msg = str_replace(['{you}'], 'YOU:',$data->message);
+                    $msg = str_replace(['{your}'], 'Your ',$msg);
+                }else{
+                    $msg = str_replace(['{you}','{your}'], $data->fullname.':',$data->message);
+                }
+                return str_replace('<br>',', ', $msg);
+            })
+            ->editColumn('type', function ($data) {
+                
+                return NOTIFICATION_TYPE[(int)$data->type];
+            })
+            ->make(true);
     }
     public function countMyNotificationTip(){
        return countRecentNotification();
@@ -165,7 +182,7 @@ class SchoolNotificationController extends Controller
             if($param['user']->email){
                 // send mail 
                 $schoolData = SchoolController::loadSchoolNotificationDetail(getSchoolPid());
-                self::sendSchoolMail($schoolData,$param['user'], $param['message']);
+                self::sendSchoolMail($schoolData,$param['user'], str_replace('{you}','You',$param['message']));
             }
             return true;
         }
@@ -240,7 +257,7 @@ class SchoolNotificationController extends Controller
         $riders = DB::table('school_riders as r')
             ->join('users as u', 'r.user_pid', 'u.pid')
             ->join('user_details as d', 'd.user_pid', 'u.pid')
-            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->where('email', '<>', null)->get(['fullname','email', 'gender']);
+            ->where(['r.school_pid' => getSchoolPid(), 'r.status' => 1])->where('email', '<>', null)->get(['fullname','email', 'gender']);
 
         return $riders;
     }
@@ -249,7 +266,7 @@ class SchoolNotificationController extends Controller
         $staff = DB::table('school_staff as t')
             ->join('users as u', 't.user_pid', 'u.pid')
             ->join('user_details as d', 'd.user_pid', 'u.pid')
-            ->where(['p.school_pid' => getSchoolPid(), 't.status' => 1])->where('email', '<>', null)->get(['fullname','email', 'gender']);
+            ->where(['t.school_pid' => getSchoolPid(), 't.status' => 1])->where('email', '<>', null)->get(['fullname','email', 'gender']);
 
         return $staff;
     }

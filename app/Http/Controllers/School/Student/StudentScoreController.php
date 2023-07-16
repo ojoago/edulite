@@ -61,6 +61,7 @@ class StudentScoreController extends Controller
             return true;
         }
         return DB::table('staff_subjects')->where(['arm_subject_pid'=>$pid,'teacher_pid'=>getSchoolUserPid(),'term_pid'=>activeTerm(),'session_pid'=>activeSession(),'school_pid'=>getSchoolPid()])->exists();
+        
     }
 
 
@@ -85,6 +86,10 @@ class StudentScoreController extends Controller
 
     // view subject score 
     public function viewStudentScoreRecord(Request $request){
+        if (!$this->mySubjects($request->subject)) {
+            $cl = ClassController::GetClassSubjectAndName($request->subject);
+            return redirect()->back()->with('warning', $cl->subject . ' ' . $cl->arm . ' is not assigned to YOU');
+        }
         session([
             'session'=> $request->session,
             'term'=> $request->term,
@@ -107,9 +112,9 @@ class StudentScoreController extends Controller
         $class = $params['class'];//selected class and subject
         if(!$this->createScoreSheetParams() || $this->createScoreSheetParams() === 'no class'){
             if($this->createScoreSheetParams()==='no class'){
-                return redirect()->route('student.assessment.form')->with('error', ClassController::getClassArmNameByPid(session('arm')). '  not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')));
+                return redirect()->back()->with('error', ClassController::getClassArmNameByPid(session('arm')). '  not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')));
             }
-            return redirect()->route('student.assessment.form')->with('error', 'Subject not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')).' & make sure proper term/ session is set');
+            return redirect()->back()->with('error', 'Subject not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')).' & make sure proper term/session is set');
         }
        
         return view('school.student.assessment.enter-student-score', compact('data', 'scoreParams','class'));
@@ -120,7 +125,7 @@ class StudentScoreController extends Controller
         $term = session('term');
         $arm = session('arm');
         $class = session('class');
-        // dd($session,$term,$arm);
+        
         // load score setting 
         $data = [
             'school_pid' => getSchoolPid(),
@@ -375,6 +380,10 @@ class StudentScoreController extends Controller
     // view subject result goes here  
     public function viewStudentScore(Request $request)
     {
+        if (!$this->mySubjects($request->subject)) {
+            $cl = ClassController::GetClassSubjectAndName($request->subject);
+            return redirect()->back()->with('warning', $cl->subject . ' ' . $cl->arm . ' is not assigned to YOU');
+        }
         session([
             'session' => $request->session,
             'term' => $request->term,

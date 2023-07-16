@@ -567,8 +567,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('export-student-list', [StudentScoreController::class, 'exportStudentList'])->name('export.student.list');
     Route::post('import-student-score', [StudentScoreController::class, 'importStudentScore'])->name('import.student.score');
     // view student subject score 
-    Route::view('view-student-subject-score-form', 'school.student.assessment.view-subject-score-form')->name('view.student.subject.score.form');
-    Route::post('view-student-subject-score-form', [StudentScoreController::class, 'viewStudentScoreRecord']);
+    Route::view('view-subject-score-form', 'school.student.assessment.view-subject-score-form')->name('view.student.subject.score.form');
+    Route::post('view-subject-score-form', [StudentScoreController::class, 'viewStudentScoreRecord']);
     Route::get('view-student-score', [StudentScoreController::class, 'loadStudentScore'])->name('view.student.score');
 
     // psychomotor 
