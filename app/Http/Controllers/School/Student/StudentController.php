@@ -84,6 +84,7 @@ class StudentController extends Controller
                 ->leftjoin('user_details as d', 'd.user_pid', 'p.user_pid')
         ->where(['s.school_pid' => getSchoolPid(), 's.status' => 1,'c.teacher_pid'=>getSchoolUserPid()]) //active student
         ->select('arm', 's.fullname', 'reg_number', 's.created_at', 'd.fullname as parent', 's.pid', 's.status')->orderByDesc('s.id')->get();
+        
         return $this->addDataTable($data);
     }
 

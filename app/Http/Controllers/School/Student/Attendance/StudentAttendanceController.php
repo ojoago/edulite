@@ -31,6 +31,9 @@ class StudentAttendanceController extends Controller
     }
     public function submitStudentAttendance(Request $request){
         if($request->check && $request->student){
+           if(!$this->exclodeWeekend($request->date ?? justDate())){
+               return response()->json(['status' => 'error', 'message' => "No Class! it's weekend"]);
+           }
             $pid = $this->recordStudentAttendance($request->all());
             if($pid){
                 $result = $this->takeAttendance($request->check,$request->student,$pid);
@@ -43,7 +46,12 @@ class StudentAttendanceController extends Controller
         }
         return response()->json(['status'=>0,'message'=>'Tick participated for at least 1 student']);
     }
-
+    private function exclodeWeekend($date){
+        if(in_array(date('l', strtotime($date)),['Sunday',''])){
+          return false;
+        }
+        return true;
+    }
     private function recordStudentAttendance($data){
         $pid = AttendanceRecord::where([
                                 'term_pid'=>activeTerm(),
@@ -186,7 +194,6 @@ class StudentAttendanceController extends Controller
     // particular student attendance 
     // fullcalender 
     public function studentAttendance(Request $request){
-        // logError($request->all());
        $data = DB::table('attendances as a')->join('attendance_records as r','r.pid','a.record_pid')
                     ->select(DB::raw("
                                 DISTINCT(r.date) as start,
@@ -200,6 +207,7 @@ class StudentAttendanceController extends Controller
                             'a.school_pid'=>getSchoolPid()])
                     // ->where('a.status','<>',NULL)
                     ->get();
+    
        return response()->json($data->toArray());
     }
 }

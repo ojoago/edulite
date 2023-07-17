@@ -59,8 +59,8 @@ class RecordPsychomotorController extends Controller
 
     public function loadPsychomotoKeys(Request $request){
         $data = [
-            'session_pid'=>$request->session,
-            'term_pid'=>$request->term,
+            'session_pid'=>activeSession(),
+            'term_pid'=>activeTerm(),
             'arm_pid'=>$request->arm,
             'school_pid'=>getSchoolPid()
         ];

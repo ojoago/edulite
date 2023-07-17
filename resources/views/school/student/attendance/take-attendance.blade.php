@@ -46,7 +46,9 @@
                                     <th width="5%">S/N</th>
                                     <th scope="col">Reg-Number</th>
                                     <th scope="col">Names</th>
-                                    <th width="5%"> <input type="checkbox" id="checkAll"> </th>
+                                    <th width="5%"> Present<input type="checkbox" id="checkAll"> </th>
+                                    <th width="5%">Absent <input type="checkbox" id="checkAll"> </th>
+                                    <th width="5%"> Excused<input type="checkbox" id="checkAll"> </th>
 
                                 </tr>
                             </thead>
@@ -58,6 +60,8 @@
                                     <td>{{$row->reg_number}}</td>
                                     <td>{{$row->fullname}}</td>
                                     <input type="hidden" name="student[]" value="{{$row->pid}}">
+                                    <td> <input type="checkbox" class="checkAll" name="check[]"></td>
+                                    <td> <input type="checkbox" class="checkAll" name="check[]"></td>
                                     <td> <input type="checkbox" class="checkAll" name="check[]"></td>
                                 </tr>
                                 @endforeach

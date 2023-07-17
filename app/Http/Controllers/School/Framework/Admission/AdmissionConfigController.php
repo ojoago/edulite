@@ -26,7 +26,7 @@ class AdmissionConfigController extends Controller
     private function loadAdmission(){
         $data = DB::table('admission_details as ad')->join('sessions as s', 's.pid', 'ad.session_pid')
             ->join('admission_setups as as', 'as.admission_pid', 'ad.pid')
-            ->join('classes as c', 'c.pid', 'as.class_pid')
+            ->join('classes as c', 'c.pid', 'as.class_pid')->where('ad.school_pid',getSchoolPid())
             ->select('from', 'to', 'class', 'session', 'ad.created_at','amount','as.id')
             ->orderByDesc('ad.id')
             ->get();

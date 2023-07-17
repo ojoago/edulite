@@ -18,13 +18,13 @@
                                 <select type="text" name="category" class="form-control" id="formCategorySelect2" required>
                                 </select>
                             </div>
-                            
+
                             <div class="col-12">
                                 <label for="class" class="form-label">Class</label>
                                 <select type="text" name="class" class="form-control" id="formClassSelect2">
                                 </select>
                             </div>
-                             
+
                             <div class="col-12">
                                 <label for="arm" class="form-label">Class Arm</label>
                                 <select type="text" name="arm" class="form-control" id="formArmSelect2">
@@ -55,12 +55,12 @@
         });
         $('#formClassSelect2').on('change', function(e) {
             var id = $(this).val();
-            FormMultiSelect2Post('#formArmSelect2', 'class-arm', id, 'Select Class Arm');
+            FormMultiSelect2Post('#formArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
         });
-        $('#formArmSelect2').on('change', function(e) {
-            var id = $(this).val();
-            FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
-        });
+        // $('#formArmSelect2').on('change', function(e) {
+        //     var id = $(this).val();
+        //     FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
+        // });
 
     });
 </script>

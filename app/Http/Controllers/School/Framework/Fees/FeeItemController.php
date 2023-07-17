@@ -75,7 +75,7 @@ class FeeItemController extends Controller
     public function loadFeeConfig(){
         $data = DB::table('fee_configurations as c')
                     ->join('fee_items as f','f.pid','c.fee_item_pid')
-                    ->select('fee_name','category','gender','religion','type','payment_model','c.created_at')
+                    ->select('fee_name','category','gender','religion','type','payment_model','c.created_at')->where(['c.school_pid'=>getSchoolPid()])
                     ->orderBy('fee_name')->get();
         return datatables($data)
             ->editColumn('model', function ($data) {
@@ -88,7 +88,7 @@ class FeeItemController extends Controller
                 return matchPaymentType($data->type);
             })
             ->editColumn('category', function ($data) {
-                return matchPaymentCategory($data->type);
+                return matchPaymentCategory($data->category);
             })
             ->editColumn('date', function ($data) {
                 return date('d F Y',strtotime($data->created_at));

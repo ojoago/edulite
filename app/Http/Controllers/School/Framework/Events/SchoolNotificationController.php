@@ -25,13 +25,7 @@ class SchoolNotificationController extends Controller
         return datatables($data)
             ->addIndexColumn()
             ->editColumn('message', function ($data) {
-                if(matchPid($data->notifyee)){
-                    $msg = str_replace(['{you}'], 'YOU:',$data->message);
-                    $msg = str_replace(['{your}'], 'Your ',$msg);
-                }else{
-                    $msg = str_replace(['{you}','{your}'], $data->fullname.':',$data->message);
-                }
-                return str_replace('<br>',', ', $msg);
+                return slotText($data);
             })
             ->editColumn('type', function ($data) {
                 
@@ -39,6 +33,14 @@ class SchoolNotificationController extends Controller
             })
             ->make(true);
     }
+    public function loadEvents()
+    {
+        $data = DB::table('school_notifications')->where([
+            'school_pid' => getSchoolPid()
+        ])->whereIn('type',[1,4])->select(DB::raw('begin as start,end, message as title,pid as id'))->get();
+        return response()->json($data->toArray());
+    }
+
     public function countMyNotificationTip(){
        return countRecentNotification();
     }

@@ -1,6 +1,7 @@
 <div class="dropdown">
     <button type="button" class="btn btn-primary btn-sm pointer" data-bs-toggle="modal" data-bs-target="#modal{{$data->pid}}">
-        <i class="bi bi-tools"></i>
+        <!-- <i class="bi bi-tools"></i> -->
+        edit
     </button>
 </div>
 <!-- create edit fee  -->

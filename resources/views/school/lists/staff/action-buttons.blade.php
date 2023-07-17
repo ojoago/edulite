@@ -42,6 +42,12 @@
                         </div>
                         @endif
                         <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="access[]" id="" value="301">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Class/Form Teacher
+                            </label>
+                        </div>
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="access[]" id="" value="305">
                             <label class="form-check-label" for="flexCheckDefault">
                                 Secretary

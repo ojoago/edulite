@@ -69,7 +69,7 @@
         });
         $('#formClassSelect2').on('change', function(e) {
             var id = $(this).val();
-            FormMultiSelect2Post('#formArmSelect2', 'class-arm', id, 'Select Class Arm');
+            FormMultiSelect2Post('#formArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
         });
 
     });

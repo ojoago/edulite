@@ -77,37 +77,7 @@
             "info": false,
             "searchable": false,
         });
-        $('.studentPsycho').change(function() {
-            var score = $(this).val(); //CA score
-            var key = $(this).attr('id'); //CA score
-            var max = $(this).attr('max_score'); //CA score
-            var spid = $(this).closest('tr').attr('id'); // student pid 
-            var token = $("input[name='_token']").val();
-            if (max >= score) {
-                $.ajax({
-                    url: "{{route('record.psycomotor.score')}}",
-                    type: "POST",
-                    data: {
-                        score: score,
-                        student_pid: spid,
-                        _token: token,
-                        param: "{{$params['param']}}",
-                        key_pid: key,
-                    },
-                    success: function(data) {
-                        showTipMessage(data)
-                    },
-                    error: function(data) {
-                        showTipMessage('Last Score not saved!!!');
-                    }
-                });
-            } else {
-                showTipMessage('Maximum Score ' + max);
-                $(this).val('');
-            }
-
-        });
-
+       
         var arm = "{{session('arm')}}";
         if (arm != null) {
             getArmSubject(arm)

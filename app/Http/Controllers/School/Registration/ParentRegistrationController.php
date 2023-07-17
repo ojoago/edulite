@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ParentRegistrationController extends Controller
 {
-    private $pwd = 1243657;
+    private $pwd = 7654321;
     public function index()
     {
         //
@@ -33,8 +33,8 @@ class ParentRegistrationController extends Controller
             'lastname'=> "required|string|min:3|regex:/^[a-zA-Z0-9'\s]+$/",
             'othername'=>"nullable|string|regex:/^[a-zA-Z0-9'\s]+$/",
             'gsm'=>'required|min:11|max:11|unique:users,gsm',
-            'username'=> "string|nullable|unique:users,username|regex:/^[a-zA-Z0-9'\s]+$/",
-            'email'=>'string|email|nullable|unique:users,email',
+            'username'=> "string|nullable|unique:users,username|regex:/^[a-zA-Z0-9\s]+$/",
+            'email'=> 'string|email|nullable|unique:users,email|regex:/^[a-zA-Z0-9\s]+$/',
             'gender'=>'required',
             'dob'=> 'nullable|before:' . confrimYear(),
             // 'religion'=>'required|string|',

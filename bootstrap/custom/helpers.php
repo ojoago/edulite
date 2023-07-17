@@ -115,7 +115,16 @@ use App\Http\Controllers\Auths\AuthController;
     }
     
     function matchPid($pid){
-     return getSchoolUserPid() === $pid;
+        return getSchoolUserPid() === $pid;
+    }
+    function slotText($data){
+        if (matchPid($data->notifyee)) {
+            $msg = str_replace(['{you}'], 'YOU:', $data->message);
+            $msg = str_replace(['{your}'], 'Your ', $msg);
+        } else {
+            $msg = str_replace(['{you}', '{your}'], $data->fullname . ':', $data->message);
+        }
+        return str_replace('<br>', ', ', $msg);
     }
     function schoolTeacher(){
         $cn =['200','205','301','300','303','305','307','500'];

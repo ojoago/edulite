@@ -122,7 +122,7 @@
                                 <option disabled selected>Select Type</option>
                                 <option value="1">Class</option>
                                 <option value="2">School</option>
-                                <option value="3">okay</option>
+                                <!-- <option value="3">okay</option> -->
                             </select>
                             <p class="text-danger type_error"></p>
                         </div>

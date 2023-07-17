@@ -137,12 +137,9 @@
         });
 
         function getClassArms(id) {
-            FormMultiSelect2Post('#formArmSelect2', 'class-arm', id, 'Select Class Arm');
+            FormMultiSelect2Post('#formArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
         }
 
-        function getArmSubject(id) {
-            FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
-        }
     });
 </script>
 @endsection

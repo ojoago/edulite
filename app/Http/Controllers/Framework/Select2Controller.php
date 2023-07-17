@@ -593,6 +593,7 @@ class Select2Controller extends Controller
     // load all classes based on what is assigned to form/class teacher 
     public function loadClassTeacherClassArms(Request $request)
     {
+       
         $data = null;
         if(schoolAdmin()){
             if ($request->has('q'))
@@ -657,7 +658,8 @@ class Select2Controller extends Controller
             }
         }
         if (!$result) {
-            return response()->json(['id' => null, 'text' => null]);
+            
+            return response()->json(['id' => null, 'text' => 'no class assigned to you']);
         }
         foreach ($result as $row) {
             $data[] = [
@@ -699,7 +701,7 @@ class Select2Controller extends Controller
                     ->limit(10)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm', 'subject']); //
         }
         if (!$result) {
-            return response()->json(['id' => null, 'text' => null]);
+            return response()->json(['id' => 0, 'text' => null]);
         }
         foreach ($result as $row) {
             $data[] = [

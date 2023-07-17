@@ -292,6 +292,8 @@ Route::middleware('schoolAuth')->group(function(){
     // load notification 
     Route::post('load-school-notification', [SchoolNotificationController::class, 'loadMyNotificationHistories'])->name('load.school.notification');
 
+    Route::get('load-school-events', [SchoolNotificationController::class, 'loadEvents'])->name('load.events');
+
     // notify parent when time table is ready 
     Route::post('notify-parent-timetable', [SchoolNotificationController::class, 'createSchoolNotifyParent'])->name('create.school.notify.parent');
    
