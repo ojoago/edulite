@@ -13,9 +13,9 @@
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="inActiveStudent-tab" data-bs-toggle="tab" data-bs-target="#inActiveStudent" type="button" role="tab" aria-controls="nonActiveStudent" aria-selected="false">Non-active</button>
             </li>
-            <li class="nav-item flex-fill" role="presentation">
+            <!-- <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="graduatedStudent-tab" data-bs-toggle="tab" data-bs-target="#graduatedStudent" type="button" role="tab">Ex Student</button>
-            </li>
+            </li> -->
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="activeStudent" role="tabpanel" aria-labelledby="activeStudent-tab">

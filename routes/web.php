@@ -548,7 +548,7 @@ Route::middleware('schoolAuth')->group(function(){
 
     //student attendance
     Route::view('student-attendance-form', 'school.student.attendance.student-attendance-form')->name('student.attendance.form');
-    Route::post('student-attendance-form', [StudentAttendanceController::class, 'loadArmStudent']);
+    // Route::post('student-attendance-form', [StudentAttendanceController::class, 'loadArmStudent']);
     Route::post('student-attendance-form', [StudentAttendanceController::class, 'loadArmStudent'])->name('attendance.change.class');
     Route::post('submit-student-attendance', [StudentAttendanceController::class, 'submitStudentAttendance'])->name('submit.student.attendance');
     // student attendance 

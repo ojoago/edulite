@@ -21,6 +21,7 @@ class StudentAttendanceController extends Controller
     }
 
     public function loadArmStudent(Request $request){
+        //class mot assigned to you
         $data = Student::where([
                             'current_class_pid'=>$request->arm,
                             'current_session_pid'=>activeSession(),

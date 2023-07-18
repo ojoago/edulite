@@ -36,7 +36,7 @@ class StudentScoreController extends Controller
             'session'=>'required',
        ]);
 
-       if(!$this->mySubjects($request->subject)){
+       if(!self::mySubjects($request->subject)){
             $cl = ClassController::GetClassSubjectAndName($request->subject);
             return redirect()->back()->with('warning',$cl->subject.' '.$cl->arm.' is not assigned to YOU');
        }
@@ -56,7 +56,7 @@ class StudentScoreController extends Controller
         // self::useClassArmSubjectToGetSubjectScroe();
     return redirect()->route('enter.student.score');
     }
-    private function mySubjects($pid){
+    public static function mySubjects($pid){
         if(schoolAdmin()){
             return true;
         }
@@ -86,7 +86,7 @@ class StudentScoreController extends Controller
 
     // view subject score 
     public function viewStudentScoreRecord(Request $request){
-        if (!$this->mySubjects($request->subject)) {
+        if (!self::mySubjects($request->subject)) {
             $cl = ClassController::GetClassSubjectAndName($request->subject);
             return redirect()->back()->with('warning', $cl->subject . ' ' . $cl->arm . ' is not assigned to YOU');
         }
@@ -380,7 +380,7 @@ class StudentScoreController extends Controller
     // view subject result goes here  
     public function viewStudentScore(Request $request)
     {
-        if (!$this->mySubjects($request->subject)) {
+        if (!self::mySubjects($request->subject)) {
             $cl = ClassController::GetClassSubjectAndName($request->subject);
             return redirect()->back()->with('warning', $cl->subject . ' ' . $cl->arm . ' is not assigned to YOU');
         }

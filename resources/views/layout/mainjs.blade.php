@@ -77,6 +77,7 @@
                 url: "switch-role/" + role,
                 success: function(data) {
                     $('.overlay').hide();
+                    alert_toast('Role Switched... rediecting');
                     let url = "{{URL::to('school-dashboard')}}";
                     location.href = url;
                 },
