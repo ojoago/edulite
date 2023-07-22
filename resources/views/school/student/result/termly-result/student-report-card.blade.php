@@ -156,8 +156,8 @@
                 flex-direction: column !important;
             }
 
-            .examTable{
-               width: 100% !important;
+            .examTable {
+                width: 100% !important;
             }
 
             body {
@@ -166,6 +166,7 @@
         }
 
         @media print {
+
             .header,
             #header,
             button {
@@ -468,7 +469,6 @@
         <button class="btn btn-success" id="printResult"> <i class="bi bi-printer"></i> </button>
 
     </div>
-
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {

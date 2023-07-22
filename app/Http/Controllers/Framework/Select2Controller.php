@@ -639,21 +639,21 @@ class Select2Controller extends Controller
                     's.term_pid' => activeTerm(),
                     's.session_pid' => activeSession(),
                     ])
-                ->limit(10)->orderBy('c.arm')
-                ->get(['c.pid', 'c.arm']); //
-
-                $sbj = DB::table('class_arms as ca')->join('class_arm_subjects as cas', 'cas.arm_pid', 'ca.pid')
-                ->join('staff_subjects as sb', 'cas.pid', 'sb.arm_subject_pid')
-                ->where([
-                    'sb.teacher_pid' => getSchoolUserPid(),
-                    'sb.term_pid' => activeTerm(),
-                    'sb.session_pid' => activeSession(),
-                    'ca.school_pid' => getSchoolPid(),
-                    'ca.class_pid' => $request->pid,
-                    'cas.status' => 1
-                ])
-                ->limit(10)->orderBy('ca.arm')
-                ->get(['ca.pid', 'ca.arm']);
+                    ->limit(10)->orderBy('c.arm')
+                    ->get(['c.pid', 'c.arm']); //
+                    
+                    $sbj = DB::table('class_arms as ca')->join('class_arm_subjects as cas', 'cas.arm_pid', 'ca.pid')
+                    ->join('staff_subjects as sb', 'cas.pid', 'sb.arm_subject_pid')
+                    ->where([
+                        'sb.teacher_pid' => getSchoolUserPid(),
+                        'sb.term_pid' => activeTerm(),
+                        'sb.session_pid' => activeSession(),
+                        'ca.school_pid' => getSchoolPid(),
+                        'ca.class_pid' => $request->pid,
+                        'cas.status' => 1
+                        ])
+                        ->limit(10)->orderBy('ca.arm')
+                        ->get(['ca.pid', 'ca.arm']);
                 $result = $class->merge($sbj);
             }
         }

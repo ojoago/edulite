@@ -295,7 +295,7 @@
         });
         $('#timetableClassSelect2').on('change', function(e) {
             var id = $(this).val();
-            FormMultiSelect2Post('#timetableArmSelect2', 'class-arm', id, 'Select Class Arm');
+            FormMultiSelect2Post('#timetableArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
         });
 
 
@@ -306,7 +306,7 @@
         });
         $('#ctClassSelect2').on('change', function(e) {
             var pid = $(this).val();
-            multiSelect2Post('#ctArmSelect2', 'createTimetableModal', 'class-arm', pid, 'Select Class Arm');
+            multiSelect2Post('#ctArmSelect2', 'createTimetableModal', 'class-teacher-arm', pid, 'Select Class Arm');
             // var id = ;
             multiSelect2Post('#ctArmSubjects0', 'createTimetableModal', 'all-arms-subject', pid, 'Select Class Subject');
         });

@@ -45,7 +45,7 @@
                 </div>
             </form>
             <!-- Primary Color Bordered Table -->
-            <h5 class="card-title">{{$class->arm}} <small>{{$class->subject}} <i class="bi bi-calendar-event-fill"></i> {{termName(session('term'))}} {{sessionName(session('session'))}}</small></h5>
+            <h5 class="card-title">{{$class->arm}} <small>{{$class->subject}} <i class="bi bi-calendar-event-fill"></i> {{activeTermName()}} {{activeSessionName()}}</small></h5>
             @if($scoreParams->isNotEmpty())
             @if($data->isNotEmpty())
             <div class="btn-group">

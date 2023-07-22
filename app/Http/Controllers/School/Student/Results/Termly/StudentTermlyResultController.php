@@ -10,6 +10,7 @@ use App\Http\Controllers\School\Framework\ClassController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Models\School\Framework\Psychomotor\PsychomotorBase;
 use App\Models\School\School;
+use App\Models\School\Student\Result\StudentClassResult;
 use App\Models\School\Student\Result\StudentClassScoreParam;
 
 class StudentTermlyResultController extends Controller
@@ -80,7 +81,7 @@ class StudentTermlyResultController extends Controller
 
     // a particular student result 
     public function studentReportCard($param,$spid){ //class param & student pid
-        
+    //  StudentClassResult::where('student_pid',$spid)->get()->dd();   
      try {
             $classParam = StudentClassScoreParam::where('pid', $param)->first(['session_pid', 'term_pid', 'arm_pid']);
             // dd($classParam);
@@ -158,6 +159,7 @@ class StudentTermlyResultController extends Controller
 
 
                 // query class result 
+                
                 // individual student result and class position 
                 $dtl = DB::table('student_class_results as r')
                     ->join('student_class_score_params as p', 'p.pid', 'r.class_param_pid')
@@ -205,9 +207,9 @@ class StudentTermlyResultController extends Controller
                     })
                     // ->leftJoin('attendances as ad','')
                     ->joinSub($result, 'rs', function ($r) {
-                        $r->on('r.student_pid', '=', 'rs.student_pid');
+                        $r->on('r.student_pid', 'rs.student_pid');
                     })->leftjoin('attendance_records as ar', function ($join) {
-                        $join->on('srp.term_pid', '=', 'ar.term_pid')->on('srp.session_pid', '=', 'ar.session_pid');
+                        $join->on('srp.term_pid', 'ar.term_pid')->on('srp.session_pid', 'ar.session_pid');
                     })->leftjoin('attendances as an', 'an.record_pid', 'ar.pid')
                     ->select(DB::raw("rs.*,d.fullname as class_teacher,st.signature,t.term,s.session,a.arm,atm.begin,atm.end,rs.student_pid,
                                 COUNT(CASE WHEN an.status = 1 THEN 'present' END) as 'present',
@@ -220,6 +222,7 @@ class StudentTermlyResultController extends Controller
                     ])
                     ->groupBy('an.student_pid')->first();
                 // add principal commnet if not added 
+                
                 if ($results) {
                     if (!$results->principal_comment || ($results->principal_comment && $results->exam_status == 1)) {
                         $results->principal_comment = $this->getPrincipalComment($results->class_param_pid, $results->average);
@@ -228,6 +231,8 @@ class StudentTermlyResultController extends Controller
                         $results->class_teacher_comment = $this->getClassTeacherComment($results->class_param_pid, $results->average);
                     }
                 }
+
+
                 // dd($results);
                 $psycho = PsychomotorBase::where(['school_pid' => getSchoolPid()])
                     ->get(['psychomotor', 'pid']);

@@ -23,33 +23,34 @@
                                 <select type="text" name="session" class="form-control" id="formSessionSelect2">
                                 </select>
                             </div>
-                            <div class="col-12">
-                                <label for="class" class="form-label">Class</label>
-                                <select type="text" name="class" class="form-control" id="formClassSelect2">
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label for="term" class="form-label">Term</label>
-                                <select type="text" name="term" class="form-control" id="formTermSelect2">
+                            <label for="term" class="form-label">Term</label>
+                            <select type="text" name="term" class="form-control" id="formTermSelect2">
 
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label for="arm" class="form-label">Class Arm</label>
-                                <select type="text" name="arm" class="form-control" id="formArmSelect2">
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="class" class="form-label">Class</label>
+                            <select type="text" name="class" class="form-control" id="formClassSelect2">
+                            </select>
+                        </div>
+                        <div class="col-12">
 
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label for="subject" class="form-label">Class Subject</label>
-                                <select type="text" name="subject" class="form-control" id="formArmSubjectSelect2">
+                        <div class="col-12">
+                            <label for="arm" class="form-label">Class Arm</label>
+                            <select type="text" name="arm" class="form-control" id="formArmSelect2">
 
-                                </select>
-                            </div>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="subject" class="form-label">Class Subject</label>
+                            <select type="text" name="subject" class="form-control" id="formArmSubjectSelect2">
 
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100" type="submit">Continue</button>
-                            </div>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <button class="btn btn-primary w-100" type="submit">Continue</button>
+                        </div>
                         </form>
 
                     </div>

@@ -59,13 +59,13 @@
 <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 <script>
     $(document).ready(function() {
-        FormMultiSelect2('#psychomotorBaseSelect2', 'psychomotors', 'Select Psychomotor');
         FormMultiSelect2('#formSessionSelect2', 'session', 'Select Session');
         FormMultiSelect2('#formTermSelect2', 'term', 'Select Term');
         FormMultiSelect2('#formCategorySelect2', 'category', 'Select Category');
         $('#formCategorySelect2').on('change', function(e) {
             var id = $(this).val();
             FormMultiSelect2Post('#formClassSelect2', 'class', id, 'Select Class');
+            FormMultiSelect2Post('#psychomotorBaseSelect2', 'psychomotors', id, 'Select Psychomotor');
         });
         $('#formClassSelect2').on('change', function(e) {
             var id = $(this).val();

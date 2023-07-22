@@ -263,7 +263,7 @@ class FeeItemController extends Controller
     public function loadInvoicePayment(Request $request){
         $data = DB::table('student_invoice_payments as ip')
                         ->join('students as s','s.pid','ip.student_pid')
-                        ->select(DB::raw('s.fullname,s.reg_number,invoice_number,total,ip.created_at'))->where('ip.status',1)->orderBy('ip.created_at','desc')->get();
+                        ->select(DB::raw('s.fullname,s.reg_number,invoice_number,total,ip.created_at'))->where(['ip.status'=>1,'ip.school_pid'=>getSchoolPid()])->orderBy('ip.created_at','desc')->get();
         return $this->paymentDataTable($data);
     }
     

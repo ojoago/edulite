@@ -207,11 +207,6 @@
             subjectsDropDown(psp)
         });
 
-        // subjectsDropDown(psp)
-        function subjectsDropDown(psp) {
-            let pid = $('#ctClassSelect2').val();
-            multiSelect2Post('#ctArmSubjects' + psp, 'createTimetableModal', 'all-arms-subject', pid, 'Select Class Subject');
-        }
 
 
         $(document).on('click', '.addedRow .removeRowBtn', function() {
@@ -304,7 +299,7 @@
         });
         $('#timetableClassSelect2').on('change', function(e) {
             var id = $(this).val();
-            FormMultiSelect2Post('#timetableArmSelect2', 'class-arm', id, 'Select Class Arm');
+            FormMultiSelect2Post('#timetableArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
         });
 
 
@@ -315,10 +310,25 @@
         });
         $('#ctClassSelect2').on('change', function(e) {
             var pid = $(this).val();
-            multiSelect2Post('#ctArmSelect2', 'createTimetableModal', 'class-arm', pid, 'Select Class Arm');
-            // var id = ;
-            multiSelect2Post('#ctArmSubjects0', 'createTimetableModal', 'all-arms-subject', pid, 'Select Class Subject');
+            multiSelect2Post('#ctArmSelect2', 'createTimetableModal', 'class-teacher-arm', pid, 'Select Class Arm');
         });
+        $('#ctArmSelect2').on('change', function(e) {
+            var pid = $(this).val();
+            multiSelect2Post('#ctArmSubjects0', 'createTimetableModal', 'class-arm-subject', pid, 'Select Class Subject');
+        });
+
+        // subjectsDropDown(psp)
+        function subjectsDropDown(psp) {
+            let pid = $('#ctArmSelect2').val();
+            // multiSelect2Post('#ctArmSubjects' + psp, 'createTimetableModal', 'all-arms-subject', pid, 'Select Class Subject');
+            multiSelect2Post('#ctArmSubjects' + psp, 'createTimetableModal', 'class-arm-subject', pid, 'Select Class Subject');
+        }
+
+        function subjectsDropDown(psp) {
+            let pid = $('#ctArmSelect2').val();
+            // multiSelect2Post('#ctArmSubjects' + psp, 'createTimetableModal', 'all-arms-subject', pid, 'Select Class Subject');
+            multiSelect2Post('#ctArmSubjects' + psp, 'createTimetableModal', 'class-arm-subject', pid, 'Select Class Subject');
+        }
 
 
         // create school class arm
