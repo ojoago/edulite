@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('school_pid');
             $table->string('class_param_pid')->nullable();
-            $table->string('pid')->unique();
+            $table->string('pid',255)->unique();
             $table->string('title')->nullable();
             $table->longText('note')->nullable();
             $table->float('mark')->nullable();

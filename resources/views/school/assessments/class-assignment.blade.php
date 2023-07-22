@@ -188,6 +188,7 @@
                                 </select>
                                 <textarea name="question" id="newAssignmentQuestion1" class="form-control form-control-sm summer-note"></textarea>
                                 <p class="text-danger question_error"></p>
+                                Add Option 
                                 
                             </fieldset>
                         </div>
