@@ -72,6 +72,7 @@
                     <div class="tab-pane fade" id="fees" role="tabpanel">
                         <!--  -->
                         <button class="btn btn-primary btn-sm m-2" id="payWardFee">Pay Fee</button>
+                        List of unpaid fees
                         <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="unPaidInvoiceTable">
                             <thead>
                                 <tr>
@@ -141,16 +142,16 @@
                                 <tr>
                                     <th width="5%">S/N</th>
                                     <th>Invoice Number</th>
-                                    <th>Total</th>
-                                    <th>Amount paid</th>
+                                    <th align="right">{!!NAIRA_UNIT!!} Total</th>
+                                    <th align="right">{!!NAIRA_UNIT!!} Amount paid</th>
                                     <th>Date</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
                             <tfoot>
                                 <td colspan="2"></td>
-                                <td></td>
-                                <td></td>
+                                <th></th>
+                                <th></th>
                             </tfoot>
                         </table>
                     </div>

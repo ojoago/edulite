@@ -213,8 +213,8 @@ class SchoolRiderController extends Controller
     }
     public static function riderUniqueId()
     {
-        $id = self::countRider() + 1;
-        $id = strlen($id) == 1 ? '0' . $id : $id;
+        $id = sprintNumber(self::countRider() + 1);
+        // $id = strlen($id) == 1 ? '0' . $id : $id;
         return SchoolController::getSchoolHandle() . '/' . strtoupper(date('yMd')) . $id; // concatenate shool handle with Rider id
     }
     public static function getRiderDetailBypId(string $pid)

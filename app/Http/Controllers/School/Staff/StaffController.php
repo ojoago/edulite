@@ -408,11 +408,11 @@ class StaffController extends Controller
     public static function staffUniqueId(){
         $id = sprintNumber(self::countStaff() + 1);
         // $id =strlen($id) == 1 ? '0'.$id : $id;
-        return  (SchoolController::getSchoolCode() ?? SchoolController::getSchoolHandle()) .'/'.strtoupper(date('yM')).$id;
+        return  (SchoolController::getSchoolCode() ?? SchoolController::getSchoolHandle()) .'/'.strtoupper(date('My')).$id;
     }
     
     public static function countStaff(){
-       return SchoolStaff::where(['school_pid'=>getSchoolPid()])->where('staff_id','like','%'.date('yM').'%')->count('id');
+       return SchoolStaff::where(['school_pid'=>getSchoolPid()])->where('staff_id','like','%'.date('My').'%')->count('id');
     }
     
     public function updateStaffStatus($pid){
