@@ -591,26 +591,22 @@
 </li>
 @endif--}}
       <!-- rider  -->
-      @if(riderRole())
-      {{--<li class="nav-item">
+      <!-- @if(riderRole())
+      <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#rider-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
     </a>
     <ul id="rider-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <!-- <li>
-            <a href="#">
-                <i class="bi bi-circle"></i><span>Dashboard </span>
-            </a>
-        </li> -->
+        
         <li>
             <a href="#">
                 <i class="bi bi-circle"></i><span>My Wards</span>
             </a>
         </li>
     </ul>
-</li> --}}
-      @endif
-      @if(studentRole())
+</li> 
+      @endif -->
+      <!-- @if(studentRole())
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#student-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -638,7 +634,7 @@
           </li>
         </ul>
       </li>
-      @endif
+      @endif -->
       @if(getUserAccess())
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#roles-nav" data-bs-toggle="collapse" href="#">

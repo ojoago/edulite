@@ -548,6 +548,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('class-assignment', [AssignmentController::class, 'submitManualAssignment'])->name('submit.manual.assignment');
     Route::post('submit-automated-assignment', [AssignmentController::class, 'submitAutomatedAssignment'])->name('submit.automated.assignment');
     Route::get('load-assignment', [AssignmentController::class, 'loadAssignment'])->name('load.assignment');
+    Route::get('load-assignment-for-student/{id}', [AssignmentController::class, 'loadAssignmentForStudent'])->name('load.assignment.for.student');
 
     //student attendance
     Route::view('student-attendance-form', 'school.student.attendance.student-attendance-form')->name('student.attendance.form');

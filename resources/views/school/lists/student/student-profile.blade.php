@@ -22,6 +22,9 @@
                         <button class="nav-link w-100" id="attendance-tab" data-bs-toggle="tab" data-bs-target="#attendance" type="button" role="tab">Attendance</button>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
+                        <button class="nav-link w-100" id="assignment-tab" data-bs-toggle="tab" data-bs-target="#assignment" type="button" role="tab">Assignment</button>
+                    </li>
+                    <li class="nav-item flex-fill" role="presentation">
                         <button class="nav-link w-100" id="fees-tab" data-bs-toggle="tab" data-bs-target="#fees" type="button" role="tab">Fees</button>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
@@ -50,6 +53,21 @@
                         <h4>Attendance Record</h4>
                         <div class="response"></div>
                         <div id='calendar'></div>
+                    </div>
+                    <div class="tab-pane fade" id="assignment" role="tabpanel">
+                        <table class="table table-hover table-responsive table-striped table-bordered cardTable" width="100%" id="assignmentTable">
+                            <thead>
+                                <tr>
+                                    <th width="5%">S/N</th>
+                                    <th>Subject</th>
+                                    <th>TItle</th>
+                                    <th>Deadline</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                     <div class="tab-pane fade" id="fees" role="tabpanel">
                         <!--  -->
@@ -94,7 +112,7 @@
                             <thead>
                                 <tr>
                                     <th width="5%">S/N</th>
-                                    <th>Class</th>
+                                    <!-- <th>Class</th> -->
                                     <th>Subject</th>
                                     <th>Date</th>
                                     <th>Time</th>
@@ -147,7 +165,7 @@
                                 </select>
                             </div>
                         </div>
-                        <table class="table table-hover table-striped table-bordered cardTable" id="resultDataTable">
+                        <table class="table table-hover table-striped table-bordered cardTable" width="100%" id="resultDataTable">
                             <thead>
                                 <tr>
 
@@ -389,8 +407,91 @@
                         "data": "action"
                     },
                 ],
+                "columnDefs": [{
+                    "visible": false,
+                    "targets": 4
+                }],
+                "drawCallback": function(settings) {
+                    var api = this.api();
+                    var rows = api.rows({
+                        page: 'current'
+                    }).nodes();
+                    var last = null;
+
+                    api.column(4, {
+                        page: 'current'
+                    }).data().each(function(group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
             });
         });
+
+        $('#assignment-tab').click(function() {
+            $('#assignmentTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                destroy: true,
+                "ajax": "{{route('load.assignment.for.student',['id'=>$pid])}}",
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        // orderable: false,
+                        // searchable: false
+                    },
+                    {
+                        "data": "subject"
+                    },
+                    {
+                        "data": "title"
+                    },
+                    {
+                        "data": "end_date"
+                    },
+
+
+                    {
+                        "data": "created_at"
+                    },
+                    {
+                        "data": "action"
+                    },
+                ],
+                "columnDefs": [{
+                    "visible": false,
+                    "targets": 1
+                }],
+                "drawCallback": function(settings) {
+                    var api = this.api();
+                    var rows = api.rows({
+                        page: 'current'
+                    }).nodes();
+                    var last = null;
+
+                    api.column(1, {
+                        page: 'current'
+                    }).data().each(function(group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
+            });
+        })
 
         function unPaidInvoice(term = null, session = null) {
             $('#unPaidInvoiceTable').DataTable({
@@ -513,9 +614,9 @@
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                     },
-                    {
-                        "data": "arm"
-                    },
+                    // {
+                    //     "data": "arm"
+                    // },
                     {
                         "data": "subject"
                     },
@@ -529,27 +630,27 @@
                         "data": "date"
                     },
                 ],
-                drawCallback: function(settings) {
-                    var api = this.api();
-                    var rows = api.rows({
-                        page: 'current'
-                    }).nodes();
-                    var last = null;
+                // drawCallback: function(settings) {
+                //     var api = this.api();
+                //     var rows = api.rows({
+                //         page: 'current'
+                //     }).nodes();
+                //     var last = null;
 
-                    api.column(4, {
-                        page: 'current'
-                    }).data().each(function(group, i) {
+                //     api.column(4, {
+                //         page: 'current'
+                //     }).data().each(function(group, i) {
 
-                        if (last !== group) {
+                //         if (last !== group) {
 
-                            $(rows).eq(i).before(
-                                '<tr class="group"><td colspan="8">' + 'GRUPO ....' + group + '</td></tr>'
-                            );
+                //             $(rows).eq(i).before(
+                //                 '<tr class="group"><td colspan="8">' + 'GRUPO ....' + group + '</td></tr>'
+                //             );
 
-                            last = group;
-                        }
-                    });
-                }
+                //             last = group;
+                //         }
+                //     });
+                // }
             });
         }
 

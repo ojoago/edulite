@@ -37,6 +37,28 @@ class AssignmentController extends Controller
         })
         ->make(true);
     }
+    public function loadAssignmentForStudent($pid){
+        $data = DB::table('question_banks as b')->join('questions as q','q.bank_pid','b.pid')
+                                                ->join('class_arm_subjects as cas','cas.pid','b.subject_pid')
+                                                ->join('subjects as s','s.pid','cas.subject_pid')
+                                                ->join('student_class_score_params as p','p.pid', 'b.class_param_pid')
+                                                ->join('class_arms as a','a.pid','p.arm_pid')
+                                                ->join('students as std', 'std.current_class_pid','a.pid')
+                                                ->where(['b.school_pid'=>getSchoolPid(),'std.pid'=>base64Decode($pid)])
+                                                ->select('s.subject','b.title','a.arm','b.pid','b.end_date','b.created_at')->get();
+        return datatables($data)
+        ->addIndexColumn()
+        ->editColumn('subject', function ($data) {
+            return $data->arm .' - '.$data->subject;
+        })
+        ->editColumn('created_at', function ($data) {
+            return date('d F Y', strtotime($data->created_at));
+        })
+        ->addColumn('action', function ($data) {
+            return 'submit';// return view('school.assessments.class-assignment', ['data' => $data]);
+        })
+        ->make(true);
+    }
 
     // create manual assignment 
     public function submitManualAssignment(Request $request){
