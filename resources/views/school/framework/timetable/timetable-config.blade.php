@@ -270,6 +270,7 @@
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                     },
+
                     {
                         "data": "arm"
                     },
@@ -286,8 +287,37 @@
                         "data": "date"
                     },
                 ],
+                // orderFixed: [1, 'asc'],
+                // rowGroup: {
+                //     dataSrc: 1
+                // },
+
+                "columnDefs": [{
+                    "visible": false,
+                    "targets": 1
+                }],
+                "drawCallback": function(settings) {
+                    var api = this.api();
+                    var rows = api.rows({
+                        page: 'current'
+                    }).nodes();
+                    var last = null;
+
+                    api.column(1, {
+                        page: 'current'
+                    }).data().each(function(group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
             });
         }
+
 
         // filter class subject 
         FormMultiSelect2('#timetableCategorySelect2', 'category', 'Select Category');
