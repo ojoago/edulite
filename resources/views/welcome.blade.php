@@ -211,7 +211,7 @@
             <div class="card-secction">
                 <img src="{{asset('files/edulite/svg/formula-pana.svg')}}" alt="student" />
                 <h3>Teacher</h3>
-                <p>Education needs wisdom, teacher handle humanly task while <span class="ed-color">Edu</span><span class="lite-color">Lite</span> takes care of the computain </p>
+                <p>Education needs wisdom, teacher handle humanly task while <span class="ed-color">Edu</span><span class="lite-color">Lite</span> takes care of the computatoins </p>
             </div>
         </div>
         <div class="col-md-3 mb-3">
@@ -228,14 +228,15 @@
                 <p>Manage student hostel activities. <br> Parent/school keep track of who take children to/from school</p>
             </div>
         </div>
-        <div class="col-md-12 mb-3">
+
+        <!-- <div class="col-md-12 mb-3">
             <div class="card-secction" style="padding: 20px!important; height:200px">
 
                 <p>We've spent time building this APP with blood, sweat, and lots of resources.</p>
                 <p>Real-life Human Beings
                     Tech veterans, geeks, and nerds are all standing by to optimize your experience.</p>
             </div>
-        </div>
+        </div> -->
 
     </div>
 </section>

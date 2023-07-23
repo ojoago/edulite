@@ -40,8 +40,69 @@ class AssignmentController extends Controller
 
     // create manual assignment 
     public function submitManualAssignment(Request $request){
+       
         $validator = Validator::make($request->all(),['subject'=>'required','arm'=>'required']);
 
+        if(!$validator->fails()){
+            try {
+                $data = [
+                    'school_pid' => getSchoolPid(),
+                    'session_pid' => activeSession(),
+                    'term_pid' => activeTerm(),
+                    'arm_pid' => $request->arm,
+                ];
+                $class_param_pid = ClassController::createClassParam($data);
+                $teacher = StaffController::getSubjectTeacherPid(session: activeSession(), term: activeTerm(), subject: $request->subject);
+
+                $bank = [
+                        'school_pid' => getSchoolPid(),
+                        'class_param_pid' => $class_param_pid,
+                        'pid' => public_id(),
+                        'note' => $request->note,
+                        'mark' => $request->mark,
+                        'type' => 1, //$request->type,
+                        'category' => 1,
+                        'start_date' => justDate(),
+                        'title' => $request->title,
+                        // 'end_date', 
+                        // 'start_time',
+                        // 'end_time', 
+                        'teacher_pid' => $teacher,
+                        'subject_pid' => $request->subject,
+                        // 'access'=>0
+                    ];
+               $bank = $this->updateOrCreateQuestionBank($bank);
+                if ($bank) {
+                    $question = [
+                        'school_pid' => getSchoolPid(),
+                        'pid' => public_id(),
+                        'bank_pid'=>$bank->pid,
+                        'question' => $request->question,
+                        'path' => $request->file,
+                        'mark' => $request->mark ?? null,
+                        // 'type', 
+                        // 'options'
+                    ];
+                   $result =  $this->updateOrCreateQuestion($question);
+                   if($result){
+                       return response()->json(['status' => 1, 'message' => 'Assignment created Successfully']);
+                   }
+                }
+            } catch (\Throwable $e) {
+                logError(['error' => $e->getMessage(), 'line' => __LINE__]);
+                return response()->json(['status' => 'error', 'message' => ER_500]);
+            }
+        }
+
+        return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+
+    }
+
+    // create manual assignment 
+    public function submitAutomatedAssignment(Request $request){
+        logError($request->all());
+        return;
+        $validator = Validator::make($request->all(),['subject'=>'required','arm'=>'required']);
         if(!$validator->fails()){
             try {
                 $data = [

@@ -3,7 +3,15 @@
 @section('content')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.css" rel="stylesheet">
 <!-- <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet"> -->
-
+<style>
+    .formController {
+        right: 0 !important;
+        position: fixed;
+        z-index: 1;
+        padding: 5px;
+        border: 1px solid #f1f1f1;
+    }
+</style>
 <div class="card">
     <div class="card-body">
         <h5 class="card-title mr-4">Assignments</h5>
@@ -21,16 +29,7 @@
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="manual" role="tabpanel" aria-labelledby="manual-tab">
-                <div class="row p-2">
-                    <div class="col-md-4">
-                        <select name="session" id="newAssignmentSessionSelect2" style="width: 100%;" class="form-control form-control-sm">
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <select name="session" id="newAssignmentTermSelect2" style="width: 100%;" class="form-control form-control-sm">
-                        </select>
-                    </div>
-                </div>
+
                 <fieldset class="border rounded-3 p-3">
                     <legend class="float-none w-auto px-3">New Assignment</legend>
                     <form class="row g-3 needs-validation" id="newManualAssignmentForm">
@@ -111,18 +110,12 @@
                 </fieldset>
             </div>
             <div class="tab-pane fade" id="automated" role="tabpanel" aria-labelledby="automated-tab">
-                <div class="row p-2">
-                    <div class="col-md-4">
-                        <select name="session" id="newAssignmentSessionSelect2" style="width: 100%;" class="form-control form-control-sm">
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <select name="session" id="newAssignmentTermSelect2" style="width: 100%;" class="form-control form-control-sm">
-                        </select>
-                    </div>
-                </div>
+
                 <fieldset class="border rounded-3 p-3">
-                    <legend class="float-none w-auto px-3">New Assignment</legend>
+                    <legend class="float-none w-auto px-3">Automated Assignment</legend>
+                    <div class="formController" id="formController">
+                        <button class="btn btn-outline-success" id="nextQuestion"><i class="bi bi-plus mr-1"></i>Next Question</button>
+                    </div>
                     <form class="row g-3 needs-validation" id="automatedAssignmentForm">
                         @csrf
                         <div class="col-md-4">
@@ -178,23 +171,29 @@
                         </div>
                         <input type="hidden" name="type" id="newAutomatedAssignmentType" value="2" checked>
 
-                        <div class="col-md-12">
+                        <div class="col-md-12" id="fieldQuestions">
                             <fieldset class="border rounded-3 p-3">
                                 <legend class="float-none w-auto px-3">Question 1</legend>
-                                Question Type 
-                                <select name="type" id="questionType" class="" style="width: 200px !important;">
+                                Question Type
+                                <select name="type[]" id="questionType1" class="changeQuestionType" style="width: 200px !important;">
                                     <option value="1">Single Select</option>
                                     <option value="2">Multi Select</option>
                                 </select>
-                                <textarea name="question" id="newAssignmentQuestion1" class="form-control form-control-sm summer-note"></textarea>
+                                <textarea name="question[]" placeholder="Question 1" value="Question 1" id="question1" class="form-control form-control-sm summer-note"></textarea>
                                 <p class="text-danger question_error"></p>
-                                Add Option 
-                                
+                                <button type="button" id="question1" class="addMoreOption btn btn-sm btn-outline-success"><i class="bi bi-plus"></i></button>
+                                <div class="col-md-4 m-3 " id="question1Option">
+                                    <div class="input-group mb-2">
+                                        <input type="radio" class="questionType1 m-2" name="question['answer'][]">
+                                        <input type="text" name="question['option'][]" id="" placeholder="option 1" class="form-control form-control-sm">
+                                        <i class="bi bi-x-circle-fill text-white m-2"></i>
+                                    </div>
+                                </div>
                             </fieldset>
                         </div>
 
                         <div class="text-center">
-                            <button class="btn btn-primary" type="button" id="newManualAssignmentBtn">Submit</button>
+                            <button class="btn btn-primary" type="button" id="automatedAssignmentBtn">Submit</button>
                             <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                         </div>
                     </form>
@@ -247,6 +246,7 @@
                     selector: 'td:nth-child(2)'
                 },
                 responsive: true,
+                destroy: true,
                 "ajax": "{{route('load.assignment')}}",
                 "columns": [{
                         data: 'DT_RowIndex',
@@ -275,52 +275,7 @@
             });
         })
 
-        $('#in-active-staff-tab').click(function() {
-            $('#activedataTable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
-                responsive: true,
-                "ajax": "{{route('load.inactive.staff.list')}}",
-                "columns": [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        // orderable: false,
-                        // searchable: false
-                    },
-                    {
-                        "data": "fullname"
-                    },
-                    {
-                        "data": "username"
-                    },
-                    {
-                        "data": "gsm"
-                    },
-
-                    {
-                        "data": "email"
-                    },
-                    {
-                        "data": "role"
-                    },
-
-                    {
-                        "data": "created_at"
-                    },
-                    {
-                        "data": "action"
-                    },
-                ],
-            });
-        });
-
-
-
         FormMultiSelect2('#newAssignmentCategorySelect2', 'category', 'Select Category');
-
         $('#newAssignmentCategorySelect2').on('change', function(e) {
             var id = $(this).val();
             FormMultiSelect2Post('#newAssignmentClassSelect2', 'class', id, 'Select Class');
@@ -332,6 +287,20 @@
         $('#newAssignmentClassArmSelect2').on('change', function(e) {
             var id = $(this).val();
             FormMultiSelect2Post('#newAssignmentSubjectSelect2', 'class-arm-subject', id, 'Select Class Subject');
+        });
+
+        FormMultiSelect2('#newAutomatedAssignmentCategorySelect2', 'category', 'Select Category');
+        $('#newAutomatedAssignmentCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            FormMultiSelect2Post('#newAutomatedAssignmentClassSelect2', 'class', id, 'Select Class');
+        });
+        $('#newAutomatedAssignmentClassSelect2').on('change', function(e) {
+            var id = $(this).val();
+            FormMultiSelect2Post('#newAutomatedAssignmentClassArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
+        });
+        $('#newAutomatedAssignmentClassArmSelect2').on('change', function(e) {
+            var id = $(this).val();
+            FormMultiSelect2Post('#newAutomatedAssignmentSubjectSelect2', 'class-arm-subject', id, 'Select Class Subject');
         });
         $('#newAssignmentRecordable').click(function() {
             // var previousValue = $(this).attr('previousValue');
@@ -351,7 +320,67 @@
         $('.summer-note').summernote()
         $('#newManualAssignmentBtn').click(function() {
             submitFormAjax('newManualAssignmentForm', 'newManualAssignmentBtn', "{{route('submit.manual.assignment')}}")
+        });
+        $('#automatedAssignmentBtn').click(function() {
+            submitFormAjax('automatedAssignmentForm', 'automatedAssignmentBtn', "{{route('submit.automated.assignment')}}")
+        });
+        let qn = 1;
+        let n = 0;
+        $('#nextQuestion').click(function() {
+            qn++;
+            n = 1;
+            $('#fieldQuestions').append(`
+                <fieldset class="border rounded-3 p-3">
+                                <legend class="float-none w-auto px-3">Question ${qn} <i class="bi bi-x-circle-fill btn-danger m-2 removeFieldsetBtn pointer"></i></legend>
+                                Question Type
+                                <select name="type[]" id="questionType${qn}" class="changeQuestionType" style="width: 200px !important;">
+                                    <option value="1">Single Select</option>
+                                    <option value="2">Multi Select</option>
+                                </select>
+                                <textarea name="question[]" placeholder="Question ${qn}"  value="Question ${qn}" id="question1" class="form-control form-control-sm summer-note"></textarea>
+                                <p class="text-danger question_error"></p>
+                                <button type="button" id="question${qn}" class="addMoreOption btn btn-sm btn-outline-success"><i class="bi bi-plus"></i></button>
+                                <div class="col-md-4 m-3 " id="question${qn}Option">
+                                    <div class="input-group mb-2">
+                                        <input type="radio" class="questionType${qn} m-2" name="${qn}_question['answer'][]"> 
+                                        <input type="text" name="${qn}_question['option'][]" id="" placeholder="enter option " class="form-control form-control-sm">
+                                        <i class="bi bi-x-circle-fill text-white m-2"></i>
+                                    </div>
+                                </div>
+                            </fieldset>
+            `);
         })
+
+        // remove question 
+        $(document).on('click', '.removeFieldsetBtn', function() {
+            $(this).parent().parent().remove()
+        });
+
+        // add option 
+        $(document).on('click', '.addMoreOption', function() {
+            n++
+            let id = $(this).attr('id')
+            $('#' + id + 'Option').append(`
+                <div class="input-group mb-2">
+                    <input type="radio" class="questionType${qn} m-2" name="${qn}_question['answer'][]"> 
+                    <input type="text" name="${qn}_question['option'][]" id="" placeholder="enter option " class="form-control form-control-sm">
+                    <i class="bi bi-x-circle-fill btn-danger m-2 removeRowBtn pointer"></i>
+                </div>
+            `);
+        });
+        //    remove option 
+        $(document).on('click', '.removeRowBtn', function() {
+            $(this).parent().remove()
+        });
+        $(document).on('change', '.changeQuestionType', function() {
+            let cls = $(this).attr('id');
+            type = $(this).val();
+            if (type == 2) {
+                $('.' + cls).attr('type', 'checkbox');
+            } else {
+                $('.' + cls).attr('type', 'radio');
+            }
+        });
     });
 </script>
 @endsection

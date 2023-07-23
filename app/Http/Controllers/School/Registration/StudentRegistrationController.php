@@ -16,7 +16,7 @@ use App\Http\Controllers\School\Student\StudentController;
 
 class StudentRegistrationController extends Controller
 {
-    private  $pwd = 654321;
+    private  $pwd = 123456;
     // public function __construct()
     // {
     //     $this->middleware('auth');
@@ -171,7 +171,7 @@ class StudentRegistrationController extends Controller
                 return response()->json(['status'=>1,'message'=>'account created but not completed, so please use '.$user->username.' to update details and link to school']);
             } catch (\Throwable $e) {
                 $error = $e->getMessage();
-                logError($error);
+                logError(['error'=>$e->getMessage(),'line'=>__LINE__]);
                 return response()->json(['status'=>'error','message'=>'Something went Wrong... error logged']);
              }
             
