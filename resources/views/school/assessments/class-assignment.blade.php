@@ -11,6 +11,10 @@
         padding: 5px;
         border: 1px solid #f1f1f1;
     }
+
+    .non-visible {
+        visibility: hidden;
+    }
 </style>
 <div class="card">
     <div class="card-body">
@@ -52,20 +56,25 @@
                             </select>
                             <p class="text-danger arm_error"></p>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <label class="form-label">Subject</label>
                             <select name="subject" id="newAssignmentSubjectSelect2" style="width: 100%;" class="form-control form-control-sm">
                             </select>
                             <p class="text-danger subject_error"></p>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <label class="form-label">Assignment Title</label>
                             <input type="text" class="form-control form-control-sm" name="title" id="newAssignmentScore" placeholder="e.g 5">
                             <p class="text-danger title_error"></p>
                         </div>
                         <div class="col-md-2">
+                            <label class="form-label">Deadline</label>
+                            <input type="date" class="form-control form-control-sm" name="end_date" id="end_date">
+                            <p class="text-danger end_date_error"></p>
+                        </div>
+                        <div class="col-md-2">
                             <label class="form-label">Mark</label>
-                            <input type="number" class="form-control form-control-sm" name="mark" id="newAssignmentScore" placeholder="e.g 5">
+                            <input type="number" class="form-control form-control-sm" name="total_mark" id="newAssignmentScore" placeholder="e.g 5">
                             <p class="text-danger mark_error"></p>
                         </div>
                         <div class="col-md-10">
@@ -73,9 +82,13 @@
                             <textarea type="text" class="form-control form-control-sm summer-note" name="note" id="newAssignmentNote" placeholder="guideline"></textarea>
                             <p class="text-danger note_error"></p>
                         </div>
+
                         <div class="col-md-2">
                             <label class="form-label">Recordable?</label><br>
                             Yes <input type="checkbox" class="radio" name="recordable" id="newAssignmentRecordable">
+                            <p class="text-danger recordable_error"></p>
+                            <label class="form-label">Same Mark?</label><br>
+                            Yes <input type="checkbox" class="radio" name="same_make" id="same_make">
                             <p class="text-danger recordable_error"></p>
                         </div>
 
@@ -136,21 +149,26 @@
                             </select>
                             <p class="text-danger arm_error"></p>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <label class="form-label">Subject</label>
                             <select name="subject" id="newAutomatedAssignmentSubjectSelect2" style="width: 100%;" class="form-control form-control-sm">
                             </select>
                             <p class="text-danger subject_error"></p>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <label class="form-label">Assignment Title</label>
-                            <input type="text" class="form-control form-control-sm" name="title" id="newAssignmentScore" placeholder="e.g 5">
+                            <input type="text" class="form-control form-control-sm" autocomplete="off" name="title" id="newAssignmentScore" placeholder="e.g 5">
                             <p class="text-danger title_error"></p>
                         </div>
                         <div class="col-md-2">
+                            <label class="form-label">Deadline</label>
+                            <input type="date" class="form-control form-control-sm" name="end_date" id="end_date">
+                            <p class="text-danger end_date_error"></p>
+                        </div>
+                        <div class="col-md-2">
                             <label class="form-label">Mark</label>
-                            <input type="number" class="form-control form-control-sm" name="mark" id="newAssignmentScore" placeholder="e.g 5">
-                            <p class="text-danger mark_error"></p>
+                            <input type="number" class="form-control form-control-sm" name="total_mark" id="newAssignmentScore" placeholder="e.g 5">
+                            <p class="text-danger total_mark_error"></p>
                         </div>
                         <div class="col-md-10">
                             <label class="form-label">Note</label>
@@ -160,6 +178,9 @@
                         <div class="col-md-2">
                             <label class="form-label">Recordable?</label><br>
                             Yes <input type="checkbox" class="radio" name="recordable" id="newAssignmentRecordable">
+                            <p class="text-danger recordable_error"></p>
+                            <label class="form-label">Same Mark?</label><br>
+                            Yes <input type="checkbox" class="radio" name="same_mark" id="same_mark" checked>
                             <p class="text-danger recordable_error"></p>
                         </div>
 
@@ -171,22 +192,63 @@
                         </div>
                         <input type="hidden" name="type" id="newAutomatedAssignmentType" value="2" checked>
 
-                        <div class="col-md-12" id="fieldQuestions">
-                            <fieldset class="border rounded-3 p-3">
+                        <div class="col-md-12  px-0" id="fieldQuestions">
+                            <fieldset class="border rounded-3 p-3  px-0">
                                 <legend class="float-none w-auto px-3">Question 1</legend>
-                                Question Type
-                                <select name="type[]" id="questionType1" class="changeQuestionType" style="width: 200px !important;">
-                                    <option value="1">Single Select</option>
-                                    <option value="2">Multi Select</option>
-                                </select>
-                                <textarea name="question[]" placeholder="Question 1" value="Question 1" id="question1" class="form-control form-control-sm summer-note"></textarea>
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        Question Type
+                                        <select name="type[]" id="type0" type="0" class="changeQuestionType form-select form-select-sm ">
+                                            <option value="1">Single Select</option>
+                                            <option value="2">Multi Select</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 sameMarkRow" style="display:none">
+                                        <label for="">Score</label>
+                                        <input name="marks[]" placeholder="allocate Score" id="mark1" question="0" class="marks form-control form-control-sm">
+                                    </div>
+                                </div>
+                                <textarea name="question[]" placeholder="Question 1" value="Question 1" id="question1" question="0" class="questions form-control form-control-sm summer-note"></textarea>
                                 <p class="text-danger question_error"></p>
-                                <button type="button" id="question1" class="addMoreOption btn btn-sm btn-outline-success"><i class="bi bi-plus"></i></button>
-                                <div class="col-md-4 m-3 " id="question1Option">
-                                    <div class="input-group mb-2">
-                                        <input type="radio" class="questionType1 m-2" name="question['answer'][]">
-                                        <input type="text" name="question['option'][]" id="" placeholder="option 1" class="form-control form-control-sm">
-                                        <i class="bi bi-x-circle-fill text-white m-2"></i>
+                                <button type="button" id="question0" question="0" class="addMoreOption btn btn-sm btn-outline-success"><i class="bi bi-plus"></i></button>
+                                <div class="col-md-8 m-3  px-0" id="question0Option">
+                                    <div class="row px-0">
+                                        <div class="col-md-6  px-0">
+                                            <div class="input-group mb-2  px-0">
+                                                <input type="radio" answer="0" class="optionAnswer0 m-2 answer" name="answer[0][]">
+                                                <input type="text" option="0" name="option[0][]" id="" placeholder="enter option" class="question0 form-control form-control-sm">
+                                                <i class="bi bi-x-circle-fill text-white m-2"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6  px-0">
+                                            <div class="input-group mb-2  px-0">
+                                                <input type="radio" class="non-visible m-2">
+                                                <input type="hidden" mark="0" name="mark[0][]" id="" placeholder="ENter Individual Mark" class="mark0 option-mark form-control form-control-sm">
+                                                <i class="bi bi-x-circle-fill text-white m-2"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- first option  end here-->
+
+                                    <div class="row  px-0">
+                                        <div class="col-md-6  px-0">
+                                            <!-- send option   start here-->
+                                            <div class="input-group mb-2  px-0">
+                                                <input type="radio" answer="1" class="optionAnswer0 m-2 answer" name="answer[0][]">
+                                                <input type="text" option="1" name="option[0][]" id="" placeholder="enter option " class="question0 form-control form-control-sm">
+                                                <!-- <input type="hidden" mark="${n}" name="mark[${qn}][]" id="" placeholder="individual Mark" class="mark${qn} mark form-control form-control-sm"> -->
+                                                <i class="bi bi-x-circle-fill text-white m-2"></i>
+                                            </div>
+                                        </div>
+                                        <!-- send option   start here-->
+                                        <div class="col-md-6  px-0">
+                                            <div class="input-group mb-2  px-0">
+                                                <input type="radio" class="non-visible m-2">
+                                                <!-- <input type="text" option="1" name="option[0][]" id="" placeholder="enter option " class="question0 form-control form-control-sm"> -->
+                                                <input type="hidden" mark="1" name="mark[0][]" id="" placeholder="Enter Individual Mark" class="mark0 option-mark form-control form-control-sm">
+                                                <i class="bi bi-x-circle-fill text-white m-2"></i>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </fieldset>
@@ -210,17 +272,17 @@
                         </select>
                     </div>
                 </div>
-                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="assignmentTable">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" width="100%" id="assignmentTable">
                     <thead>
                         <tr>
-                            <th>S/N</th>
+                            <th width="5%">S/N</th>
                             <th>Subject</th>
                             <th>TItle</th>
                             <!-- <th>Date</th> -->
                             <th>Deadline</th>
                             <!-- <th></th> -->
                             <th>Date</th>
-                            <th>Action</th>
+                            <th width="5%">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -229,6 +291,7 @@
         </div><!-- End Default Tabs -->
     </div>
 </div>
+
 
 
 <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
@@ -272,6 +335,29 @@
                         "data": "action"
                     },
                 ],
+                "columnDefs": [{
+                    "visible": false,
+                    "targets": 1
+                }],
+                "drawCallback": function(settings) {
+                    var api = this.api();
+                    var rows = api.rows({
+                        page: 'current'
+                    }).nodes();
+                    var last = null;
+
+                    api.column(1, {
+                        page: 'current'
+                    }).data().each(function(group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
             });
         })
 
@@ -317,40 +403,87 @@
                 $('#newAssignmentCaType').hide(500);
             }
         });
-        $('.summer-note').summernote()
+        $('#same_mark').click(function() {
+            if ($(this).is(':checked')) {
+                $('.sameMarkRow').hide(500);
+                $('.option-mark').attr('type', 'hidden');
+            } else {
+                $('.sameMarkRow').show(500);
+                $('.option-mark').show(500);
+            }
+        });
+
         $('#newManualAssignmentBtn').click(function() {
             submitFormAjax('newManualAssignmentForm', 'newManualAssignmentBtn', "{{route('submit.manual.assignment')}}")
         });
-        $('#automatedAssignmentBtn').click(function() {
-            submitFormAjax('automatedAssignmentForm', 'automatedAssignmentBtn', "{{route('submit.automated.assignment')}}")
-        });
-        let qn = 1;
-        let n = 0;
+
+
+        let qn = 0;
+        let n = 2;
         $('#nextQuestion').click(function() {
             qn++;
-            n = 1;
+            n = 2;
             $('#fieldQuestions').append(`
-                <fieldset class="border rounded-3 p-3">
-                                <legend class="float-none w-auto px-3">Question ${qn} <i class="bi bi-x-circle-fill btn-danger m-2 removeFieldsetBtn pointer"></i></legend>
-                                Question Type
-                                <select name="type[]" id="questionType${qn}" class="changeQuestionType" style="width: 200px !important;">
-                                    <option value="1">Single Select</option>
-                                    <option value="2">Multi Select</option>
-                                </select>
-                                <textarea name="question[]" placeholder="Question ${qn}"  value="Question ${qn}" id="question1" class="form-control form-control-sm summer-note"></textarea>
+                <fieldset class="border rounded-3 p-3  px-0">
+                                <legend class="float-none w-auto px-3">Question ${qn+1} <i class="bi bi-x-circle-fill btn-danger m-2 removeFieldsetBtn pointer"></i></legend>
+                                <div class="row mb-2 px-0">
+                                    <div class="col-md-6 px-0">
+                                        Question Type
+                                        <select name="type[]" id="type${qn}" type="${qn}" class="changeQuestionType form-select form-select-sm ">
+                                            <option value="1">Single Select</option>
+                                            <option value="2">Multi Select</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 px-0 sameMarkRow" style="display:none">
+                                        <label for="">Score</label>
+                                        <input name="marks[]" placeholder="allocate Score"  id="mark${qn}" question="${qn}" class="marks form-control form-control-sm">
+                                    </div>
+                                </div>
+                                <textarea name="question[]" placeholder="Question ${qn+1}"  value="Question ${qn+1}" id="question${qn}" question="${qn}" class="questions form-control form-control-sm summer-note"></textarea>
                                 <p class="text-danger question_error"></p>
-                                <button type="button" id="question${qn}" class="addMoreOption btn btn-sm btn-outline-success"><i class="bi bi-plus"></i></button>
-                                <div class="col-md-4 m-3 " id="question${qn}Option">
-                                    <div class="input-group mb-2">
-                                        <input type="radio" class="questionType${qn} m-2" name="${qn}_question['answer'][]"> 
-                                        <input type="text" name="${qn}_question['option'][]" id="" placeholder="enter option " class="form-control form-control-sm">
-                                        <i class="bi bi-x-circle-fill text-white m-2"></i>
+                                <button type="button" id="question${qn}" question="${qn}" class="addMoreOption btn btn-sm btn-outline-success"><i class="bi bi-plus"></i></button>
+                                <div class="col-md-8 m-3 px-0" id="question${qn}Option">
+                                    <div class="row px-0">
+                                        <div class="col-md-6 px-0">
+                                            <div class="input-group mb-2 px-0">
+                                                <input type="radio" answer="0" class="optionAnswer${qn} answer m-2" name="answer[${qn}][]">
+                                                <input type="text" option="0" name="option[${qn}][]" id="" placeholder="enter option " class="question${qn} form-control form-control-sm">
+                                                <i class="bi bi-x-circle-fill text-white m-2"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 px-0">
+                                            <div class="input-group mb-2 px-0">
+                                                <input type="radio" class="non-visible m-2">
+                                                <input type="hidden" mark="0" name="mark[${qn}][]" id="" placeholder="enter individual mark " class="mark${qn} form-control form-control-sm">
+                                                <i class="bi bi-x-circle-fill text-white m-2"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row px-0">
+                                        <div class="col-md-6 px-0">
+                                            <div class="input-group mb-2 px-0">
+                                                <input type="radio" answer="1" class="optionAnswer${qn} answer m-2" name="answer[${qn}][]">
+                                                <input type="text" option="1" name="option[${qn}][]" id="" placeholder="enter option " class="question${qn} form-control form-control-sm">
+                                                <i class="bi bi-x-circle-fill text-white m-2"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 px-0">
+                                            <div class="input-group mb-2 px-0">
+                                                <input type="radio" class="non-visible m-2">
+                                                <input type="hidden" mark="1" name="mark[${qn}][]" id="" placeholder="enter Individual Mark " class="mark${qn} form-control form-control-sm">
+                                                <i class="bi bi-x-circle-fill text-white m-2"></i>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </fieldset>
             `);
+            $('.summer-note').summernote()
+            if ($('#same_mark').is(':not(:checked)')) {
+                $('.sameMarkRow').show(500);
+            }
         })
-
+        $('.summer-note').summernote()
         // remove question 
         $(document).on('click', '.removeFieldsetBtn', function() {
             $(this).parent().parent().remove()
@@ -360,27 +493,161 @@
         $(document).on('click', '.addMoreOption', function() {
             n++
             let id = $(this).attr('id')
+            let qn = $(this).attr('question')
+            let type = $('#type' + qn).val();
+            let mark = 'hidden';
+            if (type == 2) {
+                type = 'checkbox';
+                if ($('#same_mark').is(':not(:checked)')) {
+                    mark = 'number';
+                    $('.mark' + qn).attr('type', mark)
+                } else {
+                    $('.mark' + qn).attr('type', mark)
+                }
+            } else {
+                type = 'radio';
+                $('.mark' + qn).attr('type', mark)
+            }
+
             $('#' + id + 'Option').append(`
-                <div class="input-group mb-2">
-                    <input type="radio" class="questionType${qn} m-2" name="${qn}_question['answer'][]"> 
-                    <input type="text" name="${qn}_question['option'][]" id="" placeholder="enter option " class="form-control form-control-sm">
-                    <i class="bi bi-x-circle-fill btn-danger m-2 removeRowBtn pointer"></i>
+                <div class="row px-0">
+                    <div class="col-md-6 px-0">
+                        <div class="input-group mb-2 px-0">
+                            <input type="${type}" answer="${n}" class="optionAnswer${qn} m-2 answers" name="answer[${qn}][]">
+                            <input type="text" option="${n}" name="option[${qn}][]" id="" placeholder="enter option " class="question${qn} form-control form-control-sm">
+                            <i class="bi bi-x-circle-fill btn-danger m-2 removeRowBtn pointer"></i>
+                            </div>
+                            </div>
+                            <div class="col-md-6 px-0">
+                            <div class="input-group mb-2 px-0">
+                            <input type="radio" class="non-visible m-2">
+                            <input type="${mark}" mark="${n}" name="mark[${qn}][]" id="" placeholder="Enter Individual Mark" class="mark${qn} option-mark form-control form-control-sm">
+                            <i class="bi bi-x-circle-fill text-white m-2"></i>
+                        </div>
+                    </div>
                 </div>
             `);
         });
         //    remove option 
         $(document).on('click', '.removeRowBtn', function() {
-            $(this).parent().remove()
+            $(this).parent().parent().parent().remove()
         });
         $(document).on('change', '.changeQuestionType', function() {
-            let cls = $(this).attr('id');
-            type = $(this).val();
+            let cls = $(this).attr('type');
+            let type = $(this).val();
+
+            let mark = 'hidden';
             if (type == 2) {
-                $('.' + cls).attr('type', 'checkbox');
+                type = 'checkbox';
+                if ($('#same_mark').is(':not(:checked)')) {
+                    mark = 'number';
+                    $('.mark' + cls).attr('type', mark)
+                } else {
+                    $('.mark' + cls).attr('type', mark)
+                }
             } else {
-                $('.' + cls).attr('type', 'radio');
+                type = 'radio';
+                $('.mark' + cls).attr('type', mark)
             }
+            $('.optionAnswer' + cls).attr('type', type);
         });
+
+        // $('#automatedAssignmentBtn').click(function() {
+        //     submitFormAjax('automatedAssignmentForm', 'automatedAssignmentBtn', "{{route('submit.automated.assignment')}}")
+        // });
+        $('#automatedAssignmentBtn').click(async function(e) {
+            e.preventDefault()
+            $('#automatedAssignmentForm').find('p.text-danger').text('');
+            $('#automatedAssignmentBtn').prop('disabled', true);
+            $('.overlay').show();
+            const formData = new FormData($('#automatedAssignmentForm')[0])
+            formData.delete("question[]");
+
+            const questionArray = await sortQuestion();
+            formData.append('questions', JSON.stringify(questionArray));
+            $.ajax({
+                url: "{{route('submit.automated.assignment')}}", //"url,
+                type: "POST",
+                data: formData,
+                dataType: "JSON",
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+                    $('#automatedAssignmentForm').find('p.text-danger').text('');
+                    $('#automatedAssignmentBtn').prop('disabled', true);
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#automatedAssignmentBtn').prop('disabled', false);
+                    $('.overlay').hide();
+                    if (data.status === 0) {
+                        alert_toast('Fill in form correctly', 'warning');
+                        $.each(data.error, function(prefix, val) {
+                            $('.' + prefix + '_error').text(val[0]);
+                        });
+                        $.each(data.error, function(prefix, val) {
+                            let prfx = prefix.replace(".", "");
+                            $('.' + prfx + '_error').text(val[0]);
+                        });
+                        // resolve(null)
+                    } else if (data.status === 1) {
+                        alert_toast(data.message, 'success');
+                        $('#automatedAssignmentForm')[0].reset();
+                        $('.summer-note').val('')
+                    } else {
+                        alert_toast(data.message, 'error');
+                    }
+                },
+                error: function(data) {
+                    $('#automatedAssignmentBtn').prop('disabled', false);
+                    $('.overlay').hide();
+                    alert_toast('Something Went Wrong', 'error');
+                }
+            });
+        });
+
+        function sortQuestion() {
+            return new Promise((resolve, reject) => {
+                const questionArray = []
+                const marks = $('.marks');
+                $('.questions').each(function(j, obj) {
+
+                    const question = $(this).val();
+                    const mark = $(marks[j]).val();
+                    const qn = $(this).attr('question');
+                    // alert(qn + ' ' + question);
+                    const options = $('.question' + qn)
+                    const asignMark = $('.mark' + qn)
+                    const answer = $('.optionAnswer' + qn)
+                    const type = $('#type' + qn).val()
+                    let questionOptions = [];
+                    let selected;
+                    for (let i = 0; i < options.length; i++) {
+                        if (answer[i].checked == true) { //check if question is selected
+                            selected = true;
+                        } else {
+                            selected = false;
+                        }
+                        questionOptions.push({
+                            option: $(options[i]).val(),
+                            correct: selected,
+                            mark: $(asignMark[i]).val(),
+                        })
+                    }
+                    questionArray.push({
+                        question,
+                        type,
+                        mark,
+                        options: questionOptions
+                    })
+
+                });
+
+                resolve(questionArray)
+
+            });
+
+        }
     });
 </script>
 @endsection

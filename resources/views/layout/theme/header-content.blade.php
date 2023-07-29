@@ -2,12 +2,13 @@
      <header id="header" class="header fixed-top d-flex align-items-center">
 
          <div class="d-flex align-items-center justify-content-between">
+             <i class="bi bi-list toggle-sidebar-btn"></i>
              @if(getSchoolPid())
              <a href="{{route('my.school.dashboard')}}" class="logo d-flex align-items-center">
                  <img src="{{asset(getSchoolLogo())}}" alt="logo">
                  <span class="d-none d-lg-block ellipsis-text" id="schoolName">{{getSchoolName()}}</span>
              </a>
-             <i class="bi bi-list toggle-sidebar-btn"></i>
+             <!-- <i class="bi bi-list toggle-sidebar-btn"></i> -->
              @else
              <a href="{{route('users.home')}}" class="logo d-flex align-items-center">
                  <img src="{{asset(getSchoolLogo())}}" alt="">

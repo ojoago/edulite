@@ -28,11 +28,11 @@ class StudentRegistrationController extends Controller
      */
     public function index()
     {
-        $cnd = ['school_pid',getSchoolPid()];
-        $data = User::get(['pid','username']);
-        $school = School::get(['pid','school_name']);
-        $arm = ClassArm::get(['pid','arm']);
-        return view('school.registration.student.index',compact('data','school','arm'));
+        // $cnd = ['school_pid',getSchoolPid()];
+        // $data = User::get(['pid','username']);
+        // $school = School::get(['pid','school_name']);
+        // $arm = ClassArm::get(['pid','arm']);
+        // return view('school.registration.student.index',compact('data','school','arm'));
     }
 
     public function registerStudent(Request $request){
@@ -49,7 +49,7 @@ class StudentRegistrationController extends Controller
                                 Rule::unique('users')->where(function ($param) use ($request) {
                                         $param->where('pid','<>', $request->user_pid);
                                     })],
-            'email'=>['nullable', 'string', 'email', "regex:/^[a-zA-Z0-9\s]+$/",
+            'email'=>['nullable', 'string', 'email', "regex:/^[a-zA-Z0-9.@\s]+$/",
                                 Rule::unique('users')->where(function ($param) use ($request) {
                                         $param->where('pid', '<>', $request->user_pid);
                                     })],//|||unique:users,email

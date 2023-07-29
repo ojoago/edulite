@@ -534,7 +534,7 @@
           @if(getUserActiveRole() == "500")
           <li>
             <a href="{{route('principal.comment.termly.result')}}">
-              <i class="bi bi-circle"></i><span>Principal </span>
+              <i class="bi bi-circle"></i><span>Manual Comment </span>
             </a>
           </li>
           <li>
@@ -546,7 +546,7 @@
           @if(getUserActiveRole() == "301")
           <li>
             <a href="{{route('teacher.comment.termly.result')}}">
-              <i class="bi bi-circle"></i><span>Teacher</span>
+              <i class="bi bi-circle"></i><span>Manual Comment</span>
             </a>
           </li>
           <li>

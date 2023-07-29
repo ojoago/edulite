@@ -33,7 +33,7 @@ class AssignmentController extends Controller
             return date('d F Y', strtotime($data->created_at));
         })
         ->addColumn('action', function ($data) {
-            return 'edit';// return view('school.assessments.class-assignment', ['data' => $data]);
+            return view('school.assessments.class-assignment-action-button', ['data' => $data]);
         })
         ->make(true);
     }
@@ -63,44 +63,19 @@ class AssignmentController extends Controller
     // create manual assignment 
     public function submitManualAssignment(Request $request){
        
-        $validator = Validator::make($request->all(),['subject'=>'required','arm'=>'required']);
+        $validator = Validator::make($request->all(),['subject'=>'required','arm'=>'required', 'end_date' => 'required','title'=>'required']);
 
         if(!$validator->fails()){
             try {
-                $data = [
-                    'school_pid' => getSchoolPid(),
-                    'session_pid' => activeSession(),
-                    'term_pid' => activeTerm(),
-                    'arm_pid' => $request->arm,
-                ];
-                $class_param_pid = ClassController::createClassParam($data);
-                $teacher = StaffController::getSubjectTeacherPid(session: activeSession(), term: activeTerm(), subject: $request->subject);
-
-                $bank = [
-                        'school_pid' => getSchoolPid(),
-                        'class_param_pid' => $class_param_pid,
-                        'pid' => public_id(),
-                        'note' => $request->note,
-                        'mark' => $request->mark,
-                        'type' => 1, //$request->type,
-                        'category' => 1,
-                        'start_date' => justDate(),
-                        'title' => $request->title,
-                        // 'end_date', 
-                        // 'start_time',
-                        // 'end_time', 
-                        'teacher_pid' => $teacher,
-                        'subject_pid' => $request->subject,
-                        // 'access'=>0
-                    ];
-               $bank = $this->updateOrCreateQuestionBank($bank);
+                
+               $bank = $this->createQuestionBank($request);
                 if ($bank) {
                     $question = [
                         'school_pid' => getSchoolPid(),
                         'pid' => public_id(),
                         'bank_pid'=>$bank->pid,
                         'question' => $request->question,
-                        'path' => $request->file,
+                        'path' => $request->file ?? null,
                         'mark' => $request->mark ?? null,
                         // 'type', 
                         // 'options'
@@ -120,55 +95,73 @@ class AssignmentController extends Controller
 
     }
 
-    // create manual assignment 
+    // create question bank 
+    public static function createQuestionBank($request){
+        $data = [
+            'school_pid' => getSchoolPid(),
+            'session_pid' => activeSession(),
+            'term_pid' => activeTerm(),
+            'arm_pid' => $request->arm,
+        ];
+        $class_param_pid = ClassController::createClassParam($data);
+        $teacher = StaffController::getSubjectTeacherPid(session: activeSession(), term: activeTerm(), subject: $request->subject);
+        $bank = [
+            'school_pid' => getSchoolPid(),
+            'class_param_pid' => $class_param_pid,
+            'pid' => $request->pid ?? public_id(),
+            'note' => $request->note,
+            'mark' => $request->total_mark,
+            'type' => $request->type,
+            'category' => 1,
+            'start_date' => justDate(),
+            'title' => $request->title,
+            'end_date'=>$request->end_date ?? null,
+            'start_time' => $request->start_time ?? null,
+            'end_time' => $request->end_time ?? null, 
+            'teacher_pid' => $teacher,
+            'subject_pid' => $request->subject,
+            // 'access'=>0
+        ];
+        return (new self)->updateOrCreateQuestionBank($bank);
+    }
+
+ 
+    // create automated assignment 
     public function submitAutomatedAssignment(Request $request){
-        logError($request->all());
-        return;
-        $validator = Validator::make($request->all(),['subject'=>'required','arm'=>'required']);
+        // logError(json_decode($request->questions));
+        // return;
+        $validator = Validator::make($request->all(),
+                                ['subject'=>'required','arm'=>'required', 'title'=>'required', 'end_date'=>'required']
+                            );
         if(!$validator->fails()){
             try {
-                $data = [
-                    'school_pid' => getSchoolPid(),
-                    'session_pid' => activeSession(),
-                    'term_pid' => activeTerm(),
-                    'arm_pid' => $request->arm,
-                ];
-                $class_param_pid = ClassController::createClassParam($data);
-                $teacher = StaffController::getSubjectTeacherPid(session: activeSession(), term: activeTerm(), subject: $request->subject);
 
-                $bank = [
-                        'school_pid' => getSchoolPid(),
-                        'class_param_pid' => $class_param_pid,
-                        'pid' => public_id(),
-                        'note' => $request->note,
-                        'mark' => $request->mark,
-                        'type' => 1, //$request->type,
-                        'category' => 1,
-                        'start_date' => justDate(),
-                        'title' => $request->title,
-                        // 'end_date', 
-                        // 'start_time',
-                        // 'end_time', 
-                        'teacher_pid' => $teacher,
-                        'subject_pid' => $request->subject,
-                        // 'access'=>0
-                    ];
-               $bank = $this->updateOrCreateQuestionBank($bank);
+                $bank = $this->createQuestionBank($request);
                 if ($bank) {
-                    $question = [
-                        'school_pid' => getSchoolPid(),
-                        'pid' => public_id(),
-                        'bank_pid'=>$bank->pid,
-                        'question' => $request->question,
-                        'path' => $request->file,
-                        'mark' => $request->mark ?? null,
-                        // 'type', 
-                        // 'options'
-                    ];
-                   $result =  $this->updateOrCreateQuestion($question);
-                   if($result){
-                       return response()->json(['status' => 1, 'message' => 'Assignment created Successfully']);
-                   }
+                    $result = false;
+                    $questions = json_decode($request->questions);
+                    foreach($questions as $row){
+                        if(empty($row->question) || count($row->options)<2){
+                            continue;
+                        }
+                        $question = [
+                            'school_pid' => getSchoolPid(),
+                            'pid' => $row->pid ?? public_id(),
+                            'bank_pid' => $bank->pid,
+                            'question' => $row->question,
+                            'path' => $request->file ?? null,
+                            'mark' =>  is_array($row->mark) ? array_sum($row->mark) : 0,
+                            'type' => $row->type,
+                            'options' => ($row->options), 
+    
+                        ];
+                        $result =  $this->updateOrCreateQuestion($question);
+                    }
+                    
+                    if ($result) {
+                        return response()->json(['status' => 1, 'message' => 'Assignment created Successfully']);
+                    }
+                    return response()->json(['status' => 'error', 'message' => 'Enter all Questions and at least two options for each.']);
                 }
             } catch (\Throwable $e) {
                 logError(['error' => $e->getMessage(), 'line' => __LINE__]);
@@ -185,6 +178,7 @@ class AssignmentController extends Controller
             return QuestionBank::updateOrCreate(['pid' => $data['pid']],$data);
         } catch (\Throwable $e) {
             logError(['error'=>$e->getMessage(),'line'=>__LINE__]);
+            return false;
         }
     }
     private function updateOrCreateQuestion(array $data){
@@ -192,6 +186,7 @@ class AssignmentController extends Controller
             return Question::updateOrCreate(['pid'=>$data['pid'],'bank_pid'=>$data['bank_pid']],$data);
         } catch (\Throwable $e) {
             logError(['error'=>$e->getMessage(),'line'=>__LINE__]);
+            return false;
         }
     }
 

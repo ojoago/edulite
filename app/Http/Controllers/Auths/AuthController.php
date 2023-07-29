@@ -196,15 +196,21 @@ class AuthController extends Controller
             'email' => 'required',
             'password' => 'required',
         ]);
-        $user = User::leftJoin('students','students.user_pid','users.pid')
-                        ->leftJoin('school_staff','school_staff.user_pid','users.pid')
-                        ->leftJoin('school_riders', 'school_riders.user_pid','users.pid')
-                        ->where('email',$request->email)// login with email
-                        ->orwhere('gsm', $request->email)// login with gsm
-                        ->orwhere('rider_id', $request->email)// logon with rider id number
-                        ->orwhere('staff_id', $request->email)// logon with staff id
-                        ->orwhere('username', $request->email)
-                        ->first(['username','account_status']);
+        // login with username/gsm/email 
+        $user = User::where('users.email',$request->email)// login with email
+                        ->orwhere('users.username', $request->email)
+                        ->orwhere('users.gsm', $request->email)// login with gsm
+                        ->first(['username','account_status']);//
+        if(!$user){// lgin with student reg
+            $user = User::join('students', 'students.user_pid', 'users.pid')
+                ->where('students.reg_number', $request->email) // logon with staff id
+                ->first(['username', 'account_status']);
+             }
+        if(!$user){//login with staff id
+            $user = User::join('school_staff', 'school_staff.user_pid', 'users.pid')
+                ->where('school_staff.staff_id', $request->email) // logon with staff id
+                ->first(['username', 'account_status']);
+             }
         if($user && isset($user->account_status)){
             if ($user->account_status == 1) {
                 if (auth()->attempt(['username' => $user->username, 'password' => $request->password,/*$request->only('email', 'password')*/])) {

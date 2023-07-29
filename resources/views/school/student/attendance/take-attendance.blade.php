@@ -7,7 +7,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <form action="{{route('attendance.change.class')}}" method="post">
+                    <form action="{{route('load.class.student')}}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-md-4">
@@ -23,7 +23,7 @@
                                 </select>
                             </div>
                             <div class="col-md-1">
-                                <button class="btn btn-primary btn-sm" type="submit">Change</button>
+                                <button class="btn btn-primary btn-sm" type="submit">Continue</button>
                             </div>
                         </div>
                     </form>
@@ -32,10 +32,11 @@
             <div class="row">
                 <div class="col-md-12">
                     <h5 class="card-title">{{--$class--}} <small>Attendance</small></h5>
-                    <p> <i class="bi bi-calendar-event-fill"></i> {{termName(activeTerm())}} {{sessionName(activeSession())}}</p>
+                    <p> <i class="bi bi-calendar-event-fill"></i> <span class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</span></p>
                 </div>
             </div>
             <!-- Primary Color Bordered Table -->
+            @if(isset($data))
             <div class="row">
                 <div class="col-md-8">
                     <form id="studentAttendanceForm">
@@ -46,9 +47,9 @@
                                     <th width="5%">S/N</th>
                                     <th scope="col">Reg-Number</th>
                                     <th scope="col">Names</th>
-                                    <th width="5%"> Present<input type="checkbox" id="checkAll"> </th>
-                                    <th width="5%">Absent <input type="checkbox" id="checkAll"> </th>
-                                    <th width="5%"> Excused<input type="checkbox" id="checkAll"> </th>
+                                    <th width="5%"> Present<input type="checkbox" class="checkAll" id="preantAll"> </th>
+                                    <th width="5%">Absent <input type="checkbox" class="checkAll" id="absentAll"> </th>
+                                    <th width="5%"> Excused<input type="checkbox" class="checkAll" id="excusedAll"> </th>
 
                                 </tr>
                             </thead>
@@ -60,9 +61,9 @@
                                     <td>{{$row->reg_number}}</td>
                                     <td>{{$row->fullname}}</td>
                                     <input type="hidden" name="student[]" value="{{$row->pid}}">
-                                    <td> <input type="checkbox" class="checkAll" name="check[]"></td>
-                                    <td> <input type="checkbox" class="checkAll" name="check[]"></td>
-                                    <td> <input type="checkbox" class="checkAll" name="check[]"></td>
+                                    <td> <input type="radio" class="preantAll" value="1" name="check[{{$row->pid}}]"></td>
+                                    <td> <input type="radio" class="absentAll" value="0" name="check[{{$row->pid}}]"></td>
+                                    <td> <input type="radio" class="excusedAll" value="2" name="check[{{$row->pid}}]"></td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -73,12 +74,17 @@
 
                     <textarea type="text" name="note" placeholder="attendance note" class="form-control form-control-sm" id="attnote"></textarea>
                     <label>Date</label>
+                    <input type="hidden" name="arm" value="{{$arm}}" required>
                     <input type="date" name="date" class="form-control form-control-sm" id="attdate" required>
 
                     <button class="btn btn-primary mt-2" type="button" id="studentAttendanceBtn">Submit</button>
                 </div>
                 </form>
             </div>
+            @else
+            <h5 class="card-title">Select Class to take Attendance</h5>
+
+            @endif
             <!-- End Primary Color Bordered Table -->
 
         </div>
@@ -97,7 +103,8 @@
         });
 
         // toggle checkbox 
-        $('#checkAll').click(function(event) {
+        $('.checkAll').click(function(event) {
+            let id = $(this).attr('id');
             if (this.checked) {
                 // Iterate each checkbox
                 $(':checkbox').each(function() {
@@ -113,7 +120,7 @@
         $('#studentAttendanceBtn').click(function() {
             $('.overlay').show();
             let formData = new FormData($('#studentAttendanceForm')[0]);
-            formData.append("arm", "{{$arm}}")
+
             $.ajax({
                 url: "{{route('submit.student.attendance')}}",
                 type: "POST",
@@ -144,14 +151,14 @@
             })
         });
 
-        var arm = "{{session('arm')}}";
-        if (arm != null) {
-            getArmSubject(arm)
-        }
-        var class_pid = "{{session('class')}}";
-        if (class_pid != null) {
-            getClassArms(class_pid)
-        }
+        // var arm = "{{session('arm')}}";
+        // if (arm != null) {
+        //     getArmSubject(arm)
+        // }
+        // var class_pid = "{{session('class')}}";
+        // if (class_pid != null) {
+        //     getClassArms(class_pid)
+        // }
         FormMultiSelect2('#formCategorySelect2', 'category', 'Select Category');
         $('#formCategorySelect2').on('change', function(e) {
             var id = $(this).val();
@@ -159,20 +166,20 @@
         });
         $('#formClassSelect2').on('change', function(e) {
             var id = $(this).val();
-            FormMultiSelect2Post('#formArmSelect2', 'class-arm', id, 'Select Class Arm');
+            FormMultiSelect2Post('#formArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
         });
-        $('#formArmSelect2').on('change', function(e) {
-            var id = $(this).val();
-            FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
-        });
+        // $('#formArmSelect2').on('change', function(e) {
+        //     var id = $(this).val();
+        //     FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
+        // });
 
-        function getClassArms(id) {
-            FormMultiSelect2Post('#formArmSelect2', 'class-arm', id, 'Select Class Arm');
-        }
+        // function getClassArms(id) {
+        //     FormMultiSelect2Post('#formArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
+        // }
 
-        function getArmSubject(id) {
-            FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
-        }
+        // function getArmSubject(id) {
+        //     FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
+        // }
     });
 </script>
 @endsection

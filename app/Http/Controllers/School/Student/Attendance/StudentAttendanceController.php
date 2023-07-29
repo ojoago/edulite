@@ -31,6 +31,7 @@ class StudentAttendanceController extends Controller
         return view('school.student.attendance.take-attendance',compact('data', 'arm'));
     }
     public function submitStudentAttendance(Request $request){
+        logError($request->check);
         if($request->check && $request->student){
            if(!$this->exclodeWeekend($request->date ?? justDate())){
                return response()->json(['status' => 'error', 'message' => "No Class! it's weekend"]);
@@ -90,7 +91,7 @@ class StudentAttendanceController extends Controller
             for ($i = 0; $i < $count; $i++) {
                 $data['student_pid'] = $student[$i];
                 $dupParam = $data;
-                $data['status'] = isset($checks[$i]) ? 1 : 0;
+                $data['status'] = $checks[$student[$i]] ??  0;
                 $result = Attendance::updateOrCreate($dupParam, $data);
             }
         }
@@ -170,7 +171,8 @@ class StudentAttendanceController extends Controller
                 ->join('students as s', 's.pid', 'a.student_pid')
                 ->select(DB::raw("fullname,reg_number,
                                     COUNT(CASE WHEN a.status = 1 THEN 'present' END) as 'present',
-                                    COUNT(CASE WHEN a.status = 0 THEN 'absent' END) as 'absent'
+                                    COUNT(CASE WHEN a.status = 0 THEN 'absent' END) as 'absent',
+                                    COUNT(CASE WHEN a.status = 2 THEN 'excused' END) as 'excused',
                                      "))
                 ->where($where)
                     ->groupBy('reg_number')
@@ -188,7 +190,10 @@ class StudentAttendanceController extends Controller
                         ->editColumn('absent',function($data){
                             return '<span class="bg-danger text-white p-2">'.$data->absent.'</span>' ;
                         })
-                        ->rawColumns(['data','present','absent'])
+                        ->editColumn('excused',function($data){
+                            return '<span class="bg-warning text-white p-2">'.$data->excused.'</span>' ;
+                        })
+                        ->rawColumns(['data','present','absent', 'excused'])
                         ->addIndexColumn()
                         ->make(true);
     }
@@ -200,6 +205,7 @@ class StudentAttendanceController extends Controller
                                 DISTINCT(r.date) as start,
                                 (CASE a.status WHEN 1 THEN 'present'
                                             WHEN 0 THEN 'absent'
+                                            WHEN 2 THEN 'excused'
                                 END) as title"))
                     ->where([
                             'a.student_pid'=>base64Decode($request->pid),
