@@ -1,4 +1,12 @@
+@if(schoolTeacher())
+<button type="button" class="btn btn-primary btn-sm ">
+    <!-- <i class="bi bi-tools"></i> -->
+    Edit
+</button>
+@else
+<a href="{{route('load.questions',['query'=>$data->pid])}}">
     <button type="button" class="btn btn-primary btn-sm ">
-        <!-- <i class="bi bi-tools"></i> -->
-        Edit
+        Submit
     </button>
+</a>
+@endif

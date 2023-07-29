@@ -63,7 +63,7 @@
                                     <th>TItle</th>
                                     <th>Deadline</th>
                                     <th>Date</th>
-                                    <th>Action</th>
+                                    <th width="3%">Action</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -424,7 +424,7 @@
                     }).data().each(function(group, i) {
                         if (last !== group) {
                             $(rows).eq(i).before(
-                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                                '<tr class="group"><td colspan="5"><b>' + group + '</td></tr>'
                             );
 
                             last = group;
@@ -484,7 +484,7 @@
                     }).data().each(function(group, i) {
                         if (last !== group) {
                             $(rows).eq(i).before(
-                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                                '<tr class="group"><td colspan="5"><b>' + group + '</td></tr>'
                             );
 
                             last = group;

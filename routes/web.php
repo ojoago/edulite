@@ -525,6 +525,8 @@ Route::middleware('schoolAuth')->group(function(){
 
     // student profile 
     Route::get('student-profile/{id}', [StudentController::class, 'studentProfile'])->name('student.profile');
+    // student attempt assigment 
+    Route::get('attempt-questions', [AssignmentController::class, 'loadQuestions'])->name('load.questions');
     // load student info for editing 
     Route::get('edit-student/{id}', [StudentController::class, 'find'])->name('edit.student.info');
     Route::post('load-student-detail-by-id', [StudentController::class, 'loadStudentDetailsById'])->name('load.student.details.by.id');

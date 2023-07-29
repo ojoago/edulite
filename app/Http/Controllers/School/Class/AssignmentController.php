@@ -55,11 +55,14 @@ class AssignmentController extends Controller
             return date('d F Y', strtotime($data->created_at));
         })
         ->addColumn('action', function ($data) {
-            return 'submit';// return view('school.assessments.class-assignment', ['data' => $data]);
+            return view('school.assessments.class-assignment-action-button', ['data' => $data]);
         })
         ->make(true);
     }
 
+    public function loadQuestions($pid){
+        dd($pid);
+    }
     // create manual assignment 
     public function submitManualAssignment(Request $request){
        

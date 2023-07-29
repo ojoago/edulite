@@ -19,48 +19,48 @@
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
             <div class="tab-pane fade show active" id="activeStudent" role="tabpanel" aria-labelledby="activeStudent-tab">
-                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="activeStudentDataTable">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" width="100%" id="activeStudentDataTable">
                     <thead>
                         <tr>
-                            <th>S/N</th>
+                            <th width="5%">S/N</th>
                             <th>Names</th>
                             <th>Reg No.</th>
                             <th>Current Class</th>
                             <th>Date</th>
                             <th>Parent/Guardian</th>
-                            <th>Action</th>
+                            <th width="5%">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
             <div class="tab-pane fade" id="inActiveStudent" role="tabpanel" aria-labelledby="nonActiveStudent-tab">
-                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="inActiveStudentDataTable">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" width="100%" id="inActiveStudentDataTable">
                     <thead>
                         <tr>
-                            <th>S/N</th>
+                            <th width="5%">S/N</th>
                             <th>Names</th>
                             <th>Reg No.</th>
                             <th>Current Class</th>
                             <th>Date</th>
                             <th>Parent/Guardian</th>
-                            <th>Action</th>
+                            <th width="5%">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
             <div class="tab-pane fade" id="graduatedStudent" role="tabpanel" aria-labelledby="graduatedStudent-tab">
-                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="exStudentDataTable">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" width="100%" id="exStudentDataTable">
                     <thead>
                         <tr>
-                            <th>S/N</th>
+                            <th width="5%">S/N</th>
                             <th>Names</th>
                             <th>Reg No.</th>
                             <th>Current Class</th>
                             <th>Date</th>
                             <th>Parent/Guardian</th>
-                            <th>Action</th>
+                            <th width="5%">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -112,6 +112,29 @@
                     "data": "action"
                 },
             ],
+            "columnDefs": [{
+                "visible": false,
+                "targets": 3
+            }],
+            "drawCallback": function(settings) {
+                var api = this.api();
+                var rows = api.rows({
+                    page: 'current'
+                }).nodes();
+                var last = null;
+
+                api.column(3, {
+                    page: 'current'
+                }).data().each(function(group, i) {
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr class="group"><td colspan="6"><b>' + group + '</td></tr>'
+                        );
+
+                        last = group;
+                    }
+                });
+            }
         });
         $('#inActiveStudent-tab').click(function() {
             $('#inActiveStudentDataTable').DataTable({
@@ -151,6 +174,29 @@
                         "data": "action"
                     },
                 ],
+                "columnDefs": [{
+                    "visible": false,
+                    "targets": 3
+                }],
+                "drawCallback": function(settings) {
+                    var api = this.api();
+                    var rows = api.rows({
+                        page: 'current'
+                    }).nodes();
+                    var last = null;
+
+                    api.column(3, {
+                        page: 'current'
+                    }).data().each(function(group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="6">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
             });
         });
         $('#graduatedStudent-tab').click(function() {
