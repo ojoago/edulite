@@ -416,9 +416,9 @@ class SchoolController extends Controller
     // find parent
     
 
-    public function findExistingParent($key)
+    public function findExistingParent(Request $request)
     {
-        $key = str_replace('@__@','/',trim($key));
+        $key = $request->key;
         $user = DB::table('users as u')->leftJoin('user_details as d', 'u.pid', 'd.user_pid')
         ->leftJoin('school_parents as p', 'u.pid', 'p.user_pid')
         ->where('u.email', $key)

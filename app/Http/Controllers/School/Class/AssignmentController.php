@@ -55,13 +55,30 @@ class AssignmentController extends Controller
             return date('d F Y', strtotime($data->created_at));
         })
         ->addColumn('action', function ($data) {
-            return view('school.assessments.class-assignment-action-button', ['data' => $data]);
+            return view('school.assessments.class-assessment-action-button', ['data' => $data]);
         })
         ->make(true);
     }
 
-    public function loadQuestions($pid){
-        dd($pid);
+    public function loadQuestions(Request $request){
+        // dd($request->all());
+        $data = DB::table('question_banks as b')
+        // ->join('questions as q', 'q.bank_pid', 'b.pid')
+        ->join('class_arm_subjects as cas', 'cas.pid', 'b.subject_pid')
+        ->join('subjects as s', 's.pid', 'cas.subject_pid')
+        ->join('student_class_score_params as p', 'p.pid', 'b.class_param_pid')
+        ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+        ->join('terms as t', 't.pid', 'p.term_pid')
+        ->join('sessions as e', 'e.pid', 'p.session_pid')
+        // ->join('students as std', 'std.current_class_pid', 'a.pid')
+        ->where(['b.school_pid' => getSchoolPid(), 'b.pid' => $request->key])
+            ->select('s.subject', 'b.title', 'a.arm', 'b.end_date', 'b.created_at','term','session')->first();
+
+        $questions = DB::table('questions')
+        ->where(['school_pid' => getSchoolPid(), 'bank_pid' => $request->key])
+            ->select('question', 'bank_pid','pid','path','mark','options','type')->inRandomOrder()->get();
+        return view('school.assessments.attempt-assessment', compact('questions','data'));
+
     }
     // create manual assignment 
     public function submitManualAssignment(Request $request){

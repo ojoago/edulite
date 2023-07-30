@@ -467,7 +467,7 @@ Route::middleware('schoolAuth')->group(function(){
     // link link to school 
     Route::get('link-existing-student', [SchoolController::class, 'linkExistingStudentToSchool'])->name('link.existing.student');
     // find student for linking 
-    Route::get('find-existing-parent/{key}', [SchoolController::class, 'findExistingParent']);
+    Route::get('find-existing-parent', [SchoolController::class, 'findExistingParent'])->name('find.existing.parent');
     // link link to school 
     Route::get('link-existing-parent', [SchoolController::class, 'linkExistingParentToSchool'])->name('link.existing.parent');
     // find student for linking 
@@ -546,11 +546,11 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-rider-student', [SchoolRiderController::class, 'viewRiderStudent'])->name('load.rider.student');
 
     // student assignment 
-    Route::view('class-assignment', 'school.assessments.class-assignment')->name('class.assignment.form');
-    Route::post('class-assignment', [AssignmentController::class, 'submitManualAssignment'])->name('submit.manual.assignment');
+    Route::view('class-assessment', 'school.assessments.class-assignment')->name('class.assignment.form');
+    Route::post('class-assessment', [AssignmentController::class, 'submitManualAssignment'])->name('submit.manual.assignment');
     Route::post('submit-automated-assignment', [AssignmentController::class, 'submitAutomatedAssignment'])->name('submit.automated.assignment');
-    Route::get('load-assignment', [AssignmentController::class, 'loadAssignment'])->name('load.assignment');
-    Route::get('load-assignment-for-student/{id}', [AssignmentController::class, 'loadAssignmentForStudent'])->name('load.assignment.for.student');
+    Route::get('load-assessment', [AssignmentController::class, 'loadAssignment'])->name('load.assignment');
+    Route::get('load-assessment-student/{id}', [AssignmentController::class, 'loadAssignmentForStudent'])->name('load.assignment.for.student');
 
     //student attendance
     Route::view('take-attendance', 'school.student.attendance.take-attendance')->name('student.attendance.form');
@@ -692,5 +692,5 @@ Route::post('admission',[AdmissionController::class,'createAdmission']);
 
 // public hiring 
 Route::get('hiring',[HireAbleController::class,'index'])->name('hiring');
-Route::post('apply-job',[HireAbleController::class,'applyJob'])->name('apply.school.job');
+Route::get('apply-job',[HireAbleController::class,'applyJob'])->name('apply.school.job');
 

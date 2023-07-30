@@ -483,12 +483,12 @@
         });
         // search parent 
         $('#searchExistingParent').change(function() {
-            var key = $(this).val().replace('/', '@__@')
+            var key = $(this).val();
             if (key != '') {
                 let route = "{{url('find-existing-parent')}}";
                 $('.overlay').show();
                 $.ajax({
-                    url: route + '/' + key,
+                    url: route + '?key=' + key,
                     success: function(data) {
                         // console.log(data);
                         $('#parentDetails').html(data)

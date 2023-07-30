@@ -4,7 +4,7 @@
     Edit
 </button>
 @else
-<a href="{{route('load.questions',['query'=>$data->pid])}}">
+<a href="{{route('load.questions',['key'=>$data->pid])}}">
     <button type="button" class="btn btn-primary btn-sm ">
         Submit
     </button>
