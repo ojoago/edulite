@@ -1,12 +1,17 @@
 @if(schoolTeacher())
-<button type="button" class="btn btn-primary btn-sm ">
-    <!-- <i class="bi bi-tools"></i> -->
+<button type="button" class="btn btn-warning btn-sm text-white">
     Edit
 </button>
+<button type="button" class="btn btn-danger btn-sm deleteAssessment" key="{{$data->pid}}">
+    <i class="bi bi-trash"></i>
+</button>
 @else
-<a href="{{route('load.questions',['key'=>$data->pid])}}">
-    <button type="button" class="btn btn-primary btn-sm ">
-        Submit
-    </button>
-</a>
+
+    @if($data->end_date >= justDate())
+    <a href="{{route('load.questions',['key'=>$data->pid,'std'=>$data->std])}}">
+        <button type="button" class="btn btn-success btn-sm ">
+            Submit
+        </button>
+    </a>
+    @endif
 @endif

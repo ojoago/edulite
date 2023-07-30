@@ -10,26 +10,34 @@
         <fieldset class="border rounded-3 p-3">
             <legend class="float-none w-auto px-3">{{$data->title}} Deadline: <i class="text-danger">{{$data->end_date}}</i> </legend>
 
-            <form class="row g-3 needs-validation" id="automatedAssignmentForm">
+            <form class="row g-3 needs-validation" id="submitAssessmentForm">
                 @csrf
-
-
                 <div class="col-md-12" id="fieldQuestions">
+                    <input type="hidden" value="{{$std}}" name="std">
                     @foreach($questions as $row)
                     <fieldset class="border rounded-3 px-2">
-                        <legend class="float-none w-auto px-3">Question {{$loop->iteration}}</legend>
-                        {!!$row->question!!}
+                        <legend class="float-none w-auto px-3">Question {{$loop->iteration}} | {{$row->mark}} Mark</legend>
                         @php $options = json_decode($row->options) @endphp
+                        @if(isset($options))
+                        {!!$row->question!!}
+                        @php shuffle($options) @endphp
                         @foreach($options as $opn)
-                            <input type="{{$row->type==2 ? 'checkbox': 'radio'}}" class="optionAnswer0 m-2 answer" name="answer[{{$row->pid}}][]">
-                            {{$opn->option}}<br>
+                        <input type="{{$row->type==2 ? 'checkbox': 'radio'}}" class="optionAnswer0 m-2 answer" value="{{$opn->id}}" name="answer[{{$row->pid}}][]">
+                        {{$opn->option}}<br>
                         @endforeach
+                        @else
+
+                        <label class="form-label"> {!!$row->question!!}</label>
+                        <input type="hidden" name="pid[]" value="{{$row->pid}}">
+                        <textarea type="text" class="form-control form-control-sm summer-note" name="answer[{{$row->pid}}][]" id="newAssignmentNote" placeholder="Type answer"></textarea>
+                        <p class="text-danger note_error"></p>
+                        @endif
                     </fieldset>
                     @endforeach
                 </div>
 
                 <div class="text-center">
-                    <button class="btn btn-primary" type="button" id="automatedAssignmentBtn">Submit</button>
+                    <button class="btn btn-primary" type="button" id="submitAssessmentBtn">Submit</button>
                     <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                 </div>
             </form>
@@ -47,12 +55,13 @@
 
 <script>
     $(document).ready(function() {
+        $('.summer-note').summernote()
 
 
 
-        // $('#automatedAssignmentBtn').click(function() {
-        //     submitFormAjax('automatedAssignmentForm', 'automatedAssignmentBtn', "{{route('submit.automated.assignment')}}")
-        // });
+        $('#submitAssessmentBtn').click(function() {
+            submitFormAjax('submitAssessmentForm', 'submitAssessmentBtn', "{{route('submit.assessment')}}")
+        });
 
     });
 </script>

@@ -21,7 +21,7 @@ use App\Http\Controllers\School\Student\StudentClassController;
 use App\Http\Controllers\School\Student\StudentScoreController;
 use App\Http\Controllers\School\Upload\UploadStudentController;
 use App\Http\Controllers\Organisation\OrganisationUserController;
-use App\Http\Controllers\School\Class\AssignmentController;
+use App\Http\Controllers\School\Class\AssessmentController;
 use App\Http\Controllers\School\Framework\Fees\FeeItemController;
 use App\Http\Controllers\School\Framework\Hostel\HostelController;
 use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
@@ -523,8 +523,7 @@ Route::middleware('schoolAuth')->group(function(){
 
     // student profile 
     Route::get('student-profile/{id}', [StudentController::class, 'studentProfile'])->name('student.profile');
-    // student attempt assigment 
-    Route::get('attempt-questions', [AssignmentController::class, 'loadQuestions'])->name('load.questions');
+    
     // load student info for editing 
     Route::get('edit-student/{id}', [StudentController::class, 'find'])->name('edit.student.info');
     Route::post('load-student-detail-by-id', [StudentController::class, 'loadStudentDetailsById'])->name('load.student.details.by.id');
@@ -544,11 +543,16 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-rider-student', [SchoolRiderController::class, 'viewRiderStudent'])->name('load.rider.student');
 
     // student assignment 
-    Route::view('class-assessment', 'school.assessments.class-assignment')->name('class.assignment.form');
-    Route::post('class-assessment', [AssignmentController::class, 'submitManualAssignment'])->name('submit.manual.assignment');
-    Route::post('submit-automated-assignment', [AssignmentController::class, 'submitAutomatedAssignment'])->name('submit.automated.assignment');
-    Route::get('load-assessment', [AssignmentController::class, 'loadAssignment'])->name('load.assignment');
-    Route::get('load-assessment-student/{id}', [AssignmentController::class, 'loadAssignmentForStudent'])->name('load.assignment.for.student');
+    Route::view('class-assessment', 'school.assessments.class-assessment')->name('class.assignment.form');
+    Route::post('class-assessment', [AssessmentController::class, 'createManualAssessment'])->name('submit.manual.assignment');
+    Route::post('submit-automated-assessment', [AssessmentController::class, 'createAutomatedAssessment'])->name('submit.automated.assignment');
+    Route::post('delete-assessment', [AssessmentController::class, 'deleteAssessment'])->name('delete.assessment');
+    Route::get('load-assessment', [AssessmentController::class, 'loadAssessment'])->name('load.assignment');
+    Route::get('load-assessment-student/{id}', [AssessmentController::class, 'loadAssessmentForStudent'])->name('load.assignment.for.student');
+    Route::post('submit-assessment', [AssessmentController::class, 'submitAssessment'])->name('submit.assessment');
+    // student attempt assigment 
+    Route::get('attempt-questions', [AssessmentController::class, 'loadQuestions'])->name('load.questions');
+
 
     //student attendance
     Route::view('take-attendance', 'school.student.attendance.take-attendance')->name('student.attendance.form');

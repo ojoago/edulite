@@ -28,7 +28,10 @@
                 <button class="nav-link w-100" id="automated-tab" data-bs-toggle="tab" data-bs-target="#automated" type="button" role="tab" aria-controls="automated" aria-selected="false">Automated</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="submitted-tab" data-bs-toggle="tab" data-bs-target="#submitted" type="button" role="tab" aria-controls="submitted" aria-selected="false">Assignments</button>
+                <button class="nav-link w-100" id="submitted-tab" data-bs-toggle="tab" data-bs-target="#submitted" type="button" role="tab" aria-controls="submitted" aria-selected="false">Assessment</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100" id="mark-tab" data-bs-toggle="tab" data-bs-target="#mark" type="button" role="tab" aria-controls="mark" aria-selected="false">Mark</button>
             </li>
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
@@ -190,7 +193,7 @@
                             </select>
                             <p class="text-danger ca_title_error"></p>
                         </div>
-                        <input type="hidden" name="type" id="newAutomatedAssignmentType" value="2" checked>
+                        <input type="hidden" name="type" id="newAutomatedAssignmentType" value="3" checked>
 
                         <div class="col-md-12  px-0" id="fieldQuestions">
                             <fieldset class="border rounded-3 p-3  px-0">
@@ -282,7 +285,34 @@
                             <th>Deadline</th>
                             <!-- <th></th> -->
                             <th>Date</th>
-                            <th width="5%">Action</th>
+                            <th width="10%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="mark" role="tabpanel" aria-labelledby="mark-tab">
+                <div class="row p-2">
+                    <div class="col-md-4">
+                        <select name="session" id="newAssignmentSessionSelect2" style="width: 100%;" class="form-control form-control-sm">
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="session" id="newAssignmentTermSelect2" style="width: 100%;" class="form-control form-control-sm">
+                        </select>
+                    </div>
+                </div>
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" width="100%" id="markTable">
+                    <thead>
+                        <tr>
+                            <th width="5%">S/N</th>
+                            <th>Subject</th>
+                            <th>TItle</th>
+                            <!-- <th>Date</th> -->
+                            <th>Deadline</th>
+                            <!-- <th></th> -->
+                            <th>Date</th>
+                            <th width="10%">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -302,6 +332,13 @@
     $(document).ready(function() {
 
         $('#submitted-tab').click(function() {
+            loadAssessment()
+        })
+        $('#markTable-tab').click(function() {
+            loadAssessment()
+        })
+
+        function loadAssessment() {
             $('#assignmentTable').DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -359,8 +396,7 @@
                     });
                 }
             });
-        })
-
+        }
         FormMultiSelect2('#newAssignmentCategorySelect2', 'category', 'Select Category');
         $('#newAssignmentCategorySelect2').on('change', function(e) {
             var id = $(this).val();
@@ -388,6 +424,34 @@
             var id = $(this).val();
             FormMultiSelect2Post('#newAutomatedAssignmentSubjectSelect2', 'class-arm-subject', id, 'Select Class Subject');
         });
+
+        $(document).on('click', '.deleteAssessment', function() {
+            const key = $(this).attr('key');
+            $('.overlay').show();
+            $.ajax({
+                url: "{{route('delete.assessment')}}", //"url,
+                type: "POST",
+                data: {
+                    _token: "{{csrf_token()}}",
+                    key: key
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('.overlay').hide();
+                    if (data.status === 1) {
+                        alert_toast(data.message);
+                        loadAssessment()
+                    } else {
+                        alert_toast(data.message, 'error');
+                    }
+                },
+                error: function(data) {
+
+                    $('.overlay').hide();
+                    alert_toast('Something Went Wrong', 'error');
+                }
+            });
+        })
         $('#newAssignmentRecordable').click(function() {
             // var previousValue = $(this).attr('previousValue');
             // if (previousValue == 'true') {
@@ -629,6 +693,7 @@
                             selected = false;
                         }
                         questionOptions.push({
+                            id: i + 1,
                             option: $(options[i]).val(),
                             correct: selected,
                             mark: $(asignMark[i]).val(),

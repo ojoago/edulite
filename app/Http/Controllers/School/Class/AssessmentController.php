@@ -8,21 +8,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Assessment\Question;
 use App\Models\School\Assessment\QuestionBank;
+use App\Models\School\Assessment\QuestionAnswer;
 use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Framework\ClassController;
 
-class AssignmentController extends Controller
+class AssessmentController extends Controller
 {
 
-    // manual assignment goes here 
+    // manual Assessment goes here 
     // StudentClassScoreParam
-    public function loadAssignment(){
+    public function loadAssessment(){
         $data = DB::table('question_banks as b')->join('questions as q','q.bank_pid','b.pid')
                                                 ->join('class_arm_subjects as cas','cas.pid','b.subject_pid')
                                                 ->join('subjects as s','s.pid','cas.subject_pid')
                                                 ->join('student_class_score_params as p','p.pid', 'b.class_param_pid')
                                                 ->join('class_arms as a','a.pid','p.arm_pid')
-                                                ->where(['b.school_pid'=>getSchoolPid()])
+                                                ->where(['b.school_pid'=>getSchoolPid()])->where('b.status','<>',0)
                                                 ->select('s.subject','b.title','a.arm','b.pid','b.end_date','b.created_at')->get();
         return datatables($data)
         ->addIndexColumn()
@@ -33,19 +34,19 @@ class AssignmentController extends Controller
             return date('d F Y', strtotime($data->created_at));
         })
         ->addColumn('action', function ($data) {
-            return view('school.assessments.class-assignment-action-button', ['data' => $data]);
+            return view('school.assessments.class-assessment-action-button', ['data' => $data]);
         })
         ->make(true);
     }
-    public function loadAssignmentForStudent($pid){
+    public function loadAssessmentForStudent($pid){
         $data = DB::table('question_banks as b')->join('questions as q','q.bank_pid','b.pid')
                                                 ->join('class_arm_subjects as cas','cas.pid','b.subject_pid')
                                                 ->join('subjects as s','s.pid','cas.subject_pid')
                                                 ->join('student_class_score_params as p','p.pid', 'b.class_param_pid')
                                                 ->join('class_arms as a','a.pid','p.arm_pid')
                                                 ->join('students as std', 'std.current_class_pid','a.pid')
-                                                ->where(['b.school_pid'=>getSchoolPid(),'std.pid'=>base64Decode($pid)])
-                                                ->select('s.subject','b.title','a.arm','b.pid','b.end_date','b.created_at')->get();
+                                                ->where(['b.school_pid'=>getSchoolPid(),'std.pid'=>base64Decode($pid)])->where('b.status', '<>', 0)
+                                                ->select('s.subject','b.title','a.arm','b.pid','b.end_date','b.created_at','std.pid as std')->get();
         return datatables($data)
         ->addIndexColumn()
         ->editColumn('subject', function ($data) {
@@ -72,16 +73,17 @@ class AssignmentController extends Controller
         ->join('sessions as e', 'e.pid', 'p.session_pid')
         // ->join('students as std', 'std.current_class_pid', 'a.pid')
         ->where(['b.school_pid' => getSchoolPid(), 'b.pid' => $request->key])
-            ->select('s.subject', 'b.title', 'a.arm', 'b.end_date', 'b.created_at','term','session')->first();
+            ->select('s.subject', 'b.title', 'a.arm', 'b.end_date', 'b.created_at','term','session', 'b.type')->first();
 
         $questions = DB::table('questions')
         ->where(['school_pid' => getSchoolPid(), 'bank_pid' => $request->key])
             ->select('question', 'bank_pid','pid','path','mark','options','type')->inRandomOrder()->get();
-        return view('school.assessments.attempt-assessment', compact('questions','data'));
+        $std = $request->std;
+        return view('school.assessments.attempt-assessment', compact('questions','data','std'));
 
     }
-    // create manual assignment 
-    public function submitManualAssignment(Request $request){
+    // create manual Assessment 
+    public function createManualAssessment(Request $request){
        
         $validator = Validator::make($request->all(),
                                 [
@@ -108,7 +110,7 @@ class AssignmentController extends Controller
                     ];
                    $result =  $this->updateOrCreateQuestion($question);
                    if($result){
-                       return response()->json(['status' => 1, 'message' => 'Assignment created Successfully']);
+                       return response()->json(['status' => 1, 'message' => 'Assessment created Successfully']);
                    }
                 }
             } catch (\Throwable $e) {
@@ -146,14 +148,22 @@ class AssignmentController extends Controller
             'end_time' => $request->end_time ?? null, 
             'teacher_pid' => $teacher,
             'subject_pid' => $request->subject,
+            'creator' => getSchoolUserPid(),
             // 'access'=>0
         ];
         return (new self)->updateOrCreateQuestionBank($bank);
     }
 
  
-    // create automated assignment 
-    public function submitAutomatedAssignment(Request $request){
+    public function deleteAssessment(Request $request){
+        $result = QuestionBank::where('pid',$request->key)->limit(1)->first()->update(['status'=>0]);
+        if($result)
+            return response()->json(['status' => 1, 'message' => 'Assessment Deleted Successfully']);
+        else
+            return response()->json(['status' => 'error', 'message' => ER_500]);
+    }
+    // create automated Assessment 
+    public function createAutomatedAssessment(Request $request){
         // logError(json_decode($request->questions));
         // return;
         $validator = Validator::make($request->all(),
@@ -185,7 +195,7 @@ class AssignmentController extends Controller
                     }
                     
                     if ($result) {
-                        return response()->json(['status' => 1, 'message' => 'Assignment created Successfully']);
+                        return response()->json(['status' => 1, 'message' => 'Assessment created Successfully']);
                     }
                     return response()->json(['status' => 'error', 'message' => 'Enter all Questions and at least two options for each.']);
                 }
@@ -217,5 +227,32 @@ class AssignmentController extends Controller
     }
 
 
-    // manual assignment ends here 
+    // manual Assessment ends here 
+
+    public function submitAssessment(Request $request){
+        // logError($request->all());
+        if(isset($request->answer)){
+            $result = false;
+            $data = ['student_pid' => $request->std, 'school_pid' => getSchoolPid()];
+            foreach ($request->answer as $key => $row) {
+                $data['question_pid'] = $key;
+                $data['answer'] =  is_array($row) ? json_encode($row) : $row;
+                $result = $this->updateOrCreateAnswer($data);
+            }
+            if ($result)
+            return response()->json(['status' => 1, 'message' => 'Assessment submitted Successfully']);
+            else
+                return response()->json(['status' => 'error', 'message' => ER_500]);
+            }
+        return response()->json(['status' => 'error', 'message' => 'answer question first']);
+    }
+
+    private function updateOrCreateAnswer(array $data){
+        try {
+            return QuestionAnswer::updateOrCreate(['question_pid'=> $data['question_pid'],'student_pid' => $data['student_pid']],$data);
+        } catch (\Throwable $e) {
+            logError(['error' => $e->getMessage(), 'line' => __LINE__,'file'=>__FILE__]);
+            return false;
+        }
+    }
 }

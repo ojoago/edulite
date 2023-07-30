@@ -61,9 +61,9 @@
                                     <th width="5%">S/N</th>
                                     <th>Subject</th>
                                     <th>TItle</th>
-                                    <th>Deadline</th>
-                                    <th>Date</th>
-                                    <th width="3%">Action</th>
+                                    <th width="10%">Deadline</th>
+                                    <th width="10%">Date</th>
+                                    <th width="5%">Action</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
