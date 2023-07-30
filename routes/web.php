@@ -32,9 +32,7 @@ use App\Http\Controllers\School\Framework\Subject\SubjectTypeController;
 use App\Http\Controllers\School\Framework\Timetable\TimetableController;
 use App\Http\Controllers\School\Framework\Psycho\PsychoGradeKeyController;
 use App\Http\Controllers\School\Framework\Session\SchoolSessionController;
-use App\Http\Controllers\School\Registration\ParentRegistrationController;
 use App\Http\Controllers\School\Framework\Psycho\AffectiveDomainController;
-use App\Http\Controllers\School\Registration\StudentRegistrationController;
 use App\Http\Controllers\School\Student\Promotion\PromoteStudentController;
 use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 use App\Http\Controllers\School\Framework\Admission\AdmissionConfigController;
@@ -419,7 +417,7 @@ Route::middleware('schoolAuth')->group(function(){
     // Route::view('school-registration', 'school.registration.index')->name('school.registration');
     // student 
     Route::view('register-student', 'school.registration.student.register-student')->name('school.registration.student.form');
-    Route::post('register-student', [StudentRegistrationController::class, 'registerStudent'])->name('register.student');
+    Route::post('register-student', [StudentController::class, 'registerStudent'])->name('register.student');
     // edit student 
 
     Route::post('link-student-parent', [StudentController::class, 'linkStudentToParent'])->name('link.student.parent');
@@ -428,7 +426,7 @@ Route::middleware('schoolAuth')->group(function(){
 
     Route::view('register-parent', 'school.registration.parent.register-parent')->name('school.parent.registration.form');
 
-    Route::post('parent-registration', [ParentRegistrationController::class, 'registerParent'])->name('school.register.parent');
+    Route::post('parent-registration', [ParentController::class, 'registerParent'])->name('school.register.parent');
 
     Route::post('change-parent-status', [ParentController::class, 'toggleParentStatus'])->name('toggle.parent.status');
     Route::post('parent-profile/{id}', [ParentController::class, 'myProfile'])->name('school.parent.profile');

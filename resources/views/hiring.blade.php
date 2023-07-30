@@ -30,7 +30,7 @@
                     @foreach($data as $row)
                     <div class="col-md-4 col-lg-3">
                         <button class="btn btn-success btn-sm apply-job mb-1" pid="{{$row->pid}}">Apply</button>
-                        <a href="{{route('apply.school.job',['id'=>base64Encode($row->pid)])}}"> <!-- the pid here is job pid -->
+                        <a href="#{{--route('apply.school.job',['id'=>base64Encode($row->pid)])--}}"> <!-- the pid here is job pid -->
 
                             <div class="card info-card ">
                                 <div class="card-header text-center ellipsis-text"> {{$row->school_name}}</div>
@@ -79,7 +79,7 @@
             let pid = $(this).attr('pid');
             $.ajax({
                 url: "{{route('apply.school.job')}}",
-                type: "post",
+                // type: "post",
                 data: {
                     pid: pid,
                     _token: "{{csrf_token()}}"
@@ -88,8 +88,8 @@
                     $('.overlay').show()
                 },
                 success: function(data) {
-                    alert(data.message);
-                    if(data.status === 0){
+                    alert_toast(data.message);
+                    if (data.status === 0) {
                         let route = "{{route('login')}}";
                         location.href = route;
                     }

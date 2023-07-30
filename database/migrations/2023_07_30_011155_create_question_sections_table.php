@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('question_sections', function (Blueprint $table) {
             $table->id();
+            $table->string('school_pid')->nullable();
             $table->string('bank_pid');
             $table->longText('section')->nullable();
             $table->string('pid')->unique();
-            $table->string('school_pid')->nullable();
             $table->timestamps();
         });
     }

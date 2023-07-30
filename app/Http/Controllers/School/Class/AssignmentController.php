@@ -83,7 +83,13 @@ class AssignmentController extends Controller
     // create manual assignment 
     public function submitManualAssignment(Request $request){
        
-        $validator = Validator::make($request->all(),['subject'=>'required','arm'=>'required', 'end_date' => 'required','title'=>'required']);
+        $validator = Validator::make($request->all(),
+                                [
+                                    'subject'=>'required',
+                                    'arm'=>'required', 
+                                    'end_date' => 'nullable|before:' . daysFromNow(),
+                                    'title'=>'required'
+                                ]);
 
         if(!$validator->fails()){
             try {
