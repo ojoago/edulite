@@ -39,7 +39,7 @@
 
                 <fieldset class="border rounded-3 p-3">
                     <legend class="float-none w-auto px-3">New Assignment</legend>
-                    <form class="row g-3 needs-validation" id="newManualAssignmentForm">
+                    <form class="row g-3 needs-validation" enctype="multipart/form-data" id="newManualAssignmentForm">
                         @csrf
                         <div class="col-md-4">
                             <label class="form-label">Category</label>
@@ -103,19 +103,19 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Type?</label><br>
-                            Upload <input type="radio" class="radio" name="type" id="newAssignmentType" value="1">
-                            In App <input type="radio" class="radio" name="type" id="newAssignmentType" value="2" checked>
+                            Upload <input type="radio" class="radio assessmentType" name="type" id="newAssignmentType" value="1">
+                            In App <input type="radio" class="radio assessmentType" name="type" id="newAssignmentType" value="2" checked>
                             <p class="text-danger type_error"></p>
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-12" id="newAssignmentQuestion">
                             <label class="form-label">Question</label>
-                            <textarea name="question" id="newAssignmentQuestion" class="form-control form-control-sm summer-note"></textarea>
+                            <textarea name="question" class="form-control form-control-sm summer-note"></textarea>
                             <p class="text-danger question_error"></p>
                         </div>
-                        <div class="col-md-12" style="display:none">
+                        <div class="col-md-12" style="display:none" id="newAssignmentFile">
                             <label class="form-label">File</label>
-                            <input type="file" accept="pdf,docs" name="file" id="newAssignmentFile" class="form-control form-control-sm">
+                            <input type="file" accept=".pdf,.docs,.doc" name="file" class="form-control form-control-sm">
                             <p class="text-danger file_error"></p>
                         </div>
                         <div class="text-center">
@@ -465,6 +465,16 @@
                 $('#newAssignmentCaType').show(500);
             } else {
                 $('#newAssignmentCaType').hide(500);
+            }
+        });
+        $('.assessmentType').click(function() {
+            const type = $(this).val();
+            if (type == 1) {
+                $('#newAssignmentFile').show(500);
+                $('#newAssignmentQuestion').hide(500);
+            } else {
+                $('#newAssignmentFile').hide(500);
+                $('#newAssignmentQuestion').show(500);
             }
         });
         $('#same_mark').click(function() {

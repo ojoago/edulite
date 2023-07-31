@@ -198,8 +198,8 @@ use App\Http\Controllers\Auths\AuthController;
         return now()->subYears($year)->toDateString();
 
    }
-   function daysFromNow($d=1){
-    return date("Y-m-d", strtotime("+ {$d} day"));
+   function daysFromNow($d='+ 1'){
+    return date("Y-m-d", strtotime(" {$d} day"));
    }
     function matchStaffRole($role){
         $role =  match($role){

@@ -89,9 +89,10 @@ class AssessmentController extends Controller
                                 [
                                     'subject'=>'required',
                                     'arm'=>'required', 
-                                    'end_date' => 'nullable|before:' . daysFromNow(),
-                                    'title'=>'required'
-                                ]);
+                                    'end_date' => 'nullable|after:' . daysFromNow('- 1'),
+                                    'title'=> "required|regex:/^[a-zA-Z0-9,\s]+$/",
+                                    'file'=>'required_if:type,1',
+                                ],['file.required_if'=>'Select File','end_date.after'=>"deadline can't be previous date"]);
 
         if(!$validator->fails()){
             try {
@@ -103,11 +104,16 @@ class AssessmentController extends Controller
                         'pid' => public_id(),
                         'bank_pid'=>$bank->pid,
                         'question' => $request->question,
-                        'path' => $request->file ?? null,
+                        'path' => null,
                         'mark' => $request->mark ?? null,
                         // 'type', 
                         // 'options'
                     ];
+                    if($request->type == 1){
+                        $fileName = invoiceNumber() .'-'.$request->title.'.' . $request->file->extension();
+                        $request->file->move(public_path('files/assessments'), $fileName);
+                        $data['path'] = $fileName;
+                    }
                    $result =  $this->updateOrCreateQuestion($question);
                    if($result){
                        return response()->json(['status' => 1, 'message' => 'Assessment created Successfully']);
