@@ -11,6 +11,7 @@ use App\Models\School\Assessment\QuestionBank;
 use App\Models\School\Assessment\QuestionAnswer;
 use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Framework\ClassController;
+use App\Http\Controllers\School\Student\StudentController;
 
 class AssessmentController extends Controller
 {
@@ -46,7 +47,11 @@ class AssessmentController extends Controller
                                                 ->join('class_arms as a','a.pid','p.arm_pid')
                                                 ->join('students as std', 'std.current_class_pid','a.pid')
                                                 ->where(['b.school_pid'=>getSchoolPid(),'std.pid'=>base64Decode($pid)])->where('b.status', '<>', 0)
-                                                ->select('s.subject','b.title','a.arm','b.pid','b.end_date','b.created_at','std.pid as std')->get();
+                                                ->whereNotIn('q.pid', function ($query) {
+                                                    $query->select('question_pid')
+                                                        ->from('question_answers');
+                                                })
+                                                ->select('s.subject','b.title','a.arm','b.pid','b.end_date','b.created_at','std.pid as std','b.type','q.path')->get();
         return datatables($data)
         ->addIndexColumn()
         ->editColumn('subject', function ($data) {
@@ -91,8 +96,8 @@ class AssessmentController extends Controller
                                     'arm'=>'required', 
                                     'end_date' => 'nullable|after:' . daysFromNow('- 1'),
                                     'title'=> "required|regex:/^[a-zA-Z0-9,\s]+$/",
-                                    'file'=>'required_if:type,1',
-                                ],['file.required_if'=>'Select File','end_date.after'=>"deadline can't be previous date"]);
+                                    'file'=> 'required_if:type,1|nullable|mimes:pdf,docs,doc|max:1024',
+                                ],['file.required_if'=>'Select File','end_date.after'=>"deadline can't be previous date",'file.max'=>'File too large']);
 
         if(!$validator->fails()){
             try {
@@ -105,14 +110,14 @@ class AssessmentController extends Controller
                         'bank_pid'=>$bank->pid,
                         'question' => $request->question,
                         'path' => null,
-                        'mark' => $request->mark ?? null,
+                        'mark' => $request->total_mark ?? null,
                         // 'type', 
                         // 'options'
                     ];
                     if($request->type == 1){
                         $fileName = invoiceNumber() .'-'.$request->title.'.' . $request->file->extension();
-                        $request->file->move(public_path('files/assessments'), $fileName);
-                        $data['path'] = $fileName;
+                        $request->file->move(public_path('files/assessments/questions'), $fileName);
+                        $question['path'] = 'files/assessments/questions/' . $fileName;
                     }
                    $result =  $this->updateOrCreateQuestion($question);
                    if($result){
@@ -236,21 +241,49 @@ class AssessmentController extends Controller
     // manual Assessment ends here 
 
     public function submitAssessment(Request $request){
-        // logError($request->all());
-        if(isset($request->answer)){
-            $result = false;
-            $data = ['student_pid' => $request->std, 'school_pid' => getSchoolPid()];
-            foreach ($request->answer as $key => $row) {
-                $data['question_pid'] = $key;
-                $data['answer'] =  is_array($row) ? json_encode($row) : $row;
-                $result = $this->updateOrCreateAnswer($data);
-            }
-            if ($result)
-            return response()->json(['status' => 1, 'message' => 'Assessment submitted Successfully']);
-            else
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'file' => 'required_if:type,1|nullable|mimes:pdf,docs,doc|max:1024',
+                'std' => 'required',
+            ],
+            ['file.required_if' => 'Select File','std.required'=>'your session has expired, logout and login again','file.max'=>'File too large']
+        );
+       if(!$validator->fails()){
+            try {
+                $data = ['student_pid' => $request->std, 'school_pid' => getSchoolPid()];
+                if($request->type==1){
+                    $std = StudentController::getStudentDetailBypId($request->std);// get student fullname as use as file name
+                    $fileName = invoiceNumber() . '-'.@$std->fullname.'-'.time().'.' . $request->file->extension();
+                    $request->file->move(public_path('files/assessments/answers'), $fileName);
+                    $data['path'] = 'files/assessments/answers/'.$fileName;
+                    $data['question_pid'] = $request->pid[0];
+                    $result = $this->updateOrCreateAnswer($data);
+                    if ($result)
+                        return response()->json(['status' => 1, 'message' => 'Assessment submitted Successfully']);
+                    else
+                        return response()->json(['status' => 'error', 'message' => ER_500]);
+                }
+                if (isset($request->answer)) {
+                    $result = false;
+                   
+                    foreach ($request->answer as $key => $row) {
+                        $data['question_pid'] = $key;
+                        $data['answer'] =  is_array($row) ? json_encode($row) : $row;
+                        $result = $this->updateOrCreateAnswer($data);
+                    }
+                    if ($result)
+                        return response()->json(['status' => 1, 'message' => 'Assessment submitted Successfully']);
+                    else
+                        return response()->json(['status' => 'error', 'message' => ER_500]);
+                }
+                return response()->json(['status' => 'error', 'message' => 'answer question first']);
+            } catch (\Throwable $e) {
+                logError(['error' => $e->getMessage(), 'line' => __LINE__, 'file' => __FILE__]);
                 return response()->json(['status' => 'error', 'message' => ER_500]);
             }
-        return response()->json(['status' => 'error', 'message' => 'answer question first']);
+       }
+        return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
     }
 
     private function updateOrCreateAnswer(array $data){

@@ -8,7 +8,7 @@
         <h5 class="card-title mr-4">Assessment: {{$data->arm}} | {{$data->subject}} | {{$data->term}}, {{$data->session}}</h5>
 
         <fieldset class="border rounded-3 p-3">
-            <legend class="float-none w-auto px-3">{{$data->title}} Deadline: <i class="text-danger">{{$data->end_date}}</i> </legend>
+            <legend class="float-none w-auto px-3">{{$data->title}} | Deadline: <i class="text-danger">{{$data->end_date}}</i> </legend>
 
             <form class="row g-3 needs-validation" id="submitAssessmentForm">
                 @csrf
@@ -17,6 +17,14 @@
                     @foreach($questions as $row)
                     <fieldset class="border rounded-3 px-2">
                         <legend class="float-none w-auto px-3">Question {{$loop->iteration}} | {{$row->mark}} Mark</legend>
+                        @if($data->type ==1)
+                        <label class="form-label text-danger">File 1 mb max </label>
+                        <input type="hidden" name="pid[]" value="{{$row->pid}}">
+                        <input type="hidden" name="type" value="1">
+                        <input type="file" accept=".pdf,.docs,.doc" name="file" class="form-control form-control-sm">
+                        <p class="text-danger file_error"></p>
+                        @php continue @endphp
+                        @endif
                         @php $options = json_decode($row->options) @endphp
                         @if(isset($options))
                         {!!$row->question!!}

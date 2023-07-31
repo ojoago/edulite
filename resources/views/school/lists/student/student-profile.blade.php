@@ -22,7 +22,7 @@
                         <button class="nav-link w-100" id="attendance-tab" data-bs-toggle="tab" data-bs-target="#attendance" type="button" role="tab">Attendance</button>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
-                        <button class="nav-link w-100" id="assignment-tab" data-bs-toggle="tab" data-bs-target="#assignment" type="button" role="tab">Assignment</button>
+                        <button class="nav-link w-100" id="assignment-tab" data-bs-toggle="tab" data-bs-target="#assignment" type="button" role="tab">Assignments</button>
                     </li>
                     <li class="nav-item flex-fill" role="presentation">
                         <button class="nav-link w-100" id="fees-tab" data-bs-toggle="tab" data-bs-target="#fees" type="button" role="tab">Fees</button>

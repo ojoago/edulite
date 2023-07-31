@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('school_pid');
             $table->string('student_pid');
             $table->string('question_pid');
-            $table->longText('answer');
-            $table->tinyInteger('remark')->nullable();
+            $table->longText('answer')->nullable();
+            $table->longText('remark')->nullable();
+            $table->integer('mark')->nullable();
             $table->string('path')->nullable();
             $table->timestamps();
         });
