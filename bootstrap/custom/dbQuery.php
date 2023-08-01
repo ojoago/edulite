@@ -8,6 +8,7 @@ use App\Models\School\Framework\Session\Session;
 use App\Models\School\Framework\Term\ActiveTerm;
 use App\Models\School\Framework\Session\ActiveSession;
 use App\Models\School\Framework\Events\SchoolNotification;
+use App\Models\School\Framework\Events\SchoolNotificationStatus;
 use App\Models\School\Framework\Subject\Subject;
 use App\Models\School\Student\Assessment\Psychomotor\PsychomotorRecord;
 use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
@@ -159,19 +160,21 @@ function activeTermName()
     function loadRecentNotification(){
         switch (getUserActiveRole()) {
             case 610: //rider
-            $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid(), 'type' => 2])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 4]])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 5]])->get(['message', 'created_at', 'type']);
+            $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid()])->whereIn('type', [2, 4, 5])
+                ->get(['message', 'created_at', 'type']);
                 break;
             case 605: //parent
-             $ntfn = SchoolNotification::where(['school_pid'=>getSchoolPid(),'type'=>2])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 4]])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 5]])->get(['message','created_at', 'type']);
+             $ntfn = SchoolNotification::where(['school_pid'=>getSchoolPid()])->whereIn('type',[2,4,5])
+                ->get(['message','created_at', 'type']);
                 break;
             case 600: //student
-            $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid(), 'type' => 2])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 4]])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 5]])->get(['message','created_at', 'type']);
+            $ntfn = DB::table('school_notifications as n')->where(['n.school_pid' => getSchoolPid()])
+                            ->whereIn('n.type', [2, 4, 5])
+                            ->whereNotIn('n.pid', function ($query) {
+                        $query->select('message_pid')
+                        ->from('school_notification_statuses');
+                        })
+                ->get(['message','created_at', 'type']);
                 break;
             case 200: //School Super Admin
             case 205: //School Admin
@@ -183,9 +186,13 @@ function activeTermName()
             case 400: //Office Assisstnace
             case 405: //Security
             case 500: //Principal/Head Teacher
-            $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid(), 'type' => 1])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 4]])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 5]])->get(['message', 'created_at','type']);
+            $ntfn = DB::table('school_notifications as n')->where(['school_pid' => getSchoolPid()])
+            ->whereIn('type', [2, 4, 5])
+                // ->whereNotIn('n.pid', function ($query) {
+                //     $query->select('message_pid')
+                //         ->from('school_notification_statuses')->where('viewer_pid',getSchoolUserPid());
+                // })
+                ->get(['message', 'created_at','type','n.pid']);
                 break;
             default:
                 null;
@@ -194,23 +201,36 @@ function activeTermName()
 
     return $ntfn;
     }
+    function updateViewedNotification(array $data){
+        try {
+            return SchoolNotificationStatus::insert($data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
     function countRecentNotification()
     {
         switch (getUserActiveRole()) {
             case 610: //rider
-                $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid(), 'type' => 2])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 4]])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 5]])->count('type');
+                $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid()])
+                ->whereIn('type', [4,2,5])->whereNotIn('school_notifications.pid', function ($query) {
+                    $query->select('message_pid')
+                        ->from('school_notification_statuses')->where('viewer_pid', getSchoolUserPid());
+                })
+                ->count('type');
                 break;
             case 605: //parent
-                $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid(), 'type' => 2])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 4]])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 5]])->count('type');
+                $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid()])
+                ->whereIn('type', [4,5])->count('type');
                 break;
             case 600: //student
-                $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid(), 'type' => 2])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 4]])
-                ->orwhere([['school_pid', getSchoolPid()], ['type', 5]])->count('type');
+                $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid()])->whereIn('type', [4, 2, 5])
+                ->whereNotIn('school_notifications.pid', function ($query) {
+                $query->select('message_pid')
+                    ->from('school_notification_statuses')->where('viewer_pid', getSchoolUserPid());
+            })
+            ->count('type');
                 break;
             case 200: //School Super Admin
             case 205: //School Admin
@@ -222,10 +242,11 @@ function activeTermName()
             case 400: //Office Assisstnace
             case 405: //Security
             case 500: //Principal/Head Teacher
-                $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid(), 'type' => 1])
-                ->orwhere([['school_pid', getSchoolPid()], ['type' , 4]])
-                ->orwhere([['school_pid' , getSchoolPid()], ['type' , 5]])
-                ->count('type');
+                $ntfn = SchoolNotification::where(['school_pid' => getSchoolPid()])
+                ->whereIn('type' , [1,5,4])->whereNotIn('school_notifications.pid', function ($query) {
+                    $query->select('message_pid')
+                        ->from('school_notification_statuses')->where('viewer_pid', getSchoolUserPid());
+                })->count('type');
                 break;
             default:
             $ntfn= null;

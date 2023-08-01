@@ -20,6 +20,8 @@
         </li>
         <li><a class="dropdown-item text-warning" href="{{route('edit.student.info',['id'=>base64Encode($data->pid)])}}">Edit Info</a></li>
         <li><a class="dropdown-item linkMyParent pointer" pid="{{$data->pid}}">Link Parent/Guardian</a></li>
+        <li><a class="dropdown-item resetPassword pointer" pid="{{$data->pid}}">Reset Password</a></li>
+        <li><a class="dropdown-item updatePassport pointer" pid="{{$data->pid}}">Update Passport</a></li>
         <!-- <li><a class="dropdown-item" href="#">Promote</a></li>
         <li><a class="dropdown-item" href="#">View Result</a></li> -->
     </ul>

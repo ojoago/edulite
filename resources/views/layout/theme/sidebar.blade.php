@@ -8,6 +8,19 @@
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
+      <li class="nav-item">
+        @if(studentRole())
+        <a class="nav-link" href="{{route('student.profile',['id'=>base64Encode(getSchoolUserPid())])}}">
+          @elseif(parentRole())
+          <a class="nav-link" href="{{route('parent.profile',['id'=>base64Encode(getSchoolUserPid())])}}">
+            @elseif(riderRole())
+            <a class="nav-link" href="{{route('rider.profile',['id'=>base64Encode(getSchoolUserPid())])}}">
+              @else
+              <a class="nav-link" href="{{route('staff.profile',['id'=>base64Encode(getSchoolUserPid())])}}">
+                @endif
+                <i class="bi bi-person"></i> Profile</a>
+      </li>
+
       <!-- school admin section  -->
       @if(getUserActiveRole() =="200" || getUserActiveRole()=="205")
       <li class="nav-item">

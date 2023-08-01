@@ -358,6 +358,53 @@ use App\Http\Controllers\Auths\AuthController;
     // return $date->diff(Carbon::now())
     // ->format('%y years, %m months and %d days');
     }
+function dateDiff($date, $e)
+{
+    $b = new DateTime($date);
+    $e = new DateTime($e);
+    $d = $b->diff($e);
+    return $d->format("%R%a");
+}
+function diffForHumans($date)
+{
+    $timestamp = strtotime($date);
+
+    $strTime = ["second", "minute", "hour", "day", "month", "year"];
+    $length = ["60", "60", "24", "30", "12", "10"];
+
+    $currentTime = time();
+    if ($currentTime >= $timestamp) {
+        $diff     = time() - $timestamp;
+        for ($i = 0; $diff >= $length[$i] && $i < count($length) - 1; $i++) {
+            $diff = $diff / $length[$i];
+        }
+
+        $diff = round($diff);
+        return $diff . " " . $strTime[$i] . "(s) ago ";
+    }
+    // $time_difference = time() - $time;
+
+    // if ($time_difference < 1) {
+    //     return 'less than 1 second ago';
+    // }
+    // $condition = array(
+    //     12 * 30 * 24 * 60 * 60 =>  'year',
+    //     30 * 24 * 60 * 60       =>  'month',
+    //     24 * 60 * 60            =>  'day',
+    //     60 * 60                 =>  'hour',
+    //     60                      =>  'minute',
+    //     1                       =>  'second'
+    // );
+
+    // foreach ($condition as $secs => $str) {
+    //     $d = $time_difference / $secs;
+
+    //     if ($d >= 1) {
+    //         $t = round($d);
+    //         return 'about ' . $t . ' ' . $str . ($t > 1 ? 's' : '') . ' ago';
+    //     }
+    // }
+}
     function ordinalFormat($num){
         try {
             if(class_exists('NumberFormatter')){
@@ -465,8 +512,7 @@ function date_diff_weekdays($from, $to)
         return false;
        }
     }
-function saveImg($image,$path='images',$name=null)
-{
+function saveImg($image,$path='images',$name=null){
     // $image = $request->file('image');
 $name = str_replace('/', '-', $name . ' edlt' .'.png' /*$image->extension()*/);
 

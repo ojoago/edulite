@@ -299,7 +299,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('count-my-notification-tip', [SchoolNotificationController::class, 'countMyNotificationTip'])->name('count.my.notification.tip');
     Route::get('load-my-notification-tip', [SchoolNotificationController::class, 'loadMyNotificationTip'])->name('load.my.notification.tip');
     Route::get('load-my-notification-details', [SchoolNotificationController::class, 'loadMyNotificationDetails'])->name('load.my.notification.details');
-    Route::get('my-notification', [SchoolNotificationController::class, 'myNotification'])->name('my.notification');
+    Route::get('my-notifications', [SchoolNotificationController::class, 'myNotificationDetails'])->name('my.notification');
 
     // fee setup 
     Route::view('fees-config', 'school.framework.fees.fees-config')->name('fee.config');
@@ -429,7 +429,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('parent-registration', [ParentController::class, 'registerParent'])->name('school.register.parent');
 
     Route::post('change-parent-status', [ParentController::class, 'toggleParentStatus'])->name('toggle.parent.status');
-    Route::post('parent-profile/{id}', [ParentController::class, 'myProfile'])->name('school.parent.profile');
+    Route::post('parent-profile/{id}', [ParentController::class, 'myProfile'])->name('parent.profile');
 
     Route::get('parents-ward/{id}', [ParentController::class, 'myWards'])->name('school.parent.child');
 
@@ -492,7 +492,7 @@ Route::middleware('schoolAuth')->group(function(){
 
     // profile 
     // staff profile 
-    Route::get('staff-profile/{id}', [StaffController::class, 'staffProfile'])->name('school.staff.profile');
+    Route::get('staff-profile/{id}', [StaffController::class, 'staffProfile'])->name('staff.profile');
     Route::post('load-staff-profile', [StaffController::class, 'loadStaffProfile'])->name('load.staff.profile');
     Route::post('load-staff-classes', [StaffController::class, 'loadStaffClasses'])->name('load.staff.classes');
     Route::post('load-staff-subjects', [StaffController::class, 'loadStaffSubject'])->name('load.staff.subjects');
@@ -538,7 +538,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('parent-profile/{id}', [ParentController::class, 'parentProfile']);
     Route::get('view-parent-profile', [ParentController::class, 'viewParentProfile'])->name('view.parent.profile');
     // student profile 
-    Route::get('rider-profile/{id}', [SchoolRiderController::class, 'riderProfile'])->name('school.rider.profile');
+    Route::get('rider-profile/{id}', [SchoolRiderController::class, 'riderProfile'])->name('rider.profile');
     Route::post('view-rider-profile', [SchoolRiderController::class, 'viewRiderProfile'])->name('view.rider.profile');
     Route::post('load-rider-student', [SchoolRiderController::class, 'viewRiderStudent'])->name('load.rider.student');
 

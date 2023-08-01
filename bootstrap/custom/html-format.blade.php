@@ -326,13 +326,14 @@ function formatNotification($sql){
             <hr class="dropdown-divider">
         </li>';
     foreach($sql as $row){
+        // $date = date(strtotime($row->created_at));
         $ntf.='
             <li class="notification-item">
                 <i class="bi bi-exclamation-circle text-warning"></i>
                 <div>
                     <h4>Notice</h4>
                     <p>'.$row->message.'</p>
-                    <p>'.$row->created_at->diffForHumans().'</p>
+                    <p>'. $row->created_at.'</p>
                 </div>
             </li>
             <li>
