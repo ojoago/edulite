@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Users\UserDetailsController;
 
 class AuthController extends Controller
 {
@@ -20,8 +21,10 @@ class AuthController extends Controller
         $request->validate([
             'email'=>'required|email|unique:users,email|regex:/^[a-zA-Z0-9.@\s]+$/',// added regex
             'username'=> "required|unique:users,username|regex:/^[a-zA-Z0-9_\s]+$/",//added regex
-            'gsm'=> "nullable|unique:users,gsm|max:11|min:11",//added regex
-            'password'=>'required|min:4|confirmed'
+            'gsm'=> "required|unique:users,gsm|max:11|min:11",//added regex
+            'password'=>'required|min:4|confirmed',
+            'firstname'=> "required|regex:/^[a-zA-Z0-9'\s]+$/",
+            'lastname'=> "required|regex:/^[a-zA-Z0-9'\s]+$/",
         ]);
         $data = [
             'email'=>$request->email,
@@ -33,6 +36,19 @@ class AuthController extends Controller
         $user = self::createUser($data);
         // send email
         if($user){
+            $dtl = [
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'othername' => $request->othername,
+                // 'dob' => $request->dob,
+                // 'gender' => $request->gender,
+                // 'religion' => $request->religion,
+                'address' => $request->address,
+                // 'about' => $request->about,
+                'user_pid' => $user->pid
+            ];
+            // add user details to details table 
+            $dtl = UserDetailsController::insertUserDetails($dtl);
             $data = [
                     'email'=>$user->email,
                     'name'=>$user->username,
@@ -41,10 +57,10 @@ class AuthController extends Controller
                     'subject'=> 'Account Verification Link'
             ];
             sendMail($data);
-            return back()->with('success','Account Created successfully, Verification link sent to your mail, check inbox or Spam-folder now!!!');
+            return back()->with('success','Account Created successfully, Verification link sent to your mail, check inbox or Spam-folder now or contact info@edulite.ng');
         } 
         return back()->with('error','failed to created account');
-        $token = $user->createToken('traqToken')->plainTextToken;
+        $token = $user->createToken('AUTH_TOKEN')->plainTextToken;
         $response = [
             'user' => $user,
             'token' => $token,
@@ -223,7 +239,7 @@ class AuthController extends Controller
                 }
             } else {
                 if ($user->account_status == 0) {
-                    return back()->with('message', "info|Your acccount is not yet verified, please login to your mail and click on verification link to activate your account.");
+                    return back()->with('message', "info|Your acccount is not yet verified, please login to your mail and click on verification link to activate your account or contact info@edulite.ng, 09079311551.");
                 }
             }
         }
