@@ -21,6 +21,13 @@
                             @enderror
                         </div>
                         <div class="mb-2">
+                            <label for="email" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" id="gsm" value="{{@old('gsm')}}" name="gsm" placeholder="Phone Number">
+                            @error('gsm')
+                            <p class="text-danger">{{$message}}</p>
+                            @enderror
+                        </div>
+                        <div class="mb-2">
                             <label for="name" class="form-label">Username</label>
                             <input type="text" class="form-control" id="name" value="{{@old('username')}}" name="username" placeholder="Username">
                             @error('username')

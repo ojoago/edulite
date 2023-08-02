@@ -20,12 +20,14 @@ class AuthController extends Controller
         $request->validate([
             'email'=>'required|email|unique:users,email|regex:/^[a-zA-Z0-9.@\s]+$/',// added regex
             'username'=> "required|unique:users,username|regex:/^[a-zA-Z0-9_\s]+$/",//added regex
+            'gsm'=> "nullable|unique:users,gsm|max:11|min:11",//added regex
             'password'=>'required|min:4|confirmed'
         ]);
         $data = [
             'email'=>$request->email,
             'username'=>$request->username,
             'password'=>$request->password,
+            'gsm'=>$request->gsm,
         ];
         // dd($request->all());
         $user = self::createUser($data);
