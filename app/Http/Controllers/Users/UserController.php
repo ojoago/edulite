@@ -37,7 +37,7 @@ class UserController extends Controller
             }
         }
         AuthController::clearAuthSession();
-        return view('users.users-home', compact('data'));
+        return view('users.users-dashboard', compact('data'));
     }
     public function dashboard()
     {
@@ -45,7 +45,7 @@ class UserController extends Controller
         AuthController::clearAuthSession();
         $data = $this->loadUserSchools();//['schools'=> $schools,'work'=>$office];
         // $data =['schools'=> $schools,'work'=>$office];
-        return view('users.users-home', compact('data'));
+        return view('users.users-dashboard', compact('data'));
     }
 
     public function loadUserSchools(){

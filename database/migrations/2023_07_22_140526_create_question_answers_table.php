@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('question_pid');
             $table->longText('answer')->nullable();
             $table->longText('remark')->nullable();
-            $table->integer('mark')->nullable();
+            $table->float('mark')->nullable();
+            $table->tinyInteger('status')->default(0);
             $table->string('path')->nullable();
             $table->timestamps();
         });

@@ -21,7 +21,7 @@
                 <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="list-active-staff-dataTable">
                     <thead>
                         <tr>
-                            <th>S/N</th>
+                            <th width="5%">S/N</th>
                             <th>Names</th>
                             <th>Username</th>
                             <th>Phone Number</th>

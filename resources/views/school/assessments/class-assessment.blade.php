@@ -28,10 +28,10 @@
                 <button class="nav-link w-100" id="automated-tab" data-bs-toggle="tab" data-bs-target="#automated" type="button" role="tab" aria-controls="automated" aria-selected="false">Automated</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="submitted-tab" data-bs-toggle="tab" data-bs-target="#submitted" type="button" role="tab" aria-controls="submitted" aria-selected="false">Assessment</button>
+                <button class="nav-link w-100" id="submitted-tab" data-bs-toggle="tab" data-bs-target="#submitted" type="button" role="tab" aria-controls="submitted" aria-selected="false">Assessments</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="mark-tab" data-bs-toggle="tab" data-bs-target="#mark" type="button" role="tab" aria-controls="mark" aria-selected="false">Mark</button>
+                <button class="nav-link w-100" id="mark-tab" data-bs-toggle="tab" data-bs-target="#mark" type="button" role="tab" aria-controls="mark" aria-selected="false">Submitted</button>
             </li>
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
@@ -67,7 +67,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Assignment Title</label>
-                            <input type="text" class="form-control form-control-sm" name="title" id="newAssignmentScore" placeholder="e.g 5">
+                            <input type="text" class="form-control form-control-sm" name="title" id="newAssignmentScore" placeholder="enter title">
                             <p class="text-danger title_error"></p>
                         </div>
                         <div class="col-md-2">
@@ -201,7 +201,7 @@
                                 <div class="row mb-2">
                                     <div class="col-md-6">
                                         Question Type
-                                        <select name="type[]" id="type0" type="0" class="changeQuestionType form-select form-select-sm ">
+                                        <select name="types[]" id="type0" type="0" class="changeQuestionType form-select form-select-sm ">
                                             <option value="1">Single Select</option>
                                             <option value="2">Multi Select</option>
                                         </select>
@@ -307,11 +307,9 @@
                         <tr>
                             <th width="5%">S/N</th>
                             <th>Subject</th>
-                            <th>TItle</th>
+                            <th>Student</th>
                             <!-- <th>Date</th> -->
-                            <th>Deadline</th>
-                            <!-- <th></th> -->
-                            <th>Date</th>
+                            <th>Date Submitted</th>
                             <th width="10%">Action</th>
                         </tr>
                     </thead>
@@ -334,9 +332,65 @@
         $('#submitted-tab').click(function() {
             loadAssessment()
         })
-        $('#markTable-tab').click(function() {
-            loadAssessment()
+        $('#mark-tab').click(function() {
+            loadSubmittedAssessments()
         })
+
+        function loadSubmittedAssessments() {
+            $('#markTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
+                responsive: true,
+                destroy: true,
+                "ajax": "{{route('load.submitted.assessments')}}",
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        // orderable: false,
+                        // searchable: false
+                    },
+                    {
+                        "data": "subject"
+                    },
+                    {
+                        "data": "fullname"
+                    },
+
+                    {
+                        "data": "created_at"
+                    },
+                    {
+                        "data": "action"
+                    },
+                ],
+                "columnDefs": [{
+                    "visible": false,
+                    "targets": 1
+                }],
+                "drawCallback": function(settings) {
+                    var api = this.api();
+                    var rows = api.rows({
+                        page: 'current'
+                    }).nodes();
+                    var last = null;
+
+                    api.column(1, {
+                        page: 'current'
+                    }).data().each(function(group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="4">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
+            });
+        }
 
         function loadAssessment() {
             $('#assignmentTable').DataTable({
@@ -397,6 +451,10 @@
                 }
             });
         }
+
+
+
+
         FormMultiSelect2('#newAssignmentCategorySelect2', 'category', 'Select Category');
         $('#newAssignmentCategorySelect2').on('change', function(e) {
             var id = $(this).val();
@@ -425,32 +483,50 @@
             FormMultiSelect2Post('#newAutomatedAssignmentSubjectSelect2', 'class-arm-subject', id, 'Select Class Subject');
         });
 
+        // delete assessment 
         $(document).on('click', '.deleteAssessment', function() {
-            const key = $(this).attr('key');
-            $('.overlay').show();
-            $.ajax({
-                url: "{{route('delete.assessment')}}", //"url,
-                type: "POST",
-                data: {
-                    _token: "{{csrf_token()}}",
-                    key: key
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('.overlay').hide();
-                    if (data.status === 1) {
-                        alert_toast(data.message);
-                        loadAssessment()
-                    } else {
-                        alert_toast(data.message, 'error');
-                    }
-                },
-                error: function(data) {
 
-                    $('.overlay').hide();
-                    alert_toast('Something Went Wrong', 'error');
+            Swal.fire({
+                title: 'Delete Assessment',
+                text: "Are you sure, you want to delete this ?",
+                type: "warning",
+                confirmButtonText: 'Yes Delete',
+                confirmButtonColor: '#DD6B55',
+                cancelButtonText: "No, Cancel!",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }).then((result) => {
+                if (result['isConfirmed']) {
+                    // Put your function here
+                    const key = $(this).attr('key');
+                    $('.overlay').show();
+                    $.ajax({
+                        url: "{{route('delete.assessment')}}", //"url,
+                        type: "POST",
+                        data: {
+                            _token: "{{csrf_token()}}",
+                            key: key
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            $('.overlay').hide();
+                            if (data.status === 1) {
+                                alert_toast(data.message);
+                                loadAssessment()
+                            } else {
+                                alert_toast(data.message, 'error');
+                            }
+                        },
+                        error: function(data) {
+
+                            $('.overlay').hide();
+                            alert_toast('Something Went Wrong', 'error');
+                        }
+                    });
                 }
-            });
+            })
+
         })
         $('#newAssignmentRecordable').click(function() {
             // var previousValue = $(this).attr('previousValue');
@@ -488,7 +564,9 @@
         });
 
         $('#newManualAssignmentBtn').click(function() {
-            submitFormAjax('newManualAssignmentForm', 'newManualAssignmentBtn', "{{route('submit.manual.assignment')}}")
+            submitFormAjax('newManualAssignmentForm', 'newManualAssignmentBtn', "{{route('submit.manual.assignment')}}");
+            $('.summer-note').val('')
+
         });
 
 
@@ -503,7 +581,7 @@
                                 <div class="row mb-2 px-0">
                                     <div class="col-md-6 px-0">
                                         Question Type
-                                        <select name="type[]" id="type${qn}" type="${qn}" class="changeQuestionType form-select form-select-sm ">
+                                        <select name="types[]" id="type${qn}" type="${qn}" class="changeQuestionType form-select form-select-sm ">
                                             <option value="1">Single Select</option>
                                             <option value="2">Multi Select</option>
                                         </select>

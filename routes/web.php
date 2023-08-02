@@ -550,8 +550,11 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-assessment', [AssessmentController::class, 'loadAssessment'])->name('load.assignment');
     Route::get('load-assessment-student/{id}', [AssessmentController::class, 'loadAssessmentForStudent'])->name('load.assignment.for.student');
     Route::post('submit-assessment', [AssessmentController::class, 'submitAssessment'])->name('submit.assessment');
+    Route::get('load-submitted-assessments', [AssessmentController::class, 'loadStudentSubmitedAssessments'])->name('load.submitted.assessments');
     // student attempt assigment 
     Route::get('attempt-questions', [AssessmentController::class, 'loadQuestions'])->name('load.questions');
+    
+    Route::get('mark-assessment', [AssessmentController::class, 'loadSubmittedAssessmentsByStudent'])->name('mark.assessment');
 
 
     //student attendance

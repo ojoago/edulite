@@ -16,7 +16,7 @@
                     <input type="hidden" value="{{$std}}" name="std">
                     @foreach($questions as $row)
                     <fieldset class="border rounded-3 px-2">
-                        <legend class="float-none w-auto px-3">Question {{$loop->iteration}} | {{$row->mark}} Mark</legend>
+                        <legend class="float-none w-auto px-3">Question {{$loop->iteration}} {{$row->mark ? '| '.$row->mark .'Mark' :''}}</legend>
                         @if($data->type ==1)
                         <label class="form-label text-danger">File 1 mb max </label>
                         <input type="hidden" name="pid[]" value="{{$row->pid}}">
@@ -28,6 +28,7 @@
                         @php $options = json_decode($row->options) @endphp
                         @if(isset($options))
                         {!!$row->question!!}
+                        <hr>
                         @php shuffle($options) @endphp
                         @foreach($options as $opn)
                         <input type="{{$row->type==2 ? 'checkbox': 'radio'}}" class="optionAnswer0 m-2 answer" value="{{$opn->id}}" name="answer[{{$row->pid}}][]">

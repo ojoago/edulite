@@ -36,7 +36,7 @@
     <h4 class="text-danger p-3">Click on the button below to create a school</h4>
     <a href="{{route('create.school')}}"> <button class="btn btn-success btn-sm">Create School</button></a>
     <h5>How to create a school <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#createSchoolVideoModal">Watch Video</button></h5>
-
+    @if($data->isNotEmpty())
     <div class="row">
         <div class="card shadow-inner">
             <div class="card-header">Click to any school name to login </div>
@@ -58,6 +58,10 @@
             </div><!-- End Sales Card -->
         </div>
     </div>
+    @else
+    <h3>Welcome to {{env('APP_NAME', APP_NAME)}},</h3>
+    <!-- <p class="text-danger"> Please click on the green button above to create your school </p> -->
+    @endif
 </div>
 
 </div>

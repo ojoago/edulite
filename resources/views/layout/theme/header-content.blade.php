@@ -145,39 +145,45 @@
                              <hr class="dropdown-divider">
                          </li>
                          @if(getSchoolUserPid())
+                         <li >
+                             @if(studentRole())
+                             <a class="dropdown-item d-flex align-items-center pointer" href="{{route('student.profile',['id'=>base64Encode(getSchoolUserPid())])}}">
+                                 @elseif(parentRole())
+                                 <a class="dropdown-item d-flex align-items-center pointer" href="{{route('parent.profile',['id'=>base64Encode(getSchoolUserPid())])}}">
+                                     @elseif(riderRole())
+                                     <a class="dropdown-item d-flex align-items-center pointer" href="{{route('rider.profile',['id'=>base64Encode(getSchoolUserPid())])}}">
+                                         @else
+                                         <a class="dropdown-item d-flex align-items-center pointer" href="{{route('staff.profile',['id'=>base64Encode(getSchoolUserPid())])}}">
+                                             @endif
+                                             <i class="bi bi-person"></i> Profile</a>
+                         </li>
                          <li>
-                         <a class="dropdown-item d-flex align-items-center" href="{{route('staff.profile',['id'=>base64Encode(getSchoolUserPid())])}}">
-                             <i class="bi bi-person"></i>
-                             <span>My Profile</span>
-                         </a>
-                 </li>
-                 <li>
-                     <hr class="dropdown-divider">
-                 </li>
-                 @endif
-                 <li>
-                     <a class="dropdown-item d-flex align-items-center pointer" data-bs-toggle="modal" data-bs-target="#updatePwd">
-                         <i class="bi bi-lock-fill"></i>
-                         <span>Update Password</span>
-                     </a>
-                 </li>
-                 <li>
-                     <a class="dropdown-item d-flex align-items-center pointer" id="updateAccount">
-                         <i class="bi bi-file-earmark-person-fill"></i>
-                         <span>Update Account</span>
-                     </a>
-                 </li>
-                 <!-- <li>
+                             <hr class="dropdown-divider">
+                         </li>
+                         @endif
+                         <li>
+                             <a class="dropdown-item d-flex align-items-center pointer" data-bs-toggle="modal" data-bs-target="#updatePwd">
+                                 <i class="bi bi-lock-fill"></i>
+                                 <span>Update Password</span>
+                             </a>
+                         </li>
+                         <li>
+                             <a class="dropdown-item d-flex align-items-center pointer" id="updateAccount">
+                                 <i class="bi bi-file-earmark-person-fill"></i>
+                                 <span>Update Account</span>
+                             </a>
+                         </li>
+                         <!-- <li>
                              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
                                  <i class="bi bi-gear"></i>
                                  <span>Account Settings</span>
                              </a>
                          </li> -->
-                 <li>
-                     <hr class="dropdown-divider">
-                 </li>
+                         <li>
+                             <hr class="dropdown-divider">
+                         </li>
 
-                 <!-- <li>
+                         <!-- <li>
                              <a class="dropdown-item d-flex align-items-center">
                                  <i class="bi bi-question-circle"></i>
                                  <span>Need Help?</span>
@@ -186,32 +192,32 @@
                          <li>
                              <hr class="dropdown-divider">
                          </li> -->
-                 @if(getSchoolPid())
-                 <li>
-                     <a class="dropdown-item bg-warning d-flex align-items-center" href="{{route('logout.school')}}">
-                         <i class="bi bi-person"></i>
-                         <span>School Sign Out</span>
-                     </a>
-                 </li>
-                 <li>
-                     <hr class="dropdown-divider">
-                 </li>
-                 @endif
-                 <li>
-                     <a class="dropdown-item d-flex align-items-center bg-danger" href="{{route('logout')}}">
+                         @if(getSchoolPid())
+                         <li>
+                             <a class="dropdown-item bg-warning d-flex align-items-center" href="{{route('logout.school')}}">
+                                 <i class="bi bi-person"></i>
+                                 <span>School Sign Out</span>
+                             </a>
+                         </li>
+                         <li>
+                             <hr class="dropdown-divider">
+                         </li>
+                         @endif
+                         <li>
+                             <a class="dropdown-item d-flex align-items-center bg-danger" href="{{route('logout')}}">
 
-                         <!-- <form class="align-items-center" method="POST" action="{{route('logout')}}">
+                                 <!-- <form class="align-items-center" method="POST" action="{{route('logout')}}">
                                     csrf -->
-                         <!-- <button type="submit" class="btn"> -->
-                         <i class="bi bi-box-arrow-right"></i><span>App Sign Out</span>
-                         <!-- </button> -->
-                         <!-- </form> -->
+                                 <!-- <button type="submit" class="btn"> -->
+                                 <i class="bi bi-box-arrow-right"></i><span>App Sign Out</span>
+                                 <!-- </button> -->
+                                 <!-- </form> -->
 
-                     </a>
-                 </li>
+                             </a>
+                         </li>
 
-             </ul><!-- End Profile Dropdown Items -->
-             </li><!-- End Profile Nav -->
+                     </ul><!-- End Profile Dropdown Items -->
+                 </li><!-- End Profile Nav -->
 
              </ul>
          </nav><!-- End Icons Navigation -->

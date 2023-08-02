@@ -3,7 +3,7 @@
         <i class="bi bi-tools"></i>
     </button>
     <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="{{route('school.staff.profile',['id'=>base64Encode($data->pid)])}}">Profile</a></li>
+        <li><a class="dropdown-item" href="{{route('staff.profile',['id'=>base64Encode($data->pid)])}}">Profile</a></li>
         <li>
             <a class="dropdown-item pointer" href="#">
                 <?php if ($data->status == 1) : ?>

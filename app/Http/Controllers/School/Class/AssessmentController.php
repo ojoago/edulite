@@ -66,6 +66,31 @@ class AssessmentController extends Controller
         ->make(true);
     }
 
+    public function loadStudentSubmitedAssessments(){
+      $data = DB::table('question_banks as b')->join('questions as q','q.bank_pid','b.pid')
+                                                ->join('question_answers as an', 'an.question_pid','q.pid')
+                                                ->join('students as std', 'std.pid','an.student_pid')
+                                                ->join('class_arm_subjects as cas','cas.pid','b.subject_pid')
+                                                ->join('subjects as s','s.pid','cas.subject_pid')
+                                                ->join('student_class_score_params as p','p.pid', 'b.class_param_pid')
+                                                ->join('class_arms as a','a.pid','p.arm_pid')
+                                                ->where(['b.school_pid'=>getSchoolPid()])->where('b.status', '<>', 0)->orderBy('an.status')->orderBy('b.title')
+                                               
+                                                ->select('s.subject','b.title','a.arm','b.pid','b.end_date','an.created_at','std.pid as std','b.type','std.fullname','std.reg_number')->get();
+        return datatables($data)
+        ->addIndexColumn()
+        ->editColumn('subject', function ($data) {
+            return $data->arm .' - '.$data->subject.' - '.$data->title;
+        })
+        ->editColumn('created_at', function ($data) {
+            return date('d F Y', strtotime($data->created_at));
+        })
+        ->addColumn('action', function ($data) {
+            return view('school.assessments.class-assessment-mark-action-button', ['data' => $data]);
+        })
+        ->make(true);
+    }
+
     public function loadQuestions(Request $request){
         // dd($request->all());
         $data = DB::table('question_banks as b')
@@ -182,12 +207,13 @@ class AssessmentController extends Controller
                             );
         if(!$validator->fails()){
             try {
-
+                // implement transaction 
                 $bank = $this->createQuestionBank($request);
                 if ($bank) {
                     $result = false;
                     $questions = json_decode($request->questions);
                     foreach($questions as $row){
+                        // logError($row);
                         if(empty($row->question) || count($row->options)<2){
                             continue;
                         }
@@ -196,10 +222,10 @@ class AssessmentController extends Controller
                             'pid' => $row->pid ?? public_id(),
                             'bank_pid' => $bank->pid,
                             'question' => $row->question,
-                            'path' => $request->file ?? null,
+                            'path' => null,
                             'mark' =>  is_array($row->mark) ? array_sum($row->mark) : 0,
                             'type' => $row->type,
-                            'options' => ($row->options), 
+                            'options' => json_encode($row->options), 
     
                         ];
                         $result =  $this->updateOrCreateQuestion($question);
@@ -210,6 +236,7 @@ class AssessmentController extends Controller
                     }
                     return response()->json(['status' => 'error', 'message' => 'Enter all Questions and at least two options for each.']);
                 }
+                return response()->json(['status' => 'error', 'message' => ER_500]);
             } catch (\Throwable $e) {
                 logError(['error' => $e->getMessage(), 'line' => __LINE__]);
                 return response()->json(['status' => 'error', 'message' => ER_500]);
@@ -293,5 +320,11 @@ class AssessmentController extends Controller
             logError(['error' => $e->getMessage(), 'line' => __LINE__,'file'=>__FILE__]);
             return false;
         }
+    }
+
+
+    // load asseement for marking 
+    public function loadSubmittedAssessmentsByStudent(Request $request){
+        dd($request->all());
     }
 }

@@ -242,6 +242,7 @@ class SchoolController extends Controller
             logError($error);
         }
     }
+    
     public static function createSchoolParent($data){
         
         try {

@@ -10,6 +10,6 @@ class QuestionAnswer extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'school_pid','student_pid','question_pid','answer','remark','path'
+        'school_pid','student_pid','question_pid','answer','remark','path','status','mark'
     ];
 }
