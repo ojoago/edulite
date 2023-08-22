@@ -78,19 +78,23 @@
                         </div>
 
 
-                        <div class="mb-2">
-                            <label for="password" class="form-label">Password *</label>
-                            <input type="password" class="form-control form-control-sm" id="password" name="password" placeholder="Password">
-                            @error('password')
-                            <p class="text-danger">{{$message}}</p>
-                            @enderror
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <label for="password" class="form-label">Password *</label>
+                                <input type="password" class="form-control form-control-sm" id="password" name="password" placeholder="Password">
+                                @error('password')
+                                <p class="text-danger">{{$message}}</p>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="mb-2">
-                            <label for="comfirm_password" class="form-label">Confirm Password *</label>
-                            <input type="password" class="form-control form-control-sm" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password">
-                            @error('comfirmed')
-                            <p class="text-danger">{{$message}}</p>
-                            @enderror
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <label for="comfirm_password" class="form-label">Confirm Password *</label>
+                                <input type="password" class="form-control form-control-sm" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password">
+                                @error('comfirmed')
+                                <p class="text-danger">{{$message}}</p>
+                                @enderror
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">
                             Register

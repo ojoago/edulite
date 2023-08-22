@@ -141,13 +141,14 @@
                 <h1>
                     <span class="ed-color">Learning Today</span>,
                     <span class="lite-color">Leading Tomorrow</span>
-                    <p><span class="ed-color">Edu</span><span class="lite-color">Lite</span> Making life easier for teacher.</p>
                 </h1>
                 <p>
                     Dear parent, guardian, teacher elders, it is our collective duty to give our children (the next generation) the best education they deserve in-order to make this world a better and safe place.
                 </p>
                 <h5 class="shadow m-3 p-2">
-                    <b class="ed-color">Education</b> <i class="bg-text">is</i> <b class="lite-color">Light</b> Hence <span class="ed-color">Edu</span><span class="lite-color">Lite</span>
+                    <p><span class="ed-color">Edu</span><span class="lite-color">Lite</span> Making life easier for teacher.</p>
+
+                    <!-- <b class="ed-color">Education</b> <i class="bg-text">is</i> <b class="lite-color">Light</b> Hence <span class="ed-color">Edu</span><span class="lite-color">Lite</span> -->
                     <!-- <br /> @EduLite We celebrate champion -->
                 </h5>
 
