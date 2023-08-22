@@ -328,7 +328,6 @@ class StaffController extends Controller
                         }
                         $result = SchoolController::createSchoolStaff($staff);
                         if ($result) {
-
                             $this->staffRoleHistory(role: $request->role, pid: $result->pid ?? $request->pid);
                             if($request->pid){
                                 return response()->json(['status' => 1, 'message' => 'Staff Detail updated  Successfully & username is ' . $data['username']]);
@@ -348,8 +347,7 @@ class StaffController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'user account not created']);
 
             } catch (\Throwable $e) {
-                $error =  $e->getMessage();
-                logError($error);
+                logError($e->getMessage());
                 return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
             }
         }

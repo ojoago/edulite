@@ -8,6 +8,7 @@
                  <img src="{{asset(getSchoolLogo())}}" alt="logo">
                  <span class="d-none d-lg-block ellipsis-text" id="schoolName">{{getSchoolName()}}</span>
              </a>
+             <span class="text-danger small"> {{activeTermName()}} {{activeSessionName()}}</span>
              <!-- <i class="bi bi-list toggle-sidebar-btn"></i> -->
              @else
              <a href="{{route('users.home')}}" class="logo d-flex align-items-center">
@@ -145,7 +146,7 @@
                              <hr class="dropdown-divider">
                          </li>
                          @if(getSchoolUserPid())
-                         <li >
+                         <li>
                              @if(studentRole())
                              <a class="dropdown-item d-flex align-items-center pointer" href="{{route('student.profile',['id'=>base64Encode(getSchoolUserPid())])}}">
                                  @elseif(parentRole())

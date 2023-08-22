@@ -379,11 +379,13 @@ function formatNotification($sql){
 ?>
 
 <?php function staffRoleOptions($sl = null) { 
-
+        if($sl=500){
+            $sl='selected';
+        }
     // <option value="200">Super Admin</option>
        $roles = '<option disabled selected>Select Role</option>
         <option value="205">School Admin</option>
-        <option value="500">Principal/Head Teacher</option>
+        <option value="500" '.$sl.'>Principal/Head Teacher</option>
         <option value="301">Form/Class Teacher</option>
         <option value="300">Teacher</option>
         <option value="303">Clerk</option>

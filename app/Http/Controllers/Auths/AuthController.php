@@ -239,7 +239,7 @@ class AuthController extends Controller
                 }
             } else {
                 if ($user->account_status == 0) {
-                    return back()->with('message', "info|Your acccount is not yet verified, please login to your mail and click on verification link to activate your account or contact info@edulite.ng, 09079311551.");
+                    return back()->with('message', "info|Your acccount is not yet verified, please login to your mail and click on the verification link to activate your account or contact info@edulite.ng, 09079311551.");
                 }
             }
         }

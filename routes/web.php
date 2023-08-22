@@ -27,11 +27,11 @@ use App\Http\Controllers\School\Framework\Hostel\HostelController;
 use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
 use App\Http\Controllers\School\Framework\Result\AwardKeyController;
 use App\Http\Controllers\School\Framework\Subject\SubjectController;
-use App\Http\Controllers\School\Framework\Term\SchoolTermController;
+use App\Http\Controllers\School\Framework\Term\TermController;
 use App\Http\Controllers\School\Framework\Subject\SubjectTypeController;
 use App\Http\Controllers\School\Framework\Timetable\TimetableController;
 use App\Http\Controllers\School\Framework\Psycho\PsychoGradeKeyController;
-use App\Http\Controllers\School\Framework\Session\SchoolSessionController;
+use App\Http\Controllers\School\Framework\Session\SessionController;
 use App\Http\Controllers\School\Framework\Psycho\AffectiveDomainController;
 use App\Http\Controllers\School\Student\Promotion\PromoteStudentController;
 use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
@@ -101,6 +101,8 @@ Route::view('create-school', 'school.create-school')->name('create.school');
 Route::view('help', 'helps.help')->name('helps');
 Route::post('create-school', [SchoolController::class, 'createSchool']);
 Route::get('school-sign-in/{id}', [SchoolController::class, 'schoolLogin'])->name('login.school');
+Route::get('school-setup', [SchoolController::class, 'schoolSetup'])->name('setup.school');
+Route::post('update-setup-stage', [SchoolController::class, 'updateSetupStage'])->name('update.setup.stage');
 //load states
 Route::post('load-available-state', [Select2Controller::class, 'loadStates'])->name('load.available.state');
 //load school states
@@ -156,23 +158,23 @@ Route::middleware('schoolAuth')->group(function(){
     // academic session
     Route::view('school-session', 'school.framework.session.school-session')->name('school.session');
     // create new session 
-    Route::post('school-session', [SchoolSessionController::class, 'createSession']);
+    Route::post('school-session', [SessionController::class, 'createSession']);
     // load session on tab with datatable server  
-    Route::get('load-school-session', [SchoolSessionController::class, 'index'])->name('load.school.session');
+    Route::get('load-school-session', [SessionController::class, 'index'])->name('load.school.session');
 
     // active school session 
     // load active session on tab 
-    Route::get('load-school-active-session', [SchoolSessionController::class, 'loadSchoolActiveSession'])->name('load.school.active.session');
+    Route::get('load-school-active-session', [SessionController::class, 'loadSchoolActiveSession'])->name('load.school.active.session');
     // update active session 
-    Route::post('school-session-active', [SchoolSessionController::class, 'setActiveSession'])->name('school.session.active');
+    Route::post('school-session-active', [SessionController::class, 'setActiveSession'])->name('school.session.active');
 
     // terms 
     Route::view('school-term', 'school.framework.terms.school-terms')->name('school.term');
-    Route::get('list-school-term', [SchoolTermController::class, 'index'])->name('school.list.term');
-    Route::post('school-term', [SchoolTermController::class, 'createSchoolTerm']);
-    Route::post('school-active-term', [SchoolTermController::class, 'setSchoolActiveTerm'])->name('school.term.active');
-    Route::get('load-active-term', [SchoolTermController::class, 'loaSchoolActiveTerm'])->name('load.school.active.term');
-    Route::get('load-active-term-detail', [SchoolTermController::class, 'loaSchoolActiveTermDetails'])->name('load.school.active.term.details');
+    Route::get('list-school-term', [TermController::class, 'index'])->name('school.list.term');
+    Route::post('school-term', [TermController::class, 'createSchoolTerm']);
+    Route::post('school-active-term', [TermController::class, 'setSchoolActiveTerm'])->name('school.term.active');
+    Route::get('load-active-term', [TermController::class, 'loaSchoolActiveTerm'])->name('load.school.active.term');
+    Route::get('load-active-term-detail', [TermController::class, 'loaSchoolActiveTermDetails'])->name('load.school.active.term.details');
 
 
     // Assesment Title
@@ -193,7 +195,7 @@ Route::middleware('schoolAuth')->group(function(){
     // load assessment title 
     Route::post('load-available-title', [AssessmentTitleController::class, 'loadAvailableTitle'])->name('load.available.title');
     // load term 
-    Route::post('load-available-term', [SchooltermController::class, 'loadSchoolTerm'])->name('load.available.term');
+    Route::post('load-available-term', [TermController::class, 'loadSchoolTerm'])->name('load.available.term');
     // load classes 
     Route::post('load-available-class', [Select2Controller::class, 'loadAvailableClass'])->name('load.available.class');
     // load all category classes 
@@ -394,7 +396,7 @@ Route::middleware('schoolAuth')->group(function(){
 
     Route::view('register-staff', 'school.registration.staff.register-staff')->name('create.staff.form');
     Route::view('staff-list', 'school.staff.staff-list')->name('school.staff.list');
-    Route::post('create-staff', [StaffController::class, 'createStaff'])->name('create.school.staff');
+    Route::post('create-staff', [StaffController::class, 'createStaff'])->name('create.staff');
     Route::get('edit-staff/{id}', [StaffController::class, 'find'])->name('edit.staff');
     // load staff details for editing 
     Route::post('load-staff-detal-by-id', [StaffController::class, 'loadStaffDetailsById'])->name('load.staff.detail.by.id');

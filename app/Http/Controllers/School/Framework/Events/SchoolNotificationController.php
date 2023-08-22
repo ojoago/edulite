@@ -114,6 +114,7 @@ class SchoolNotificationController extends Controller
                 'session_pid' => activeSession(),
                 'pid' => public_id(),
             ];
+           
             $sts = $this->createOrUpdateNotification($data);
             if ($sts) {
                 if ($data['type'] == 1) {
@@ -192,6 +193,9 @@ class SchoolNotificationController extends Controller
     }
 
     private function createOrUpdateNotification(array $data){
+        if (activeTerm() == null || activeSession() == null) {
+            return false;
+        }
         return SchoolNotification::updateOrCreate(['pid'=>$data['pid']],$data);
     }
     private function pushNotification($data)

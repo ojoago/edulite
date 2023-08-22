@@ -7,8 +7,8 @@
 
   <title>{{env('APP_NAME',APP_NAME)}} - @yield('title')</title>
   <meta content="description" name="Upgrade your school with edulite suite, and ease the stress of school manual process at less cost.">
-  <meta content="keywords" name="education, edulite, education suite, educate, education is light, secondary school, school, primary school, nursery school">
-  <meta content="author" name="edulite">
+  <meta content="keywords" name="education, {{env('APP_NAME',APP_NAME)}}, education suite, educate, education is light, secondary school, school, primary school, nursery school">
+  <meta content="author" name="{{env('APP_NAME',APP_NAME)}}">
 
   <!-- Favicons -->
   <link href="{{asset('files/edulite/edulite drk bg.png')}}" rel="icon">

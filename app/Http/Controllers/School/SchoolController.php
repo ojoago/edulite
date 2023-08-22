@@ -38,20 +38,32 @@ class SchoolController extends Controller
         $data = School::where('pid', getSchoolPid())->first();
         return response()->json($data);
     }
+    public function schoolSetup(){
+        if (session('status') && session('status') === 1) {
+            return redirect()->route('my.school.dashboard');
+        }
+        return view('school.dashboard.setup');
+
+    }
     public function schoolLogin($id)
     {
         $id=base64Decode($id);
         $schoolUser = DB::table('school_users as u')->join('schools as s','s.pid','u.school_pid')
                                                 ->leftJoin('staff_accesses as a','a.staff_pid','u.pid')
                         ->where(['u.school_pid' => $id, 'u.user_pid' => getUserPid()])
-                        ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'u.status','access']);
+                        ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'u.status','access','s.status as sts','s.stage']);
         // dd($schoolUser);
         if(!$schoolUser){
             return redirect()->back()->with('error','you are doing it wrong');
         }
-        if ($schoolUser && $schoolUser->status != 1) {
-            return redirect()->back()->with('warning', 'you Have been denied access, contact the school.');
+        if ($schoolUser && $schoolUser->sts === 0) {
+            return redirect()->back()->with('error', $schoolUser->school_name.' Has been denied access, please contact your management');
         }
+        if ($schoolUser && $schoolUser->status != 1) {
+            return redirect()->back()->with('warning', 'you Have been denied access, contact your school.');
+        }
+
+        setUserActiveRole($schoolUser->role);// set staff primary role
         setSchoolPid($id);
         setSchoolType($schoolUser->type);
         setSchoolUserPid($schoolUser->pid);
@@ -59,19 +71,28 @@ class SchoolController extends Controller
         setSchoolLogo($schoolUser->school_logo);
         setUserAccess(json_decode($schoolUser->access) ?? null);// get staff adon roles
         setDefaultLanding(true);
-        setUserActiveRole($schoolUser->role);// get staff primary role
         $code = self::getSchoolCode() ?? self::getSchoolHandle();// get school handle or code
         setSchoolCode($code);
+        
+        // check if setup is not complete 
+        if($schoolUser->sts==2){
+            session(['stage' => $schoolUser->stage, 'status' => $schoolUser->sts]); //user role
+        }
+
         // dd(getUserActiveRole());
         // check user role and redirect to a corresponding dashboard
         return redirect()->route('my.school.dashboard');
     }
+
     public function mySchoolDashboard(){
        
         // $data = School::where('pid', getSchoolPid())->get()->dd();
         // here show dashboard and load params based on role
         switch (getUserActiveRole()) {
             case schoolTeacher():
+                if(session('status') && session('status') == 2){
+                    return redirect()->route('setup.school');
+                }
                return $this->staffLogin();
             case parentRole():
                return $this->parentLogin();
@@ -131,6 +152,7 @@ class SchoolController extends Controller
         }
         return view('school.dashboard.rider-dashboard', compact('data'));
     }
+
     public function createSchool(Request $request){
         if($request->school_name){
             $request['school_code'] = $request->school_code ?? getInitials($request->school_name);
@@ -205,6 +227,23 @@ class SchoolController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
 
+    public function updateSetupStage(Request $request){
+       try {
+            $stage = $request->stage+1;
+            if($stage==6){
+                DB::table('schools')->where('pid', getSchoolPid())->update(['stage' => $stage, 'status'=>1]);
+                session(['status' => 1]);
+            }else{
+                DB::table('schools')->where('pid', getSchoolPid())->update(['stage' => $stage]);
+                session(['stage' => $stage]);
+            }
+            return response()->json(['status' => 1, 'message' => 'stage updated']);
+            
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return response()->json(['status' => 0, 'message' => 'failed']);
+       }
+    }
     public static function createSchoolUser(string $userId, string $pid, string $role){//school user pid is the same as either staff pid, parent pid, student pid or rider pid
         $data = $dupParam = ['user_pid'=>$userId,'pid'=>$pid,'school_pid'=>getSchoolPid()];
         $data['role']= $role;
@@ -238,8 +277,8 @@ class SchoolController extends Controller
             }
             return Student::create($data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
+            logError($e->getMessage());
+            return false;
         }
     }
     

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Session\Session;
 use App\Models\School\Framework\Session\ActiveSession;
 
-class SchoolSessionController extends Controller
+class SessionController extends Controller
 {
     public function __construct()
     {

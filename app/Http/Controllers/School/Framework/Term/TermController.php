@@ -10,7 +10,7 @@ use App\Models\School\Framework\Term\Term;
 use App\Models\School\Framework\Term\ActiveTerm;
 use App\Models\School\Framework\Term\ActiveTermDetail;
 
-class SchoolTermController extends Controller
+class TermController extends Controller
 {
     
     public function index()

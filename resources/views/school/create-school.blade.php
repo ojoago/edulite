@@ -34,7 +34,7 @@
 
             </div>
             <div class="col-md-2">
-                <label for="school_handel">School Handle </label>
+                <label for="school_handel">School Short Code </label>
                 <input type="text" name="school_code" id="school_code" class=" form-control form-control-sm" placeholder="School Abreviation" required><br>
                 <p class="text-danger school_code_error"></p>
 
@@ -110,13 +110,13 @@
             var route = "{{route('create.school')}}";
             let msg = await submitFormAjax('createSchoolForm', 'createSchoolBtn', route);
             if (msg) {
-                if ((msg.status==1) && msg.code) {
+                if ((msg.status == 1) && msg.code) {
                     let url = "{{'school-sign-in/'}}" + msg.code;
                     location.href = url;
                 }
             }
         });
-
+        
         let pid = "<?php echo $pid ?? '' ?>"
         if (pid != '') {
             $('#createSchoolBtn').text('Update')

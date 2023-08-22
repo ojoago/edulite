@@ -156,10 +156,11 @@
             var id = $(this).val();
             lga(id);
         });
+        let setting = "<?php echo session('setting') ?? '' ?>"
         // create school category 
         $('#createStaffBtn').click(function() {
             $.ajax({
-                url: "{{route('create.school.staff')}}",
+                url: "{{route('create.staff')}}",
                 type: "POST",
                 data: new FormData($('#createStaffForm')[0]),
                 dataType: "JSON",
@@ -182,6 +183,12 @@
                         });
                     } else if (data.status === 1) {
                         alert_toast(data.message, 'success');
+                        if (setting != '') {
+                            let url = "{{'school-sign-in/'}}" + msg.code;
+                            location.href = url;
+                        } else {
+
+                        }
                         $('#createStaffForm')[0].reset();
                         $('.previewImg').removeAttr('src');
                     } else {
@@ -227,7 +234,19 @@
                 }
             });
         }
-        // create school class 
+
+
+        if (setting != '') {
+
+            $('#roleSelect2').val(500).trigger('change');
+            Swal.fire({
+                icon: 'info',
+                title: 'Create School Head',
+                text: 'Fill this form to create school head e.g head teacher, principal etc',
+                footer: '<b class="text-danger"do not, Skip this Part<b>'
+            })
+        }
+
     });
 </script>
 @endsection

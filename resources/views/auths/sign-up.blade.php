@@ -25,7 +25,7 @@
                         <div class="col-md-4">
                             <div class="mb-2">
                                 <label for="email" class="form-label">Phone Number *</label>
-                                <input type="text" class="form-control form-control-sm" id="gsm" value="{{@old('gsm')}}" name="gsm" placeholder="Phone Number">
+                                <input type="text" class="form-control form-control-sm" id="gsm" value="{{@old('gsm')}}" maxlength="11" name="gsm" placeholder="Phone Number">
                                 @error('gsm')
                                 <p class="text-danger">{{$message}}</p>
                                 @enderror

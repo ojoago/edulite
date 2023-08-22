@@ -141,6 +141,7 @@
                 <h1>
                     <span class="ed-color">Learning Today</span>,
                     <span class="lite-color">Leading Tomorrow</span>
+                    <p><span class="ed-color">Edu</span><span class="lite-color">Lite</span> Making life easier for teacher.</p>
                 </h1>
                 <p>
                     Dear parent, guardian, teacher elders, it is our collective duty to give our children (the next generation) the best education they deserve in-order to make this world a better and safe place.
@@ -174,7 +175,7 @@
             <li> Class Arm Management </li>
             <li>Student Assignment</li>
             <li>Attendance </li>
-            <li>  Exam Time-Table </li>
+            <li> Exam Time-Table </li>
             <li>
                 Manage Admission
             </li>
