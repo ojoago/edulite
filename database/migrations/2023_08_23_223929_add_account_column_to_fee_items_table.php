@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('schools', function (Blueprint $table) {
-            $table->tinyInteger('stage')->default(0);
-            $table->tinyInteger('status')->default(2)->comment('0:suspended,1 complete setup and active,2 incomplete setup');
+        Schema::table('fee_items', function (Blueprint $table) {
+            $table->string('account_pid');
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('schools');
+        Schema::dropIfExists('fee_items');
     }
 };

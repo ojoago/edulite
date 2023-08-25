@@ -81,6 +81,12 @@ use App\Http\Controllers\Auths\AuthController;
        return session('userAccess'); //user role
     }
 
+    function withInTerm(){
+        if (activeTerm() == null || activeSession() == null) {
+            
+            return false;
+        }
+    }
    
     function staffRoles($role){
         $role =  match ($role) {

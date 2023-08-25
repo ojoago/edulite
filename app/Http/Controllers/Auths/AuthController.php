@@ -237,11 +237,12 @@ class AuthController extends Controller
                     setAuthFullName($name);
                     return redirect()->route('users.dashboard');
                 }
-            } else {
-                if ($user->account_status == 0) {
-                    return back()->with('message', "info|Your acccount is not yet verified, please login to your mail and click on the verification link to activate your account or contact info@edulite.ng, 09079311551.");
-                }
+            } elseif($user->account_status == 2) {
+                return back()->with('message', "info|this account has been banned because of suspicius activities care@edulite.ng, 09079311551.");
+            }elseif($user->account_status == 0){
+                return back()->with('message', "info|Your acccount is not yet verified, please login to your mail and click on the verification link to activate your account or contact info@edulite.ng, 09079311551.");
             }
+            return back()->with('message', "info|Contact care@edulite.ng, 09079311551.");
         }
         
         return back()->with('message', "error|Invalid login details");

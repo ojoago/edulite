@@ -26,7 +26,7 @@
             <div class="tab-pane fade show active" id="term-tab" role="tabpanel" aria-labelledby="term-tab">
                 <!-- Create term -->
                 <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createTermModal">
-                    New Term
+                    Create Term
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
                 <table class="table display table-bordered table-striped table-hover mt-3 cardTable" id="term-dataTable">
@@ -89,64 +89,9 @@
     </div>
 </div>
 
-<!-- create school term modal  -->
-<div class="modal fade" id="createTermModal" tabindex="-1">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Create School Term</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="" method="post" class="" id="createTermForm">
-                    @csrf
-                    <input type="text" name="term" autocomplete="off" class="form-control" placeholder="lite term e.g first term" required>
-                    <p class="text-danger term_error"></p>
-                    <textarea type="text" name="description" autocomplete="off" class="form-control" placeholder="lite term description"></textarea>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createTermBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 
-<!-- set active active Modal -->
-<div class="modal fade" id="setActiveTermModal" tabindex="-1">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Set Active active</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="" method="post" id="setActiveTermForm">
-                    @csrf
-                    <select class="form-control select2-container" style="width: 100%;" id="sessionSelect2" name="active_session">
-                    </select>
-                    <p class="text-danger active_session_error"></p>
-                    <select class="form-control select2-container" style="width: 100%;" id="setTermSelect2" name="active_term">
-                    </select>
-                    <p class="text-danger active_term_error"></p>
-                    <label for="">Term Begin</label>
-                    <input type="date" name="term_begin" autocomplete="off" class="form-control" placeholder="lite term e.g first term" required>
-                    <p class="text-danger term_begin_error"></p>
-                    <label for="">Term End</label>
-                    <input type="date" name="term_end" autocomplete="off" class="form-control" placeholder="lite term e.g first term" required>
-                    <p class="text-danger term_end_error"></p>
-                    <textarea type="text" name="note" autocomplete="off" class="form-control" placeholder="lite term description"></textarea>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="setActiveTermBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 
 <!-- End Basic Modal-->
@@ -154,11 +99,9 @@
 
 <script>
     $(document).ready(function() {
+       
         // validate signup form on keyup and submit
-        $('#createTermBtn').click(function() {
-            submitFormAjax('createTermForm', 'createTermBtn', "{{route('school.term')}}");
-            $('#' + formId)[0].reset();
-        });
+       
         $(document).on('click', '.createTermBtn', function() {
             let pid = $(this).attr('pid');
             let formId = 'termForm' + pid;
@@ -229,16 +172,7 @@
             ],
         });
 
-        // session dropdown 
-        multiSelect2('#sessionSelect2', 'setActiveTermModal', 'session', 'Select Session');
-        multiSelect2('#setTermSelect2', 'setActiveTermModal', 'term', 'Select Term');
-
-        // term dropdown 
-        // set active session 
-        $('#setActiveTermBtn').click(function() {
-            submitFormAjax('setActiveTermForm', 'setActiveTermBtn', "{{route('school.term.active')}}");
-            $('#' + formId)[0].reset();
-        });
+       
     });
 </script>
 @endsection

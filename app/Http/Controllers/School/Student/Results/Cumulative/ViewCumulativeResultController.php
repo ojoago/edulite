@@ -6,11 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\School\Framework\ClassController;
-use App\Http\Controllers\School\Student\StudentController;
-use App\Models\School\Student\Result\StudentClassScoreParam;
-use App\Models\School\Student\Assessment\Psychomotor\PsychomotorRecord;
-use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
-use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
 
 class ViewCumulativeResultController extends Controller
 {
@@ -34,8 +29,8 @@ class ViewCumulativeResultController extends Controller
             $sub->on('r.class_param_pid', '=', 'class.pid');
         })->select(DB::raw('r.student_pid,AVG(r.total) AS total,COUNT(DISTINCT(r.class_param_pid)) AS terms,
                                 RANK() OVER (ORDER BY AVG(r.total) DESC) AS position'))
-        ->groupBy('r.student_pid')
-        ->groupBy('class.session_pid');
+        ->groupBy('r.student_pid')->get()->dd();
+        // ->groupBy('class.session_pid')->get()->dd();
 
         $result = DB::table('students as s')->joinSub($rank, 'rank', function ($sub) {
             $sub->on('s.pid', '=', 'rank.student_pid');

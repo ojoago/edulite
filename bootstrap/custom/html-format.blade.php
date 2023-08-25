@@ -379,7 +379,7 @@ function formatNotification($sql){
 ?>
 
 <?php function staffRoleOptions($sl = null) { 
-        if($sl=500){
+        if($sl==500){
             $sl='selected';
         }
     // <option value="200">Super Admin</option>

@@ -183,8 +183,8 @@ class StudentController extends Controller
         try {
             return StudentClass::updateOrCreate($dupParams, $data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
+            logError($e->getMessage());
+            return false;
         }
     }
 
@@ -410,6 +410,7 @@ class StudentController extends Controller
                 'staff_pid' => getSchoolUserPid(),
             ];
             try {
+                DB::beginTransaction();
                 // create user 
                 $user = AuthController::createUser($data);
                 if ($user) {
@@ -427,6 +428,7 @@ class StudentController extends Controller
 
                         $studentDetails = SchoolController::createSchoolStudent($student); // create school student
                         if ($studentDetails) {
+                            DB::commit();
                             if ($request->parent_pid) {
                                 $student_pid =  $studentDetails->pid ?? $request->pid;
                                 self::linkParentToStudent(parentPid: $request->parent_pid, studentPid: $student_pid);
@@ -439,6 +441,7 @@ class StudentController extends Controller
                             }
                             return response()->json(['status' => 1, 'message' => 'Student Account Updated Successfully!!']);
                         }
+                        DB::rollBack();
                         return response()->json(['status' => 1, 'message' => 'account completely  created but student class details not taken, so please use ' . $studentDetails->reg_number . ' to take create history']);
                     }
 

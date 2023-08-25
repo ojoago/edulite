@@ -97,14 +97,13 @@ class ClassController extends Controller
         }
         $data = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
         ->join('subjects', 'subjects.pid', 'subject_pid')
-        ->join('sessions', 'sessions.pid', 'session_pid')
-        ->join('school_staff', 'school_staff.pid', 'class_arm_subjects.staff_pid')
-        ->leftjoin('user_details', 'user_details.user_pid', 'school_staff.user_pid')
+        // ->join('sessions', 'sessions.pid', 'session_pid')
+        // ->join('school_staff', 'school_staff.pid', 'class_arm_subjects.staff_pid')
+        // ->leftjoin('user_details', 'user_details.user_pid', 'school_staff.user_pid')
         ->where($where)
             ->get([
-                    'class_arm_subjects.pid', 'session','arm','subject', 
-                    'class_arm_subjects.created_at', 'class_arm_subjects.status',
-                     'user_details.fullname']);
+                    'class_arm_subjects.pid','arm','subject', 
+                    'class_arm_subjects.created_at', 'class_arm_subjects.status']);
         return datatables($data)
             ->addColumn('action', function ($data) {
                 return view('school.framework.class.class-subject-action-buttons',['data'=>$data]);
@@ -116,6 +115,7 @@ class ClassController extends Controller
                 $html = $data->status == 1 ? '<span class="text-success">Enabled</span>' : '<span class="text-danger">Disabled</span>';
                 return $html;
             })
+            ->addIndexColumn()
             ->rawColumns(['data', 'status'])
             ->make(true);
     }
@@ -184,7 +184,8 @@ class ClassController extends Controller
                 'classes' => $request->class,
                 'category_pid' => $request->category_pid,
             ];
-            $result = $this->insertOrUpdateClass($data);
+
+            $result = $this->prepareClassData($data);
             if ($result) {
                 $msg = 'school class created successfully';
                 if(isset($request->pid)){
@@ -197,13 +198,57 @@ class ClassController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
 
-    private function insertOrUpdateClass($data){
+    public function updateClass(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'category_pid' => 'required',
+                'class' => [
+                    'required',
+                Rule::unique('classes')->where(function ($param) use ($request) {
+                    $param->where('pid', '<>', $request->pid)->where('school_pid',getSchoolPid());
+                })
+            ],
+            'class_number' => 'required']
+            ,[
+            'category_pid.required'=>'select school category',
+            'class.required'=>'Enter class Name',
+            'class_number.required'=>'select Class number',
+            'class_number.int'=>'class number must a number',
+            ]
+        );
+        if(!$validator->fails()){
+            $data = [
+                'school_pid' => getSchoolPid(),
+                'staff_pid' => getSchoolUserPid(),
+                'number' => $request->class_number,
+                'pids' => $request->pid,
+                'classes' => $request->class,
+                'category_pid' => $request->category_pid,
+            ];
+            $result = $this->prepareClassData($data);
+            if ($result) {
+                $msg = 'school class created successfully';
+                if(isset($request->pid)){
+                    $msg = 'class updated successfully';
+                }
+                return response()->json(['status'=>1,'message'=> $msg]);
+            }
+            return response()->json(['status'=>'error','message'=> 'operation failed']);
+        }
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+    }
+
+    private function prepareClassData($data){
         try {
-            for ($i=0; $i < count($data['classes']); $i++) { 
-               $data['pid'] = public_id();
+            $count = count($data['classes']);
+            for ($i=0; $i < $count; $i++) {
+                if (empty($data['classes'][$i]) || empty($data['number'][$i])) {
+                    continue;
+                }
+               $data['pid'] = $data['pids'][$i] ?? public_id();
                $data['class'] = $data['classes'][$i];
                $data['class_number'] = $data['number'][$i];
-               Classes::updateOrCreate(['school_pid'=>$data['school_pid'],'pid'=>$data['pid']],$data);
+                $this->updateOrCreateClass($data);
             }
             return true;
         } catch (\Throwable $e) {
@@ -211,6 +256,16 @@ class ClassController extends Controller
             return false;
         }
     }
+
+    private function updateOrCreateClass($data){
+        try {
+            return Classes::updateOrCreate(['school_pid' => $data['school_pid'], 'pid' => $data['pid']], $data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+
     public function createClassArm(Request $request)
     {
         $validator = Validator::make($request->all(),[
@@ -232,7 +287,7 @@ class ClassController extends Controller
                 'class_pid' => $request->class_pid,
                 'className'=> $request->prepend ? self::getClassNameByPid($request->class_pid).' ' : ' ',
             ];
-            $result = $this->insertOrUpdateClassArm($data);
+            $result = $this->updateOrCreaateClassArm($data);
             if ($result) {
                 $msg = 'Class arm created successfully';
                 if(isset($request->pid)){
@@ -245,11 +300,11 @@ class ClassController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
 
-    private function insertOrUpdateClassArm($data){
+    private function updateOrCreaateClassArm($data){
         try {
             $count = count($data['arms']);
             for ($i=0; $i < $count; $i++) { 
-                if(empty($data['arms'][$i])){
+                if(empty($data['arms'][$i])|| empty($data['numbers'][$i])){
                     continue;
                 }
                 $data['pid']=public_id();
@@ -271,13 +326,13 @@ class ClassController extends Controller
                         'class_pid'=>'required',
                         'arm_pid'=>'required',
                         'subject_pid'=> 'required',
-                        'session_pid'=> 'required',
+                        // 'session_pid'=> 'required',
        ],[
             'category_pid.required'=>'Select Category',
             'class_pid.required'=>'Select Class',
             'arm_pid.required'=>'Select Class Arm at least',
             'subject_pid.required'=>'Select one subject at least',
-            'session_pid.required'=>'Select Session',
+            // 'session_pid.required'=>'Select Session',
         ]);
             
         if(!$validator->fails()){
@@ -287,6 +342,7 @@ class ClassController extends Controller
                 // 'arm_pid'=>$request->arm_pid,
                 'school_pid'=>getSchoolPid(),
                 'staff_pid'=>getSchoolUserPid(),
+                'session_pid'=>activeSession(),
             ];
             foreach($request->arm_pid as $arm){
                 $data['arm_pid'] = $arm;

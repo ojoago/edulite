@@ -143,7 +143,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('create-school-category', [ClassController::class, 'createCategory'])->name('create.school.category');
     Route::post('load-school-category-by-pid', [ClassController::class, 'loadCategoryByPid'])->name('load.school.category.by.pid');
     // create class 
-    Route::post('school-class', [ClassController::class, 'createClass'])->name('create.school.class');
+    Route::post('create-class', [ClassController::class, 'createClass'])->name('create.school.class');
+    Route::post('update-class', [ClassController::class, 'updateClass'])->name('update.class');
     // create class arm 
     Route::post('school-arm', [ClassController::class, 'createClassArm'])->name('create.school.class.arm');
     // create class arm 
@@ -264,6 +265,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-school-subject', [SubjectController::class, 'index'])->name('load.school.subject');
     // create school category subject 
     Route::post('create-subject-subject', [SubjectController::class, 'createSchoolSubject'])->name('create.school.subject');
+    Route::post('dup-subject-subject', [SubjectController::class, 'dupSubjectTypeAsSubject'])->name('dup.subject.type.subject');
     Route::post('load-subject-by-id', [SubjectController::class, 'loadSubjectById'])->name('load.subject.by.id');
 
 
@@ -402,7 +404,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-staff-detal-by-id', [StaffController::class, 'loadStaffDetailsById'])->name('load.staff.detail.by.id');
     // Route::post('school-staff-role/{id}', [StaffController::class, 'staffRole'])->name('school.staff.role');
     // Route::post('school-staff-access/{id}', [StaffController::class, 'staffAccessRight'])->name('school.staff.access');
-    Route::post('staff-class', [StaffController::class, 'assignClassToStaff'])->name('school.staff.class');
+    Route::post('assign-class-to-staff', [StaffController::class, 'assignClassToStaff'])->name('assign.staff.class');
     Route::post('staff-subject', [StaffController::class, 'staffSubject'])->name('school.staff.subject');
     // update staff images 
     Route::post('update-staff-images', [StaffController::class, 'updateStaffImages'])->name('update.staff.image');

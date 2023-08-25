@@ -2,10 +2,26 @@
 @section('title','Register Student')
 @section('content')
 
+
+@if(activeTerm() == null)
+<div class="alert alert-danger alert-dismissible text-center">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <strong>Navigate to Term and set the school current term</strong>
+</div>
+<a href="{{route('school.term')}}">Click here</a>
+@endif
+@if(activeSession() == null)
+<div class="alert alert-danger alert-dismissible text-center">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <strong>Navigate to Session Under Framework and set the school current session</strong>
+</div>
+<a href="{{route('school.session')}}">Click here</a>
+@endif
 <div class="card">
     <div class="card-body">
+        <a href="{{route('upload.student')}}">Click here upload multiple</a>
         <h5 class="card-title">Register Student for <span class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</span> </h5>
-        <!-- Multi Columns Form -->
+
         <form class="row g-3" id="createStudentForm">
             @csrf
             <div class="col-md-4">
@@ -54,9 +70,9 @@
                 <label for="religion" class="form-label">Religion <small class="text-danger">*</small></label>
                 <select id="religion" name="religion" class="form-control form-control-sm">
                     <option disabled selected>Select Religion</option>
-                    <option >Christian</option>
-                    <option >Muslim</option>
-                    <option >Other</option>
+                    <option>Christian</option>
+                    <option>Muslim</option>
+                    <option>Other</option>
                 </select>
                 <p class="text-danger religion_error"></p>
             </div>

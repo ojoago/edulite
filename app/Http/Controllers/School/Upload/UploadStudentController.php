@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\School\Upload;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\SchoolController;
-use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\Users\UserDetailsController;
+use App\Http\Controllers\School\Student\StudentController;
 
 class UploadStudentController extends Controller
 {
@@ -63,6 +64,8 @@ class UploadStudentController extends Controller
                                 if($email){
                                     $data['email'] = AuthController::findEmail($email) ? null : $email;
                                 }
+                                DB::beginTransaction();
+
                                 $user = AuthController::createUser($data);
                                 $detail = [
                                     'firstname' => $row[0],
@@ -110,8 +113,11 @@ class UploadStudentController extends Controller
                                         $studentClass['student_pid'] = $studentDetails->pid;
                                         StudentController::createStudentClassRecord($studentClass);
                                         $n++;
+                                    DB::commit();
+
                                     }else{
                                         $errors[] = 'Student on row ' . $k . ' not Linked to School';
+                                        DB::rollBack();
                                     }
                                 } else {
                                     $errors[] = 'Student on row ' . $k . ' partially created use edit to completed it please';

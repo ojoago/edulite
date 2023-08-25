@@ -226,16 +226,6 @@
             </a>
           </li>
           <li>
-            <a href="{{ route('school.staff.classes') }}">
-              <i class="bi bi-circle"></i><span>Staff Class</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{ route('all.staff.subjects') }}">
-              <i class="bi bi-circle"></i><span>Staff Subjects</span>
-            </a>
-          </li>
-          <li>
             <a href="{{route('school.student.list')}}">
               <i class="bi bi-circle"></i><span>Students</span>
             </a>
@@ -250,6 +240,27 @@
               <i class="bi bi-circle"></i><span>Rider List</span>
             </a>
           </li>
+        </ul>
+      </li>
+      <!-- End Forms Nav -->
+      <!-- user list  -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#staff-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-file-spreadsheet-fill"></i><span>Staff Activities</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="staff-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+         
+          <li>
+            <a href="{{ route('school.staff.classes') }}">
+              <i class="bi bi-circle"></i><span>Staff Class</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ route('all.staff.subjects') }}">
+              <i class="bi bi-circle"></i><span>Staff Subjects</span>
+            </a>
+          </li>
+         
         </ul>
       </li>
       <!-- End Forms Nav -->

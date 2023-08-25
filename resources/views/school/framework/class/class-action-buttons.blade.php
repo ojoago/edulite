@@ -18,12 +18,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" class="" id="createClassForm">
+                <form action="" method="post" class="" id="updateClassForm{{$data->pid}}">
                     @csrf
                     <!-- <select name="category_pid" id="editClassCategorySelect2" style="width: 100%;">
                     </select>
                     <p class="text-danger category_pid_error"></p> -->
                     <input type="hidden" name="category_pid" value="{{$data->category_pid}}">
+                    <input type="hidden" name="pid" value="{{$data->pid}}">
                     <div class="row">
                         <div class="col-md-7">
                             <input type="text" name="class[]" placeholder="class e.g JSS 1" value="{{$data->class}}" class="form-control form-control-sm" required>
@@ -46,7 +47,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-warning btn-sm createTermBtn" id="id{{$data->pid}}" pid="{{$data->pid}}">Update</button>
+                <button type="button" class="btn btn-warning btn-sm updateClassBtn" id="id{{$data->pid}}" pid="{{$data->pid}}"><i class="bi bi-edit"></i> Update</button>
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>

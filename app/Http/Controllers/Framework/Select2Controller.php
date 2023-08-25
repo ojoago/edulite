@@ -77,7 +77,7 @@ class Select2Controller extends Controller
             ->orderBy('subject')->get(['pid', 'subject']); //
         else
         $result = Subject::where(['school_pid' => getSchoolPid(), 'status' => 1, 'category_pid' => $request->pid])
-            ->limit(10)
+            ->limit(40)
             ->orderBy('subject')
             ->get(['pid', 'subject']); //
         if (!$result) {
@@ -122,7 +122,7 @@ class Select2Controller extends Controller
         $result = SchoolStaff::join('user_details', 'user_details.user_pid','school_staff.user_pid')
                             ->where(['school_staff.school_pid' => getSchoolPid(), 'school_staff.status' => 1])
                             ->WhereNotIn('role',[400,405])
-            ->orderBy('school_staff.id', 'DESC')->limit(10)->get(['school_staff.pid', 'user_details.fullname','role']); //
+            ->orderBy('school_staff.id', 'DESC')->limit(30)->get(['school_staff.pid', 'user_details.fullname','role']); //
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }
@@ -151,7 +151,7 @@ class Select2Controller extends Controller
             ->orderBy('id', 'DESC')->get(['pid', 'fullname', 'reg_number']); //
         else
         $result = Student::where(['school_pid'=>getSchoolPid(),'status'=>1])
-                            ->limit(10)
+                            ->limit(35)
                             ->orderBy('id', 'DESC')->get(['pid', 'fullname','reg_number']);
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
@@ -182,7 +182,7 @@ class Select2Controller extends Controller
             ->orderBy('id', 'DESC')->get(['pid', 'fullname', 'reg_number']); //
         else
         $result = Student::where(['school_pid'=>getSchoolPid(),'status'=>1,'type'=>2])
-                            ->limit(10)
+                            ->limit(35)
                             ->orderBy('id', 'DESC')->get(['pid', 'fullname','reg_number']);
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
@@ -212,7 +212,7 @@ class Select2Controller extends Controller
             ->orderBy('id', 'DESC')->get(['pid', 'fullname', 'reg_number']); //
         else
         $result = Student::where('school_pid',getSchoolPid())
-                            ->limit(10)
+                            ->limit(35)
                             ->orderBy('id', 'DESC')->get(['pid', 'fullname','reg_number']);
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
@@ -246,7 +246,7 @@ class Select2Controller extends Controller
                             ->where([
                                 ['school_parents.school_pid',getSchoolPid()],
                                 ['school_parents.status', 1]])
-                            ->limit(5)
+                            ->limit(30)
                             ->orderBy('school_parents.id', 'DESC')->get(['school_parents.pid', 'user_details.fullname','users.gsm']);
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
@@ -275,7 +275,7 @@ class Select2Controller extends Controller
                 ['school_riders.school_pid', getSchoolPid()],
                 ['school_riders.status', 1]
             ];
-            $limit = 5;
+            $limit = 25;
         }
             
         $result = SchoolRider::join('user_details', 'user_details.user_pid', 'school_riders.user_pid')
@@ -333,7 +333,7 @@ class Select2Controller extends Controller
             ->limit(5)->orderBy('class')->get(['pid', 'class']); //
         else
         $result = Classes::where(['school_pid' => getSchoolPid(), 'status' => 1,'category_pid'=>$request->pid])
-                            ->limit(5)->orderBy('class')->get(['pid', 'class']); //
+                            ->limit(25)->orderBy('class')->get(['pid', 'class']); //
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }
@@ -355,7 +355,7 @@ class Select2Controller extends Controller
             ->limit(5)->orderBy('class')->get(['pid', 'class']); //
         else
         $result = Classes::where(['school_pid' => getSchoolPid(), 'status' => 1])
-                            ->limit(5)->orderBy('class')->get(['pid', 'class']); //
+                            ->limit(25)->orderBy('class')->get(['pid', 'class']); //
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }
@@ -377,14 +377,14 @@ class Select2Controller extends Controller
                         ->join('active_admissions  as t', 't.admission_pid','as.admission_pid')
                         ->where(['ad.school_pid' => getSchoolPid()])
             ->where('class', 'like', '%' . $request->q . '%')
-            ->limit(5)->orderBy('class')->get(['c.pid', 'c.class']); //
+            ->limit(10)->orderBy('class')->get(['c.pid', 'c.class']); //
         else
         $result = DB::table('classes as c')
                     ->join('admission_setups as as', 'c.pid', 'as.class_pid')
                     ->join('admission_details as ad', 'ad.pid', 'as.admission_pid')
                     ->join('active_admissions  as t', 't.admission_pid', 'as.admission_pid')
                     ->where(['ad.school_pid' => getSchoolPid()])
-                    ->limit(5)->orderBy('class')->get(['c.pid', 'c.class']); //
+                    ->limit(25)->orderBy('class')->get(['c.pid', 'c.class']); //
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }
@@ -406,7 +406,7 @@ class Select2Controller extends Controller
             ->limit(5)->orderBy('arm')->get(['pid', 'arm']); //
         else
         $result = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1,'class_pid'=>$request->pid])
-                             ->limit(5)->orderBy('arm')->get(['pid', 'arm']); //
+                             ->limit(25)->orderBy('arm')->get(['pid', 'arm']); //
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }
@@ -427,7 +427,7 @@ class Select2Controller extends Controller
             ->limit(5)->orderBy('arm')->get(['pid', 'arm']); //
         else
         $result = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1])
-                             ->limit(5)->orderBy('arm')->get(['pid', 'arm']); //
+                             ->limit(25)->orderBy('arm')->get(['pid', 'arm']); //
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }
@@ -455,7 +455,7 @@ class Select2Controller extends Controller
                 $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
                     ->join('subjects', 'subjects.pid', 'subject_pid')
                     ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' => $request->pid])
-                    ->limit(10)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm', 'subject']); //
+                    ->limit(35)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm', 'subject']); //
         }
         else{
             if ($request->has('q')){
@@ -501,7 +501,7 @@ class Select2Controller extends Controller
                         'sc.session_pid' => activeSession(), 's.status' => 1
                     ])
                     // ->where('subject', 'like', '%' . $request->q . '%')
-                    ->limit($request->page_limit)->orderBy('arm')
+                    ->limit(25)->orderBy('arm')
                     ->get(['cas.pid', 'arm', 's.subject']); //
                 // load class subject assigned to teacher 
                 $sbj = DB::table('class_arm_subjects as cas')->join('class_arms as ca', 'ca.pid', 'arm_pid')
@@ -516,7 +516,7 @@ class Select2Controller extends Controller
                          's.status' => 1
                     ])
                     // ->where('subject', 'like', '%' . $request->q . '%')
-                    ->limit($request->page_limit)->orderBy('arm')
+                    ->limit(25)->orderBy('arm')
                     ->get(['cas.pid', 'arm', 's.subject']); //
                 // merge to avoid duplicate 
                 $result = $class->merge($sbj);
@@ -546,13 +546,13 @@ class Select2Controller extends Controller
                                    ->join('subjects','subjects.pid', 'subject_pid')
                                    ->where(['class_arms.school_pid' => getSchoolPid(), 'class_pid' =>$request->pid])
                                    ->where('subject', 'like', '%' . $request->q . '%')
-                                    ->limit($request->page_limit)->orderBy('arm')
+                                    ->limit(25)->orderBy('arm')
                                     ->get(['class_arm_subjects.pid', 'arm','subject']); //
         else 
             $result = ClassArmSubject::join('class_arms','class_arms.pid','arm_pid')
                                    ->join('subjects','subjects.pid', 'subject_pid')
                                    ->where(['class_arms.school_pid' => getSchoolPid(), 'class_pid' =>$request->pid])
-                                   ->limit(10)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm','subject']); //
+                                   ->limit(25)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm','subject']); //
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }
@@ -570,12 +570,12 @@ class Select2Controller extends Controller
         if ($request->has('q'))
             $result = Subject::where(['school_pid' => getSchoolPid(), 'status' =>1])
                                    ->where('subject', 'like', '%' . $request->q . '%')
-                                    ->limit($request->page_limit)->orderBy('subject')
+                                    ->limit(25)->orderBy('subject')
                                     ->get(['pid', 'subject']); //
         else
             $result = Subject::where(['school_pid' => getSchoolPid(), 'status' => 1])
             // ->where('subject', 'like', '%' . $request->q . '%')
-                ->limit(10)->orderBy('subject')
+                ->limit(25)->orderBy('subject')
                 ->get(['pid', 'subject']); //
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
@@ -599,10 +599,10 @@ class Select2Controller extends Controller
             if ($request->has('q'))
                 $result = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1, 'class_pid' => $request->pid])
                     ->where('arm', 'like', '%' . $request->q . '%')
-                    ->limit(10)->orderBy('arm')->get(['pid', 'arm']); //
+                    ->limit(20)->orderBy('arm')->get(['pid', 'arm']); //
             else
                 $result = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1, 'class_pid' => $request->pid])
-                    ->limit(10)->orderBy('arm')->get(['pid', 'arm']); //
+                    ->limit(20)->orderBy('arm')->get(['pid', 'arm']); //
         }else{
             if ($request->has('q')){
                 $class = DB::table('class_arms as c')->join('staff_classes as s','s.arm_pid','c.pid')
@@ -613,7 +613,7 @@ class Select2Controller extends Controller
                 's.term_pid' => activeTerm(),
                 's.session_pid' => activeSession()])
                 ->where('c.arm', 'like', '%' . $request->q . '%')
-                ->limit(10)->orderBy('c.arm')
+                ->limit(20)->orderBy('c.arm')
                 ->get(['c.pid', 'c.arm']);
 
                 $sbj = DB::table('class_arms as ca')->join('class_arm_subjects as cas','cas.arm_pid','ca.pid')
@@ -625,7 +625,7 @@ class Select2Controller extends Controller
                         'ca.class_pid' => $request->pid,
                         'cas.status' => 1])
                         ->where('c.arm', 'like', '%' . $request->q . '%')
-                ->limit(10)->orderBy('ca.arm')
+                ->limit(20)->orderBy('ca.arm')
                 ->get(['ca.pid', 'ca.arm']);
                 $result = $class->merge($sbj);
             }
@@ -639,7 +639,7 @@ class Select2Controller extends Controller
                     's.term_pid' => activeTerm(),
                     's.session_pid' => activeSession(),
                     ])
-                    ->limit(10)->orderBy('c.arm')
+                    ->limit(20)->orderBy('c.arm')
                     ->get(['c.pid', 'c.arm']); //
                     
                     $sbj = DB::table('class_arms as ca')->join('class_arm_subjects as cas', 'cas.arm_pid', 'ca.pid')
@@ -652,7 +652,7 @@ class Select2Controller extends Controller
                         'ca.class_pid' => $request->pid,
                         'cas.status' => 1
                         ])
-                        ->limit(10)->orderBy('ca.arm')
+                        ->limit(20)->orderBy('ca.arm')
                         ->get(['ca.pid', 'ca.arm']);
                 $result = $class->merge($sbj);
             }
@@ -679,26 +679,26 @@ class Select2Controller extends Controller
                     ->join('subjects', 'subjects.pid', 'subject_pid')
                     ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' => $request->pid])
                     ->where('subject', 'like', '%' . $request->q . '%')
-                    ->limit($request->page_limit)->orderBy('arm')
+                    ->limit(25)->orderBy('arm')
                     ->get(['class_arm_subjects.pid', 'arm', 'subject']); //
             else
                 $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
                     ->join('subjects', 'subjects.pid', 'subject_pid')
                     ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' => $request->pid])
-                    ->limit(10)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm', 'subject']); //
+                    ->limit(25)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm', 'subject']); //
         }else{
             if ($request->has('q'))
                 $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
                     ->join('subjects', 'subjects.pid', 'subject_pid')
                     ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' => $request->pid])
                     ->where('subject', 'like', '%' . $request->q . '%')
-                    ->limit($request->page_limit)->orderBy('arm')
+                    ->limit(25)->orderBy('arm')
                     ->get(['class_arm_subjects.pid', 'arm', 'subject']); //
             else
                 $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
                     ->join('subjects', 'subjects.pid', 'subject_pid')
                     ->where(['class_arms.school_pid' => getSchoolPid(), 'arm_pid' => $request->pid])
-                    ->limit(10)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm', 'subject']); //
+                    ->limit(25)->orderBy('arm')->get(['class_arm_subjects.pid', 'arm', 'subject']); //
         }
         if (!$result) {
             return response()->json(['id' => 0, 'text' => null]);
@@ -716,9 +716,9 @@ class Select2Controller extends Controller
         $data = null;
         if ($request->has('q'))
          $result = State::where('state', 'like', '%' . $request->q . '%')
-            ->limit(5)->get(['id','state']); //
+            ->limit(40)->get(['id','state']); //
         else
-        $result = State::limit(10)->get(['id','state']); //
+        $result = State::limit(40)->get(['id','state']); //
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }
@@ -760,10 +760,10 @@ class Select2Controller extends Controller
         $data = null;
         if ($request->has('q'))
             $result = SubjectType::where(['school_pid' => getSchoolPid()])->where('subject_type','like','%'.$request->q.'%')
-                ->orderBy('subject_type')->limit($request->page_limit)->get(['pid', 'subject_type']); //
+                ->orderBy('subject_type')->limit(25)->get(['pid', 'subject_type']); //
         else
             $result = SubjectType::where(['school_pid' => getSchoolPid()])
-                ->orderBy('subject_type')->limit(10)->get(['pid', 'subject_type']); //
+                ->orderBy('subject_type')->limit(25)->get(['pid', 'subject_type']); //
         if (!$result) {
             $data[] = ['id' => null, 'text' => null];
             return response()->json($data);
@@ -847,10 +847,10 @@ class Select2Controller extends Controller
         $data = null;
         if ($request->has('q'))
         $result = FeeItem::where(['school_pid' => getSchoolPid()])->where('fee_name', 'like', '%' . $request->q . '%')
-            ->orderBy('fee_name')->limit($request->page_limit)->get(['pid', 'fee_name']); //
+            ->orderBy('fee_name')->limit(25)->get(['pid', 'fee_name']); //
         else
         $result = FeeItem::where(['school_pid' => getSchoolPid()])
-        ->orderBy('fee_name')->limit(10)->get(['pid', 'fee_name']); //
+        ->orderBy('fee_name')->limit(25)->get(['pid', 'fee_name']); //
         if (!$result) {
             $data[] = ['id' => null, 'text' => null];
             return response()->json($data);
@@ -872,7 +872,7 @@ class Select2Controller extends Controller
             ->join('fee_item_amounts as i', 'i.config_pid', 'c.pid')
             ->join('class_arms as a', 'a.pid', 'i.arm_pid')
             ->where(['i.school_pid' => getSchoolPid(), 'type' => 2])->where('fee_name', 'like', '%' . $request->q . '%')
-            ->orderBy('fee_name')->limit($request->page_limit)->select('amount','i.pid','fee_name')->get(); //
+            ->orderBy('fee_name')->limit(25)->select('amount','i.pid','fee_name')->get(); //
         else
         $result = $data = DB::table('fee_configurations as c')
         ->join('fee_items as f', 'f.pid', 'c.fee_item_pid')
@@ -905,12 +905,12 @@ class Select2Controller extends Controller
         $result = DB::table('subjects as b')->join('schools as s', 's.pid', 'b.school_pid')
             ->where(['s.state' => $request->pid,'b.status'=>1])
             ->where('subject', 'like', '%' . $request->q . '%')
-            ->limit($request->page_limit)->orderBy('subject')
+            ->limit(25)->orderBy('subject')
             ->get(['b.pid', 'subject']); //
         else
         $result = DB::table('subjects as b')->join('schools as s', 's.pid', 'b.school_pid')
             ->where(['s.state' => $request->pid, 'b.status' => 1])
-            ->limit(10)->orderBy('subject')->get(['b.pid', 'subject']); //
+            ->limit(25)->orderBy('subject')->get(['b.pid', 'subject']); //
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }

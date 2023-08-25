@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\School\Framework\Subject;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\School\Framework\Subject\Subject;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use App\Models\School\Framework\Subject\Subject;
+use App\Models\School\Framework\Subject\SubjectType;
 
 class SubjectController extends Controller
 {
@@ -22,11 +24,9 @@ class SubjectController extends Controller
         } else {
             $where = ['subjects.school_pid' => getSchoolPid()];
         }
-        $data = Subject::join('school_staff', 'school_staff.pid', 'subjects.staff_pid')
-        ->join('subject_types', 'subject_types.pid', 'subjects.subject_type_pid')
-        ->join('users', 'users.pid', 'school_staff.user_pid')
+        $data = Subject::join('subject_types', 'subject_types.pid', 'subjects.subject_type_pid')
         ->where($where)
-            ->get(['subjects.pid','subject', 'subjects.status','subject_type', 'subjects.created_at', 'subjects.description', 'username']);
+            ->get(['subjects.pid','subject', 'subjects.status','subject_type', 'subjects.created_at', 'subjects.description']);
         return datatables($data)
             ->addColumn('action', function ($data) {
                 // <i class="bi bi-tools"></i>
@@ -42,6 +42,7 @@ class SubjectController extends Controller
             ->editColumn('status', function ($data) {
                 return $data->status == 1 ? '<span class = "text-succses"> Enabled</span>' : '<span class = "text-danger">Disabled</span>';
             })
+            ->addIndexColumn()
             ->rawColumns(['action', 'status'])
             ->make(true);
     }
@@ -99,14 +100,55 @@ class SubjectController extends Controller
         
     }
 
+    public function dupSubjectTypeAsSubject(Request $request){
+        $validator = Validator::make($request->all(), [
+            'subject_type_pid' => 'required|array',
+            'category_pid' => 'required|string'
+        ],['subject_type_pid.required'=>'Select one Subject type at least','category_pid.required'=>'Select Category']);
+        if (!$validator->fails()) {
+            try {
+                $result = false;$k=0;
+                $sbj = SubjectType::whereIn('pid',$request->subject_type_pid)->where('school_pid',getSchoolPid())->get(['pid', 'school_pid', 'subject_type', 'description']);
+                foreach ($sbj as  $sb){
+                    $data = [
+                        'school_pid' => $sb->school_pid,
+                        'pid' => public_id(),
+                        'staff_pid' => getSchoolUserPid(),
+                        'subject' => $sb->subject_type,
+                        'subject_type_pid' => $sb->pid,
+                        'category_pid' => $request->category_pid,
+                        'description' => $sb->description,
+                    ];
+                    $dp = Subject::where(['school_pid'=>getSchoolPid(),'category_pid'=>$request->category_pid,'subject'=>$sb->subject_type])->get('id');
+                    if($dp->isNotEmpty()){
+                        
+                        continue;
+                    }
+                    $result = $this->createOrUpdateSubject($data);
+                    $k++;
+                }
+                if ($result) {
+                    return response()->json(['status' => 1, 'message' =>  $k.' Subject(s) duplicated']);
+                }
+                return response()->json(['status' => 'error', 'message' => 'Something Went Wrong']);
+                
+            } catch (\Throwable $e) {
+                logError($e->getMessage());
+                return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
+
+            }
+            
+        }
+        return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+       
+    }
     private function createOrUpdateSubject($data)
     {
         try {
             return  Subject::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
-            
+            logError($e->getMessage());
+            return false;
         }
     }
     

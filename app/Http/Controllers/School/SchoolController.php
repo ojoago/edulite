@@ -40,7 +40,7 @@ class SchoolController extends Controller
     }
     public function schoolSetup(){
         if (session('status') && session('status') === 1) {
-            return redirect()->route('my.school.dashboard');
+            return redirect()->route('my.school.dashboard')->with('success','Congratualtions!!! Setups completed... enjoy '. env('APP_NAME'));
         }
         return view('school.dashboard.setup');
 
@@ -76,7 +76,9 @@ class SchoolController extends Controller
         
         // check if setup is not complete 
         if($schoolUser->sts==2){
-            session(['stage' => $schoolUser->stage, 'status' => $schoolUser->sts]); //user role
+            session(['stage' => $schoolUser->stage+1, 'status' => $schoolUser->sts,'total'=>13]); //user role
+        }else{
+            session(['stage' => null, 'status' => null]);
         }
 
         // dd(getUserActiveRole());
@@ -229,13 +231,13 @@ class SchoolController extends Controller
 
     public function updateSetupStage(Request $request){
        try {
-            $stage = $request->stage+1;
-            if($stage==6){
+            $stage = $request->stage;
+            if($stage==13){
                 DB::table('schools')->where('pid', getSchoolPid())->update(['stage' => $stage, 'status'=>1]);
                 session(['status' => 1]);
             }else{
                 DB::table('schools')->where('pid', getSchoolPid())->update(['stage' => $stage]);
-                session(['stage' => $stage]);
+                session(['stage' => $stage+1]);
             }
             return response()->json(['status' => 1, 'message' => 'stage updated']);
             

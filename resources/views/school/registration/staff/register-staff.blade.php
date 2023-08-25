@@ -156,7 +156,7 @@
             var id = $(this).val();
             lga(id);
         });
-        let setting = "<?php echo session('setting') ?? '' ?>"
+        
         // create school category 
         $('#createStaffBtn').click(function() {
             $.ajax({
@@ -233,18 +233,6 @@
                     $('#lgaSelect2').val(data.lga).trigger('change');
                 }
             });
-        }
-
-
-        if (setting != '') {
-
-            $('#roleSelect2').val(500).trigger('change');
-            Swal.fire({
-                icon: 'info',
-                title: 'Create School Head',
-                text: 'Fill this form to create school head e.g head teacher, principal etc',
-                footer: '<b class="text-danger"do not, Skip this Part<b>'
-            })
         }
 
     });

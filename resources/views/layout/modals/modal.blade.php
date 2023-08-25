@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" class="" id="createArmSubjectTeacherForm">
+                <form action="" method="post" class="" id="assignArmSubjectTeacherForm">
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
@@ -51,7 +51,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-sm" id="createArmSubjectTeacherBtn">Submit</button>
+                <button type="button" class="btn btn-primary btn-sm" id="assignArmSubjectTeacherBtn">Submit</button>
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -112,7 +112,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" class="" id="createArmTeacherForm">
+                <form action="" method="post" class="" id="assignClassArmToTeacherForm">
                     @csrf
                     <!-- <label for="session_pid">Session</label>
                     <select name="session_pid" id="sessionSelect24t" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
@@ -141,7 +141,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-sm" id="createArmSubjectBtn">Submit</button>
+                <button type="button" class="btn btn-primary btn-sm" id="assignClassArmToTeacherBtn">Submit</button>
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -724,4 +724,500 @@
     </div>
 </div>
 
+<!-- end of hire me modal  -->
+
+<!-- setup modal  -->
+<!-- stage 2 term modal  -->
+<!-- create school term modal  -->
+<div class="modal fade" id="createTermModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Term</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="createTermForm">
+                    @csrf
+                    <input type="text" name="term" autocomplete="off" class="form-control" placeholder="lite term e.g first term" required>
+                    <p class="text-danger term_error"></p>
+                    <textarea type="text" name="description" autocomplete="off" class="form-control" placeholder="lite term description"></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="createTermBtn">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end term modal  -->
+<!-- set active term modal -->
+<!-- set active active Modal -->
+<div class="modal fade" id="setActiveTermModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Set Active active</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" id="setActiveTermForm">
+                    @csrf
+                    <select class="form-control select2-container" style="width: 100%;" id="setTermSessionSelect2" name="active_session">
+                    </select>
+                    <p class="text-danger active_session_error"></p>
+                    <select class="form-control select2-container" style="width: 100%;" id="setTermSelect2" name="active_term">
+                    </select>
+                    <p class="text-danger active_term_error"></p>
+                    <label for="">Term Begin</label>
+                    <input type="date" name="term_begin" autocomplete="off" class="form-control" placeholder="lite term e.g first term" required>
+                    <p class="text-danger term_begin_error"></p>
+                    <label for="">Term End</label>
+                    <input type="date" name="term_end" autocomplete="off" class="form-control" placeholder="lite term e.g first term" required>
+                    <p class="text-danger term_end_error"></p>
+                    <textarea type="text" name="note" autocomplete="off" class="form-control" placeholder="lite term description"></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="setActiveTermBtn">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end set active term modal -->
+
+<!-- stage 3 create session  -->
+
+<!-- create school session modal  -->
+<div class="modal fade" id="createSessionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Academic Session</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="createSessionForm">
+                    @csrf
+                    <input type="text" name="session" autocomplete="off" class="form-control" placeholder="lite session e.g 2021/2022" required>
+                    <p class="text-danger session_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="createSessionBtn">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End school session Modal-->
+<!-- set active session modal  -->
+<div class=" modal fade" id="setActiveSessionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Set Active Academic Session</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="setActiveSessionForm">
+                    @csrf
+                    <select class="form-control select2-container" style="width: 100%;" id="sessionSelect2" name="active_session">
+                    </select>
+                    <span class="text-danger active_session_error"></span>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="setActiveSessionBtn">Update</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end active session modal  -->
+
+
+<!-- end create session  -->
+<!-- create school category modal start here  -->
+<!-- create school category modal  -->
+<div class="modal fade" id="createClassCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create School Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="createClassCategoryForm">
+                    @csrf
+                    <input type="text" name="category" id="categoryName" class="form-control form-control-sm" placeholder="school category" required>
+                    <input type="hidden" name="pid" id="categoryPid">
+                    <p class="text-danger category_error"></p>
+                    <label for="head_pid">Principal/Head</label>
+                    <select name="head_pid" id="staffSelect2" style="width: 100%;">
+                    </select>
+                    <p class="text-danger head_pid_error"></p>
+                    <textarea type="text" name="description" id="categoryDescription" class="form-control form-control-sm" placeholder="description" required></textarea>
+                    <p class="text-danger description_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="createClassCategoryBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- create school category modal end here  -->
+
+<!-- class modal start here  -->
+<div class="modal fade" id="createClassModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create School Class
+                    <button id="addMoreClass" type="button" class="btn btn-danger btn-sm btn-small m-3">Add More Row</button>
+
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="createClassForm">
+                    @csrf
+                    <select name="category_pid" id="classCategorySelect2" style="width: 100%;">
+                    </select>
+                    <p class="text-danger category_pid_error"></p>
+
+                    <div class="row">
+                        <div class="col-md-7">
+                            <input type="text" name="class[]" placeholder="class e.g JSS 1" class="form-control form-control-sm" required>
+                            <p class="text-danger class_error"></p>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group mb-3">
+                                <select name="class_number[]" id="classNumberSelect" class="form-control form-control-sm">
+                                    <option disabled selected>Select Class Number</option>
+                                    @foreach(CLASS_NUMBER as $key=> $nm)
+                                    <option value="{{$key}}"> {{$nm}}</option>
+                                    @endforeach
+                                </select>
+                                <i class="bi bi-x-circle-fill text-white m-2"></i>
+                            </div>
+                            <p class="text-danger class_number_error"></p>
+                        </div>
+                    </div>
+                    <div id="addMoreClassRow"></div>
+                    <p>[Class equivalence in number] is used to promote student to the next class automatically by the system if need be</p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="createClassBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- class modal end here  -->
+
+<!-- class arm model start here  -->
+<div class="modal fade" id="createClassArmModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Class Arms
+
+                    <center>
+                        prepend class name to class arm ? <input type="checkbox" name="prepend">
+                        <button id="addMArm" type="button" class="btn btn-danger btn-sm btn-small mb-1">Add More Arm</button>
+                    </center>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="createClassArmForm">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select name="category_pid" id="ccaCategorySelect2" class="ccaCategorySelect2 form-control form-control-sm" style="width: 100%;">
+                            </select>
+                            <p class="text-danger category_pid_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <select name="class_pid" id="ccaClassSelect2" class="ccaclassSelect2 form-control form-control-sm" style="width: 100%;">
+                            </select>
+                            <p class="text-danger class_pid_error"></p>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="arm">Class Arm Name</label>
+                            <div class="input-group">
+                                <input type="text" name="arm[]" placeholder="class arm" class="form-control form-control-sm" required>
+                                <i class="bi bi-x-circle-fill text-white m-2 removeRowBtn"></i>
+                            </div>
+                            <p class="text-danger arm_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="number">Class Arm Serial Number</label>
+                            <div class="input-group mb-3">
+                                <select name="arm_number[]" id="classNumberSelect" class="form-control form-control-sm">
+                                    <option disabled selected>Select Class Number</option>
+                                    @foreach(CLASS_NUMBER as $key=> $nm)
+                                    <option value="{{$key}}"> {{$nm}}</option>
+                                    @endforeach
+                                </select>
+                                <i class="bi bi-x-circle-fill text-white m-2 removeRowBtn"></i>
+                            </div>
+                            <p class="text-danger arm_number_error"></p>
+                        </div>
+                    </div>
+                    <div id="addMoreArmRow"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="createClassArmBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- class arm model end here  -->
+
+<!-- subject type  -->
+<!-- subject type modal  -->
+<div class="modal fade" id="createSubjectTypeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Subject Type</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" class="createSubjectTypeForm" id="createSubjectTypeForm">
+                    @csrf
+                    <input type="text" name="subject_type" class="form-control form-control-sm" placeholder="name of Subject" required>
+                    <p class="text-danger subject_type_error"></p>
+                    <input type="text" name="description" class="form-control form-control-sm" placeholder="Subject Description" required>
+                    <p class="text-danger description_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm createSubjectTypeBtn" id="createSubjectTypeForm">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end subject type modal  -->
+<!-- subject modal  -->
+<div class="modal fade" id="createSubjectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Subject</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" class="" id="createSchoolCategortSubjectForm">
+                    @csrf
+                    <select name="category_pid" style="width:100%" class="form-control form-control-sm createSubjectCategorySelect2" id="createSubjectCategorySelect2">
+                    </select>
+                    <p class="text-danger category_pid_error"></p>
+                    <select name="subject_type_pid" style="width:100%" class="form-control form-control-sm createSubjectSubjectTypeSelect2" id="createSubjectSubjectTypeSelect2">
+                    </select>
+                    <p class="text-danger subject_type_pid_error"></p>
+                    <input type="text" name="subject" id="subject" class="form-control form-control-sm" placeholder="subject name" required>
+                    <input type="hidden" name="pid" id="pid">
+                    <p class="text-danger subject_error"></p>
+                    <textarea type="text" name="description" id="description" class="form-control form-control-sm" placeholder="description" required></textarea>
+                    <p class="text-danger description_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="createSubjectBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- duplicate subject type as subject modal  -->
+<div class="modal fade" id="dupSubjectTypeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Use subject types as subject</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" class="" id="createDupSubjectForm">
+                    @csrf
+                    <select name="category_pid" style="width:100%" class="form-control form-control-sm createSubjectCategorySelect2" id="dupSubjectCategorySelect2">
+                    </select>
+                    <p class="text-danger category_pid_error"></p>
+                    <select name="subject_type_pid[]" style="width:100%" multiple class="form-control form-control-sm createSubjectSubjectTypeSelect2" id="dupSubjectTypeSelect2">
+                    </select>
+                    <p class="text-danger subject_type_pid_error"></p>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="createDupSubjectBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- create class subject modal -->
+<div class="modal fade" id="createArmSubjectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create School Class Subject</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="createClassArmSubjectForm">
+                    @csrf
+                    <label for="category_pid">Category</label>
+                    <select name="category_pid" id="casfCategorySelect2" class="form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger category_pid_error"></p>
+                    <!-- <label for="session_pid">Session</label>
+                    <select name="session_pid" id="casfSessionSelect2" placeholder="select" class=" " style="width: 100%;">
+                    </select>
+                    <p class="text-danger session_pid_error"></p> -->
+                    <label for="class_pid">Class</label>
+                    <select name="class_pid" id="casfClassSelect2" class="classSelect2 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger class_pid_error"></p>
+                    <label for="arm_pid">Arm</label>
+                    <select name="arm_pid[]" id="casfArmSelect2" multiple="multiple" style="width: 100%;" class="form-control form-control-sm">
+                    </select>
+                    <p class="text-danger arm_pid_error"></p>
+                    <label for="subject_pid">Subjects</label>
+                    <select name="subject_pid[]" id="casfSubjectSelect2" multiple="multiple" style="width: 100%;" class="form-control form-control-sm">
+                    </select>
+                    <p class="text-danger subject_pid_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="createClassArmSubjectBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- asseement type modal  -->
+<div class="modal fade" id="createAssessmentModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Assessment Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="createAssessmentForm">
+                    @csrf
+                    <input type="text" name="title" class="form-control form-control-sm" placeholder="Assessment title">
+                    <p class="text-danger title_error"></p>
+                    <select type="number" name="category" class="form-control form-control-sm">
+                        <option disabled selected>Select Category</option>
+                        <option value="1" selected>General</option>
+                        <option value="2">Mid Term</option>
+                    </select>
+                    <p class="text-danger category_error"></p>
+                    <textarea type="text" name="description" class="form-control form-control-sm" placeholder="assessment description" required></textarea>
+                    <p class="text-danger description_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="createAssessmentBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div><!-- End Basic Modal-->
+
+
+<!-- score settings  -->
+
+<div class="modal fade" id="createScoreSettingModal" tabindex="-1" data-bs-backdrop="false">
+    <div class="modal-dialog modal-lg  modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Score Setting</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createScoreSettingForm">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-7">
+                                @csrf
+                                <!-- <select type="text" name="session_pid" id="cssSessionSelect2" style="width: 100%;" class="form-control form-control-sm">
+                                </select>
+                                <p class="text-danger session_pid_error"></p> -->
+                                <select name="category_pid" id="cssCategorySelect2" style="width: 100%;">
+                                </select>
+                                <p class="text-danger category_pid_error"></p>
+                                <select type="text" name="class_pid" id="cssClassSelect2" style="width: 100%;" class="form-control form-control-sm">
+                                </select>
+                                <p class="text-danger class_pid_error"></p>
+                                <!-- <select type="text" name="term_pid" id="cssTermSelect2" style="width: 100%;" class="form-control form-control-sm">
+                                </select>
+                                <p class="text-danger term_pid_error"></p> -->
+                            </div>
+                            <div class="col-md-5">
+                                <h5 class="text-danger">The Sum of Score Settings has to be equal to 100</h5>
+
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-info">
+                                Title will appear on student result in the other they are entered.
+                                I.e if you enter exam first then from left to right exam will appear before other student assessment titles
+                            </p>
+                            <!-- Multiple ? <input class="custom-check m-1" name="keekVal" type="checkbox" id="gridCheck2"> -->
+
+                            <button id="addMore" type="button" class="btn btn-danger btn-sm btn-small m-1">Add More Row</button>
+                            <p class="text-danger title_pid_error"></p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-5">
+                                <select type="text" name="title_pid[]" id="titleSelect0" style="width:100%;" class="titleSelect2 form-control form-control-sm">
+                                </select>
+                                <p class="text-danger title_pid0_error"></p>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="input-group mb-3">
+                                    <input type="number" step=".0" min="1" max="100" class="form-control form-control-sm" name="score[]" placeholder="obtainable score">
+                                    <span class="input-group-text">Mid-Term?</span>
+                                    <input class="custom-check m-1" value="2" name="mid[]" type="checkbox" id="gridCheck2">
+                                    <i class="bi bi-x-circle-fill text-danger hidden-item m-2"></i>
+                                </div>
+                                <p class="text-danger score0_error"></p>
+                            </div>
+                        </div>
+                        <div id="settingParams"></div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="createScoreSettingBtn">Submit</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <!-- <button id="resetForm" type="reset" class="btn btn-warning btn-sm btn-small m-3">Reset</button> -->
+        </div>
+    </div>
+</div>
+
+<!-- end of setup modal  -->
 <!-- videos modals  -->

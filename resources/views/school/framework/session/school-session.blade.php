@@ -21,7 +21,7 @@
             <div class="tab-pane fade show active" id="session-tab" role="tabpanel" aria-labelledby="session-tab">
                 <!-- Create Session -->
                 <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createSessionModal">
-                    New Session
+                    Create Session
                 </button>
                 <!-- <div class="table-responsive mt-3"> -->
                 <table class="table table-bordered table-striped table-hover mt-3 cardTable" id="dataTable">
@@ -64,53 +64,9 @@
 
     </div>
 </div>
-<!-- create school session modal  -->
-<div class="modal fade" id="createSessionModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Create Academic Session</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="" method="post" class="" id="createSessionForm">
-                    @csrf
-                    <input type="text" name="session" autocomplete="off" class="form-control" placeholder="lite session e.g 2021/2022" required>
-                    <p class="text-danger session_error"></p>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createSessionBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End school session Modal-->
 
-<!-- set active session modal  -->
-<div class=" modal fade" id="setActiveSessionModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Set Active Academic Session</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="" method="post" class="" id="setActiveSessionForm">
-                    @csrf
-                    <select class="form-control select2-container" style="width: 100%;" id="sessionSelect2" name="active_session">
-                    </select>
-                    <span class="text-danger active_session_error"></span>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="setActiveSessionBtn">Update</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div><!-- End Basic Modal-->
+
+<!-- End Basic Modal-->
 
 
 <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
@@ -118,9 +74,7 @@
 <script>
     $(document).ready(function() {
         // validate signup form on keyup and submit
-        $('#createSessionBtn').click(function() {
-            submitFormAjax('createSessionForm', 'createSessionBtn', "{{route('school.session')}}");
-        });
+        
 
         // update session 
         $(document).on('click', '.createSessionBtn', function() {
@@ -160,12 +114,7 @@
             ],
         });
 
-        multiSelect2('#sessionSelect2', 'setActiveSessionModal', 'session', 'Select Session');
-
-        // set active session 
-        $('#setActiveSessionBtn').click(function() {
-            submitFormAjax('setActiveSessionForm', 'setActiveSessionBtn', "{{route('school.session.active')}}");
-        });
+        
 
     });
 </script>

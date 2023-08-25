@@ -23,7 +23,7 @@
                 <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createNotificationModal">
                     Create Notification
                 </button>
-                <!-- <div class="table-responsive mt-3"> -->
+                <div class="table-responsive mt-3">
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="notificationTable">
                     <thead>
                         <tr>
@@ -37,6 +37,7 @@
                     <tbody>
                     </tbody>
                 </table>
+                </div>
             </div>
             <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
                 <!-- <div class="table-responsive mt-3"> -->

@@ -341,14 +341,14 @@
             submitFormAjax('assignArmToRepForm', 'assignArmToRepBtn', route);
         });
         // subject class arm subject teacher 
-        $('#createArmSubjectBtn').click(function() {
-            var route = "{{route('school.staff.class')}}";
-            submitFormAjax('createArmTeacherForm', 'createArmSubjectBtn', route);
+        $('#assignClassArmToTeacherBtn').click(function() {
+            var route = "{{route('assign.staff.class')}}";
+            submitFormAjax('assignClassArmToTeacherForm', 'assignClassArmToTeacherBtn', route);
         });
         // subject class arm subject teacher 
-        $('#createArmSubjectTeacherBtn').click(function() {
+        $('#assignArmSubjectTeacherBtn').click(function() {
             var route = "{{route('school.staff.subject')}}";
-            submitFormAjax('createArmSubjectTeacherForm', 'createArmSubjectTeacherBtn', route);
+            submitFormAjax('assignArmSubjectTeacherForm', 'assignArmSubjectTeacherBtn', route);
         });
         // register parent 
         $('#createParentBtn').click(function() {
@@ -680,6 +680,323 @@
         <?php if (getSchoolPid()) : ?>
             countMyNotification();
         <?php endif ?>
+
+
+
+        // setup page code start here
+
+        // stage 2 create term 
+        $('#createTermBtn').click(async function() {
+            let s = await submitFormAjax('createTermForm', 'createTermBtn', "{{route('school.term')}}");
+            if (s.status === 1) {
+                $('#setupStepForm').show(500)
+            }
+        });
+
+        // session dropdown active term
+        multiSelect2('#setTermSessionSelect2', 'setActiveTermModal', 'session', 'Select Session');
+        // term dropdown for active term 
+        multiSelect2('#setTermSelect2', 'setActiveTermModal', 'term', 'Select Term');
+
+        // term dropdown 
+        // set active session 
+        $('#setActiveTermBtn').click(async function() {
+            let s = await submitFormAjax('setActiveTermForm', 'setActiveTermBtn', "{{route('school.term.active')}}");
+            if (s.status === 1) {
+                $('#setupStepForm').show(500)
+                $('#setActiveTermModal').modal('close')
+            }
+        });
+
+        // stage 3 create sessions 
+        $('#createSessionBtn').click(async function() {
+            let s = await submitFormAjax('createSessionForm', 'createSessionBtn', "{{route('school.session')}}");
+            if (s.status === 1) {
+                $('#setupStepForm').show(500)
+            }
+        });
+
+        // active session 
+        multiSelect2('#sessionSelect2', 'setActiveSessionModal', 'session', 'Select Session');
+
+        // set active session 
+        $('#setActiveSessionBtn').click(async function() {
+            let s = await submitFormAjax('setActiveSessionForm', 'setActiveSessionBtn', "{{route('school.session.active')}}");
+            if (s.status === 1) {
+                $('#setupStepForm').show(500)
+            }
+        });
+        // active session end here 
+        // create school category
+        // load head teacher 
+        multiSelect2('#staffSelect2', 'createClassCategoryModal', 'school-category-head', 'Select Category Head');
+
+        $('#createClassCategoryBtn').click(async function() {
+            let s = await submitFormAjax('createClassCategoryForm', 'createClassCategoryBtn', "{{route('create.school.category')}}");
+            if (s.status === 1) {
+                $('#setupStepForm').show(500)
+            }
+        });
+        // create category end here 
+
+        // create class start here
+        multiSelect2('#classCategorySelect2', 'createClassModal', 'category', 'Select Category');
+
+        // create school class 
+        $('#addMoreClass').click(function() {
+            $('#addMoreClassRow').append(
+                `
+                 <div class="row addedRow">
+                        <div class="col-md-7">
+                            <input type="text" name="class[]" placeholder="class e.g JSS 1" class="form-control form-control-sm" required>
+                            <p class="text-danger class_error"></p>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group mb-3">
+                                <select name="class_number[]" id="classNumberSelect" class="form-control form-control-sm">
+                                <option disabled selected>Select Class Number</option>
+                                @foreach(CLASS_NUMBER as $key=> $nm)
+                                        <option value="{{$key}}"> {{$nm}}</option>
+                                    @endforeach
+                            </select>
+                            <i class="bi bi-x-circle-fill text-danger pointer m-2 removeRowBtn"></i>
+                            </div>
+                            <p class="text-danger class_number_error"></p>
+                        </div>
+                    </div>
+                `
+            );
+            // init select2 again 
+        });
+        $("#classNumberSelect2").select2({
+            tags: true,
+            dropdownParent: $('#createClassModal'),
+            width: "100%",
+        });
+        $(document).on('click', '.addedRow .removeRowBtn', function() {
+            $(this).parent().parent().parent().remove();
+        });
+
+
+        $('#createClassBtn').click(async function() {
+            let s = await submitFormAjax('createClassForm', 'createClassBtn', "{{route('create.school.class')}}");
+            if (s.status === 1) {
+                $('#setupStepForm').show(500)
+            }
+        });
+        // create class end here
+
+        // creata class arm start here
+
+        var psp = 2;
+        $('#addMArm').click(function() {
+            psp++;
+            $('#addMoreArmRow').append(
+                `
+                 <div class="row addedRow">
+                        <div class="col-md-6">
+                        <label for="number">Class Arm Name</label>
+                            <div class ="input-group">
+                            <input type="text" name="arm[]" placeholder="class arm" class="form-control form-control-sm" required>
+                            <i class="bi bi-x-circle-fill text-white m-2 removeRowBtn"></i>
+                            </div>
+                            <p class="text-danger arm_error"></p>
+                        </div>
+                        <div class="col-md-6">
+                        <label for="number">Class Arm Serial Number</label>
+                            <div class="input-group mb-3">
+                                <select name="arm_number[]" id="classNumberSelect2" class="form-control form-control-sm">
+                                    <option disabled selected>Arm serial number</option>
+                                    @foreach(CLASS_NUMBER as $key=> $nm)
+                                    <option value="{{$key}}">{{$nm}}</option>
+                                    @endforeach
+                                </select>
+                                <i class="bi bi-x-circle-fill text-danger m-2 removeRowccaBtn pointer"></i>
+                            </div>
+                            <p class="text-danger arm_number_error"></p>
+                        </div>
+                    </div>
+                `
+            );
+            // init select2 again 
+        });
+
+        $(document).on('click', '.addedRow .removeRowccaBtn', function() {
+            $(this).parent().parent().parent().remove();
+        });
+        multiSelect2('.ccaCategorySelect2', 'createClassArmModal', 'category', 'Select Category');
+        $('#ccaCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#ccaClassSelect2', 'createClassArmModal', 'class', id, 'Select Class');
+        });
+        $('#createClassArmBtn').click(async function() {
+            let s = await submitFormAjax('createClassArmForm', 'createClassArmBtn', "{{route('create.school.class.arm')}}");
+            if (s.status === 1) {
+                $('#setupStepForm').show(500)
+            }
+        });
+
+        // creata class arm end here 
+
+        // step 9 create subject type 
+
+        $(document).on('click', '.createSubjectTypeBtn', function() {
+            let form = $(this).attr('id');
+            $('.overlay').show();
+            $.ajax({
+                url: "{{route('create.school.subject.type')}}",
+                type: "POST",
+                data: new FormData($('#' + form)[0]),
+                dataType: "JSON",
+                processData: false,
+                contentType: false,
+                beforeSend: function() {
+                    $('.createSubjectTypeForm').find('p.text-danger').text('');
+                    $('.createSubjectTypeBtn').prop('disabled', true);
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('.createSubjectTypeBtn').prop('disabled', false);
+                    $('.overlay').hide();
+                    if (data.status === 0) {
+                        alert_toast('Fill in form correctly', 'warning');
+                        $.each(data.error, function(prefix, val) {
+                            $('.' + prefix + '_error').text(val[0]);
+                        });
+                    } else if (data.status === 1) {
+                        $('#setupStepForm').show(500)
+                        alert_toast(data.message, 'success');
+                        $('#' + form)[0].reset();
+                    } else {
+                        alert_toast(data.message, 'error');
+                    }
+                },
+                error: function(data) {
+                    // console.log(data);
+                    $('.createSubjectTypeBtn').prop('disabled', false);
+                    $('.overlay').hide();
+                    alert_toast('Something Went Wrong', 'error');
+                }
+            });
+        });
+
+        // step 10 subject 
+        multiSelect2('#createSubjectSubjectTypeSelect2', 'createSubjectModal', 'subject-type', 'Select Subject Type');
+        multiSelect2('#dupSubjectTypeSelect2', 'dupSubjectTypeModal', 'subject-type', 'Select Subject Type');
+        multiSelect2('#dupSubjectCategorySelect2', 'dupSubjectTypeModal', 'category', 'Select Category');
+        multiSelect2('#createSubjectCategorySelect2', 'createSubjectModal', 'category', 'Select Category');
+        FormMultiSelect2('#categorySubjectSelect2', 'category', 'Select Category');
+        multiSelect2('#subjectTeacherSelect2', 'createClassSubjectToTeacherModal', 'school-teachers', 'Select Subject Teacher');
+        // create subject 
+        $('#createSubjectBtn').click(async function() {
+            let s = await submitFormAjax('createSchoolCategortSubjectForm', 'createSubjectBtn', "{{route('create.school.subject')}}");
+            if (s.status === 1) {
+                $('#setupStepForm').show(500)
+            }
+        });
+        // create subject 
+        $('#createDupSubjectBtn').click(async function() {
+            let s = await submitFormAjax('createDupSubjectForm', 'createDupSubjectBtn', "{{route('dup.subject.type.subject')}}");
+            if (s.status === 1) {
+                $('#setupStepForm').show(500)
+            }
+        });
+
+
+
+        // create class arm subjects 
+        multiSelect2('#casfCategorySelect2', 'createArmSubjectModal', 'category', 'Select Category');
+        multiSelect2('#casfSessionSelect2', 'createArmSubjectModal', 'session', 'Select Category');
+        $('#casfCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#casfClassSelect2', 'createArmSubjectModal', 'class', id, 'Select Class');
+        });
+        $('#casfCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#casfSubjectSelect2', 'createArmSubjectModal', 'category-subject', id, 'Select Subject');
+        });
+        $('#casfClassSelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#casfArmSelect2', 'createArmSubjectModal', 'class-arm', id, 'Select Class Arm');
+        });
+
+        $('#createClassArmSubjectBtn').click(async function() {
+            let s = await submitFormAjax('createClassArmSubjectForm', 'createArmSubjectBtn', "{{route('create.school.class.arm.subject')}}");
+            if (s.status === 1) {
+                $('#setupStepForm').show(500)
+            }
+        });
+
+        // create assessment type 
+        $('#createAssessmentBtn').click(async function(e) {
+            e.preventDefault()
+            let s = await submitFormAjax('createAssessmentForm', 'createAssessmentBtn', "{{route('school.assessment.title')}}");
+            if (s.status === 1) {
+                $('#setupStepForm').show(500)
+            }
+        });
+
+
+        // score setting 
+        // title dropdown 
+        var pid = 0;
+        titleDropDown(pid)
+
+        function titleDropDown(id) {
+            var id = '#titleSelect' + id;
+            multiSelect2(id, 'createScoreSettingModal', 'title', 'Select Title');
+        }
+        // add more title 
+        $('#addMore').click(function() {
+            pid++
+            $('#settingParams').append(
+                `
+                 <div class="row addedRow">
+                            <div class="col-md-5">
+                                <select type="text" name="title_pid[]" id="titleSelect${pid}" style="width:100%;" class="titleSelect2 form-control form-control-sm">
+                                </select>
+                                <p class="text-danger title_pid${pid}_error"></p>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="input-group mb-3">
+                                    <input type="number" step=".0" min="1" max="100" class="form-control form-control-sm" name="score[]" placeholder="obtainable score">
+                                    <span class="input-group-text">Mid-Term?</span>
+                                    <input class="custom-check m-1" value="2" name="mid[]" type="checkbox" id="gridCheck2">
+                                    <i class="bi bi-x-circle-fill text-danger removeRowBtn pointer m-2"></i>
+                                </div>
+                                <p class="text-danger score${pid}_error"></p>
+                            </div>
+                        </div>`
+            );
+            // init select2 again 
+            titleDropDown(pid);
+        });
+
+        $(document).on('click', '.addedRow .removeRowBtn', function() {
+            $(this).parent().parent().parent().remove();
+        });
+
+        // validate signup form on keyup and submit
+
+
+
+        // create score seeting 
+        // multiSelect2('#cssSessionSelect2', 'createScoreSettingModal', 'session', 'Select Session');
+        // multiSelect2('#cssTermSelect2', 'createScoreSettingModal', 'term', 'Select Term');
+        multiSelect2('#cssCategorySelect2', 'createScoreSettingModal', 'category', 'Select Category');
+        $('#cssCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#cssClassSelect2', 'createScoreSettingModal', 'class', id, 'Select Class');
+        });
+        $('#createScoreSettingBtn').click(async function(e) {
+            let route = "{{route('create.school.score.settings')}}";
+            e.preventDefault()
+            let s = await submitFormAjax('createScoreSettingForm', 'createScoreSettingBtn', route);
+            if (s.status === 1) {
+                $('#setupStepForm').show(500)
+            }
+        });
+        // setup page code end here 
     })
 
     // global functions 
