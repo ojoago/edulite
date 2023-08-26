@@ -282,6 +282,7 @@ class ViewCumulativeResultController extends Controller
 
         $school = School::where('pid',getSchoolPid())->first(['school_email', 'school_website', 'school_logo', 'school_moto', 'school_address', 'school_contact']);
         $std = StudentController::studentName($spid);
+        $grades = DB::table('grade_keys AS g')->where('class_param_pid', $param)->get(['grade', 'title', 'min_score', 'max_score']);
 
         // $subjects = DB::table('student_subject_results as sr')->join('student_class_score_params as p','p.pid','sr.class_param_pid')
         //                 ->join('subject_types AS s','s.pid','sr.subject_type')->where(['p.session_pid' => $session,'p.arm_pid'=>$arm_pid])
@@ -301,7 +302,7 @@ class ViewCumulativeResultController extends Controller
                         // ])->select(DB::raw('DISTINCT(s.subject_type) AS subject,total,s.pid AS type'))
                         // ->get()->dd();
 
-        return view('school.student.result.cumulative.student-cumulative-report-card', compact('result', 'subjectResults', 'scoreSettings','school','std'));
+        return view('school.student.result.cumulative.student-cumulative-report-card', compact('result', 'subjectResults', 'scoreSettings','school','std', 'params', 'grades'));
 
     }
 }
