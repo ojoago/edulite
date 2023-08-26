@@ -405,7 +405,9 @@ Route::middleware('schoolAuth')->group(function(){
     // Route::post('school-staff-role/{id}', [StaffController::class, 'staffRole'])->name('school.staff.role');
     // Route::post('school-staff-access/{id}', [StaffController::class, 'staffAccessRight'])->name('school.staff.access');
     Route::post('assign-class-to-staff', [StaffController::class, 'assignClassToStaff'])->name('assign.staff.class');
-    Route::post('staff-subject', [StaffController::class, 'staffSubject'])->name('school.staff.subject');
+    Route::post('re-assign-class-to-staff', [StaffController::class, 'reAssignClassToStaff'])->name('reassign.staff.class');
+    Route::post('assign-staff-subject', [StaffController::class, 'staffSubject'])->name('school.staff.subject');
+    Route::post('re-assign-staff-subject', [StaffController::class, 'reAssignStaffSubject'])->name('reassign.staff.subject');
     // update staff images 
     Route::post('update-staff-images', [StaffController::class, 'updateStaffImages'])->name('update.staff.image');
     // update role 
@@ -486,7 +488,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-staff-list', [StaffController::class, 'index'])->name('load.staff.list');
     Route::get('in-active-staff-list', [StaffController::class, 'inActiveStaff'])->name('load.inactive.staff.list');
     // all staff class 
-    Route::view('all-staff-classes', 'school.lists.staff.staff-classes')->name('school.staff.classes');
+    Route::view('staff-classes', 'school.lists.staff.staff-classes')->name('school.staff.classes');
     // load all staff classes goes here 
     Route::post('load-all-staff-classes', [StaffController::class, 'loadAllStaffClasses'])->name('load.all.staff.classes');
     // all staff subjects goes here view 
@@ -610,8 +612,9 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('student-report-card/{param}/{pid}', [StudentTermlyResultController::class, 'studentReportCard'])->name('student.report.card');
     // view student cumualtive result 
     //view-student-cumualtive-result
-    Route::view('view-student-cumulative-result', 'school.student.result.cumulative.cumulative-result-form')->name('view.student.cumualtive.result');
-    Route::post('view-student-cumulative-result', [ViewCumulativeResultController::class, 'loadStudentCumulativeResult']);
+    Route::view('load-student-cumulative-result', 'school.student.result.cumulative.cumulative-result-form')->name('view.student.cumualtive.result');
+    Route::post('load-student-cumulative-result', [ViewCumulativeResultController::class, 'loadStudentCumulativeResult']);
+    Route::get('view-class-cumulative-results', [ViewCumulativeResultController::class, 'loadClassCumulativeResult'])->name('view.class.cumulative.result');
     Route::get('class-cumulative-result/{param}/{std}', [ViewCumulativeResultController::class, 'studentCumulativeReportCard'])->name('student.cumulative.result');
     // redirect to this route 
     // particular student money

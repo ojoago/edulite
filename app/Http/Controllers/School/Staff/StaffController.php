@@ -164,7 +164,9 @@ class StaffController extends Controller
                     'c.term_pid' => $request->term,
                     'c.session_pid' => $request->session,
                 ])
-                ->orderBy('arm')->get();
+                ->orderBy('c.created_at', 'desc')
+                ->orderBy('arm')
+                ->get();
         } elseif (isset($request->session) || isset($request->term)) {
             $data = DB::table('staff_classes as c')->join('class_arms as a', 'a.pid', 'c.arm_pid')
                 ->join('terms as t', 't.pid', 'c.term_pid')
@@ -174,7 +176,9 @@ class StaffController extends Controller
                 ->select('term', 'session', 'arm', 'c.updated_at', 'fullname')
                 ->where(['c.school_pid' => getSchoolPid(), 'term_pid' => $request->term])
                 ->orWhere(['c.school_pid' => getSchoolPid(), 'session_pid' => $request->session])
-                ->orderBy('arm')->get();
+                ->orderBy('c.created_at', 'desc')
+                ->orderBy('arm')
+                ->get();
         } else {
             $data = DB::table('staff_classes as c')->join('class_arms as a', 'a.pid', 'c.arm_pid')
                 ->join('terms as t', 't.pid', 'c.term_pid')
@@ -183,7 +187,9 @@ class StaffController extends Controller
                 ->join('user_details as d', 'd.user_pid', 'st.user_pid')
                 ->select('term', 'session', 'arm', 'c.updated_at','fullname')
                 ->where(['c.school_pid' => getSchoolPid()])
-                ->orderBy('arm')->get();
+                ->orderBy('c.created_at','desc')
+                ->orderBy('arm')
+                ->get();
         }
         return datatables($data)
             ->editColumn('date', function ($data) {
@@ -210,7 +216,9 @@ class StaffController extends Controller
                         'sb.term_pid'=>$request->term,
                         'sb.session_pid'=>$request->session
                         ])
-                ->orderBy('arm')->get();
+                ->orderBy('sb.created_at', 'desc')
+                ->orderBy('arm')
+                ->get();
         }elseif(isset($request->session) || isset($request->term)){
             $data = DB::table('staff_subjects as sb')->join('class_arm_subjects as as', 'as.pid', 'sb.arm_subject_pid')
                 ->join('subjects as j', 'j.pid', 'as.subject_pid')
@@ -223,7 +231,9 @@ class StaffController extends Controller
                 ->select('term', 'session', 'j.subject', 'sb.updated_at', 'a.arm','fullname', 'username')
                 ->where(['sb.school_pid' => getSchoolPid(), 'sb.term_pid' => $request->term])
                 ->orWhere(['sb.school_pid' => getSchoolPid(), 'sb.term_pid' => $request->session])
-                ->orderBy('arm')->get();
+                ->orderBy('sb.created_at', 'desc')
+                ->orderBy('arm')
+                ->get();
             }else{
                 $data = DB::table('staff_subjects as sb')->join('class_arm_subjects as as', 'as.pid', 'sb.arm_subject_pid')
                 ->join('subjects as j', 'j.pid', 'as.subject_pid')
@@ -234,8 +244,10 @@ class StaffController extends Controller
                 ->join('user_details as d', 'd.user_pid', 'st.user_pid')
                 ->join('users as u', 'd.user_pid', 'u.pid')
                     ->select('term', 'session', 'j.subject', 'sb.updated_at', 'a.arm', 'fullname','username')
-                    ->where(['sb.school_pid' => getSchoolPid()])
-            ->orderBy('arm')->get();
+                    ->where(['sb.school_pid' => getSchoolPid(),'sb.term_pid'=>activeTerm(),'sb.session_pid'=>activeSession()])
+            ->orderBy('sb.created_at','desc')
+            ->orderBy('arm')
+            ->get();
         }
         
         return datatables($data)
@@ -591,6 +603,65 @@ class StaffController extends Controller
             return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
         
     }
+
+    public function reAssignClassToStaff(Request $request){
+        $validator = Validator::make($request->all(),[
+            'term_pid'=>'required',
+            'session_pid'=>'required',
+                  
+            ],[
+                'term_pid.required'=>'Select Term from the list',
+                'session_pid.required'=>'Select Session from the list',
+            ]);
+            if(!$validator->fails()){
+                try {
+                    $data = [
+                        'school_pid'=>getSchoolPid(),
+                        'term_pid'=>$request->term_pid,
+                        'session_pid'=>$request->session_pid,
+                    ];
+                    $result = $this->reAssignClasses($data);
+                    if($result){
+                        return response()->json(['status' => 1, 'message' => " Class(es) Assigned to Staff"]);
+                    }
+                    
+                    return response()->json(['status'=>'error','message'=> 'Something Went Wrong']);
+                } catch (\Throwable $e) {
+                    $error = $e->getMessage();
+                    logError($error);
+                   return response()->json(['status'=>'error','message'=> 'Something Went Wrong.. error logged']);
+                }   
+            }
+            return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+        
+    }
+
+    private function reAssignClasses($data){
+        try {
+            $classes = StaffClass::where($data)->get(['teacher_pid', 'arm_pid','school_pid']);
+            foreach ($classes as $row) {
+                $data = $row->toArray();
+                $data['term_pid'] = activeTerm();
+                $data['session_pid'] = activeSession();
+                $result = StaffClass::updateOrCreate($data, $data);
+            }
+            if ($result) {
+                $term = termName($data['term_pid']);
+                $session = sessionName($data['session_pid']);
+                $classes = StaffClass::where($data)->distinct()->get(['teacher_pid']);
+
+                foreach ($classes as $row) {
+                    $message = '{your} classes for ' . $term . ' ' . $session . ' has been reassigned to {you} ';
+                    SchoolNotificationController::notifyIndividualStaff(message: $message, pid: $row->teacher_pid);
+                }
+                return true;
+            }
+            return false;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
     // assign subject to staff 
     public function StaffSubject(Request $request){
             $validator = Validator::make($request->all(),[
@@ -620,10 +691,6 @@ class StaffController extends Controller
                 'subject_pid'=> $request->subject_pid,
                 'staff_pid'=> getSchoolUserPid(),
             ];
-            // logError($request->arm_pid);
-            // foreach($request->arm_pid as $row){
-            //     $data['arm_pid'] = $row;
-            // }
             $result= $this->assignClassArmSubjectToTeacher($data);
             
             if($result){
@@ -642,27 +709,103 @@ class StaffController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
         
     }
-    
-    private function assignClassArmSubjectToTeacher(array $data){
-        $dupParams = [
-            'term_pid'=>$data['term_pid'],
-            'session_pid'=>$data['session_pid']
-        ];
+    private function assignClassArmSubjectToTeacher(array $data)
+    {
+        // $dupParams = [
+        //     'term_pid' => $data['term_pid'],
+        //     'session_pid' => $data['session_pid']
+        // ];
         try {
-            $r=false;
+            $r = false;
             foreach ($data['subject_pid'] as $row) {
                 $data['pid'] = public_id();
-                $dupParams['arm_subject_pid'] = $data['arm_subject_pid'] = $row;
-                $r= StaffSubject::updateOrCreate($dupParams, $data);
+                // $dupParams['arm_subject_pid'] = 
+                $data['arm_subject_pid'] = $row;
+                $r = $this->updateOrCreateStaffSubject($data);
+                // $r = 
             }
             return $r;
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
+            logError($e->getMessage());
             return false;
         }
     }
 
+    private function updateOrCreateStaffSubject($data){
+        $dupParam = [
+            'term_pid' => $data['term_pid'],
+            'session_pid' => $data['session_pid'],
+            'arm_subject_pid' => $data['arm_subject_pid'],
+            'school_pid' => $data['school_pid'],
+        ];
+        try {
+            return StaffSubject::updateOrCreate($dupParam, $data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+    // re assign previous subject to staff 
+    public function reAssignStaffSubject(Request $request){
+            $validator = Validator::make($request->all(),[
+            'session_pid'=> 'required',
+            'term_pid'=> 'required',
+        ],[
+            'term_pid.required'=>'Select Term',
+            'session_pid.required'=>'Select Session',
+        ]);
+
+        if(!$validator->fails()){
+            $data = [
+                'school_pid'=>getSchoolPid(),
+                'term_pid'=> $request->term_pid,
+                'session_pid'=> $request->session_pid,
+            ];
+           
+            $result= $this->reAssignSubjects($data);
+            if($result){
+                return response()->json(['status'=>1,'message'=>'all Subjects reassigned to staff!!!']);
+            }
+            return response()->json(['status'=>'error','message'=>'Something Went Wrong from the Back!']);
+        }
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+        
+    }
+    
+    private function reAssignSubjects($data){
+        try {
+            $r = false;
+            $subjects = StaffSubject::where($data)->get(['arm_subject_pid', 'teacher_pid']);
+            $datas = [
+                'school_pid' =>getSchoolPid(),
+                'session_pid' => activeSession(),
+                'term_pid' => activeTerm(),
+                'staff_pid' => getSchoolUserPid(),
+                'pid' => public_id(),
+            ];
+            foreach($subjects as $sbj){
+                $datas['arm_subject_pid'] = $sbj->arm_subject_pid;
+                $datas['teacher_pid'] = $sbj->teacher_pid;
+                $datas['pid'] = public_id();
+                $r = $this->updateOrCreateStaffSubject($datas);
+            }
+            if($r){
+                $term = termName($data['term_pid']);
+                $session = sessionName($data['session_pid']);
+                $classes = StaffSubject::where($data)->distinct()->get(['teacher_pid']);
+                foreach ($classes as $row) {
+                    $message = '{your} subjects for ' . $term . ' ' . $session . ' has been reassigned to {you} ';
+                    SchoolNotificationController::notifyIndividualStaff(message: $message, pid: $row->teacher_pid);
+                }
+                return true;
+            }
+            return $r;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+   
     public static function getSubjectTeacherPid(string $session, string $term,string $subject){
         $teacher = StaffSubject::where([
             'school_pid'=>getSchoolPid(),

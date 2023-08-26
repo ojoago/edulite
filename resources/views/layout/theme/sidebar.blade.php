@@ -449,7 +449,7 @@
           </li>
           <li>
             <a href="{{route('view.student.cumualtive.result')}}">
-              <!-- <i class="bi bi-circle"></i><span>View Cumulative Result</span> -->
+              <i class="bi bi-circle"></i><span>View Cumulative Result</span>
             </a>
           </li>
           <li>
