@@ -213,6 +213,7 @@ class StudentTermlyResultController extends Controller
                     })->leftjoin('attendances as an', 'an.record_pid', 'ar.pid')
                     ->select(DB::raw("rs.*,d.fullname as class_teacher,st.signature,t.term,s.session,a.arm,atm.begin,atm.end,rs.student_pid,
                                 COUNT(CASE WHEN an.status = 1 THEN 'present' END) as 'present',
+                                COUNT(CASE WHEN an.status = 2 THEN 'excused' END) as 'excused',
                                     COUNT(CASE WHEN an.status = 0 THEN 'absent' END) as 'absent'
                                     "))
                     ->where([

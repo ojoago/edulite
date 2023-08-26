@@ -263,25 +263,28 @@
                         Class
                     </td>
                     <td>
-                        {{'$result->arm'}}
+                        {{$result->arm}}
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        Term
-                    </td>
-                    <td>
-                        {{count($params)}}
-                    </td>
-                </tr>
+
                 <tr>
                     <td>
                         Session
                     </td>
                     <td>
-                        {{'$results->session'}}
+                        {{$result->session}}
                     </td>
                 </tr>
+                
+                <tr>
+                    <td>
+                        Term
+                    </td>
+                    <td>
+                        {{$result->terms}}
+                    </td>
+                </tr>
+
             </table>
             <table class="table table-hover table-striped table-bordered">
                 <tr>
@@ -289,21 +292,21 @@
                         Class Attendance
                     </td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td align="center">
                         Number of Times Open
                     </td>
                     <td>
                         {{'date_diff_weekdays(@$result->begin,@$results->end)'}}
                     </td>
-                </tr>
+                </tr> -->
                 <tr>
-                    @if(@$result->present>0 || @$result->absent>0)
+                    @if($result->present>0 || $result->absent>0)
                     <td>
-                        Present: {{@$result->present}}
+                        Present: {{$result->present}}
                     </td>
                     <td>
-                        Absent: {{@$result->absent}}
+                        Absent: {{$result->absent}}
                     </td>
                     @else
                     <td colspan="2" align="center">

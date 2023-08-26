@@ -127,6 +127,7 @@ class AssessmentController extends Controller
         if(!$validator->fails()){
             try {
                 
+                DB::beginTransaction();
                $bank = $this->createQuestionBank($request);
                 if ($bank) {
                     $question = [
@@ -146,11 +147,14 @@ class AssessmentController extends Controller
                     }
                    $result =  $this->updateOrCreateQuestion($question);
                    if($result){
+                    DB::commit();
                        return response()->json(['status' => 1, 'message' => 'Assessment created Successfully']);
                    }
+                   DB::rollBack();
                 }
             } catch (\Throwable $e) {
                 logError(['error' => $e->getMessage(), 'line' => __LINE__]);
+                DB::rollBack();
                 return response()->json(['status' => 'error', 'message' => ER_500]);
             }
         }
@@ -203,11 +207,16 @@ class AssessmentController extends Controller
         // logError(json_decode($request->questions));
         // return;
         $validator = Validator::make($request->all(),
-                                ['subject'=>'required','arm'=>'required', 'title'=>'required', 'end_date'=>'required']
-                            );
+                                [
+                                    'subject'=>'required',
+                                    'arm'=>'required',
+                                    'end_date' => 'nullable|after:' . daysFromNow('- 1'),
+                                    'title' => "required|regex:/^[a-zA-Z0-9,\s]+$/",
+                                ],['end_date.after'=>"deadline can't be previous date"]);
         if(!$validator->fails()){
             try {
                 // implement transaction 
+                DB::beginTransaction();
                 $bank = $this->createQuestionBank($request);
                 if ($bank) {
                     $result = false;
@@ -232,13 +241,16 @@ class AssessmentController extends Controller
                     }
                     
                     if ($result) {
+                        DB::commit();
                         return response()->json(['status' => 1, 'message' => 'Assessment created Successfully']);
                     }
+                    DB::rollBack();
                     return response()->json(['status' => 'error', 'message' => 'Enter all Questions and at least two options for each.']);
                 }
                 return response()->json(['status' => 'error', 'message' => ER_500]);
             } catch (\Throwable $e) {
                 logError(['error' => $e->getMessage(), 'line' => __LINE__]);
+                DB::rollBack();
                 return response()->json(['status' => 'error', 'message' => ER_500]);
             }
         }
