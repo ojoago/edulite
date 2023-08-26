@@ -5,6 +5,7 @@ namespace App\Http\Controllers\School\Framework\Term;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\School\Staff\StaffController;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Term\Term;
 use App\Models\School\Framework\Term\ActiveTerm;
@@ -90,7 +91,6 @@ class TermController extends Controller
             'term_begin:requred'=>'enter begin of term date',
             'term_end:requred'=>'enter end date'
         ]);
-
         if(!$validator->fails()){
             $data = [
                 'school_pid'=>getSchoolPid(),
@@ -104,12 +104,21 @@ class TermController extends Controller
                 'school_pid' => getSchoolPid(),
                 'term_pid' => $request->active_term,
             ];
+            $rdata=[
+                'term_pid'=>activeTerm(),
+                'session_pid'=>activeSession(),
+                'school_pid' => getSchoolPid(),
+            ];
             $result = $this->updateOrCreateActiveTerm($term);
+           
             if($result){
                 $this->updateOrCreateActiveTermDetail($data);
-            }
-            if($result){
-
+                if (isset($request->clone_class)) {
+                    StaffController::reAssignClasses($rdata);
+                }
+                if (isset($request->clone_subject)) {
+                    StaffController::reAssignSubjects($rdata);
+                }
                 return response()->json(['status'=>1,'message'=>'Active Term Set']);
             }
             return response()->json(['status'=>2,'message'=>'failed to submit']);

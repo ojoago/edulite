@@ -776,8 +776,8 @@
                     <label for="">Term End</label>
                     <input type="date" name="term_end" autocomplete="off" class="form-control" placeholder="lite term e.g first term" required>
                     <p class="text-danger term_end_error"></p>
-                    Re-asign last term class ?<input type="checkbox" name="clone_class" value="1" class="checkbox">
-                    Re-asign last term subjects ?<input type="checkbox" name="clone_subject" value="1" class="checkbox">
+                    Re-asign last term class ? <input type="checkbox" name="clone_class" value="1" class="checkbox"> <br>
+                    Re-asign last term subjects ? <input type="checkbox" name="clone_subject" value="1" class="checkbox">
                     <textarea type="text" name="note" autocomplete="off" class="form-control" placeholder="lite term description"></textarea>
                 </form>
             </div>

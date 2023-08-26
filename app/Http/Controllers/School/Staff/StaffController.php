@@ -620,7 +620,7 @@ class StaffController extends Controller
                         'term_pid'=>$request->term_pid,
                         'session_pid'=>$request->session_pid,
                     ];
-                    $result = $this->reAssignClasses($data);
+                    $result = self::reAssignClasses($data);
                     if($result){
                         return response()->json(['status' => 1, 'message' => " Class(es) Assigned to Staff"]);
                     }
@@ -636,7 +636,7 @@ class StaffController extends Controller
         
     }
 
-    private function reAssignClasses($data){
+    public static function reAssignClasses($data){
         try {
             $classes = StaffClass::where($data)->get(['teacher_pid', 'arm_pid','school_pid']);
             foreach ($classes as $row) {
@@ -762,7 +762,7 @@ class StaffController extends Controller
                 'session_pid'=> $request->session_pid,
             ];
            
-            $result= $this->reAssignSubjects($data);
+            $result= self::reAssignSubjects($data);
             if($result){
                 return response()->json(['status'=>1,'message'=>'all Subjects reassigned to staff!!!']);
             }
@@ -772,10 +772,11 @@ class StaffController extends Controller
         
     }
     
-    private function reAssignSubjects($data){
+    public static function reAssignSubjects($data){
         try {
             $r = false;
             $subjects = StaffSubject::where($data)->get(['arm_subject_pid', 'teacher_pid']);
+            // logError($subjects);
             $datas = [
                 'school_pid' =>getSchoolPid(),
                 'session_pid' => activeSession(),
@@ -787,7 +788,8 @@ class StaffController extends Controller
                 $datas['arm_subject_pid'] = $sbj->arm_subject_pid;
                 $datas['teacher_pid'] = $sbj->teacher_pid;
                 $datas['pid'] = public_id();
-                $r = $this->updateOrCreateStaffSubject($datas);
+                $r = (new self)->updateOrCreateStaffSubject($datas);
+                // logError($r);
             }
             if($r){
                 $term = termName($data['term_pid']);
