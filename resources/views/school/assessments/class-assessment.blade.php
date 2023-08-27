@@ -160,7 +160,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Assignment Title</label>
-                            <input type="text" class="form-control form-control-sm" autocomplete="off" name="title" id="newAssignmentScore" placeholder="e.g 5">
+                            <input type="text" class="form-control form-control-sm" autocomplete="off" name="title" id="newAssignmentScore" placeholder="e.g Assignment 1">
                             <p class="text-danger title_error"></p>
                         </div>
                         <div class="col-md-2">
