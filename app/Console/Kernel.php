@@ -19,6 +19,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('seasonal:greeting')->everyMinute();
+        $schedule->command('birthday:greeting')->daily()->runInBackground();
+        $schedule->command('newmonth:greeting')->monthly()->runInBackground();
         $schedule->command('seasonal:greeting')->yearlyOn(6, 12, '06:45')->runInBackground();
     }
 
