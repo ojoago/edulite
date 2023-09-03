@@ -24,10 +24,8 @@ class ClassController extends Controller
    
     public function loadCategory()
     {
-        $data = Category::join('school_staff', 'school_staff.pid', 'categories.staff_pid')
-        ->join('users', 'users.pid', 'school_staff.user_pid')
-        ->where(['categories.school_pid' => getSchoolPid()])
-            ->get(['categories.pid', 'category', 'categories.created_at', 'description', 'username']);
+        $data = Category::where(['school_pid' => getSchoolPid()])
+            ->get(['pid', 'category', 'created_at', 'description']);
         return datatables($data)
             ->editColumn('created_at', function ($data) {
                 return $data->created_at->diffForHumans();
@@ -48,11 +46,9 @@ class ClassController extends Controller
 
     public function loadClasses()
     {
-        $data = Classes::join('school_staff', 'school_staff.pid', 'classes.staff_pid')
-        ->join('users', 'users.pid', 'school_staff.user_pid')
-        ->join('categories', 'categories.pid', 'classes.category_pid')
+        $data = Classes::join('categories', 'categories.pid', 'classes.category_pid')
         ->where(['classes.school_pid' => getSchoolPid()])
-            ->get(['classes.pid', 'category', 'classes.created_at', 'class', 'classes.status','username', 'classes.category_pid','class_number']);
+            ->get(['classes.pid', 'category', 'classes.created_at', 'class', 'classes.status', 'classes.category_pid','class_number']);
         return datatables($data)
             ->addColumn('action', function ($data) {
                 return view('school.framework.class.class-action-buttons',['data'=>$data]);
@@ -69,23 +65,27 @@ class ClassController extends Controller
     }
     public function loadClassArm()
     {
-        $data = ClassArm::join('classes', 'classes.pid', 'class_arms.class_pid')
-        ->join('school_staff', 'school_staff.pid', 'classes.staff_pid')
-        ->join('users', 'users.pid', 'school_staff.user_pid')
-        ->where(['class_arms.school_pid' => getSchoolPid()])
-            ->get(['class_arms.pid', 'class','arm', 'class_arms.created_at', 'class_arms.status','username','arm_number','category_pid','class_pid']);
+        $data = ClassArm::from('class_arms as a')->join('classes as c', 'c.pid', 'a.class_pid')
+        // ->leftjoin('staff_classes as f', 'f.arm_pid', 'a.pid')
+        // ->leftjoin('school_staff as s', 's.pid', 'f.teacher_pid')
+        // ->join('user_details as d', 'd.user_pid', 's.user_pid')
+        ->where(['a.school_pid' => getSchoolPid()])->orderBy('arm') //->distinct('arm')
+            ->get(['a.pid', 'class','arm', 'a.created_at', 'a.status',
+            // 'fullname',
+            'arm_number','category_pid','class_pid']);
         return datatables($data)
             ->addColumn('action', function ($data) {
                 return view('school.framework.class.class-arm-action-buttons', ['data' => $data]);
             })
-            ->editColumn('created_at', function ($data) {
-                return $data->created_at->diffForHumans();
-            })
-            ->editColumn('status', function ($data) {
-                return $data->status == 1 ? '<span class="text-success">Enabled</span>' : '<span class="text-danger">Disabled</span>';
-                // return $html;
-            })
-            ->rawColumns(['data', 'status'])
+            // ->editColumn('created_at', function ($data) {
+            //     return $data->created_at->diffForHumans();
+            // })
+            // ->editColumn('status', function ($data) {
+            //     return $data->status == 1 ? '<span class="text-success">Enabled</span>' : '<span class="text-danger">Disabled</span>';
+            //     // return $html;
+            // })
+            ->addIndexColumn()
+            // ->rawColumns(['data', 'status'])
             ->make(true);
     }
     public function loadClassArmSubject(Request $request)

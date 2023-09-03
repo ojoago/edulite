@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 class SeasonalGreetingController extends Controller
 {
+    private $birthday = [];
     public static function seasonalGreeting()
     {
         $users = (new self)->loadUsers();

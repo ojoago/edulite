@@ -136,7 +136,7 @@ Route::middleware('schoolAuth')->group(function(){
     // tab 2 
     Route::get('load-school-class', [ClassController::class, 'loadClasses'])->name('load.school.classes');
     // tab 3 
-    Route::get('load-school-class-arm', [ClassController::class, 'loadClassArm'])->name('load.school.class.arm');
+    Route::get('load-school-class-arm', [ClassController::class, 'loadClassArm'])->name('load.class.arm');
     // tab 4 
     Route::post('load-school-class-arm-subject', [ClassController::class, 'loadClassArmSubject'])->name('load.school.class.arm.subject');
     // create category 

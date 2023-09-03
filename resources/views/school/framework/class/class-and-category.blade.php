@@ -30,8 +30,8 @@
                         <tr>
                             <th>Category</th>
                             <th>Description</th>
-                            <th>Date</th>
-                            <th>Created By</th>
+                            <!-- <th>Date</th> -->
+                            <!-- <th>Created By</th> -->
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -51,7 +51,7 @@
                             <th>Class</th>
                             <th>Status</th>
                             <th>Date</th>
-                            <th>Created By</th>
+                            <!-- <th>Created By</th> -->
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -67,11 +67,12 @@
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="classArmTable">
                     <thead>
                         <tr>
+                            <th width="5%">S/N</th>
                             <th>Class</th>
                             <th>Class Arm</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Created By</th>
+                            <!-- <th>Status</th> -->
+                            <!-- <th>Date</th> -->
+                            <!-- <th>Class Teacher</th> -->
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -106,8 +107,8 @@
                             <th width="3%">S/N</th>
                             <th>Class</th>
                             <th>Subject</th>
-                            <th>Status</th>
-                            <th>Date</th>
+                            <!-- <th>Status</th> -->
+                            <!-- <th>Date</th> -->
                             <!-- <th>Created By</th> -->
                             <th>Action</th>
                         </tr>
@@ -134,18 +135,13 @@
 <script>
     $(document).ready(function() {
         // add more title 
-       
-        
-        
-        
+
         // load page content  
         // load school category
         $('#classCategoryTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+
             responsive: true,
             type: "GET",
             "ajax": "{{route('load.school.category')}}",
@@ -155,12 +151,10 @@
                 {
                     "data": "description"
                 },
-                {
-                    "data": "created_at"
-                },
-                {
-                    "data": "username"
-                },
+                // {
+                //     "data": "created_at"
+                // },
+
                 {
                     "data": "action"
                 },
@@ -170,9 +164,7 @@
         $('#classTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+
             responsive: true,
             type: "GET",
             "ajax": "{{route('load.school.classes')}}",
@@ -188,9 +180,9 @@
                 {
                     "data": "created_at"
                 },
-                {
-                    "data": "username"
-                },
+                // {
+                //     "data": "username"
+                // },
                 {
                     "data": "action"
                 },
@@ -200,31 +192,60 @@
         $('#classArmTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
             responsive: true,
             type: "GET",
-            "ajax": "{{route('load.school.class.arm')}}",
+            "ajax": "{{route('load.class.arm')}}",
             "columns": [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                },
+                {
                     "data": "class"
                 },
                 {
                     "data": "arm"
                 },
-                {
-                    "data": "status"
-                },
-                {
-                    "data": "created_at"
-                },
-                {
-                    "data": "username"
-                },
+                // {
+                //     "data": "status"
+                // },
+                // {
+                //     "data": "created_at"
+                // },
+                // {
+                //     "data": "fullname"
+                // },
                 {
                     "data": "action"
                 },
             ],
+            "columnDefs": [{
+                    targets: [1],
+                    visible: false
+                },
+                // {
+                //     targets: [5],
+                //     className: "align-right"
+                // }
+            ],
+            "drawCallback": function(settings) {
+                var api = this.api();
+                var rows = api.rows({
+                    page: 'current'
+                }).nodes();
+                var last = null;
+
+                api.column(1, {
+                    page: 'current'
+                }).data().each(function(group, i) {
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr class="group"><td colspan="4">' + group + '</td></tr>'
+                        );
+
+                        last = group;
+                    }
+                });
+            }
         });
         loadSubject(cls = null)
         // load school class arm
@@ -232,9 +253,7 @@
             $('#classArmSubjectTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
+
                 responsive: true,
                 destroy: true,
                 // type: "post",
@@ -256,12 +275,12 @@
                     {
                         "data": "subject"
                     },
-                    {
-                        "data": "status"
-                    },
-                    {
-                        "data": "created_at"
-                    },
+                    // {
+                    //     "data": "status"
+                    // },
+                    // {
+                    //     "data": "created_at"
+                    // },
 
                     {
                         "data": "action"
@@ -283,7 +302,7 @@
                     }).data().each(function(group, i) {
                         if (last !== group) {
                             $(rows).eq(i).before(
-                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                                '<tr class="group"><td colspan="5"><b>' + group + '</b></td></tr>'
                             );
 
                             last = group;
@@ -319,12 +338,12 @@
         multiSelect2('#sessionSelect2', 'createArmSubjectModal', 'session', 'Select Session');
         multiSelect2('#editClassCategorySelect2', 'createClassModal', 'category', 'Select Category');
 
-        
+
         // load principal/ head 
 
-        
 
-        
+
+
 
         // edit class category goes here  
         $(document).on('click', '.editCategory', async function() {
@@ -345,7 +364,7 @@
                 showTipMessage('cluod not load category');
             }
         });
-       
+
 
         $(document).on('click', '.updateClassBtn', function() {
             let pid = $(this).attr('pid');
@@ -353,11 +372,11 @@
         });
 
         // create school class arm
-        
+
 
 
         // create school class arm
-        
+
 
     });
 </script>
