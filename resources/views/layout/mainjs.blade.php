@@ -273,59 +273,10 @@
             multiSelect2Post('#ccarStudentSelect2', 'assignArmToRepModal', 'class-arm-student', id, 'Select Class Student');
         });
 
-        // load student on fee payment modal 
-        multiSelect2('#psiStudentSelect2', 'processStudentInvoiceModal', 'student', 'Select Student');
-
         // 
-        $('#psiStudentSelect2').change(async function(e) {
-            e.preventDefault()
-            let pid = $(this).val();
-            if (pid) {
-                await loadStudentInvoiceById(pid)
-            }
-        });
-
 
         // find sudent by reg  
-        $('#findStudentByReg').click(async function() {
-            let reg = $('#studentReg').val();
-            if (reg != null) {
-                let params = {
-                    reg: reg,
-                    _token: "{{csrf_token()}}"
-                };
-                let route = "{{route('find.student.by.reg')}}";
-                let data = await loadDataAjax(route, params);
-                if (data && data.pid) {
-                    await loadStudentInvoiceById(data.pid);
-                }
-            }
-        });
 
-        // compute total fee ticked 
-        $(document).on('change', '.invoicePidStatus', function() {
-            let total = 0;
-            $('.invoicePidStatus').each(function(i, obj) {
-                if (obj.checked == true) {
-                    total += Number($(this).val());
-                }
-                if (total > 0) {
-                    $('#acceptPaymentBtn').prop('disabled', false);
-                } else {
-                    $('#acceptPaymentBtn').prop('disabled', true);
-                }
-                $('#totalAmountSelected').text(total.toFixed(2));
-            });
-        })
-
-
-        $('#acceptPaymentBtn').click(async function() {
-            data = await submitFormAjax('processStudentInvoiceForm', 'acceptPaymentBtn', "{{route('process.student.invoice')}}");
-            if (data.status === 1) {
-                let url = "{{URL::to('payment-receipt')}}/" + data.invoice_number;
-                location.href = url;
-            }
-        });
         // link rider to student  
         multiSelect2('#lstcrStudentSelect2', 'linkStudentToRiderModal', 'student', 'Select Student');
         multiSelect2('#lstcrRiderSelect2', 'linkStudentToRiderModal', 'rider', 'Select Care/Rider');
@@ -1016,6 +967,7 @@
                 },
                 success: function(data) {
                     $('#studentUnPaidInvoices').html(data)
+                    $('#paymentBtn').show();
                     $('#acceptPaymentBtn').show().prop('disabled', true);
                     $('.overlay').hide();
                     resolve(true)

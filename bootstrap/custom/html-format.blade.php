@@ -350,14 +350,14 @@ function formatNotification($sql){
     function formatStudentFees($data){
         if($data->isNotEmpty()){
             $total = 0;
-            $fmt = '<h5 class="bg-info text-white"> <small></small> '.@$data[0]->fullname.'</h5>';
+            $fmt = '<h5 class="bg-info text-white"> <small></small> '.@$data[0]->fullname.'</h5> ';
             // $fmt .= '<p class="bg-danger text-white">Select Payment to Proceed</p>';
             $fmt .= '<table class="table table-bordered">';
             foreach($data as $row){
                 $total+=$row->amount;
                 $fmt .= '
                     <tr>
-                        <td><input type="checkbox" name="'.$row->pid.'" class="invoicePidStatus" value="'. $row->amount.'"> </td>
+                        <td><input type="checkbox" name="'.$row->pid.'" class="invoicePidStatus big-check" value="'. $row->amount.'"> </td>
                         <td>'.$row->fee_name.'</td>
                         <td align="right">'.number_format($row->amount,2).'</td>
                     </tr>

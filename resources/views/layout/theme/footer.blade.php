@@ -9,7 +9,6 @@
 
     <!-- Vendor JS Files -->
     <script src="{{asset('themes/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
     <script src="{{asset('plugins/sweetalert/sweetalert2.min.js')}}"></script>
     <script src="{{asset('plugins/DataTables/datatables.min.js')}}"></script>
     <script src="{{asset('plugins/DataTables/DataTables.rowGrouping.min.js')}}"></script>

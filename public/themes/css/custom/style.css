@@ -17,7 +17,7 @@ body{
 .align-right{
     text-align: right !important;
 }
-.invoicePidStatus{
+.big-check{
     width: 25px;
     height: 25px;
 }

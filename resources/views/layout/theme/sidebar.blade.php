@@ -539,7 +539,7 @@
         </a>
         <ul id="payment-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a data-bs-toggle="modal" data-bs-target="#processStudentInvoiceModal" class="pointer">
+            <a href="{{route('accept.payment')}}" databs-toggle="modal" data-bstarget="#processStudentInvoiceModal">
               <i class="bi bi-circle pointer"></i><span>Accept Payment</span>
             </a>
           </li>

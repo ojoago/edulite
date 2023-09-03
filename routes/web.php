@@ -10,28 +10,29 @@ use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Parent\ParentController;
 use App\Http\Controllers\School\Framework\ClassController;
 use App\Http\Controllers\School\Student\StudentController;
+use App\Http\Controllers\School\Class\AssessmentController;
 use App\Http\Controllers\School\Rider\SchoolRiderController;
 use App\Http\Controllers\Organisation\OrganisationController;
 use App\Http\Controllers\School\Upload\UploadRiderController;
 use App\Http\Controllers\School\Upload\UploadStaffController;
 use App\Http\Controllers\Organisation\OrgUserAccessController;
 use App\Http\Controllers\School\Admission\AdmissionController;
+use App\Http\Controllers\School\Framework\Term\TermController;
 use App\Http\Controllers\School\Upload\UploadParentController;
 use App\Http\Controllers\School\Student\StudentClassController;
 use App\Http\Controllers\School\Student\StudentScoreController;
 use App\Http\Controllers\School\Upload\UploadStudentController;
 use App\Http\Controllers\Organisation\OrganisationUserController;
-use App\Http\Controllers\School\Class\AssessmentController;
 use App\Http\Controllers\School\Framework\Fees\FeeItemController;
+use App\Http\Controllers\School\Framework\Fees\PaymentController;
 use App\Http\Controllers\School\Framework\Hostel\HostelController;
 use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
 use App\Http\Controllers\School\Framework\Result\AwardKeyController;
+use App\Http\Controllers\School\Framework\Session\SessionController;
 use App\Http\Controllers\School\Framework\Subject\SubjectController;
-use App\Http\Controllers\School\Framework\Term\TermController;
 use App\Http\Controllers\School\Framework\Subject\SubjectTypeController;
 use App\Http\Controllers\School\Framework\Timetable\TimetableController;
 use App\Http\Controllers\School\Framework\Psycho\PsychoGradeKeyController;
-use App\Http\Controllers\School\Framework\Session\SessionController;
 use App\Http\Controllers\School\Framework\Psycho\AffectiveDomainController;
 use App\Http\Controllers\School\Student\Promotion\PromoteStudentController;
 use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
@@ -317,13 +318,14 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('generate-all-invoice', [FeeItemController::class, 'generateAllInvoice'])->name('generate.all.invoice');
     Route::post('re-generate-all-invoice', [FeeItemController::class, 'reGenerateAllInvoice'])->name('re.generate.all.invoice');
     // class teacher view student invoices 
+    Route::view('accept-payment', 'school.fees.accept-payment')->name('accept.payment');
     Route::view('student-invoice', 'school.fees.student-invoice')->name('student.invoice');
 
     // payment collection and management by clert 
     Route::view('payment-records', 'school.payments.payment-records')->name('payment.records');
     Route::get('load-paid-invoice', [FeeItemController::class, 'loadInvoicePayment'])->name('load.paid.invoice');
     Route::post('load-student-invoice-by-pid', [FeeItemController::class, 'loadStudentInvoiceByPid'])->name('load.student.invoice.by.pid');
-    Route::post('process-student-invoice', [FeeItemController::class, 'processStudentInvoice'])->name('process.student.invoice');
+    Route::post('process-student-invoice', [PaymentController::class, 'processStudentInvoice'])->name('process.student.invoice');
     Route::get('payment-receipt/{invoice?}', [FeeItemController::class, 'loadPaymentInvoice'])->name('payment.invoice.receipt');
 
     // admission config
@@ -539,7 +541,7 @@ Route::middleware('schoolAuth')->group(function(){
     
     Route::post('load-student-riders', [StudentController::class, 'loadStudentRiders'])->name('load.student.riders');
     Route::post('view-student-results', [StudentTermlyResultController::class, 'viewStudentResult'])->name('load.student.result');
-    
+
     Route::post('load-particular-student-invoices', [FeeItemController::class, 'loadParticularStudentInvoice'])->name('load.particular.student.invoice');
     Route::post('load-particular-student-payment', [FeeItemController::class, 'loadParticularStudentPayment'])->name('load.particular.student.payment');
     // student profile 
