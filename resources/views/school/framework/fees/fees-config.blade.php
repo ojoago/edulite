@@ -7,20 +7,41 @@
         <!-- Default Tabs -->
         <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
             <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab">Fee Items</button>
+                <button class="nav-link w-100 active" id="account-tab" data-bs-toggle="tab" data-bs-target="#account" type="button" role="tab">Account Setup</button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab">Fee Items</button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="itemFeeAmount" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab">Item Fee Amount</button>
             </li>
-            <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="generateInvoiceTab" data-bs-toggle="tab" data-bs-target="#generatedInvoice" type="button" role="tab">School Invoice</button>
-            </li>
+            
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100" id="itemConfig" data-bs-toggle="tab" data-bs-target="#class-arm" type="button" role="tab">Item Fee Config</button>
             </li>
         </ul>
         <div class="tab-content pt-2" id="myTabjustifiedContent">
-            <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
+            <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="home-tab">
+                <button type="button" class="btn btn-primary mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#accountSetupModal">
+                    Create Account
+                </button>
+                <!-- <div class="table-responsive mt-3"> -->
+                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="feeAccountTable">
+                    <thead>
+                        <tr>
+                            <th width="5%">S/N</th>
+                            <th>Account Name</th>
+                            <th>Account Number</th>
+                            <th>Account Bank</th>
+                            <th>status</th>
+                            <th width="5%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade " id="home-justified" role="tabpanel" aria-labelledby="home-tab">
                 <button type="button" class="btn btn-primary mb-3 btn-sm" data-bs-toggle="modal" data-bs-target="#createFeeModal">
                     Create Fee Name
                 </button>
@@ -71,51 +92,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane fade" id="generatedInvoice" role="tabpanel" aria-labelledby="profile-tab">
-                <!-- <div class="table-responsive mt-3"> -->
-                <div class="row">
-                    <div class="col-md-4">
-                        <button type="button" class="btn btn-primary mb-3 btn-sm" id="generateInvoice">
-                            Generate Invoice
-                        </button>
-                        <!-- <button type="button" class="btn btn-primary mb-3 btn-sm" id="reGenerateInvoice">
-                            ReGenerate Invoice
-                        </button> -->
-                    </div>
-                    <div class="col-md-4">
-                        <select name="session_pid" id="sessionFeeSelect2" class="form-control form-control-sm" style="width: 100%;">
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <select name="term_pid" id="termFeeSelect2" class="form-control form-control-sm" style="width: 100%;">
-                        </select>
-                    </div>
-                </div>
-                <!--  -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="generatedInvoiceTable">
-                    <thead>
-                        <tr>
-                            <th width="5%">S/N</th>
-                            <th>Class</th>
-                            <th>Reg No.</th>
-                            <th>Names</th>
-                            <th>Fee</th>
-                            <th align="right">{!!NAIRA_UNIT!!} Amount</th>
-                            <th>Term</th>
-                            <th>Session</th>
-                            <th>Type</th>
-                            <th>Date</th>
-                            <!-- <th width="5%">Action</th> -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+            
             <div class="tab-pane fade" id="class-arm" role="tabpanel" aria-labelledby="class-arm-tab">
-                <!-- <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassArmModal">
-                    Event
-                </button> -->
+              
                 <!-- <div class="table-responsive mt-3"> -->
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="FeeItemTable">
                     <thead>
@@ -141,6 +120,33 @@
 
 <!-- modals  -->
 <!-- create school category modal  -->
+<div class="modal fade" id="accountSetupModal" tabindex="-1" data-bs-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> <i class="bi bi-bank"></i>  Fee Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="createFeeForm">
+                    @csrf
+                    <label for="account_number">Account Number</label>
+                    <input type="text" name="account_number" class="form-control form-control-sm" placeholder="example school fee" required>
+                    <p class="text-danger account_number_error"></p>
+
+                    <!-- <input type="text" name="account_number" class="form-control form-control-sm" placeholder="example school fee" required>
+                    <p class="text-danger account_number_error"></p> -->
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="createFeeBtn">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="createFeeModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -164,7 +170,9 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="FeeConfigModal" tabindex="-1">
+
+
+<div class="modal fade" id="FeeConfigModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -298,72 +306,14 @@
     </div>
 </div>
 <!-- create school category modal  -->
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {
 
         // generate all invoice 
-        $('#generateInvoice').click(function() {
-            if (confirm("Are you sure you want to generate invoice for {{activeTermName()}} {{activeSessionName()}}")) {
-                $.ajax({
-                    url: "{{route('generate.all.invoice')}}", // generate invoice for active term
-                    type: "post",
-                    data: {
-                        _token: "{{csrf_token()}}",
-                    },
-                    beforeSend: function() {
-                        $('.overlay').show();
-                        $(this).prop('disabled', true);
-                    },
-                    success: function(data) {
-                        console.log(data);
-                        if (data.status === 1) {
-                            alert_toast(data.message, 'success');
-                        } else {
-                            alert_toast(data.message, 'warning');
-                        }
-                        $(this).prop('disabled', false);
-                        $('.overlay').hide();
-                    },
-                    error: function(data) {
-                        $(this).prop('disabled', false);
-                        $('.overlay').hide();
-                        alert_toast('Something Went Wrong', 'error');
-                    }
-                });
-            }
-        });
-        // regenerate all invoice 
-        $('#reGenerateInvoice').click(function() {
-            $.ajax({
-                url: "{{route('re.generate.all.invoice')}}",
-                type: "post",
-                data: {
-                    _token: "{{csrf_token()}}",
-                },
-                beforeSend: function() {
-                    $('.overlay').show();
-                    $(this).prop('disabled', true);
-                },
-                success: function(data) {
-                    console.log(data);
-                    $(this).prop('disabled', false);
-                    $('.overlay').hide();
-                },
-                error: function(data) {
-                    $(this).prop('disabled', false);
-                    $('.overlay').hide();
-                    alert_toast('Something Went Wrong', 'error');
-                }
-            });
-        });
         $('#feeNameTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
             responsive: true,
             // destroy: true,
             type: "GET",
@@ -458,70 +408,6 @@
             });
         }
 
-
-        $('#generateInvoiceTab').click(function() {
-            loadInvoice()
-        })
-
-        function loadInvoice(term = null, session = null) {
-            $('#generatedInvoiceTable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
-                responsive: true,
-                destroy: true,
-                // type: "GET",
-                "ajax": {
-                    url: "{{route('load.student.invoice')}}",
-                    type: "POST",
-                    data: {
-                        _token: "{{csrf_token()}}",
-                        session_pid: session,
-                        term_pid: term,
-                        // arm_pid: arm,
-                    }
-                },
-
-                "columns": [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                    },
-                    {
-                        "data": "arm"
-                    },
-                    {
-                        "data": "reg_number"
-                    },
-                    {
-                        "data": "fullname"
-                    },
-
-                    {
-                        "data": "fee_name"
-                    },
-                    {
-                        "data": "amount"
-                    },
-                    {
-                        "data": "term"
-                    },
-                    {
-                        "data": "session"
-                    },
-
-                    {
-                        "data": "type",
-                    },
-
-                    {
-                        "data": "date",
-                    },
-
-                ],
-            });
-        }
 
         $('#itemConfig').click(function() {
             loadFeeConfig()

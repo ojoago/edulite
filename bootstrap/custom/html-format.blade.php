@@ -350,7 +350,9 @@ function formatNotification($sql){
     function formatStudentFees($data){
         if($data->isNotEmpty()){
             $total = 0;
-            $fmt = '<table class="table table-bordered">';
+            $fmt = '<h5 class="bg-info text-white"> <small></small> '.@$data[0]->fullname.'</h5>';
+            // $fmt .= '<p class="bg-danger text-white">Select Payment to Proceed</p>';
+            $fmt .= '<table class="table table-bordered">';
             foreach($data as $row){
                 $total+=$row->amount;
                 $fmt .= '

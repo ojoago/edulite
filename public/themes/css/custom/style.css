@@ -14,6 +14,13 @@ body{
 .pointer{
     cursor: pointer;
 }
+.align-right{
+    text-align: right !important;
+}
+.invoicePidStatus{
+    width: 25px;
+    height: 25px;
+}
 .custom-check{
     transform: scale(1.5);
 }

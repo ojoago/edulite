@@ -574,15 +574,16 @@ class FeeItemController extends Controller
     public function loadStudentInvoiceByPid(Request $request){
         $data = DB::table('student_invoices as si')
         ->join('fee_item_amounts as fa', 'fa.pid', 'si.item_amount_pid')
+        ->join('students as st', 'st.pid', 'si.student_pid')
         ->join('fee_configurations as fc', 'fa.config_pid', 'fc.pid')
             ->join('class_invoice_params as p', 'p.pid', 'si.param_pid')
             ->join('fee_items as f', 'f.pid', 'fc.fee_item_pid')
             ->join('class_arms as a', 'a.pid', 'p.arm_pid')
             ->join('terms as t', 't.pid', 'p.term_pid')
             ->join('sessions as s', 's.pid', 'p.session_pid')
-            ->where(['si.school_pid'=>getSchoolPid(),'student_pid'=>$request->pid,'si.status'=>0])
-            ->select('si.pid','a.arm','t.term','s.session','fee_name','si.amount','si.created_at',
-            )->orderBy('arm')
+            ->where(['si.school_pid'=>getSchoolPid(),'si.student_pid'=>$request->pid,'si.status'=>0])
+            ->select('si.pid','a.arm','t.term','s.session','fee_name','si.amount','si.created_at','st.fullname','st.reg_number')
+            ->orderBy('arm')
             ->orderBy('term')
             ->orderBy('session')
             ->get();

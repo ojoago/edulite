@@ -20,6 +20,7 @@ class ScoreSettingsController extends Controller
         $data = ScoreSettingBase::join('classes','classes.pid', 'score_setting_bases.class_pid')
                             ->join('assessment_titles', 'assessment_titles.pid', 'assessment_title_pid')
                             ->where(['score_setting_bases.school_pid'=>getSchoolPid()])
+                            ->orderBy('class','ASC')
                             ->orderBy('score_setting_bases.order','ASC')
                             ->get(['title','order','type','class','score', 'score_setting_bases.updated_at']);
         return datatables($data)
@@ -28,6 +29,7 @@ class ScoreSettingsController extends Controller
         })->editColumn('type',function($data){
             return $data->type == 1 ? 'General' : 'Mid-term';
         })
+        ->addIndexColumn()
         
         ->make(true);
     }

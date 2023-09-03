@@ -56,7 +56,7 @@
 
 
 <!-- create school category modal  -->
-<div class="modal fade" id="createTimetableModal" tabindex="-1">
+<div class="modal fade" id="createTimetableModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -119,7 +119,7 @@
 </div>
 
 <!-- create school category modal  -->
-<div class="modal fade" id="createNotificationModal" tabindex="-1">
+<div class="modal fade" id="createNotificationModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

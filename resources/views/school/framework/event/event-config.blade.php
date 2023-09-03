@@ -24,19 +24,19 @@
                     Create Notification
                 </button>
                 <div class="table-responsive mt-3">
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="notificationTable">
-                    <thead>
-                        <tr>
-                            <th>S/N</th>
-                            <th>Message</th>
-                            <th>type</th>
-                            <th>start date</th>
-                            <th>end date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                    <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="notificationTable">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Message</th>
+                                <th>type</th>
+                                <th>start date</th>
+                                <th>end date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
@@ -71,11 +71,11 @@
 
 <!-- modals  -->
 <!-- create school category modal  -->
-<div class="modal fade" id="createNotificationModal" tabindex="-1">
+<div class="modal fade" id="createNotificationModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create School Category</h5>
+                <h5 class="modal-title">Create Event</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

@@ -1,5 +1,5 @@
 <!-- create class subject to teacher modal  -->
-<div class="modal fade" id="createArmSubjectTeacherModal" tabindex="-1">
+<div class="modal fade" id="createArmSubjectTeacherModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -58,7 +58,7 @@
     </div>
 </div>
 <!-- assign class arm rep modal  -->
-<div class="modal fade" id="assignArmToRepModal" tabindex="-1">
+<div class="modal fade" id="assignArmToRepModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -104,7 +104,7 @@
     </div>
 </div>
 <!-- assign class to class arm teacher modal  -->
-<div class="modal fade" id="assignClassArmTeacherModal" tabindex="-1">
+<div class="modal fade" id="assignClassArmTeacherModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -148,7 +148,7 @@
     </div>
 </div>
 <!-- link students to parent modal  -->
-<div class="modal fade" id="linkMyWardsModal" tabindex="-1">
+<div class="modal fade" id="linkMyWardsModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -173,7 +173,7 @@
     </div>
 </div>
 <!-- link students to parent modal  -->
-<div class="modal fade" id="linkMyParentModal" tabindex="-1">
+<div class="modal fade" id="linkMyParentModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -198,7 +198,7 @@
     </div>
 </div>
 <!-- link students to parent modal  -->
-<div class="modal fade" id="linkStudentParentModal" tabindex="-1">
+<div class="modal fade" id="linkStudentParentModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -226,7 +226,7 @@
     </div>
 </div>
 <!-- create parent on student form modal  -->
-<div class="modal fade" id="createParentOnStudentFormMadal" tabindex="-1">
+<div class="modal fade" id="createParentOnStudentFormMadal" tabindex="-1" data-bs-backdrop="false">
     <style>
         .addStudent {
             display: none;
@@ -253,7 +253,7 @@
 </div>
 <!-- add nav section  -->
 <!-- add user or staff from another school modal  -->
-<div class="modal fade" id="addStaffModal" tabindex="-1">
+<div class="modal fade" id="addStaffModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -277,7 +277,7 @@
     </div>
 </div>
 <!-- add existing user or Student from another school modal  -->
-<div class="modal fade" id="addStudentModal" tabindex="-1">
+<div class="modal fade" id="addStudentModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -301,7 +301,7 @@
     </div>
 </div>
 <!-- add existing user or parent from another school modal  -->
-<div class="modal fade" id="addParentModal" tabindex="-1">
+<div class="modal fade" id="addParentModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -325,7 +325,7 @@
     </div>
 </div>
 <!-- add existing user or rider from another school modal  -->
-<div class="modal fade" id="addRiderModal" tabindex="-1">
+<div class="modal fade" id="addRiderModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -349,7 +349,7 @@
     </div>
 </div>
 <!-- link portal to hostel -->
-<div class="modal fade" id="assignHostelToPortalModal" tabindex="-1">
+<div class="modal fade" id="assignHostelToPortalModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -390,7 +390,7 @@
 </div>
 
 
-<div class="modal fade" id="assignHostelToStudentModal" tabindex="-1">
+<div class="modal fade" id="assignHostelToStudentModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -421,7 +421,7 @@
     </div>
 </div>
 <!-- student invoice payment -->
-<div class="modal fade" id="processStudentInvoiceModal" tabindex="-1">
+<div class="modal fade" id="processStudentInvoiceModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -431,13 +431,14 @@
             <div class="modal-body">
                 <form method="post" class="" id="processStudentInvoiceForm">
                     @csrf
-                    <label for="hostel_pid" class="text-center">Student</label>
                     <div class="row">
                         <div class="col-md-6">
+                            <label for="hostel_pid" class="text-center">Select Student</label>
                             <select name="student_pid" id="psiStudentSelect2" class="form-control form-control-sm">
                             </select>
                         </div>
                         <div class="col-md-6">
+                            <label for="hostel_pid" class="text-center">Enter Student Reg Instead</label>
                             <div class="input-group">
                                 <input type="text" name="" id="studentReg" class="form-control form-control-sm">
                                 <span class="input-group-text pointer" id="findStudentByReg"> <i class="bi bi-search"></i> </span>
@@ -446,6 +447,9 @@
                     </div>
                     <p class="text-danger student_pid_error"></p>
                     <div id="studentUnPaidInvoices"></div>
+                    <hr>
+                    <p>select mode of payment</p>
+                    
                 </form>
             </div>
             <div class="modal-footer">
@@ -459,7 +463,7 @@
 </div>
 
 <!-- student direct payment -->
-<div class="modal fade" id="payDirectModal" tabindex="-1">
+<div class="modal fade" id="payDirectModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -500,7 +504,7 @@
 </div>
 
 
-<div class="modal fade" id="linkStudentToRiderModal" tabindex="-1">
+<div class="modal fade" id="linkStudentToRiderModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -729,7 +733,7 @@
 <!-- setup modal  -->
 <!-- stage 2 term modal  -->
 <!-- create school term modal  -->
-<div class="modal fade" id="createTermModal" tabindex="-1">
+<div class="modal fade" id="createTermModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -754,7 +758,7 @@
 <!-- end term modal  -->
 <!-- set active term modal -->
 <!-- set active active Modal -->
-<div class="modal fade" id="setActiveTermModal" tabindex="-1">
+<div class="modal fade" id="setActiveTermModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -793,7 +797,7 @@
 <!-- stage 3 create session  -->
 
 <!-- create school session modal  -->
-<div class="modal fade" id="createSessionModal" tabindex="-1">
+<div class="modal fade" id="createSessionModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -816,7 +820,7 @@
 </div>
 <!-- End school session Modal-->
 <!-- set active session modal  -->
-<div class=" modal fade" id="setActiveSessionModal" tabindex="-1">
+<div class=" modal fade" id="setActiveSessionModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -844,7 +848,7 @@
 <!-- end create session  -->
 <!-- create school category modal start here  -->
 <!-- create school category modal  -->
-<div class="modal fade" id="createClassCategoryModal" tabindex="-1">
+<div class="modal fade" id="createClassCategoryModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -875,7 +879,7 @@
 <!-- create school category modal end here  -->
 
 <!-- class modal start here  -->
-<div class="modal fade" id="createClassModal" tabindex="-1">
+<div class="modal fade" id="createClassModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -924,7 +928,7 @@
 <!-- class modal end here  -->
 
 <!-- class arm model start here  -->
-<div class="modal fade" id="createClassArmModal" tabindex="-1">
+<div class="modal fade" id="createClassArmModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -991,7 +995,7 @@
 
 <!-- subject type  -->
 <!-- subject type modal  -->
-<div class="modal fade" id="createSubjectTypeModal" tabindex="-1">
+<div class="modal fade" id="createSubjectTypeModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -1016,7 +1020,7 @@
 </div>
 <!-- end subject type modal  -->
 <!-- subject modal  -->
-<div class="modal fade" id="createSubjectModal" tabindex="-1">
+<div class="modal fade" id="createSubjectModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -1048,7 +1052,7 @@
 </div>
 
 <!-- duplicate subject type as subject modal  -->
-<div class="modal fade" id="dupSubjectTypeModal" tabindex="-1">
+<div class="modal fade" id="dupSubjectTypeModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -1076,7 +1080,7 @@
 </div>
 
 <!-- create class subject modal -->
-<div class="modal fade" id="createArmSubjectModal" tabindex="-1">
+<div class="modal fade" id="createArmSubjectModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -1118,7 +1122,7 @@
 
 
 <!-- asseement type modal  -->
-<div class="modal fade" id="createAssessmentModal" tabindex="-1">
+<div class="modal fade" id="createAssessmentModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -1128,13 +1132,14 @@
             <div class="modal-body">
                 <form method="post" id="createAssessmentForm">
                     @csrf
-                    <input type="text" name="title" class="form-control form-control-sm" placeholder="Assessment title">
+                    <input type="text" name="title" class="form-control form-control-sm" autocomplete="off" placeholder="Assessment title">
                     <p class="text-danger title_error"></p>
-                    <select type="number" name="category" class="form-control form-control-sm">
+                    <!-- <select type="number" name="category" class="form-control form-control-sm">
                         <option disabled selected>Select Category</option>
                         <option value="1" selected>General</option>
                         <option value="2">Mid Term</option>
-                    </select>
+                    </select> -->
+                    <input type="hidden" name="category" value="1">
                     <p class="text-danger category_error"></p>
                     <textarea type="text" name="description" class="form-control form-control-sm" placeholder="assessment description" required></textarea>
                     <p class="text-danger description_error"></p>

@@ -27,6 +27,7 @@
   <link href="{{asset('plugins/DataTables/datatables.min.css')}}" rel="stylesheet">
   <link href="{{asset('plugins/select2/css/select2.min.css')}}" rel="stylesheet">
   <link href="{{asset('themes/css/custom/style.css')}}" rel="stylesheet">
+  <script src="{{asset('js/jquery.3.7.0.min.js')}}"></script>
 
 </head>
 

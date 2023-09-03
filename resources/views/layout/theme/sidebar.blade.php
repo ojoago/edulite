@@ -8,7 +8,7 @@
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
-      
+
 
       <!-- school admin section  -->
       @if(getUserActiveRole() =="200" || getUserActiveRole()=="205")
@@ -73,20 +73,7 @@
               </span>
             </a>
           </li>
-          <li>
-            <a href="{{route('event.config')}}">
-              <i class="bi bi-circle"></i><span>
-                Events
-              </span>
-            </a>
-          </li>
-          <li>
-            <a href="{{route('fee.config')}}">
-              <i class="bi bi-circle"></i><span>
-                Fees
-              </span>
-            </a>
-          </li>
+
           <li>
             <a href="{{route('admission.config')}}">
               <i class="bi bi-circle"></i><span>Admission</span>
@@ -112,6 +99,42 @@
               <i class="bi bi-circle"></i><span>
                 Update School Info
                 <!-- cycomfrence -->
+              </span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- End Framework -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#payment" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-cash-stack"></i><span>Payment</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="payment" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{{route('fee.config')}}">
+              <i class="bi bi-circle"></i><span>
+                Fees Configuration
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="{{route('payment.account')}}">
+              <i class="bi bi-circle"></i><span>
+                Payments
+              </span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#event" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-alarm"></i><span>Events</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="event" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{{route('event.config')}}">
+              <i class="bi bi-circle"></i><span>
+                Events
               </span>
             </a>
           </li>
@@ -249,7 +272,7 @@
           <i class="bi bi-file-spreadsheet-fill"></i><span>Staff Activities</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="staff-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-         
+
           <li>
             <a href="{{ route('school.staff.classes') }}">
               <i class="bi bi-circle"></i><span>Staff Class</span>
@@ -260,7 +283,7 @@
               <i class="bi bi-circle"></i><span>Staff Subjects</span>
             </a>
           </li>
-         
+
         </ul>
       </li>
       <!-- End Forms Nav -->

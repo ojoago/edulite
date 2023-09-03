@@ -179,10 +179,10 @@ Route::middleware('schoolAuth')->group(function(){
 
 
     // Assesment Title
-    Route::view('school-assessment-title', 'school.framework.assessment.assessment-title')->name('school.assessment.title');
+    Route::view('assessment-title', 'school.framework.assessment.assessment-title')->name('school.assessment.title');
     Route::get('load-assessment-title', [AssessmentTitleController::class, 'index'])->name('load.school.assessment.title');
     // submiting form and create assessment title 
-    Route::post('school-assessment-title', [AssessmentTitleController::class, 'createAssessmentTitle']);
+    Route::post('assessment-title', [AssessmentTitleController::class, 'createAssessmentTitle']);
     //load score settings 
     Route::get('load-score-setting', [ScoreSettingsController::class, 'index'])->name('load.score.setting');
 
@@ -270,10 +270,10 @@ Route::middleware('schoolAuth')->group(function(){
 
 
     // grade key 
-    Route::view('school-grade-key', 'school.framework.grade.grade-key')->name('school.grade.key');
-    Route::get('load-school-grade-key', [GradeKeyController::class, 'index'])->name('load.school.grade.key');
-    Route::get('load-school-grade-key-by-class', [GradeKeyController::class, 'loadGradeKeyByClass'])->name('load.class.grade.key');
-    Route::post('school-grade-key', [GradeKeyController::class, 'createGradeKey']);
+    Route::view('grade-key', 'school.framework.grade.grade-key')->name('school.grade.key');
+    Route::get('load-grade-key', [GradeKeyController::class, 'index'])->name('load.school.grade.key');
+    Route::get('load-grade-key-by-class', [GradeKeyController::class, 'loadGradeKeyByClass'])->name('load.class.grade.key');
+    Route::post('grade-key', [GradeKeyController::class, 'createGradeKey']);
     Route::view('school-attendance', 'school.framework.attendance.attendance-setting')->name('school.attendance.setting');
     Route::get('load-attendance', [AttendanceTypeController::class, 'index'])->name('load.school.attendance.setting');
     Route::post('school-attendance', [AttendanceTypeController::class, 'createAttendanceType']);
@@ -306,6 +306,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('my-notifications', [SchoolNotificationController::class, 'myNotificationDetails'])->name('my.notification');
 
     // fee setup 
+    Route::view('payment-account', 'school.framework.fees.payment-account')->name('payment.account');
     Route::view('fees-config', 'school.framework.fees.fees-config')->name('fee.config');
     Route::get('load-fee-items', [FeeItemController::class,'loadFeeItems'])->name('load.fee.items');
     Route::post('load-fee-amount', [FeeItemController::class, 'loadFeeAmount'])->name('load.fee.amount');
@@ -538,6 +539,7 @@ Route::middleware('schoolAuth')->group(function(){
     
     Route::post('load-student-riders', [StudentController::class, 'loadStudentRiders'])->name('load.student.riders');
     Route::post('view-student-results', [StudentTermlyResultController::class, 'viewStudentResult'])->name('load.student.result');
+    
     Route::post('load-particular-student-invoices', [FeeItemController::class, 'loadParticularStudentInvoice'])->name('load.particular.student.invoice');
     Route::post('load-particular-student-payment', [FeeItemController::class, 'loadParticularStudentPayment'])->name('load.particular.student.payment');
     // student profile 

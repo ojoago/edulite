@@ -39,6 +39,7 @@
                 <table class="table table-hover table-striped cardTable" id="scoreDataTable" width="100%">
                     <thead>
                         <tr>
+                            <th>S/N</th>
                             <th>Class</th>
                             <th>Title</th>
                             <th>Order</th>
@@ -100,6 +101,9 @@
             responsive: true,
             "ajax": "{{route('load.score.setting')}}",
             "columns": [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                }, {
                     "data": "class"
                 },
 
@@ -120,15 +124,43 @@
                 },
 
             ],
+            "columnDefs": [{
+                    targets: [1],
+                    visible: false
+                },
+                // {
+                //     targets: [5],
+                //     className: "align-right"
+                // }
+            ],
+            "drawCallback": function(settings) {
+                var api = this.api();
+                var rows = api.rows({
+                    page: 'current'
+                }).nodes();
+                var last = null;
+
+                api.column(1, {
+                    page: 'current'
+                }).data().each(function(group, i) {
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr class="group"><td colspan="4"><b>' + group + '</td></tr>'
+                        );
+
+                        last = group;
+                    }
+                });
+            }
         });
 
 
-       
+
         // multiSelect2('categorySelect2', 'createClassArmModal', sbjCategoryselect2Url, 'Select Category');
-        
 
 
-        
+
+
     });
 </script>
 @endsection
