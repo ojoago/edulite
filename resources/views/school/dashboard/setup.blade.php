@@ -1,101 +1,106 @@
 @extends('layout.mainlayout')
 @section('title','School Setup')
 @section('content')
-<div class="container">
+<div class="container-fluid">
 
-    @if(session('stage')==1)
-    <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: this is where you will create school head: e.g Principal, head teacher!!</p>
-    @include('layout.forms.principal-form')
-    @endif
-    <div class=" min-vh-50 d-flex flex-column align-items-center justify-content-center">
-        @if(session('stage')==2)
-        <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: this is where you will create school Term. e.g First term, second term etc</p>
-        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createTermModal">
-            Create Term
-        </button>
+    <fieldset class="border rounded-3 p-1">
+        <legend class="float-none w-auto px-3 text-danger">Stage {{session('stage')}} of {{session('total')}} </legend>
+        <span class="text-info text-center">{{SETUP_STAGE[session('stage')]}} </span>
+        <!-- <hr> -->
+        @if(session('stage')==1)
+        @include('layout.forms.principal-form')
         @endif
-        @if(session('stage')==3)
-        <p class="bg-info text-white">Stage {{session('stage')}} of {{session('total')}}: this is where you will create school Session</p>
-        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createSessionModal">
-            Create Session
-        </button>
-        @endif
-        @if(session('stage')==4)
-        <p class="bg-info text-white">Stage {{session('stage')}} of {{session('total')}}: this is where you will set school Active/Current Session</p>
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#setActiveSessionModal">
-            Set Active Session
-        </button>
-        @endif
-        @if(session('stage')==5)
-        <p class="bg-info text-white">Stage {{session('stage')}} of {{session('total')}}: this is where you will set school Active/Current Session</p>
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#setActiveTermModal">
-            Set Active Term
-        </button>
-        @endif
-        @if(session('stage')==6)
-        <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: this is where you will create Categories. e.g Primary, Nursery etc</p>
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassCategoryModal">
-            Create Category
-        </button>
-        @endif
+        <div class=" min-vh-50 d-flex flex-column align-items-center justify-content-center">
+            @if(session('stage')==2)
+            <!-- <p class="bg-info text-white p-2"> </p> -->
+            <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createTermModal">
+                Create Term
+            </button>
+            @endif
+            @if(session('stage')==3)
+            <!-- <p class="bg-info text-white"> </p> -->
+            <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createSessionModal">
+                Create Session
+            </button>
+            @endif
+            @if(session('stage')==4)
+            <p class="bg-info text-white"> </p>
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#setActiveSessionModal">
+                Set Active Session
+            </button>
+            @endif
+            @if(session('stage')==5)
+            <!-- <p class="bg-info text-white"> this is where you will set school Active/Current Session</p> -->
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#setActiveTermModal">
+                Set Active Term
+            </button>
+            @endif
+            @if(session('stage')==6)
+            <!-- <p class="bg-info text-white p-2"> </p> -->
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassCategoryModal">
+                Create Category
+            </button>
+            @endif
 
-        @if(session('stage')==7)
-        <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: this is where you will create class under each Categories. e.g Primary 1, Nursery 1 etc</p>
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassModal">
-            Create Class
-        </button>
+            @if(session('stage')==7)
+            <!-- <p class="bg-info text-white p-2"> </p> -->
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassModal">
+                Create Class
+            </button>
 
-        @endif
-        @if(session('stage')==8)
-        <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: this is where you will create class arms under each classes. e.g Primary 1 A, Nursery 1 B etc</p>
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassArmModal">
-            Create Class Arm
-        </button>
-        @endif
-        @if(session('stage')==9)
-        <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: Here you will create school Subject Types/groups</p>
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createSubjectTypeModal">
-            Create Subject Type
-        </button>
-        @endif
-        @if(session('stage')==10)
-        <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: Here you will create school Subjects under each subject types</p>
-        <button type="button" class="btn btn-primary mb-3 " data-bs-toggle="modal" data-bs-target="#createSubjectModal">
-            Create Subject
-        </button>
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#dupSubjectTypeModal">
-            Copy Subject Type
-        </button>
-        @endif
-        @if(session('stage')==11)
-        <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: Here you will assign subjects to each class</p>
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createArmSubjectModal">
-            Add Subjects to Class Arm
-        </button>
+            @endif
+            @if(session('stage')==8)
+            <!-- <p class="bg-info text-white p-2"> </p> -->
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createClassArmModal">
+                Create Class Arm
+            </button>
+            @endif
+            @if(session('stage')==9)
+            <!-- <p class="bg-info text-white p-2"> </p> -->
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createSubjectTypeModal">
+                Create Subject Type
+            </button>
+            @endif
+            @if(session('stage')==10)
+            <!-- <p class="bg-info text-white p-2"> </p> -->
+            <button type="button" class="btn btn-primary mb-3 " data-bs-toggle="modal" data-bs-target="#createSubjectModal">
+                Create Subject
+            </button>
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#dupSubjectTypeModal">
+                Copy Subject Type
+            </button>
+            @endif
+            @if(session('stage')==11)
+            <!-- <p class="bg-info text-white p-2"> </p> -->
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createArmSubjectModal">
+                Add Subjects to Class Arm
+            </button>
 
-        @endif
-        @if(session('stage')==12)
-        <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: Here you will create assessment as it will appear on student report card</p>
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createAssessmentModal">
-            Create Assessment
-        </button>
+            @endif
+            @if(session('stage')==12)
+            <!-- <p class="bg-info text-white p-2"> </p> -->
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createAssessmentModal">
+                Create Assessment
+            </button>
 
-        @endif
-        @if(session('stage')==13)
-        <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: this is where you will assign maximum obtainable score to assessment title</p>
-        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createScoreSettingModal">
-            Create Score Setting
-        </button>
+            @endif
+            @if(session('stage')==13)
+            <!-- <p class="bg-info text-white p-2"> </p> -->
+            <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createScoreSettingModal">
+                Create Score Setting
+            </button>
 
-        @endif
+            @endif
 
-        <form id="setupStepForm" style="display: none;">
-            @csrf
-            <input type="hidden" name="stage" value="{{session('stage')}}">
-            <h3>Completed Step {{session('stage')}} ?</h3>
-            <button type="button" id="setupStepBtn" class="btn btn-small btn-success">Yes</button>
-        </form>
-    </div>
+            <form id="setupStepForm" style="display: none;">
+                @csrf
+                <input type="hidden" name="stage" value="{{session('stage')}}">
+                <h3>Completed Step {{session('stage')}} ?</h3>
+                <button type="button" id="setupStepBtn" class="btn btn-small btn-success">Yes</button>
+            </form>
+        </div>
+    </fieldset>
+
 </div>
 
 
@@ -182,7 +187,7 @@
 
         // state();
 
-        
+
         state();
 
         function state(id = null) {

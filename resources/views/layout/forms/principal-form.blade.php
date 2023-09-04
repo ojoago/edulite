@@ -1,17 +1,17 @@
 <form class="row g-3" id="createStaffForm" enctype='multipart/form-data'>
     @csrf
     <div class="col-md-4">
-        <label for="firstname" class="form-label">First-Name <small class="text-danger">*</small></label>
+        <label for="firstname" class="form-label">Firstname <small class="text-danger">*</small></label>
         <input type="text" class="form-control form-control-sm" id="firstname" name="firstname" placeholder="e.g OJOago" required>
         <p class="text-danger firstname_error"></p>
     </div>
     <div class="col-md-4">
-        <label for="lastname" class="form-label">Last-Name <small class="text-danger">*</small></label>
+        <label for="lastname" class="form-label">Lastname <small class="text-danger">*</small></label>
         <input type="text" class="form-control form-control-sm" id="lastname" name="lastname" placeholder="e.g Otteh" required>
         <p class="text-danger lastname_error"></p>
     </div>
     <div class="col-md-4">
-        <label for="othername" class="form-label">Other-Name</label>
+        <label for="othername" class="form-label">Othername</label>
         <input type="text" class="form-control form-control-sm" id="othername" name="othername" placeholder="e.g oceje">
     </div>
     <div class="col-md-4">
@@ -87,6 +87,8 @@
         <textarea type="text" class="form-control form-control-sm" id="address" name="address" placeholder="e.g no 51  offeoke"></textarea>
         <p class="text-danger address_error"></p>
     </div>
+    
+<!--     
     <div class="col-md-4">
         <label for="passport" class="form-label">Passport</label>
         <input type="file" accept="image/*" class="form-control form-control-sm" id="passport" name="passport">
@@ -104,7 +106,7 @@
         <input type="file" accept="image/*" class="form-control form-control-sm" id="stamp" name="stamp">
         <p class="text-danger stamp_error"></p>
         <img src="" id="staffStamp" class="previewImg" alt="">
-    </div>
+    </div> -->
 
     <div class="text-center">
         <button type="button" class="btn btn-primary" id="createStaffBtn">Create</button>

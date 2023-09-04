@@ -15,3 +15,21 @@ define('STAFF_ROLE', ['200' => 'School Super Admin','205' => 'School Admin','300
 define('ACCOUNT_STATUS', ['Deactivated','Activated']);
 define('SCHOOL_SETUP', ['pr','Activated']);
 define('ER_500', 'Something Went Wrong ...error logged');
+define('SETUP_STAGE', [
+    '', "This is where you will create school head: e.g Principal, head teacher!!",
+        "This is where you will create school Term. e.g First term, second term etc",
+        "This is where you will create school Session",
+        "This is where you will set school Active/Current Session",
+        "This is where you will set school Active/Current Term",
+        "This is where you will create Categories. e.g Primary, Nursery etc",
+        "This is where you will create class under each Categories. e.g Primary 1, Nursery 1 etc",
+        "This is where you will create class arms under each classes. e.g Primary 1 A, Nursery 1 B etc",
+        "Here you will create school Subject Types/groups",
+        "Here you will create school Subjects under each subject types",
+        "Here you will assign subjects to each class",
+        "Here you will create assessment as it will appear on student report card",
+        "This is where you will assign maximum obtainable score to assessment title",
+        "",
+        "","","","","",""
+    ]
+);
