@@ -9,13 +9,13 @@
     @endif
     <div class=" min-vh-50 d-flex flex-column align-items-center justify-content-center">
         @if(session('stage')==2)
-        <p class="bg-info text-white p-2">Stage {{session('stage')}} {{session('total')}}: this is where you will create school Term. e.g First term, second term etc</p>
+        <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: this is where you will create school Term. e.g First term, second term etc</p>
         <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createTermModal">
             Create Term
         </button>
         @endif
         @if(session('stage')==3)
-        <p class="bg-info text-white">Stage {{session('stage')}} {{session('total')}}: this is where you will create school Session</p>
+        <p class="bg-info text-white">Stage {{session('stage')}} of {{session('total')}}: this is where you will create school Session</p>
         <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createSessionModal">
             Create Session
         </button>
@@ -82,7 +82,7 @@
 
         @endif
         @if(session('stage')==13)
-        <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: Here you will create school Subject Types/groups</p>
+        <p class="bg-info text-white p-2">Stage {{session('stage')}} of {{session('total')}}: this is where you will assign maximum obtainable score to assessment title</p>
         <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createScoreSettingModal">
             Create Score Setting
         </button>
