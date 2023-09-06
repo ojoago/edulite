@@ -117,6 +117,8 @@ Route::post('update-user-detail', [UserController::class, 'updateUserDetail'])->
     
 
 Route::middleware('schoolAuth')->group(function(){
+    Route::post('reset-user-password', [AuthController::class, 'resetUserPassword'])->name('reset.user.password');
+
     // user create school 
     Route::get('school-dashboard', [SchoolController::class, 'mySchoolDashboard'])->name('my.school.dashboard');
     Route::get('update-school', [SchoolController::class, 'index'])->name('edit.school.info');
@@ -323,10 +325,10 @@ Route::middleware('schoolAuth')->group(function(){
 
     // payment collection and management by clert 
     Route::view('payment-records', 'school.payments.payment-records')->name('payment.records');
-    Route::get('load-paid-invoice', [FeeItemController::class, 'loadInvoicePayment'])->name('load.paid.invoice');
     Route::post('load-student-invoice-by-pid', [FeeItemController::class, 'loadStudentInvoiceByPid'])->name('load.student.invoice.by.pid');
+    Route::get('load-paid-invoice', [PaymentController::class, 'loadInvoicePayment'])->name('load.paid.invoice');
     Route::post('process-student-invoice', [PaymentController::class, 'processStudentInvoice'])->name('process.student.invoice');
-    Route::get('payment-receipt/{invoice?}', [FeeItemController::class, 'loadPaymentInvoice'])->name('payment.invoice.receipt');
+    Route::get('payment-receipt', [PaymentController::class, 'loadPaymentInvoice'])->name('payment.invoice.receipt');
 
     // admission config
     Route::view('admission-config', 'school.framework.admission.admission-config')->name('admission.config');
@@ -356,7 +358,16 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-denied-admission', [AdmissionController::class, 'loadDeniedAdmission'])->name('denied.admission');
     Route::post('grant-admission', [AdmissionController::class, 'grantAdmission'])->name('grant.admission');
     Route::post('deny-admission', [AdmissionController::class, 'denyAdmission'])->name('deny.admission');
-    
+
+
+    // parent dashboaRD
+    Route::get('parent-dashboard', [SchoolController::class, 'parentLogin'])->name('parent.dashboard');
+
+    // rider dashboard 
+    Route::get('rider-dashboard', [SchoolController::class, 'riderLogin'])->name('rider.dashboard');
+    // rider dashboard 
+    Route::get('student-dashboard', [SchoolController::class, 'studentLogin'])->name('student.dashboard');
+
     // Psychomotor, effective domain and grade key 
     // hostels  
     //   
@@ -440,7 +451,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('change-parent-status', [ParentController::class, 'toggleParentStatus'])->name('toggle.parent.status');
     Route::post('parent-profile/{id}', [ParentController::class, 'myProfile'])->name('parent.profile');
 
-    Route::get('parents-ward/{id}', [ParentController::class, 'myWards'])->name('school.parent.child');
+    Route::get('parents-ward/{id}', [ParentController::class, 'myWards'])->name('parent.child');
 
     // parent assistance 
     Route::view('create-rider-form', 'school.registration.rider.register-rider')->name('school.rider.form');

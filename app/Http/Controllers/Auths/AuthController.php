@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Auths;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Users\UserDetailsController;
 
 class AuthController extends Controller
 {
+    public $password = 1234567;
     // public function signUpForm($id=null){
     //     if($id){
     //         session(['linkId'=>base64Decode($id)]);
@@ -158,6 +160,28 @@ class AuthController extends Controller
         return view('auths.reset');
     }
 
+    public function resetUserPassword(Request $request){
+        try {
+            $user = User::where('pid', base64Decode($request->pid))->first();
+            if ($user) {
+                $pwd = randomNumber();
+                $user->password = $pwd;
+                $result = $user->save();
+                if($result){
+                    $id = base64Decode($request->id);
+                    $msg = getAuthFullname(). ' Has reset your password <br>';
+                    $msg .= '<p>Your new password is: <b>'.$pwd.'</b> </p>';
+                    $msg .= 'if your are not aware of this contact the school management for a prompt action.';
+                    SchoolNotificationController::notifyIndividualParent($msg,$id);
+                    return response()->json(['status' => 1, 'message' => 'Password reset successful']);
+                }
+            }
+            return response()->json(['status' => 0, 'message' => 'User not found']);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return response()->json(['status' => 0, 'message' => ER_500]);
+        }
+    }
     // reseting password when user submit b=form 
     public function resetPassword(Request $request)
     {
@@ -229,6 +253,8 @@ class AuthController extends Controller
                 ->where('school_staff.staff_id', $request->email) // logon with staff id
                 ->first(['username', 'account_status']);
              }
+            
+
         if($user && isset($user->account_status)){
             if ($user->account_status == 1) {
                 if (auth()->attempt(['username' => $user->username, 'password' => $request->password,/*$request->only('email', 'password')*/])) {
@@ -237,6 +263,8 @@ class AuthController extends Controller
                     setAuthFullName($name);
                     return redirect()->route('users.dashboard');
                 }
+                
+                return back()->with('message', "error|Invalid login details");
             } elseif($user->account_status == 2) {
                 return back()->with('message', "info|this account has been banned because of suspicius activities care@edulite.ng, 09079311551.");
             }elseif($user->account_status == 0){

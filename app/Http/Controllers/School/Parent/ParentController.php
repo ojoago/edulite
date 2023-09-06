@@ -24,7 +24,7 @@ class ParentController extends Controller
         $data = SchoolParent::join('user_details', 'school_parents.user_pid', 'user_details.user_pid')
                             ->join('users','users.pid', 'school_parents.user_pid')
                             ->where('school_parents.school_pid', getSchoolPid())
-                            ->get(['fullname', 'gsm', 'email', 'address', 'username', 'school_parents.pid', 'school_parents.created_at', 'school_parents.status']);
+                            ->get(['fullname', 'gsm', 'email', 'address', 'username', 'school_parents.pid', 'school_parents.created_at', 'school_parents.status', 'user_details.user_pid']);
         // $data = DB::table('school_parents as p')
         //             ->join('user_details as d','p.user_pid','d.user_pid')
         //             ->join('users as u','u.pid','p.user_pid')

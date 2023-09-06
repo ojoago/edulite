@@ -20,7 +20,7 @@
                     Email: {{ $data->email }}
                     <hr>
                     Students : {{ $data->wardCount() }}
-                    <a href="{{route('school.parent.child',['id'=>base64Encode($data->pid)])}}">View Wards</a>
+                    <a href="{{route('parent.child',['id'=>base64Encode($data->pid)])}}">View Wards</a>
                     <hr>
                     Date of Birth: {{ $data->dob }}
                     <hr>

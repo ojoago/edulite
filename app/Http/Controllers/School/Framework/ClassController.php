@@ -182,6 +182,7 @@ class ClassController extends Controller
                 'staff_pid' => getSchoolUserPid(),
                 'number' => $request->class_number,
                 'classes' => $request->class,
+                'pids' => $request->pid,
                 'category_pid' => $request->category_pid,
             ];
 

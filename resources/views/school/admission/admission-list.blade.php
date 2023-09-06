@@ -32,7 +32,7 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="activeAdmission">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" width="100%" id="activeAdmission">
                     <thead>
                         <tr>
                             <th>S/N</th>
@@ -50,7 +50,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="denied" role="tabpanel" aria-labelledby="in-active-staff-tab">
-                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="deniedAdmission">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" width="100%" id="deniedAdmission">
                     <thead>
                         <tr>
                             <th>S/N</th>
@@ -69,7 +69,7 @@
             </div>
             <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="admin-tab">
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped table-bordered cardTable" id="admin-list-dataTable">
+                    <table class="table table-hover table-striped table-bordered cardTable" width="100%" id="admin-list-dataTable">
 
                     </table>
                 </div>
@@ -77,7 +77,6 @@
         </div>
     </div>
 </div>
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {

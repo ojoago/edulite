@@ -37,8 +37,8 @@
                         <tr>
                             <th width="5%">S/N</th>
                             <th>Class</th>
-                            <th>Reg No.</th>
-                            <th>Names</th>
+                            <!-- <th>Reg No.</th> -->
+                            <th>Student</th>
                             <th>Fee</th>
                             <th align="right">{!!NAIRA_UNIT!!} Amount</th>
                             <th>Term</th>
@@ -50,6 +50,10 @@
                     </thead>
                     <tbody>
                     </tbody>
+                    <tfoot>
+                        <td colspan="4"></td>
+                        <td></td>
+                    </tfoot>
                 </table>
             </div>
             <div class="tab-pane fade " id="paidInvoice" role="tabpanel">
@@ -61,11 +65,11 @@
                         </button> -->
                     </div>
                     <div class="col-md-4">
-                        <select name="session_pid" id="sessionFeeSelect2" class="form-control form-control-sm" style="width: 100%;">
+                        <select name="session_pid" id="sessionPaidFeeSelect2" class="form-control form-control-sm" style="width: 100%;">
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <select name="term_pid" id="termFeeSelect2" class="form-control form-control-sm" style="width: 100%;">
+                        <select name="term_pid" id="termPaidFeeSelect2" class="form-control form-control-sm" style="width: 100%;">
                         </select>
                     </div>
                 </div>
@@ -75,7 +79,7 @@
                         <tr>
                             <th width="5%">S/N</th>
                             <th>Class</th>
-                            <th>Reg No.</th>
+                            <!-- <th>Reg No.</th> -->
                             <th>Names</th>
                             <th>Fee</th>
                             <th align="right">{!!NAIRA_UNIT!!} Amount</th>
@@ -88,6 +92,10 @@
                     </thead>
                     <tbody>
                     </tbody>
+                    <tfoot>
+                        <td colspan="4"></td>
+                        <td></td>
+                    </tfoot>
                 </table>
             </div>
 
@@ -99,7 +107,6 @@
 <!-- modals  -->
 
 <!-- create school category modal  -->
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {
@@ -123,9 +130,6 @@
             $('#unPaidInvoiceTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
                 responsive: true,
                 destroy: true,
                 // type: "GET",
@@ -147,9 +151,9 @@
                     {
                         "data": "arm"
                     },
-                    {
-                        "data": "reg_number"
-                    },
+                    // {
+                    //     "data": "reg_number"
+                    // },
                     {
                         "data": "fullname"
                     },
@@ -176,19 +180,70 @@
                     },
 
                 ],
+                "columnDefs": [{
+                    "visible": false,
+                    "targets": 1
+                }, {
+                    targets: 4,
+                    className: 'align-right'
+                }],
+                "footerCallback": function() {
+                    var api = this.api();
+                    var intVal = function(i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+                    // computing column Total of the complete result 
+
+                    var price = api
+                        .column(4)
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    $(api.column(0).footer()).html('Total');
+                    $(api.column(4).footer()).html('₦' + numberFormat(price));
+                },
+                "drawCallback": function(settings) {
+                    var api = this.api();
+                    var rows = api.rows({
+                        page: 'current'
+                    }).nodes();
+                    var last = null;
+
+                    api.column(1, {
+                        page: 'current'
+                    }).data().each(function(group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="9">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
             });
         }
         $('#paidInvoiceTab').click(function() {
             paidInvoice()
         })
 
+        $('#termPaidFeeSelect2').change(function() {
+            let term = $(this).val();
+            let session = $('#sessionPaidFeeSelect2').val();
+            if (term != null && session != null) {
+                paidInvoice(term, session);
+            }
+        })
+
         function paidInvoice(term = null, session = null) {
             $('#paidInvoiceTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
+
                 responsive: true,
                 destroy: true,
                 // type: "GET",
@@ -210,9 +265,9 @@
                     {
                         "data": "arm"
                     },
-                    {
-                        "data": "reg_number"
-                    },
+                    // {
+                    //     "data": "reg_number"
+                    // },
                     {
                         "data": "fullname"
                     },
@@ -239,6 +294,51 @@
                     },
 
                 ],
+                "columnDefs": [{
+                    "visible": false,
+                    "targets": 1
+                }, {
+                    targets: 4,
+                    className: 'align-right'
+                }],
+                "footerCallback": function() {
+                    var api = this.api();
+                    var intVal = function(i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+                    // computing column Total of the complete result 
+
+                    var price = api
+                        .column(4)
+                        .data()
+                        .reduce(function(a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    $(api.column(0).footer()).html('Total');
+                    $(api.column(4).footer()).html('₦' + numberFormat(price));
+                },
+                "drawCallback": function(settings) {
+                    var api = this.api();
+                    var rows = api.rows({
+                        page: 'current'
+                    }).nodes();
+                    var last = null;
+
+                    api.column(1, {
+                        page: 'current'
+                    }).data().each(function(group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="9">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
             });
         }
 
@@ -246,6 +346,8 @@
         // load dropdown on 
         FormMultiSelect2('#termFeeSelect2', 'term', 'Select Term');
         FormMultiSelect2('#sessionFeeSelect2', 'session', 'Select Session');
+        FormMultiSelect2('#termPaidFeeSelect2', 'term', 'Select Term');
+        FormMultiSelect2('#sessionPaidFeeSelect2', 'session', 'Select Session');
         multiSelect2('#feeItem', 'FeeConfigModal', 'fee-items', 'Select Fee');
 
         // create fee name 

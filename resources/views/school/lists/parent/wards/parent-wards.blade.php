@@ -7,7 +7,7 @@
         @if(!$data->isEmpty())
 
         <h5 class="card-title text-success">Parent/Guardian Ward(s)</h5>
-        <a class="text-center h4" href="{{route('school.parent.profile',['id'=>base64Encode($data[0]->parent_pid)])}}">Parent/Guardian Profile</a>
+        <a class="text-center h4" href="{{route('parent.profile',['id'=>base64Encode($data[0]->parent_pid)])}}">Parent/Guardian Profile</a>
         <div class="row">
             @foreach($data as $row)
             <div class="col-md-4 ">

@@ -194,9 +194,6 @@
             $('#notificationTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
                 responsive: true,
                 destroy: true,
                 // type: "GET",

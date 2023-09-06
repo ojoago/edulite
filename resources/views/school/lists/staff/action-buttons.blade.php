@@ -65,18 +65,18 @@
                                 Manage Results
                             </label>
                         </div>
-                        <div class="form-check">
+                        <!-- <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="access[]" id="" value="610">
                             <label class="form-check-label" for="flexCheckDefault">
                                 Rider/Care
                             </label>
-                        </div>
-                        <div class="form-check">
+                        </div> -->
+                        <!-- <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="access[]" id="" value="605">
                             <label class="form-check-label" for="flexCheckDefault">
                                 Parent/Guardian
                             </label>
-                        </div>
+                        </div> -->
                         <input type="hidden" value="{{$data->pid}}" name="pid">
                         <p class="text-danger access_error"></p>
                     </div>

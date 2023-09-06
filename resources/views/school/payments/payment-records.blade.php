@@ -36,7 +36,7 @@
                     <thead>
                         <tr>
                             <th width="5%">S/N</th>
-                            <th>Reg No.</th>
+                            <!-- <th>Reg No.</th> -->
                             <th>Names</th>
                             <th>Invoice No.</th>
                             <th align="right">{!!NAIRA_UNIT!!} Total</th>
@@ -46,6 +46,10 @@
                     </thead>
                     <tbody>
                     </tbody>
+                    <tfoot>
+                        <td colspan="3"></td>
+                        <td></td>
+                    </tfoot>
                 </table>
             </div>
             <div class="tab-pane fade" id="paymentHistory" role="tabpanel">
@@ -126,16 +130,13 @@
     </div>
 </div>
 <!-- create school category modal  -->
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {
         $('#completePaymentTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+
             responsive: true,
             // destroy: true,
             type: "GET",
@@ -144,9 +145,9 @@
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
                 },
-                {
-                    "data": "reg_number"
-                },
+                // {
+                //     "data": "reg_number"
+                // },
                 {
                     "data": "fullname"
                 },
@@ -164,6 +165,51 @@
                 //     "data": "action",
                 // },
             ],
+            "columnDefs": [{
+                "visible": false,
+                "targets": 1
+            }, {
+                targets: 4,
+                className: 'align-right'
+            }],
+            "footerCallback": function() {
+                var api = this.api();
+                var intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+                // computing column Total of the complete result 
+
+                var price = api
+                    .column(3)
+                    .data()
+                    .reduce(function(a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                $(api.column(0).footer()).html('Total');
+                $(api.column(3).footer()).html('₦' + numberFormat(price));
+            },
+            "drawCallback": function(settings) {
+                var api = this.api();
+                var rows = api.rows({
+                    page: 'current'
+                }).nodes();
+                var last = null;
+
+                api.column(1, {
+                    page: 'current'
+                }).data().each(function(group, i) {
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                        );
+
+                        last = group;
+                    }
+                });
+            }
         });
         $('#termFeeSelect2').change(function() {
             let term = $(this).val();

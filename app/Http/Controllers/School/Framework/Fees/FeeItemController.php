@@ -3,21 +3,17 @@
 namespace App\Http\Controllers\School\Framework\Fees;
 
 use Illuminate\Http\Request;
-use App\Models\School\School;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\School\Student\Student;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Fees\FeeItem;
-// use App\Http\Controllers\School\SchoolController;
 use App\Models\School\Framework\Fees\FeeItemAmount;
 use App\Models\School\Framework\Fees\StudentInvoice;
 use App\Models\School\Framework\Fees\FeeConfiguration;
 use App\Models\School\Framework\Fees\ClassInvoiceParam;
 use App\Http\Controllers\School\Framework\ClassController;
-use App\Models\School\Framework\Fees\StudentInvoicePayment;
-use App\Models\School\Framework\Fees\StudentInvoicePaymentRecord;
 
 class FeeItemController extends Controller
 {
@@ -179,6 +175,9 @@ class FeeItemController extends Controller
 
     private function addDatatable($data){
         return datatables($data)
+            ->editColumn('fullname', function ($data) {
+                return @$data->reg_number.' '.@$data->fullname;
+            })
             ->editColumn('amount', function ($data) {
                 return number_format($data->amount, 2);
             })
@@ -259,28 +258,7 @@ class FeeItemController extends Controller
             ->make(true);
     }
 
-    // payment record  
-    public function loadInvoicePayment(Request $request){
-        $data = DB::table('student_invoice_payments as ip')
-                        ->join('students as s','s.pid','ip.student_pid')
-                        ->select(DB::raw('s.fullname,s.reg_number,invoice_number,total,ip.created_at'))->where(['ip.status'=>1,'ip.school_pid'=>getSchoolPid()])->orderBy('ip.created_at','desc')->get();
-        return $this->paymentDataTable($data);
-    }
-    
-    private function paymentDataTable($data){
-        return datatables($data)
-            ->editColumn('total', function ($data) {
-                return number_format($data->total, 2);
-            })
-            ->editColumn('date', function ($data) {
-                return date('d F Y', strtotime($data->created_at));
-            })
-            ->editColumn('invoice_number', function ($data) {
-                return view('school.framework.fees.view-link', ['data' => $data]);
-            })
-            ->addIndexColumn()
-            ->make(true);
-    }
+   
     // create school fee names 
     public function createFeeName(Request $request){
         $validator = Validator::make($request->all(),[

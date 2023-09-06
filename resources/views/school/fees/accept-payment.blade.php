@@ -66,29 +66,7 @@
             }
         });
 
-        // compute total fee ticked 
-        $(document).on('change', '.invoicePidStatus', function() {
-            let total = 0;
-            $('.invoicePidStatus').each(function(i, obj) {
-                if (obj.checked == true) {
-                    total += Number($(this).val());
-                }
-                if (total > 0) {
-                    $('#acceptPaymentBtn').prop('disabled', false);
-                } else {
-                    $('#acceptPaymentBtn').prop('disabled', true);
-                }
-                $('#totalAmountSelected').text(total.toFixed(2));
-            });
-        })
-
-        $('#acceptPaymentBtn').click(async function() {
-            data = await submitFormAjax('processStudentInvoiceForm', 'acceptPaymentBtn', "{{route('process.student.invoice')}}");
-            if (data.status === 1) {
-                let url = "{{URL::to('payment-receipt')}}/" + data.invoice_number;
-                location.href = url;
-            }
-        });
+        
     });
 </script>
 @endsection

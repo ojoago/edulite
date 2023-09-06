@@ -63,16 +63,13 @@
     </div>
 </div>
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 <script>
     $(document).ready(function() {
 
         $('#list-active-staff-dataTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+           
             responsive: true,
             "ajax": "{{route('load.staff.list')}}",
             "columns": [{
@@ -110,9 +107,7 @@
             $('#activedataTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
+                
                 responsive: true,
                 "ajax": "{{route('load.inactive.staff.list')}}",
                 "columns": [{

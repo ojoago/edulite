@@ -16,9 +16,16 @@ use App\Http\Controllers\Auths\AuthController;
    function public_id(){
         return strtoupper(str_shuffle(date('YMDHism').time()));
     }
-   function invoiceNumber(){
+   
+    function randomNumber($len = 7){
+        return substr(random_int(1, 99999999999999999), 1, $len);
+    }
+   
+
+    function invoiceNumber(){
         return strtoupper(date('yMd'));
     }
+
 
    function base64Encode($var){
         return base64_encode(base64_encode($var));

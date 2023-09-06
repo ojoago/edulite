@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\SeasonalGreeting::class,
+        Commands\BirthdayGreeting::class,
+        Commands\NewMonthGreeting::class,
     ];
     protected function schedule(Schedule $schedule)
     {

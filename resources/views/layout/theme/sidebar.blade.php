@@ -539,7 +539,7 @@
         </a>
         <ul id="payment-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="{{route('accept.payment')}}" databs-toggle="modal" data-bstarget="#processStudentInvoiceModal">
+            <a href="{{route('accept.payment')}}" >
               <i class="bi bi-circle pointer"></i><span>Accept Payment</span>
             </a>
           </li>
@@ -550,14 +550,10 @@
           </li>
           <li>
             <a href="{{route('payment.records')}}">
-              <i class="bi bi-circle"></i><span>Payment</span>
+              <i class="bi bi-circle"></i><span>Payment Records</span>
             </a>
           </li>
-          <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>Payment Record</span>
-            </a>
-          </li>
+          
         </ul>
       </li><!-- End Charts Nav -->
       @endif

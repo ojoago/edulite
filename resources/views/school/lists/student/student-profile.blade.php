@@ -73,7 +73,7 @@
                         <!--  -->
                         <button class="btn btn-primary btn-sm m-2" id="payWardFee">Pay Fee</button>
                         List of unpaid fees
-                        <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="unPaidInvoiceTable">
+                        <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="studentUnPaidInvoice">
                             <thead>
                                 <tr>
                                     <th width="5%">S/N</th>
@@ -211,7 +211,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Process Payment</h5>
+                <h5 class="modal-title">Make Payment</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -219,6 +219,7 @@
                     @csrf
                     <input type="hidden" name="student_pid" id="wardStudentSelect2">
                     <div id="studentUnPaidInvoices"></div>
+                    <input type="hidden" name="mode" class="big-check" value="1">
                 </form>
             </div>
             <div class="modal-footer">
@@ -231,7 +232,6 @@
     </div>
 </div>
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script src="{{asset('plugins/fullcalendar/lib/moment.min.js')}}"></script>
 <script src="{{asset('plugins/fullcalendar/fullcalendar.min.js')}}"></script>
@@ -494,13 +494,10 @@
             });
         })
 
-        function unPaidInvoice(term = null, session = null) {
-            $('#unPaidInvoiceTable').DataTable({
+        function studentUnPaidInvoice(term = null, session = null) {
+            $('#studentUnPaidInvoice').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
                 responsive: true,
                 destroy: true,
                 "ajax": {
@@ -565,7 +562,7 @@
 
         }
         $('#fees-tab').click(function() {
-            unPaidInvoice()
+            studentUnPaidInvoice()
         })
         $('#payWardFee').click(async function() {
             let pid = "{{base64Decode($pid)}}"

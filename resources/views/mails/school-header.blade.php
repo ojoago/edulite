@@ -70,22 +70,3 @@
                                     </td>
                                 </tr>
                            
-               
-
-                <!-- top banner -->
-
-
-                <!-- outer table 2  -->
-                <!-- main table  -->
-                <!-- 
-            -----
-            -----
-            -----
-            -----
-            include footer here 
-            -----
-            -----
-            -----
-            ----- 
-        -->
-                <!-- outer table three  -->

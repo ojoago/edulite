@@ -282,10 +282,10 @@ class SchoolNotificationController extends Controller
             $data = [
                 'email' => $userData->email,
                 'name' => matchGenderTitle($userData->gender) . ' ' . $userData->fullname,
-                'blade' => 'school-mail',
+                'blade' => 'school',
                 'message' => $message,
                 // 'url' => 'verify/' . base64Encode($user->pid),
-                'subject' => $subject,
+                'subject' => $subject .' from '. getSchoolName(),
                 'school' => $schoolData,
             ];
             return sendMail($data);

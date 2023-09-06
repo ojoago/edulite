@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>{{env('APP_NAME',APP_NAME)}} - {{'$std->fullname'}} Report card</title>
+    <title>{{env('APP_NAME',APP_NAME)}} - {{$invoiceDetails->fullname}} Payment Receipt</title>
     <meta content="description" name="Upgrade your school with edulite suite">
     <meta content="keywords" name="education, edulite, education suite, educate, education is light, secondary school, school, primary school, nursery school">
     <meta content="author" name="edulite">
@@ -25,6 +25,9 @@
     <link href="{{asset('themes/css/style.css')}}" rel="stylesheet">
     <link href="{{asset('plugins/select2/css/select2.min.css')}}" rel="stylesheet">
     <link href="{{asset('themes/css/custom/style.css')}}" rel="stylesheet">
+
+    <script src="{{asset('js/jquery.3.7.0.min.js')}}"></script>
+    <script src="{{asset('printThis/printThis.js')}}"></script>
     <style>
         body {
             margin: 20px 160px;
@@ -150,14 +153,14 @@
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>{{$row->fee_name}}</td>
-                            <td>{{$row->amount}}</td>
+                            <td>{{number_format($row->amount,2)}}</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="2">Total</td>
-                            <td>{{$invoiceDetails->total}}</td>
+                            <td>{{number_format($invoiceDetails->total,2)}}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -183,8 +186,6 @@
     </div>
     @endif
 
-    <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
-    <script src="{{asset('printThis/printThis.js')}}"></script>
     <script>
         $(document).ready(function() {
             $('#printReceipt').click(function() {

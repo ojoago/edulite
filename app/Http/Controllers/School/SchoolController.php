@@ -84,6 +84,7 @@ class SchoolController extends Controller
         // dd(getUserActiveRole());
         // check user role and redirect to a corresponding dashboard
         return redirect()->route('my.school.dashboard');
+
     }
 
     public function mySchoolDashboard(){
@@ -92,20 +93,21 @@ class SchoolController extends Controller
         // here show dashboard and load params based on role
         switch (getUserActiveRole()) {
             case schoolTeacher():
-                if(session('status') && session('status') == 2){
+                if (session('status') && session('status') == 2) {
                     return redirect()->route('setup.school');
                 }
-               return $this->staffLogin();
+                return $this->staffLogin();
             case parentRole():
-               return $this->parentLogin();
+                return redirect()->route('parent.dashboard');
             case studentRole():
-                return $this->studentLogin();
+                return redirect()->route('student.dashboard');;
             case riderRole():
-                return $this->riderLogin();
+                return redirect()->route('rider.dashboard');;
             default:
-                return redirect()->route('login.school', [base64Encode(getSchoolPid())])->with('warning','who are you!!!');
-            break;
-        } 
+                return redirect()->route('login.school', [base64Encode(getSchoolPid())])->with('warning', 'who are you!!!');
+                break;
+        }
+        return redirect()->route('my.school.dashboard');
         
     }
     public function switchRole($role){
@@ -131,23 +133,24 @@ class SchoolController extends Controller
     }
 
 
-    private function parentLogin(){
+    public function parentLogin(){
+         
         $data = DB::table('students as s')->join('class_arms as a','a.pid','s.current_class_pid')
                                         ->join('sessions as i','i.pid','current_session_pid')
                                         ->where(['s.school_pid' => getSchoolPid(), 's.parent_pid' => getSchoolUserPid()])
                                         ->orderByDesc('s.id')
-                                        ->get(['reg_number','fullname','s.status','passport','session','arm','s.pid']);
+                                        ->get(['reg_number','fullname','s.status','passport','session','arm','s.pid']);//->dd();
         if(count($data)==1){
             return redirect()->route('student.profile', ['id' => base64Encode($data[0]->pid)]);
         }
         return view('school.dashboard.parent-dashboard', compact('data'));
     }
-    private function studentLogin(){
+    public function studentLogin(){
         $data = Student::where(['school_pid' => getSchoolPid(), 'pid' => getSchoolUserPid()])->first(['pid','status']);
         return redirect()->route('student.profile',['id'=>base64Encode($data->pid)]);
         return view('school.dashboard.student-dashboard', compact('data'));
     }
-    private function riderLogin(){
+    public function riderLogin(){
         $data = SchoolRider::where(['school_pid' => getSchoolPid(), 'user_pid' => getUserPid()])->first(['pid']);//->dd();
         if($data){
             return redirect()->route('school.rider.profile', ['id' => base64Encode($data->pid)]);
@@ -155,6 +158,7 @@ class SchoolController extends Controller
         return view('school.dashboard.rider-dashboard', compact('data'));
     }
 
+    // create school 
     public function createSchool(Request $request){
         if($request->school_name){
             $request['school_code'] = $request->school_code ?? getInitials($request->school_name);

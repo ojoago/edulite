@@ -31,6 +31,59 @@
         }
         // assign class to staff 
 
+
+        // accept payment start here 
+        // compute total fee ticked 
+        $(document).on('change', '.invoicePidStatus', function() {
+            let total = 0;
+            $('.invoicePidStatus').each(function(i, obj) {
+                if (obj.checked == true) {
+                    total += Number($(this).val());
+                }
+                if (total > 0) {
+                    $('#acceptPaymentBtn').prop('disabled', false);
+                } else {
+                    $('#acceptPaymentBtn').prop('disabled', true);
+                }
+                $('#totalAmountSelected').text(total.toFixed(2));
+            });
+        })
+
+        $('#acceptPaymentBtn').click(async function() {
+            data = await submitFormAjax('processStudentInvoiceForm', 'acceptPaymentBtn', "{{route('process.student.invoice')}}");
+            if (data.status === 1) {
+                let url = "{{URL::to('payment-receipt')}}?invoice=" + data.invoice_number;
+                location.href = url;
+            }
+        });
+        // accept payment end here 
+        // reset user password from school 
+        $(document).on('click', '.resetPassword', function() {
+            let pid = $(this).attr('pid');
+            let id = $(this).attr('id');
+            $('.overlay').show();
+            $.ajax({
+                url: "{{route('reset.user.password')}}",
+                data: {
+                    pid: pid,
+                    _token: "{{csrf_token()}}",
+                    id: id
+                },
+                type: "post",
+                success: function(data) {
+                    $('.overlay').hide();
+                    if (data.status === 1) {
+                        alert_toast(data.message);
+                    } else {
+                        alert_toast(data.message);
+                    }
+                },
+                error: function() {
+                    $('.overlay').hide();
+                    alert_toast('Something Went Wrong', 'error');
+                }
+            });
+        });
         // general dropdown 
         // load passport in create parent modal  
 
@@ -72,9 +125,10 @@
         // switch role 
         $('.switchRole').click(function() {
             let role = $(this).attr('id')
+            let url = "{{URL::to('switch-role')}}/" + role;
             $('.overlay').show();
             $.ajax({
-                url: "switch-role/" + role,
+                url: url,
                 success: function(data) {
                     $('.overlay').hide();
                     alert_toast('Role Switched... rediecting');

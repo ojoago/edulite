@@ -8,48 +8,80 @@ use App\Http\Controllers\Controller;
 use App\Models\School\Framework\Fees\StudentInvoice;
 use App\Models\School\Framework\Fees\StudentInvoicePayment;
 use App\Models\School\Framework\Fees\StudentInvoicePaymentRecord;
+use Illuminate\Support\Facades\Validator;
 
 class PaymentController extends Controller
 {
     public function processStudentInvoice(Request $request)
     {
         //remove student pid,token, inorder to loop invoice keys
-        $student_pid = $request['student_pid'];
-        unset($request['_token']);
-        unset($request['student_pid']);
+        $validator = Validator::make($request->all(), [
+            'mode' => 'required|integer|between:1,3', 
+        ],['mode.required'=>'Select Payment method','mode.between'=>'Select this properly']);
+        if(!$validator->fails()){
+            try {
+                unset($request['_token']);
+                $student_pid = $request['student_pid'];
+                $mode = $request['mode'];
+                unset($request['student_pid']);
+                
+                $resultArray = $this->processSelectedFees($request->all());
+                if ($resultArray['total'] <= 0) {
+                    return response()->json(['status' => 'error', 'message' => 'Wrong Amount, check your input']);
+                }
+                $data = [
+                    'total' => $resultArray['total'],
+                    'school_pid' => getSchoolPid(),
+                    'pid' => public_id(),
+                    'invoice_number' => $this->generateInvoiceNumber(),
+                    'amount_paid' => $resultArray['total'],
+                    'status' => 1, // paid 
+                    'generated_by' => getSchoolUserPid(),
+                    'student_pid' => $student_pid,
+                    'code' => getUserActiveRole(), // paid by actor
+                    'mode' => $mode ?? 1 // paid by actor
+                ];
+                if(studentRole() || parentRole()){
+                    $data['mode'] = 1;
+                }
+                if($data['mode']===1){
+                    $data['status'] = 0;
+                }elseif($data['mode']===3){
+                    // go into wallet  
 
-        $resultArray = $this->processSelectedFees($request->all());
-        $data = [
-            'total' => $resultArray['total'],
-            'school_pid' => getSchoolPid(),
-            'pid' => public_id(),
-            'invoice_number' => $this->generateInvoiceNumber(),
-            'amount_paid' => $resultArray['total'],
-            'status' => 1, // paid 
-            'generated_by' => getSchoolUserPid(),
-            'student_pid' => $student_pid,
-            'code' => getUserActiveRole() // paid by actor
-        ];
-        $record = [
-            'school_pid' => getSchoolPid(),
-            'amount' => $resultArray['total'],
-            // 'generated_by' => getSchoolUserPid(),// this should be paid by
-            'received_by' => getSchoolUserPid(),
-            'channel' => 'Table payment',
-            'code' => getUserActiveRole()
-        ];
-        $result = StudentInvoicePayment::create($data);
-        if ($result) {
-            $record['invoice_pid'] = $result->pid;
-            $invoice_number = $result->invoice_number;
-            StudentInvoicePaymentRecord::create($record);
-            $data = ['keys' => $resultArray['keys'], 'invoice_pid' => $result->pid, 'paid_date' => fullDate(), 'status' => 1];
-            $result = $this->updateStudentInvoiceByPid($data);
-            if ($result) {
-                return response()->json(['status' => 1, 'message' => 'Student Invoice(s) paid ' . $invoice_number, 'invoice_number' => $invoice_number]);
+                }
+                $record = [
+                    'school_pid' => getSchoolPid(),
+                    'amount' => $resultArray['total'],
+                    // 'generated_by' => getSchoolUserPid(),// this should be paid by
+                    'received_by' => getSchoolUserPid(),
+                    'channel' => 'Table payment',
+                    'code' => getUserActiveRole()
+                ];
+                DB::beginTransaction();
+                $result = StudentInvoicePayment::create($data);
+                if ($result) {
+                    $record['invoice_pid'] = $result->pid;
+                    $invoice_number = $result->invoice_number;
+                    StudentInvoicePaymentRecord::create($record);
+                    $data = ['keys' => $resultArray['keys'], 'invoice_pid' => $result->pid, 'paid_date' => fullDate(), 'status' => 1];
+                    $result = $this->updateStudentInvoiceByPid($data);
+                    if ($result) {
+                        DB::commit();
+                        
+                        return response()->json(['status' => 1, 'message' => 'Student Invoice(s) paid ' . $invoice_number, 'invoice_number' => $invoice_number]);
+                    }
+                    DB::rollBack();
+                }
+                return response()->json(['status' => 'error', 'message' => ' Something Went Wrong']);
+            } catch (\Throwable $e) {
+                logError($e->getMessage());
+                DB::rollBack();
+                return response()->json(['status' => 'error', 'message' => ER_500]);
             }
         }
-        return response()->json(['status' => 'error', 'message' => ' Something Went Wrong']);
+        return response()->json(['status' => 0, 'error' => $validator->errors()->toArray(),'message'=>ER_500]);
+
     }
 
 
@@ -86,8 +118,9 @@ class PaymentController extends Controller
         return getSchoolCode() . $invoiceNumber . sprintNumber($count + 1);
     }
 
-    public function loadPaymentInvoice($id)
+    public function loadPaymentInvoice(Request $request)
     {
+        $id = $request->invoice;
         $invoiceDetails = DB::table('student_invoice_payments as p')
         ->join('students as st', 'st.pid', 'p.student_pid')
         ->join('schools as s', 's.pid', 'p.school_pid')
@@ -127,5 +160,33 @@ class PaymentController extends Controller
         ->select('s.pid', 's.amount', 's.status', 's.paid_date', 'fee_name')
         ->where(['p.invoice_number' => $id, 'p.school_pid' => getSchoolPid()])->get();
         return view('school.payments.payment-receipt', compact('list', 'invoiceDetails'));
+    }
+
+    // payment record  
+    public function loadInvoicePayment(Request $request)
+    {
+        $data = DB::table('student_invoice_payments as ip')
+        ->join('students as s', 's.pid', 'ip.student_pid')
+        ->select(DB::raw('s.fullname,s.reg_number,invoice_number,total,ip.created_at'))->where(['ip.status' => 1, 'ip.school_pid' => getSchoolPid()])->orderBy('ip.created_at', 'desc')->get();
+        return $this->paymentDataTable($data);
+    }
+
+    private function paymentDataTable($data)
+    {
+        return datatables($data)
+            ->editColumn('total', function ($data) {
+                return number_format($data->total, 2);
+            })
+            ->editColumn('fullname', function ($data) {
+                return $data->reg_number.' '.$data->fullname;
+            })
+            ->editColumn('date', function ($data) {
+                return date('d F Y', strtotime($data->created_at));
+            })
+            ->editColumn('invoice_number', function ($data) {
+                return view('school.framework.fees.view-link', ['data' => $data]);
+            })
+            ->addIndexColumn()
+            ->make(true);
     }
 }

@@ -145,10 +145,10 @@ Happy Democracy Day Nigerians💚! ',
             ];
             $users = (new self)->loadUsers();
 
-            // $data['email'] ='dhasmom01@gmail.com';
-            // $data['name'] = 'OJOago';
-            // sendMail($data);
-            // return;
+            $data['email'] ='dhasmom01@gmail.com';
+            $data['name'] = 'OJOago';
+            sendMail($data);
+            return;
             foreach ($users as $user) {
                 $data['email'] = $user->email;
                 $data['name'] = $user->username;
