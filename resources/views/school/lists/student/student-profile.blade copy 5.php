@@ -257,7 +257,7 @@
                 url: "{{route('load.student.profile')}}",
                 type: "post",
                 data: {
-                    pid: "{{studentPid()}}",
+                    pid: "{{$pid}}",
                     _token: "{{csrf_token()}}"
                 },
                 success: function(data) {
@@ -276,14 +276,16 @@
             $('#classDataTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
                 responsive: true,
                 destroy: true,
                 "ajax": {
                     method: "POST",
                     url: "{{route('load.student.class')}}",
                     data: {
-                        pid: "{{studentPid()}}",
+                        pid: "{{$pid}}",
                         _token: "{{csrf_token()}}"
                     },
                 },
@@ -318,7 +320,7 @@
                     method: "POST",
                     url: "{{route('load.particular.student.payment')}}",
                     data: {
-                        pid: "{{studentPid()}}",
+                        pid: "{{$pid}}",
                         _token: "{{csrf_token()}}"
                     },
                 },
@@ -372,14 +374,16 @@
             $('#resultDataTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
                 responsive: true,
                 destroy: true,
                 "ajax": {
                     method: "POST",
                     url: "{{route('load.student.result')}}",
                     data: {
-                        pid: "{{studentPid()}}",
+                        pid: "{{$pid}}",
                         _token: "{{csrf_token()}}"
                     },
                 },
@@ -439,7 +443,7 @@
                 },
                 responsive: true,
                 destroy: true,
-                "ajax": "{{route('load.assignment.for.student',['id'=>studentPid()])}}",
+                "ajax": "{{route('load.assignment.for.student',['id'=>$pid])}}",
                 "columns": [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -503,7 +507,7 @@
                         _token: "{{csrf_token()}}",
                         session_pid: session,
                         term_pid: term,
-                        pid: "{{studentPid()}}",
+                        pid: "{{$pid}}",
                     }
                 },
 
@@ -561,7 +565,7 @@
             studentUnPaidInvoice()
         })
         $('#payWardFee').click(async function() {
-            let pid = "{{studentPid()}}"
+            let pid = "{{base64Decode($pid)}}"
             if (pid) {
                 await loadStudentInvoiceById(pid) // this function is inside mainjs.blade.php
                 $('#wardStudentSelect2').val(pid); // 
@@ -588,7 +592,9 @@
             $('#timetableDatatable').DataTable({
                 "processing": true,
                 "serverSide": true,
-
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
                 responsive: true,
                 destroy: true,
                 // type: "GET",
@@ -599,7 +605,7 @@
                         _token: "{{csrf_token()}}",
                         session_pid: session,
                         term_pid: term,
-                        pid: "{{studentPid()}}",
+                        pid: "{{$pid}}",
                     },
                 },
                 "columns": [{

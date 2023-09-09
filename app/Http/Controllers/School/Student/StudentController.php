@@ -95,6 +95,7 @@ class StudentController extends Controller
 
     }
     public function studentProfile($pid){
+        setStudentPid(base64Decode($pid));
         return view('school.lists.student.student-profile',compact('pid'));
     }
     public function find($pid){

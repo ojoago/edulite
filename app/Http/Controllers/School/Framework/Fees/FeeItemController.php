@@ -198,10 +198,11 @@ class FeeItemController extends Controller
     public function loadParticularStudentInvoice(Request $request)
     {
         if (isset($request->session_pid) && isset($request->term_pid)) {
-            $where = ['p.term_pid' => $request->term_pid, 'p.session_pid' => $request->session_pid, 'si.school_pid' => getSchoolPid(), 'si.status' =>0, 'si.student_pid' => base64Decode($request->pid)];
+            $where = ['p.term_pid' => $request->term_pid, 'p.session_pid' => $request->session_pid, 'si.school_pid' => getSchoolPid(), 'si.status' =>0, 'si.student_pid' => $request->pid];
         } else {
-            $where = ['p.term_pid' => activeTerm(), 'p.session_pid' => activeSession(), 'p.school_pid' => getSchoolPid(), 'si.status' => 0, 'si.student_pid'=>base64Decode($request->pid)];
+            $where = ['p.term_pid' => activeTerm(), 'p.session_pid' => activeSession(), 'p.school_pid' => getSchoolPid(), 'si.status' => 0, 'si.student_pid'=>$request->pid];
         }
+        logError($request->pid);
         $data = DB::table('student_invoices as si')
         ->join('fee_item_amounts as fa', 'fa.pid', 'si.item_amount_pid')
         ->join('fee_configurations as fc', 'fa.config_pid', 'fc.pid')
@@ -233,8 +234,9 @@ class FeeItemController extends Controller
         // } else {
         //     $where = ['p.term_pid' => activeTerm(), 'p.session_pid' => activeSession(), 'p.school_pid' => getSchoolPid(), 'si.status' => 0, 'si.student_pid'=>base64Decode($request->pid)];
         // }
+        logError($request->pid);
         $data = DB::table('student_invoice_payments as sip')
-            ->where(['sip.student_pid'=>base64Decode($request->pid),'school_pid'=>getSchoolPid(),'sip.status'=>1])
+            ->where(['sip.student_pid'=>$request->pid,'school_pid'=>getSchoolPid(),'sip.status'=>1])
             ->select(
                 'sip.amount_paid',
                 'sip.total',

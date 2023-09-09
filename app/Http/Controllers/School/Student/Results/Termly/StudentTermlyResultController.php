@@ -251,26 +251,34 @@ class StudentTermlyResultController extends Controller
     public function viewStudentResult(Request $request)
     {
         try {
-            $dtl = DB::table('student_class_results as r')
-            ->join('student_class_score_params as p', 'p.pid', 'r.class_param_pid')
-            ->join('terms as t', 't.pid', 'p.term_pid')
-            ->join('sessions as ss', 'ss.pid', 'p.session_pid')
-            ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
-            ->select(DB::raw('distinct(r.student_pid),
-                                r.class_param_pid,r.total,term,session,p.id'))->where(['r.school_pid' => getSchoolPid()]);
-            $rank = DB::table('student_class_results as r')
-                ->joinSub($dtl, 'dtl', function ($dt) {
-                    $dt->on('r.student_pid', '=', 'dtl.student_pid');
-                })->select(DB::raw('r.student_pid,r.total,
+            $params = DB::table('student_class_results')->where(['student_pid' => $request->pid])->select('class_param_pid')->pluck('class_param_pid');
+            $results = [];
+            if($params) :
+                foreach($params as $pid):
+                    $dtl = DB::table('student_class_results as r')
+                    ->join('student_class_score_params as p', 'p.pid', 'r.class_param_pid')
+                    ->join('terms as t', 't.pid', 'p.term_pid')
+                    ->join('sessions as ss', 'ss.pid', 'p.session_pid')
+                    ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+                        // ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
+                        ->select(DB::raw('distinct(r.student_pid),
+                                r.class_param_pid,r.total,term,session,p.id,a.arm'))->where(['r.school_pid' => getSchoolPid(), 'r.class_param_pid' => $pid]);
+                    $rank = DB::table('student_class_results as r')
+                    ->joinSub($dtl, 'dtl', function ($dt) {
+                        $dt->on('r.student_pid', 'dtl.student_pid');
+                    })->where(['r.class_param_pid' => $pid])->select(DB::raw('r.student_pid,r.total,arm,
                                 RANK() OVER (PARTITION BY dtl.class_param_pid ORDER BY r.total DESC) AS position,
-                                r.class_param_pid,term,session,dtl.id'));
-            $results = DB::table('students as s')
-            ->joinSub($rank, 'rank', function ($rnk) {
-                $rnk->on('s.pid', '=', 'rank.student_pid');
-            })->select(DB::raw('rank.*'))
-            ->orderBy('rank.id', 'DESC')
-            ->where(['rank.student_pid' => base64Decode($request->pid)])
-            ->get();
+                                dtl.class_param_pid,term,session,dtl.id'));
+                    $result = DB::table('students as s')
+                        ->joinSub($rank, 'rank', function ($rnk) {
+                            $rnk->on('s.pid',  'rank.student_pid');
+                        })->select(DB::raw('rank.*'))
+                        ->orderBy('rank.id', 'DESC')
+                        ->where(['rank.student_pid' => $request->pid])
+                        ->first();
+                    $results[] = $result;
+                endforeach;
+            endif;
             return datatables($results)
             ->editColumn('position', function ($data) {
                 return ordinalFormat($data->position);

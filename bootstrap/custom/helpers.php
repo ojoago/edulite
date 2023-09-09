@@ -51,6 +51,15 @@ use App\Http\Controllers\Auths\AuthController;
         }
         // bruteLogout();
     }
+    function setStudentPid($pid=null){ //set pid key of the table to be acted upone
+        session(['activeStudentPid'=>$pid]); //get user pid
+    }
+    function studentPid(){ //set pid key of the table to be acted upone 
+        if(getUserPid()){//check if user is still logged
+            return session('activeStudentPid'); //return school pid
+        }
+        // bruteLogout();
+    }
     function setSchoolUserPid($pid=null){ //set pid key of the table to be acted upone
         session(['schoolUserPid'=>base64Encode($pid)]); //get user pid
     }

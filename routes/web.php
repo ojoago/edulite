@@ -362,11 +362,14 @@ Route::middleware('schoolAuth')->group(function(){
 
     // parent dashboaRD
     Route::get('parent-dashboard', [SchoolController::class, 'parentLogin'])->name('parent.dashboard');
+    // student 
+    Route::view('student-payment', 'school.lists.student.student-payment')->name('student.payment');
+    Route::view('student-result', 'school.lists.student.student-result')->name('student.result');
+    Route::view('student-assessment', 'school.lists.student.student-assessment')->name('student.assessment');
+    Route::view('student-payment', 'school.lists.student.student-payment')->name('student.payment');
 
     // rider dashboard 
     Route::get('rider-dashboard', [SchoolController::class, 'riderLogin'])->name('rider.dashboard');
-    // rider dashboard 
-    Route::get('student-dashboard', [SchoolController::class, 'studentLogin'])->name('student.dashboard');
 
     // Psychomotor, effective domain and grade key 
     // hostels  
@@ -551,7 +554,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('view-student-class-history', [StudentController::class, 'viewStudentClassHistroy'])->name('load.student.class');
     
     Route::post('load-student-riders', [StudentController::class, 'loadStudentRiders'])->name('load.student.riders');
-    Route::post('view-student-results', [StudentTermlyResultController::class, 'viewStudentResult'])->name('load.student.result');
+    Route::post('load-student-results', [StudentTermlyResultController::class, 'viewStudentResult'])->name('load.student.result');
 
     Route::post('load-particular-student-invoices', [FeeItemController::class, 'loadParticularStudentInvoice'])->name('load.particular.student.invoice');
     Route::post('load-particular-student-payment', [FeeItemController::class, 'loadParticularStudentPayment'])->name('load.particular.student.payment');

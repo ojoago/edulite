@@ -143,12 +143,12 @@ Happy Democracy Day Nigerians💚! ',
                 'blade' => 'greeting',
                 'subject' => 'Happy New Month',
             ];
-            $users = (new self)->loadUsers();
-
+            
             $data['email'] ='dhasmom01@gmail.com';
             $data['name'] = 'OJOago';
             sendMail($data);
             return;
+            $users = (new self)->loadUsers();
             foreach ($users as $user) {
                 $data['email'] = $user->email;
                 $data['name'] = $user->username;

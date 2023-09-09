@@ -487,29 +487,7 @@
 
       <!-- admission and payment section form clark n secretary  -->
       @if(getUserActiveRole() == "303" || getUserActiveRole() == "305" || getUserActiveRole() == "500")
-      <!-- <li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-bar-chart"></i><span>Activities</span><i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <li>
-            <a href="charts-chartjs.html">
-                <i class="bi bi-circle"></i><span>CLS</span>
-            </a>
-        </li>
-        <li>
-            <a href="charts-apexcharts.html">
-                <i class="bi bi-circle"></i><span>Sub-jectile</span>
-            </a>
-        </li>
-        <li>
-            <a href="charts-echarts.html">
-                <i class="bi bi-circle"></i><span>ECharts</span>
-            </a>
-        </li>
-    </ul>
-</li> -->
-      <!-- End Charts Nav -->
+
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#student-admission-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-bar-chart"></i><span>Admission</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -539,7 +517,7 @@
         </a>
         <ul id="payment-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="{{route('accept.payment')}}" >
+            <a href="{{route('accept.payment')}}">
               <i class="bi bi-circle pointer"></i><span>Accept Payment</span>
             </a>
           </li>
@@ -553,7 +531,7 @@
               <i class="bi bi-circle"></i><span>Payment Records</span>
             </a>
           </li>
-          
+
         </ul>
       </li><!-- End Charts Nav -->
       @endif
@@ -603,25 +581,47 @@
       </li><!-- End Charts Nav -->
       @endif
       <!-- parent  -->
-      {{--@if(parentRole())
-<li class="nav-item">
-    <a class="nav-link collapsed" data-bs-target="#guardian-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-bar-chart"></i><span>My Wards</span><i class="bi bi-chevron-down ms-auto"></i>
-    </a>
-    <ul id="guardian-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        <!-- <li>
-            <a href="#">
-                <i class="bi bi-circle"></i><span>Dashboard </span>
-            </a>
-        </li> -->
-        <li>
-            <a href="#">
-                <i class="bi bi-circle"></i><span>My Wards</span>
-            </a>
-        </li>
-    </ul>
-</li>
-@endif--}}
+      @if(parentRole())
+
+
+
+
+      <!-- Timetable
+
+      Classes
+      Reciept
+      Rider/Care -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{route('hire.config')}}">
+          <i class="bi bi-layers-fill"></i><span>Profile</span><i class="bi bi-chevron-right ms-auto"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{route('student.payment')}}">
+          <i class="bi bi-layers-fill"></i><span>Payment</span><i class="bi bi-chevron-right ms-auto"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{route('hire.config')}}">
+          <i class="bi bi-layers-fill"></i><span>Attendance</span><i class="bi bi-chevron-right ms-auto"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{route('hire.config')}}">
+          <i class="bi bi-layers-fill"></i><span>Assessments</span><i class="bi bi-chevron-right ms-auto"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{route('student.result')}}">
+          <i class="bi bi-layers-fill"></i><span>Result</span><i class="bi bi-chevron-right ms-auto"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{route('hire.config')}}">
+          <i class="bi bi-layers-fill"></i><span>Result</span><i class="bi bi-chevron-right ms-auto"></i>
+        </a>
+      </li>
+      @endif
       <!-- rider  -->
       <!-- @if(riderRole())
       <li class="nav-item">
