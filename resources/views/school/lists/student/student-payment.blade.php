@@ -77,7 +77,7 @@
 
 
 <!-- student invoice payment -->
-<div class="modal fade" id="processStudentInvoiceModal" tabindex="-1">
+<div class="modal fade" id="processStudentInvoiceModal" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -111,20 +111,11 @@
         FormMultiSelect2('#formTermSelect2', 'term', 'Select Term', term)
         FormMultiSelect2('#formSessionSelect2', 'session', 'Select Session', session)
 
-
-        FormMultiSelect2('#timetableTermSelect2', 'term', 'Select Term', term)
-        FormMultiSelect2('#timetableSessionSelect2', 'session', 'Select Session', session)
-
-        FormMultiSelect2('#resultTermSelect2', 'term', 'Select Term');
-        FormMultiSelect2('#resultSessionSelect2', 'session', 'Select Session');
-
         $('#reciept-tab').click(function() {
             $('#recieptDataTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
+                
                 responsive: true,
                 destroy: true,
                 "ajax": {
@@ -261,130 +252,7 @@
                 $('#processStudentInvoiceModal').modal('show');
             }
         })
-        // load page content  
-        $('#timetable-tab').click(function() {
-            loadTimetable();
-        })
-
-
-        $('#timetableTermSelect2').change(function() {
-            let term = $(this).val();
-            let session = $('#timetableSessionSelect2').val();
-            if (session != null) {
-                loadTimetable(session, term);
-            } else {
-                loadTimetable(null, term);
-            }
-        })
-        // load school timetable
-        function loadTimetable(session = null, term = null) {
-            $('#timetableDatatable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
-                responsive: true,
-                destroy: true,
-                // type: "GET",
-                "ajax": {
-                    url: "{{route('load.student.timetable')}}",
-                    type: "post",
-                    data: {
-                        _token: "{{csrf_token()}}",
-                        session_pid: session,
-                        term_pid: term,
-                        pid: "{{studentPid()}}",
-                    },
-                },
-                "columns": [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                    },
-                    // {
-                    //     "data": "arm"
-                    // },
-                    {
-                        "data": "subject"
-                    },
-                    {
-                        "data": "exam_date"
-                    },
-                    {
-                        "data": "exam_time",
-                    },
-                    {
-                        "data": "date"
-                    },
-                ],
-                // drawCallback: function(settings) {
-                //     var api = this.api();
-                //     var rows = api.rows({
-                //         page: 'current'
-                //     }).nodes();
-                //     var last = null;
-
-                //     api.column(4, {
-                //         page: 'current'
-                //     }).data().each(function(group, i) {
-
-                //         if (last !== group) {
-
-                //             $(rows).eq(i).before(
-                //                 '<tr class="group"><td colspan="8">' + 'GRUPO ....' + group + '</td></tr>'
-                //             );
-
-                //             last = group;
-                //         }
-                //     });
-                // }
-            });
-        }
-
-        // load student riders 
-        $('#rider-tab').click(function() {
-            $('#riderDataTable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
-                responsive: true,
-                destroy: true,
-                "ajax": {
-                    method: "POST",
-                    url: "{{route('load.student.riders')}}",
-                    data: {
-                        pid: "{{studentPid()}}",
-                        _token: "{{csrf_token()}}"
-                    },
-                },
-
-                "columns": [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                    },
-                    {
-                        "data": "fullname"
-                    },
-                    {
-                        "data": "gsm"
-                    },
-                    {
-                        "data": "username"
-                    },
-                    {
-                        "data": "address"
-                    },
-                    {
-                        "data": "status"
-                    },
-                    {
-                        "data": "date"
-                    },
-                ],
-            });
-        });
+         
 
     });
 </script>

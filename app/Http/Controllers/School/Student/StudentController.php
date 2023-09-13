@@ -121,16 +121,17 @@ class StudentController extends Controller
     public function viewStudentclassHistroy(Request $request){
         $data = StudentClass::where([
                     'student_classes.school_pid' => getSchoolPid(),
-                     'student_classes.student_pid' => base64Decode($request->pid)
+                     'student_classes.student_pid' => $request->pid
                      ])
                      ->leftjoin('class_arms', 'class_arms.pid', 'student_classes.arm_pid')
                      ->join('sessions', 'sessions.pid', 'student_classes.session_pid')
-                     ->get(['session','arm','student_classes.updated_at']);
+                     ->get(['session','arm']);
             // logError($data);
         return datatables($data)
-            ->editColumn('date',function($data){
-                return $data->updated_at->diffForHumans();
-            })
+
+            // ->editColumn('date',function($data){
+            //     return $data->updated_at->diffForHumans();
+            // })
             ->make(true);
     }
     public function viewStudentResult(Request $request){

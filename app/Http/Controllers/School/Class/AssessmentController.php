@@ -46,7 +46,7 @@ class AssessmentController extends Controller
                                                 ->join('student_class_score_params as p','p.pid', 'b.class_param_pid')
                                                 ->join('class_arms as a','a.pid','p.arm_pid')
                                                 ->join('students as std', 'std.current_class_pid','a.pid')
-                                                ->where(['b.school_pid'=>getSchoolPid(),'std.pid'=>base64Decode($pid)])->where('b.status', '<>', 0)
+                                                ->where(['b.school_pid'=>getSchoolPid(),'std.pid'=>$pid])->where('b.status', '<>', 0)
                                                 ->whereNotIn('q.pid', function ($query) {
                                                     $query->select('question_pid')
                                                         ->from('question_answers');

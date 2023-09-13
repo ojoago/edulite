@@ -366,7 +366,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('student-payment', 'school.lists.student.student-payment')->name('student.payment');
     Route::view('student-result', 'school.lists.student.student-result')->name('student.result');
     Route::view('student-assessment', 'school.lists.student.student-assessment')->name('student.assessment');
-    Route::view('student-payment', 'school.lists.student.student-payment')->name('student.payment');
+    Route::view('student-attendance', 'school.lists.student.student-attendance')->name('student.attendance');
 
     // rider dashboard 
     Route::get('rider-dashboard', [SchoolController::class, 'riderLogin'])->name('rider.dashboard');
@@ -587,8 +587,9 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-class-student', [StudentAttendanceController::class, 'loadArmStudent'])->name('load.class.student');
     Route::post('submit-student-attendance', [StudentAttendanceController::class, 'submitStudentAttendance'])->name('submit.student.attendance');
     // student attendance 
-    Route::post('student-attendance', [StudentAttendanceController::class, 'studentAttendance'])->name('student.attendance');
     Route::view('student-attendance-history', 'school.student.attendance.student-attendance-history')->name('student.attendance.history');
+    Route::post('student-attendance', [StudentAttendanceController::class, 'studentAttendance'])->name('student.attendance');
+    Route::post('student-attendance-history', [StudentAttendanceController::class, 'studentAttendanceHistory']);//->name('student.attendance.history');
     Route::post('load-student-attendance-history', [StudentAttendanceController::class, 'loadStudentAttendanceHistory'])->name('load.student.attendance.history');
     Route::view('student-attendance-count', 'school.student.attendance.student-attendance-count')->name('student.attendance.count');
     Route::post('load-student-attendance-count', [StudentAttendanceController::class, 'loadStudentAttendanceCount'])->name('load.student.attendance.count');

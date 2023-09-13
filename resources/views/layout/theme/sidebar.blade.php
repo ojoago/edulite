@@ -602,12 +602,12 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{{route('hire.config')}}">
+        <a class="nav-link collapsed" href="{{route('student.attendance')}}">
           <i class="bi bi-layers-fill"></i><span>Attendance</span><i class="bi bi-chevron-right ms-auto"></i>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{{route('hire.config')}}">
+        <a class="nav-link collapsed" href="{{route('student.assessment')}}">
           <i class="bi bi-layers-fill"></i><span>Assessments</span><i class="bi bi-chevron-right ms-auto"></i>
         </a>
       </li>

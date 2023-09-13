@@ -251,7 +251,7 @@ class StudentTermlyResultController extends Controller
     public function viewStudentResult(Request $request)
     {
         try {
-            $params = DB::table('student_class_results')->where(['student_pid' => $request->pid])->select('class_param_pid')->pluck('class_param_pid');
+            $params = DB::table('student_class_results')->where(['student_pid' => $request->pid])->select('class_param_pid')->orderByDesc('created_at')->pluck('class_param_pid');
             $results = [];
             if($params) :
                 foreach($params as $pid):

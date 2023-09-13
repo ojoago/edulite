@@ -129,11 +129,11 @@ class StudentAttendanceController extends Controller
         ->select('fullname', 'reg_number', 'r.date', 'a.status')
         ->where($where)
             ->orderBy('date')
-            ->orderBy('a.updated_at')
+            ->orderBy('a.updated_at','DESC')
             ->get();
         return datatables($data)
             ->editColumn('start', function ($data) {
-                return date('y-m-d, D', strtotime($data->date));
+                return date('Y-m-d, D', strtotime($data->date));
             })
             ->editColumn('title', function ($data) {
                 return $data->status == 1 ? '<span class="bg-success text-white p-1">Present</span>' : '<span class="bg-danger text-white p-1">Absent</span>';
@@ -172,7 +172,7 @@ class StudentAttendanceController extends Controller
                 ->select(DB::raw("fullname,reg_number,
                                     COUNT(CASE WHEN a.status = 1 THEN 'present' END) as 'present',
                                     COUNT(CASE WHEN a.status = 0 THEN 'absent' END) as 'absent',
-                                    COUNT(CASE WHEN a.status = 2 THEN 'excused' END) as 'excused',
+                                    COUNT(CASE WHEN a.status = 2 THEN 'excused' END) as 'excused'
                                      "))
                 ->where($where)
                     ->groupBy('reg_number')
@@ -208,7 +208,7 @@ class StudentAttendanceController extends Controller
                                             WHEN 2 THEN 'excused'
                                 END) as title"))
                     ->where([
-                            'a.student_pid'=>base64Decode($request->pid),
+                            'a.student_pid'=>($request->pid),
                             'r.term_pid'=>activeTerm(),
                             'r.session_pid'=>activeSession(),
                             'a.school_pid'=>getSchoolPid()])
@@ -216,5 +216,51 @@ class StudentAttendanceController extends Controller
                     ->get();
     
        return response()->json($data->toArray());
+    }
+    // student attendance history 
+    public function studentAttendanceHistory(Request $request)
+    {
+        if (isset($request->term_pid) && isset($request->session_pid) && isset($request->arm_pid)) {
+            $where = [
+                'r.school_pid' => getSchoolPid(),
+                'r.arm_pid' => $request->arm_pid,
+                'r.term_pid' => $request->term_pid,
+                'a.student_pid' => $request->pid,
+                'r.session_pid' => $request->session_pid
+            ];
+        } elseif (isset($request->term_pid)) {
+            $where = [
+                'r.school_pid' => getSchoolPid(),
+                'r.arm_pid' => $request->arm_pid,
+                'r.term_pid' => $request->term_pid,
+                'a.student_pid' => $request->pid,
+                'r.session_pid' => activeSession()
+            ];
+        } else {
+            $where = [
+                'r.school_pid' => getSchoolPid(),
+                // 'r.arm_pid' => $request->arm_pid,
+                'a.student_pid' => $request->pid,
+                'r.term_pid' => activeTerm(),
+                'r.session_pid' => activeSession()
+            ];
+        }
+        $data = DB::table('attendances as a')
+        ->join('attendance_records as r', 'r.pid', 'a.record_pid')
+        ->join('students as s', 's.pid', 'a.student_pid')
+        ->select('r.date', 'a.status')
+        ->where($where)
+            ->orderBy('date')
+            ->orderBy('a.updated_at')
+            ->get();
+        return datatables($data)
+            ->editColumn('start', function ($data) {
+                return date('Y-m-d, D', strtotime($data->date));
+            })
+            ->editColumn('title', function ($data) {
+                return $data->status == 1 ? '<span class="bg-success text-white p-1">Present</span>' : '<span class="bg-danger text-white p-1">Absent</span>';
+            })
+            ->rawColumns(['data', 'title'])
+            ->make(true);
     }
 }
