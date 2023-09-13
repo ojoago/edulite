@@ -28,7 +28,7 @@ class BirthdayGreeting extends Command
      */
     public function handle()
     {
-        SeasonalGreetingController::happyNewMonth();
+        SeasonalGreetingController::birthdays();
 
     }
 }

@@ -11,7 +11,7 @@ class setupReminder extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'setup:reminder';
 
     /**
      * The console command description.
