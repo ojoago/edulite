@@ -69,7 +69,8 @@ class AssessmentController extends Controller
     }
 
     public function loadStudentSubmitedAssessments(){
-      $data = DB::table('question_banks as b')->join('questions as q','q.bank_pid','b.pid')
+      $data = DB::table('question_banks as b')
+                                                ->join('questions as q','q.bank_pid','b.pid')
                                                 ->join('question_answers as an', 'an.question_pid','q.pid')
                                                 ->join('students as std', 'std.pid','an.student_pid')
                                                 ->join('class_arm_subjects as cas','cas.pid','b.subject_pid')

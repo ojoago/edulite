@@ -147,15 +147,15 @@
               </span>
             </a>
           </li>
+          <li>
+            <a class="nav-link collapsed" href="{{route('hire.config')}}">
+              <i class="bi bi-layers-fill"></i><span>Advert</span><i class="bi bi-chevron-right ms-auto"></i>
+            </a>
+          </li>
         </ul>
       </li>
       <!-- End Framework -->
-      <!-- End Recruitment -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{{route('hire.config')}}">
-          <i class="bi bi-layers-fill"></i><span>Advert</span><i class="bi bi-chevron-right ms-auto"></i>
-        </a>
-      </li>
+    
       <!-- End Framework -->
 
       <!-- create account nav  -->
