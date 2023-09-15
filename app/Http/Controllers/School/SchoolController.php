@@ -134,20 +134,22 @@ class SchoolController extends Controller
 
 
     public function parentLogin(){
-         
+
+        setStudentPid();//set student pid to null 
         $data = DB::table('students as s')->join('class_arms as a','a.pid','s.current_class_pid')
                                         ->join('sessions as i','i.pid','current_session_pid')
                                         ->where(['s.school_pid' => getSchoolPid(), 's.parent_pid' => getSchoolUserPid()])
                                         ->orderByDesc('s.id')
                                         ->get(['reg_number','fullname','s.status','passport','session','arm','s.pid']);//->dd();
         if(count($data)==1){
-            return redirect()->route('student.profile', ['id' => base64Encode($data[0]->pid)]);
+            return redirect()->route('student.login', ['id' => base64Encode($data[0]->pid)]);
         }
         return view('school.dashboard.parent-dashboard', compact('data'));
     }
     public function studentLogin(){
         $data = Student::where(['school_pid' => getSchoolPid(), 'pid' => getSchoolUserPid()])->first(['pid','status']);
-        return redirect()->route('student.profile',['id'=>base64Encode($data->pid)]);
+        setStudentPid();
+        return redirect()->route('student.login',['id'=>base64Encode($data->pid)]);
         return view('school.dashboard.student-dashboard', compact('data'));
     }
     public function riderLogin(){

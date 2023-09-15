@@ -94,10 +94,14 @@ class StudentController extends Controller
     private function loadStudentQuery($condition){
 
     }
-    public function studentProfile($pid){
+    public function studentLogin($pid){
         setStudentPid(base64Decode($pid));
-        return view('school.lists.student.student-profile',compact('pid'));
+        return redirect()->route('student.profile');
     }
+    // public function studentProfile($pid){
+    //     setStudentPid(base64Decode($pid));
+    //     return view('school.lists.student.student-profile',compact('pid'));
+    // }
     public function find($pid){
         return view('school.registration.student.register-student',compact('pid'));
     }
@@ -112,7 +116,7 @@ class StudentController extends Controller
         $data = DB::table('users as u')->join('user_details as d', 'd.user_pid', 'u.pid')
             ->join('students as s', 's.user_pid', 'u.pid')
             ->join('class_arms as a', 's.current_class_pid', 'a.pid')
-            ->where(['s.school_pid' => getSchoolPid(), 's.pid' => base64Decode($request->pid)])
+            ->where(['s.school_pid' => getSchoolPid(), 's.pid' => $request->pid])
             ->select('gsm', 'email', 'username', 's.fullname','reg_number', 's.address', 'dob', 'd.gender', 's.religion', 's.passport','s.status','a.arm')->first();
          return response()->json(formatStudentProfile($data));
     }

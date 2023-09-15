@@ -3,10 +3,19 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
       <li class="nav-item">
+
+        @if(parentRole())
+        <a class="nav-link " href="{{route('parent.dashboard')}}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+        @else
         <a class="nav-link " href="{{route('my.school.dashboard')}}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
+        @endif
+
       </li><!-- End Dashboard Nav -->
 
 
@@ -208,7 +217,8 @@
       </li>
       <!-- end of uploads -->
       <!-- add/link users   -->
-      <li class="nav-item">
+
+      <!-- <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#add-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-file-spreadsheet-fill"></i><span>Add</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -235,7 +245,8 @@
             </a>
           </li>
         </ul>
-      </li>
+      </li> -->
+
       <!-- End add/link users -->
       <!-- user list  -->
       <li class="nav-item">
@@ -581,46 +592,35 @@
       </li><!-- End Charts Nav -->
       @endif
       <!-- parent  -->
-      @if(parentRole())
+      @if(parentRole() || studentRole())
 
-
-
-
-      <!-- Timetable
-
-      Classes
-      Reciept
-      Rider/Care -->
+      @if(studentPid())
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{{route('hire.config')}}">
-          <i class="bi bi-layers-fill"></i><span>Profile</span><i class="bi bi-chevron-right ms-auto"></i>
+        <a class="nav-link" href="{{route('student.profile')}}">
+          <i class="bi bi-person"></i><span>Profile</span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{{route('student.payment')}}">
-          <i class="bi bi-layers-fill"></i><span>Payment</span><i class="bi bi-chevron-right ms-auto"></i>
+        <a class="nav-link" href="{{route('student.payment')}}">
+          <i class="bi bi-credit-card"></i><span>Payment</span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{{route('student.attendance')}}">
-          <i class="bi bi-layers-fill"></i><span>Attendance</span><i class="bi bi-chevron-right ms-auto"></i>
+        <a class="nav-link" href="{{route('student.attendance')}}">
+          <i class="bi bi-calendar-date"></i><span>Attendance</span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{{route('student.assessment')}}">
-          <i class="bi bi-layers-fill"></i><span>Assessments</span><i class="bi bi-chevron-right ms-auto"></i>
+        <a class="nav-link" href="{{route('student.assessment')}}">
+          <i class="bi bi-play-circle-fill"></i><span>Assessments</span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{{route('student.result')}}">
-          <i class="bi bi-layers-fill"></i><span>Result</span><i class="bi bi-chevron-right ms-auto"></i>
+        <a class="nav-link" href="{{route('student.result')}}">
+          <i class="bi bi-journal-album"></i><span>Result</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{{route('hire.config')}}">
-          <i class="bi bi-layers-fill"></i><span>Result</span><i class="bi bi-chevron-right ms-auto"></i>
-        </a>
-      </li>
+      @endif
       @endif
       <!-- rider  -->
       <!-- @if(riderRole())

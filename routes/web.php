@@ -56,7 +56,7 @@ Route::view('/','welcome')->middleware('guest');
 // sign up 
 Route::get('/mail',function(){
     
-    return view('mails.school-mail');
+    return view('mails.greeting-mail');
 });
 // sign up form 
 // Route::view('sign-up/{id?}', [AuthController::class, 'signUpForm'])->name('sign.up')->middleware('guest');
@@ -545,7 +545,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-rider-list', [SchoolRiderController::class, 'index'])->name('load.school.rider.list');
 
     // student profile 
-    Route::get('student-profile/{id}', [StudentController::class, 'studentProfile'])->name('student.profile');
+    Route::get('student-login/{id}', [StudentController::class, 'studentLogin'])->name('student.login');
+    Route::view('student-profile', 'school.lists.student.student-profile')->name('student.profile');
     
     // load student info for editing 
     Route::get('edit-student/{id}', [StudentController::class, 'find'])->name('edit.student.info');
@@ -576,7 +577,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('submit-assessment', [AssessmentController::class, 'submitAssessment'])->name('submit.assessment');
     Route::get('load-submitted-assessments', [AssessmentController::class, 'loadStudentSubmitedAssessments'])->name('load.submitted.assessments');
     // student attempt assigment 
-    Route::get('attempt-questions', [AssessmentController::class, 'loadQuestions'])->name('load.questions');
+    Route::get('attempt-assessment', [AssessmentController::class, 'loadQuestions'])->name('load.questions');
     
     Route::get('mark-assessment', [AssessmentController::class, 'loadSubmittedAssessmentsByStudent'])->name('mark.assessment');
 

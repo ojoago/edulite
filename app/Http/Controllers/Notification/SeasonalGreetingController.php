@@ -144,10 +144,10 @@ Happy Democracy Day Nigerians💚! ',
                 'subject' => 'Happy New Month',
             ];
             
-            $data['email'] ='dhasmom01@gmail.com';
-            $data['name'] = 'OJOago';
-            sendMail($data);
-            return;
+            // $data['email'] ='dhasmom01@gmail.com';
+            // $data['name'] = 'OJOago';
+            // sendMail($data);
+            // return;
             $users = (new self)->loadUsers();
             foreach ($users as $user) {
                 $data['email'] = $user->email;
@@ -156,6 +156,30 @@ Happy Democracy Day Nigerians💚! ',
             }
         } catch (\Throwable $e) {
             logError($e->getMessage());
+        }
+    }
+
+    
+
+    public static function setupReminder(){
+      $messages =  "We are excited that you have chosen to use our platform to manage your school.
+        We hope that you will find our platform easy to use and effective for your teaching and learning goals.
+        However, we noticed that you have not completed your school setup process yet.
+        To access all the features and benefits of our platform, you need to create your school head (Principal/Head teacher), Terms, Sessions, Categories,
+        Classes, class arms, subject types, and subjects.
+        the process is simplified, it won't take more 30 minutes of your time.
+        once you are through will the setup, our team will design a custom student report card for your school.";
+        $data = [
+            'message' => $messages,
+            'blade' => 'greeting',
+            'url' => 'login',
+        ];
+        $users = (new self)->loadSchoolAdmin();
+        foreach ($users as $row) {
+            $data['email'] = $row->email;
+            $data['name'] = $row->fullname ?? $row->username;
+            $data['subject'] = $row->school_name.', Setup Seminder';
+            sendMail($data);
         }
     }
 
@@ -169,4 +193,36 @@ Happy Democracy Day Nigerians💚! ',
             return [];
         }
     }
+
+    private function loadSchoolAdmin(){
+       try {
+            $users = DB::table('users as u')->join('schools as s', 'u.pid', 's.user_pid')
+                ->leftJoin('user_details as d', 'd.user_pid', 'u.pid')
+                ->select('email', 'username', 'fullname', 'school_name')->where('u.email', '<>', null)->where('s.status', 2)->get();
+        
+         return $users;
+
+       } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return [];
+       }
+    }
 }
+
+
+// Here is a possible TGIF message for a teacher:
+
+// Hello,
+
+// You made it to the end of another week! Congratulations on your hard work and dedication to your students. You are doing an amazing job!
+
+// We know that teaching can be challenging, especially in these uncertain times. But you have shown resilience, creativity, and compassion in your profession. You have inspired your students to learn, grow, and achieve their potential.
+
+// We want to thank you for choosing our platform for your online education needs. We hope that you find our platform easy to use and effective for your teaching and learning goals. We are always here to support you and listen to your feedback.
+
+// As you wrap up this week, we hope that you take some time to relax and recharge. You deserve it! Enjoy your weekend and celebrate your accomplishments. You are awesome!
+
+// TGIF!
+
+// Sincerely,
+// The Our Platform Team

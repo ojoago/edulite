@@ -15,7 +15,7 @@
     <div class="row">
         @foreach($data as $row)
         <div class="col-md-4 ">
-            <a href="{{route('student.profile',['id'=>base64Encode($row->pid)])}}" rel="noopener noreferrer">
+            <a href="{{route('student.login',['id'=>base64Encode($row->pid)])}}" rel="noopener noreferrer">
                 <div class="card shadow p-4" style="height: 420px;">
                     <div class="text-center" style="height:150px;">
                         <img src="{{asset('/files/images/'.$row->passport.'')}}" class="img img-responsive img-circle" style="width:auto;height:100%">

@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('seasonal:greeting')->everyMinute();
         $schedule->command('birthday:greeting')->daily()->runInBackground();
-        // $schedule->command('setup:reminder')->weeklyOn(1, '8:00');
+        $schedule->command('setup:reminder')->dailyAt('11:00')->runInBackground();
         $schedule->command('newmonth:greeting')->monthly()->runInBackground();
         $schedule->command('seasonal:greeting')->yearlyOn(6, 12, '06:45')->runInBackground();
     }

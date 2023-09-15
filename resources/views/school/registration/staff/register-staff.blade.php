@@ -4,7 +4,10 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Register Staff</h5>
+        <h5 class="card-title">Register Staff
+
+            <button class="btn btn-primary btn-sm" data-bs-target="#addStaffModal" data-bs-toggle="modal">Link</button>
+        </h5>
 
         <!-- Multi Columns Form -->
         <form class="row g-3" id="createStaffForm" enctype='multipart/form-data'>
@@ -156,7 +159,7 @@
             var id = $(this).val();
             lga(id);
         });
-        
+
         // create school category 
         $('#createStaffBtn').click(function() {
             $.ajax({

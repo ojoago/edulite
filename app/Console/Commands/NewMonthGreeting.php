@@ -19,7 +19,7 @@ class NewMonthGreeting extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'send out happy new month message';
 
     /**
      * Execute the console command.

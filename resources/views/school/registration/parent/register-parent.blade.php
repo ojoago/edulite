@@ -4,7 +4,10 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Register Parent</h5>
+        <h5 class="card-title">Register Parent
+            <button class="btn btn-primary btn-sm" data-bs-target="#addParentModal" data-bs-toggle="modal">Link</button>
+
+        </h5>
         <style>
             #linkStudentPart,
             .formS {

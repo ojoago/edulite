@@ -19,7 +19,8 @@ class AssessmentController extends Controller
     // manual Assessment goes here 
     // StudentClassScoreParam
     public function loadAssessment(){
-        $data = DB::table('question_banks as b')->join('questions as q','q.bank_pid','b.pid')
+        $data = DB::table('question_banks as b')
+                                                // ->join('questions as q','q.bank_pid','b.pid')
                                                 ->join('class_arm_subjects as cas','cas.pid','b.subject_pid')
                                                 ->join('subjects as s','s.pid','cas.subject_pid')
                                                 ->join('student_class_score_params as p','p.pid', 'b.class_param_pid')
@@ -40,7 +41,8 @@ class AssessmentController extends Controller
         ->make(true);
     }
     public function loadAssessmentForStudent($pid){
-        $data = DB::table('question_banks as b')->join('questions as q','q.bank_pid','b.pid')
+        $data = DB::table('question_banks as b')
+                                                ->join('questions as q','q.bank_pid','b.pid')
                                                 ->join('class_arm_subjects as cas','cas.pid','b.subject_pid')
                                                 ->join('subjects as s','s.pid','cas.subject_pid')
                                                 ->join('student_class_score_params as p','p.pid', 'b.class_param_pid')
@@ -50,7 +52,7 @@ class AssessmentController extends Controller
                                                 ->whereNotIn('q.pid', function ($query) {
                                                     $query->select('question_pid')
                                                         ->from('question_answers');
-                                                })
+                                                })->distinct('title')
                                                 ->select('s.subject','b.title','a.arm','b.pid','b.end_date','b.created_at','std.pid as std','b.type','q.path')->get();
         return datatables($data)
         ->addIndexColumn()
@@ -75,7 +77,7 @@ class AssessmentController extends Controller
                                                 ->join('student_class_score_params as p','p.pid', 'b.class_param_pid')
                                                 ->join('class_arms as a','a.pid','p.arm_pid')
                                                 ->where(['b.school_pid'=>getSchoolPid()])->where('b.status', '<>', 0)->orderBy('an.status')->orderBy('b.title')
-                                               
+                                               ->distinct('title')
                                                 ->select('s.subject','b.title','a.arm','b.pid','b.end_date','an.created_at','std.pid as std','b.type','std.fullname','std.reg_number')->get();
         return datatables($data)
         ->addIndexColumn()

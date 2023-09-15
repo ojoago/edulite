@@ -99,7 +99,7 @@
 <script>
     $(document).ready(function() {
 
-        $('#assessments').click(function() {
+        $('#assessment-tab').click(function() {
             loadAssessment()
         })
         $('#mark-tab').click(function() {

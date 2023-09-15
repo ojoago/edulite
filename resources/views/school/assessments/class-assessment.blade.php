@@ -322,7 +322,6 @@
 
 
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.js" defer></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.min.js" defer></script> -->
 

@@ -20,7 +20,11 @@
 <div class="card">
     <div class="card-body">
         <a href="{{route('upload.student')}}">Click here upload multiple</a>
-        <h5 class="card-title">Register Student for <span class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</span> </h5>
+        <h5 class="card-title">Register Student for
+            <button class="btn btn-primary btn-sm" data-bs-target="#addStudentModal" data-bs-toggle="modal">Link</button>
+
+            <span class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</span>
+        </h5>
 
         <form class="row g-3" id="createStudentForm">
             @csrf

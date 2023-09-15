@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\Notification\SeasonalGreetingController;
 
 class setupReminder extends Command
 {
@@ -18,7 +19,7 @@ class setupReminder extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'remind school admin to complete their setup';
 
     /**
      * Execute the console command.
@@ -27,6 +28,6 @@ class setupReminder extends Command
      */
     public function handle()
     {
-        return 0;
+        SeasonalGreetingController::setupReminder();
     }
 }
