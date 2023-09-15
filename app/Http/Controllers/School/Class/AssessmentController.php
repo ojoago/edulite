@@ -340,6 +340,28 @@ class AssessmentController extends Controller
 
     // load asseement for marking 
     public function loadSubmittedAssessmentsByStudent(Request $request){
-        dd($request->all());
+        try {
+            $data = DB::table('question_banks as b')
+                ->join('class_arm_subjects as cas', 'cas.pid', 'b.subject_pid')
+                ->join('subjects as s', 's.pid', 'cas.subject_pid')
+                ->join('student_class_score_params as p', 'p.pid', 'b.class_param_pid')
+                ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+                ->join('terms as t', 't.pid', 'p.term_pid')
+                ->join('sessions as e', 'e.pid', 'p.session_pid')
+                ->where(['b.school_pid' => getSchoolPid(), 'b.pid' => $request->key])
+                ->select('b.pid as key', 'mark',  'type', 's.subject', 'b.title', 'a.arm', 'term', 'session', 'b.end_date')->first();
+            
+            $questions = DB::table('questions as q')
+                ->join('question_answers as an', 'an.question_pid', 'q.pid')
+                ->join('students as std', 'an.student_pid', 'std.pid')
+                ->where(['q.school_pid' => getSchoolPid(), 'an.student_pid' => $request->std, 'bank_pid' => $request->key])
+                ->select('an.student_pid', 'an.created_at as submitted_date', 'std.fullname', 'std.reg_number', 'an.path', 'q.path as link','q.mark')->get();
+            
+            return view('school.assessments.mark-assessment', ['questions' => $questions, 'data' => $data]);
+
+        } catch (\Throwable $e) {
+            logError(['line'=>__LINE__,'file'=>__FILE__,'error'=>$e->getMessage()]);
+            return redirect()->back()->with('error','failed to load student answer');
+        }        
     }
 }

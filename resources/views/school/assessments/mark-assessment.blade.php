@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','Attempt Assessment')
+@section('title','Mark Assessment')
 @section('content')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.css" rel="stylesheet">
 
@@ -8,21 +8,19 @@
         <h5 class="card-title mr-4">Assessment: {{$data->arm}} | {{$data->subject}} | {{$data->term}}, {{$data->session}}</h5>
 
         <fieldset class="border rounded-3 p-3">
-            <legend class="float-none w-auto px-3">{{$data->title}} | Deadline: <span class="text-danger">{{$data->end_date}}</span> </legend>
+            <legend class="float-none w-auto px-3">{{$data->title}} | Submitted: <span class="text-danger">{{$questions[0]->submitted_date}}</span> </legend>
 
             <form class="row g-3 needs-validation" id="submitAssessmentForm">
                 @csrf
                 <div class="col-md-12" id="fieldQuestions">
-                    <input type="hidden" value="{{$std}}" name="std">
+                    <input type="hidden" value=" " name="std">
                     @foreach($questions as $row)
                     <fieldset class="border rounded-3 px-2">
                         <legend class="float-none w-auto px-3">Question {{$loop->iteration}} {{$row->mark ? '| '.$row->mark .'Mark(s)' :''}}</legend>
                         @if($data->type ==1)
                         <label class="form-label text-danger">File 1 mb max </label>
-                        <input type="hidden" name="pid[]" value="{{$row->pid}}">
-                        <input type="hidden" name="type" value="1">
-                        <input type="file" accept=".pdf,.docs,.doc" name="file" class="form-control form-control-sm">
-                        <p class="text-danger file_error"></p>
+                        <input type="hidden" name="pid[]" value="{{$row->student_pid}}">
+                        <embed src="{{asset($row->path)}}" style=""/>
                         @php continue @endphp
                         @endif
                         @php $options = json_decode($row->options) @endphp
@@ -37,8 +35,8 @@
                         @else
 
                         <label class="form-label"> {!!$row->question!!}</label>
-                        <input type="hidden" name="pid[]" value="{{$row->pid}}">
-                        <textarea type="text" class="form-control form-control-sm summer-note" name="answer[{{$row->pid}}][]" id="newAssignmentNote" placeholder="Type answer"></textarea>
+                        <input type="hidden" name="pid[]" value="{{$row->student_pid}}">
+                        <textarea type="text" class="form-control form-control-sm summer-note" name="answer[{{$row->student_pid}}][]" id="newAssignmentNote" placeholder="Type answer"></textarea>
                         <p class="text-danger note_error"></p>
                         @endif
                     </fieldset>
