@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','User Dashboard')
+@section('title','Student Dashboard')
 @section('content')
 <div class="container">
     <div class="pagetitle">

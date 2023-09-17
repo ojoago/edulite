@@ -38,7 +38,7 @@
 
                         <label class="form-label"> {!!$row->question!!}</label>
                         <input type="hidden" name="pid[]" value="{{$row->pid}}">
-                        <textarea type="text" class="form-control form-control-sm summer-note" name="answer[{{$row->pid}}][]" id="newAssignmentNote" placeholder="Type answer"></textarea>
+                        <textarea type="text" class="form-control form-control-sm summer-note" name="answer[{{$row->pid}}]" id="newAssignmentNote" placeholder="Type answer"></textarea>
                         <p class="text-danger note_error"></p>
                         @endif
                     </fieldset>
@@ -47,7 +47,7 @@
 
                 <div class="text-center">
                     <button class="btn btn-primary" type="button" id="submitAssessmentBtn">Submit</button>
-                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close"><a href="{{route('student.assessment')}}">Cancel</a></button>
                 </div>
             </form>
         </fieldset>
@@ -58,7 +58,6 @@
 
 
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.js" defer></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.min.js" defer></script> -->
 

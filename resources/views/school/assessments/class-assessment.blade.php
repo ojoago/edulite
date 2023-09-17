@@ -310,6 +310,7 @@
                             <th>Student</th>
                             <!-- <th>Date</th> -->
                             <th>Date Submitted</th>
+                            <th>Mark</th>
                             <th width="10%">Action</th>
                         </tr>
                     </thead>
@@ -339,7 +340,7 @@
             $('#markTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                 
+
                 responsive: true,
                 destroy: true,
                 "ajax": "{{route('load.submitted.assessments')}}",
@@ -358,6 +359,9 @@
 
                     {
                         "data": "created_at"
+                    },
+                    {
+                        "data": "mark"
                     },
                     {
                         "data": "action"
@@ -393,7 +397,7 @@
             $('#assignmentTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                 
+
                 responsive: true,
                 destroy: true,
                 "ajax": "{{route('load.assignment')}}",
@@ -630,7 +634,9 @@
                 $('.sameMarkRow').show(500);
             }
         })
-        $('.summer-note').summernote()
+        $('.summer-note').summernote({
+            fontsize: '14'
+        })
         // remove question 
         $(document).on('click', '.removeFieldsetBtn', function() {
             $(this).parent().parent().remove()
@@ -769,9 +775,11 @@
                     const type = $('#type' + qn).val()
                     let questionOptions = [];
                     let selected;
+                    let correctCount = 0;
                     for (let i = 0; i < options.length; i++) {
                         if (answer[i].checked == true) { //check if question is selected
                             selected = true;
+                            correctCount++; // count number of correct option
                         } else {
                             selected = false;
                         }
@@ -786,6 +794,7 @@
                         question,
                         type,
                         mark,
+                        count: correctCount,
                         options: questionOptions
                     })
 

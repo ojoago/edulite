@@ -362,6 +362,9 @@ Route::middleware('schoolAuth')->group(function(){
 
     // parent dashboaRD
     Route::get('parent-dashboard', [SchoolController::class, 'parentLogin'])->name('parent.dashboard');
+
+
+    Route::get('student-dashboard', [SchoolController::class, 'studentLogin'])->name('student.dashboard');
     // student 
     Route::view('student-payment', 'school.lists.student.student-payment')->name('student.payment');
     Route::view('student-result', 'school.lists.student.student-result')->name('student.result');
@@ -580,6 +583,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('attempt-assessment', [AssessmentController::class, 'loadQuestions'])->name('load.questions');
     
     Route::get('mark-assessment', [AssessmentController::class, 'loadSubmittedAssessmentsByStudent'])->name('mark.assessment');
+    Route::post('mark-student-assessment', [AssessmentController::class, 'markStudentAssessment'])->name('mark.student.assessment');
 
 
     //student attendance

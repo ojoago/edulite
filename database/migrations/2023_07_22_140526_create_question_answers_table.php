@@ -21,7 +21,7 @@ return new class extends Migration
             $table->longText('answer')->nullable();
             $table->longText('remark')->nullable();
             $table->float('mark')->nullable();
-            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('status')->default(0)->comment('0:submitted, 1:marked');
             $table->string('path')->nullable();
             $table->timestamps();
         });

@@ -182,7 +182,7 @@ class AuthController extends Controller
             return response()->json(['status' => 0, 'message' => ER_500]);
         }
     }
-    // reseting password when user submit b=form 
+    // reseting password when user submit  form 
     public function resetPassword(Request $request)
     {
         try {

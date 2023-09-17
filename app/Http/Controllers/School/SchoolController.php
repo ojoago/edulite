@@ -148,9 +148,11 @@ class SchoolController extends Controller
     }
     public function studentLogin(){
         $data = Student::where(['school_pid' => getSchoolPid(), 'pid' => getSchoolUserPid()])->first(['pid','status']);
-        setStudentPid();
-        return redirect()->route('student.login',['id'=>base64Encode($data->pid)]);
+        setStudentPid($data->pid); 
+
         return view('school.dashboard.student-dashboard', compact('data'));
+
+        return redirect()->route('student.login',['id'=>base64Encode($data->pid)]);
     }
     public function riderLogin(){
         $data = SchoolRider::where(['school_pid' => getSchoolPid(), 'user_pid' => getUserPid()])->first(['pid']);//->dd();

@@ -17,6 +17,8 @@ use App\Http\Controllers\Users\UserDetailsController;
 
 class StudentController extends Controller
 {
+    private  $pwd = 123456;
+
     public function __construct()
     {
         // $this->middleware('auth');
@@ -306,7 +308,6 @@ class StudentController extends Controller
 
 
     // student registration  goes here
-    private  $pwd = 123456;
 
     public function registerStudent(Request $request)
     {

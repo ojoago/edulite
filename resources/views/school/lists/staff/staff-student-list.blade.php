@@ -72,16 +72,13 @@
 </div>
 
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 <script>
     $(document).ready(function() {
 
         $('#activeStudentDataTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+            
             responsive: true,
             "ajax": "{{route('load.staff.active.student.list')}}",
             "columns": [{
@@ -140,9 +137,7 @@
             $('#inActiveStudentDataTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
+                
                 responsive: true,
                 destroy: true,
                 "ajax": "{{route('load.in.active.student')}}",
@@ -203,9 +198,7 @@
             $('#exStudentDataTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
+                
                 responsive: true,
                 destroy: true,
                 "ajax": "{{route('load.ex.student')}}",

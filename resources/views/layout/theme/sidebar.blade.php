@@ -9,6 +9,11 @@
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
+        @elseif(studentRole())
+        <a class="nav-link " href="{{route('student.dashboard')}}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
         @else
         <a class="nav-link " href="{{route('my.school.dashboard')}}">
           <i class="bi bi-grid"></i>
@@ -155,6 +160,7 @@
         </ul>
       </li>
       <!-- End Framework -->
+      <!-- End Recruitment -->
     
       <!-- End Framework -->
 

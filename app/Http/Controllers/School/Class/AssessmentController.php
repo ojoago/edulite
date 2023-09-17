@@ -49,10 +49,11 @@ class AssessmentController extends Controller
                                                 ->join('class_arms as a','a.pid','p.arm_pid')
                                                 ->join('students as std', 'std.current_class_pid','a.pid')
                                                 ->where(['b.school_pid'=>getSchoolPid(),'std.pid'=>$pid])->where('b.status', '<>', 0)
-                                                ->whereNotIn('q.pid', function ($query) {
+                                                ->whereNotIn('q.pid', function ($query) use($pid) {
                                                     $query->select('question_pid')
-                                                        ->from('question_answers');
-                                                })->distinct('title')
+                                                        ->from('question_answers')->where('student_pid',$pid);
+                                                })
+                                                ->distinct('title')
                                                 ->select('s.subject','b.title','a.arm','b.pid','b.end_date','b.created_at','std.pid as std','b.type','q.path')->get();
         return datatables($data)
         ->addIndexColumn()
@@ -79,7 +80,7 @@ class AssessmentController extends Controller
                                                 ->join('class_arms as a','a.pid','p.arm_pid')
                                                 ->where(['b.school_pid'=>getSchoolPid()])->where('b.status', '<>', 0)->orderBy('an.status')->orderBy('b.title')
                                                ->distinct('title')
-                                                ->select('s.subject','b.title','a.arm','b.pid','b.end_date','an.created_at','std.pid as std','b.type','std.fullname','std.reg_number')->get();
+                                                ->select('s.subject','b.title','a.arm','b.pid','b.end_date','an.created_at','std.pid as std','b.type','std.fullname','std.reg_number','an.status','an.mark')->get();
         return datatables($data)
         ->addIndexColumn()
         ->editColumn('subject', function ($data) {
@@ -308,7 +309,7 @@ class AssessmentController extends Controller
                 }
                 if (isset($request->answer)) {
                     $result = false;
-                   
+                    // load all questions and compare correct answer in the loop 
                     foreach ($request->answer as $key => $row) {
                         $data['question_pid'] = $key;
                         $data['answer'] =  is_array($row) ? json_encode($row) : $row;
@@ -355,7 +356,8 @@ class AssessmentController extends Controller
                 ->join('question_answers as an', 'an.question_pid', 'q.pid')
                 ->join('students as std', 'an.student_pid', 'std.pid')
                 ->where(['q.school_pid' => getSchoolPid(), 'an.student_pid' => $request->std, 'bank_pid' => $request->key])
-                ->select('an.student_pid', 'an.created_at as submitted_date', 'std.fullname', 'std.reg_number', 'an.path', 'q.path as link','q.mark')->get();
+                ->select('an.student_pid', 'an.created_at as submitted_date', 'std.fullname', 'std.reg_number', 'an.path', 'q.path as link',
+                         'q.options','q.mark', 'question_pid', 'q.question','an.answer','q.type','q.pid')->get();
             
             return view('school.assessments.mark-assessment', ['questions' => $questions, 'data' => $data]);
 
@@ -364,4 +366,22 @@ class AssessmentController extends Controller
             return redirect()->back()->with('error','failed to load student answer');
         }        
     }
+
+    public function markStudentAssessment(Request $request){
+        
+        try {
+            $count = count($request->question_pid);
+            for ($i=0; $i < $count; $i++) { 
+                QuestionAnswer::where(['student_pid' => $request->std, 'question_pid' => $request->question_pid[$i] ])
+                ->update([ 'mark' => $request->mark[$i] , 'status' => 1 ]);
+            }
+            return response()->json(['status' => 1, 'message' => 'Score updated Successfully']);
+            
+        } catch (\Throwable $e) {
+            logError(['line' => __LINE__ , 'file' => __FILE__ , 'error' => $e->getMessage()]);
+            return response()->json(['status' => 'error', 'message' => ER_500]);
+        }
+        
+    }
+   
 }
