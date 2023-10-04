@@ -763,7 +763,7 @@
                         question,
                         type,
                         mark,
-                        attr: $('#type' + qn).val() == 2 ? 'checkbox' : 'radio',
+                        // attr: $('#type' + qn).val() == 2 ? 'checkbox' : 'radio',
                         count: correctCount,
                         options: questionOptions
                     })

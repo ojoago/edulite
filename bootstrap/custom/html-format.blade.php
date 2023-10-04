@@ -299,9 +299,9 @@ function formatStudentProfile($row)
                     <hr>
                     Date of Birth: ' . $row->dob . '
                     <hr>
-                    Gender: ' . matchGender($row->gender) . '
+                    Gender: ' . GENDER[$row->gender] . '
                     <hr>
-                    Religion: ' . matchReligion($row->religion) . '
+                    Religion: ' . RELIGION[$row->religion] . '
                     <hr>
                     Address: ' . $row->address . '
 

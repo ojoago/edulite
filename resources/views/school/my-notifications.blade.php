@@ -5,7 +5,8 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Notification</h5>
+                <h5 class="card-title">Notifications <a href="{{route('all.notification')}}"> <button class="btn btn-sm btn-primary">View All</button> </a> </h5>
+
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="teacherCommentTable">
                     <thead>
                         <tr>
@@ -31,12 +32,11 @@
                             <td>{{diffForHumans($row->created_at)}}</td>
                         </tr>
                         @endforeach
-                        <!-- php updateViewedNotification($viewed) endphp -->
+                        @php updateViewedNotification($viewed) @endphp
                     </tbody>
                 </table>
             </div>
         </div>
 </section>
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 @endsection

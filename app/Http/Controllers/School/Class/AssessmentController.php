@@ -269,7 +269,7 @@ class AssessmentController extends Controller
                             'bank_pid' => $bank->pid,
                             'question' => $row->question,
                             'path' => null,
-                            'mark' => !empty($row->mark) ? $row->mark : ($request->total_mark / $question_count),
+                            'mark' => !empty($row->mark) ? $row->mark : round($request->total_mark / $question_count,2),
                             // 'mark' =>  is_array($row->mark) ? array_sum($row->mark) : 0,
                             'type' => $row->type,
                             'correct_count' => $row->count,

@@ -27,6 +27,7 @@ class SchoolNotificationController extends Controller
             ->editColumn('message', function ($data) {
                 return slotText($data);
             })
+            ->rawColumns(['message'])
             ->editColumn('type', function ($data) {
                 
                 return NOTIFICATION_TYPE[(int)$data->type];
@@ -50,15 +51,59 @@ class SchoolNotificationController extends Controller
         return $ntfn ? formatNotification($ntfn) : 0;
 
     }
-    public function loadMyNotificationDetails(){
-        $ntfn = loadMyNotificationDetails();
-        // return $ntfn ? formatNotification($ntfn) : 0;
-
-        // return formatNotification($ntfn);
-
-    }
+    
     public function myNotificationDetails(){
         $notification = loadRecentNotification();
+        return view('school.my-notifications',compact('notification'));
+    }
+    public function allNotifications(){
+        switch (getUserActiveRole()) {
+            case 610: //rider
+                $notification = SchoolNotification::where(['school_pid' => getSchoolPid()])->whereIn('type', [2, 4, 5])
+                    ->get(['message', 'created_at', 'type']);
+                break;
+            case 605: //parent
+                $notification = SchoolNotification::where(['school_pid' => getSchoolPid()])->whereIn('type', [2, 4, 5])
+                    ->get(['message', 'created_at', 'type']);
+                break;
+            case 600: //student
+                $notification = SchoolNotification::where(['school_pid' => getSchoolPid()])
+                    ->whereIn('type', [2, 4, 5])
+
+                    ->get(['message', 'created_at', 'type']);
+                break;
+            case 200: //School Super Admin
+            case 205: //School Admin
+            case 300: //Teacher
+            case 301: //Form/Class Teacher
+            case 303: //Clerk
+            case 305: //Secretary
+            case 307: //Portals
+            case 400: //Office Assisstnace
+            case 405: //Security
+            case 500: //Principal/Head Teacher
+                $notification = SchoolNotification::where(['school_pid' => getSchoolPid()])->where(function($q){
+                    $q->whereIn('type', [1, 5, 4])->orWhere([['school_pid', getSchoolPid()], ['type', 0], ['notifyee', getSchoolUserPid()]]);
+                })
+
+                    ->get(['message', 'created_at']);
+                break;
+            default:
+                $notification =   [];
+        }
+        return datatables($notification)
+                ->addIndexColumn()
+                ->editColumn('created_at',function($data){
+                    return $data->created_at->diffForHumans();
+                })
+                ->editColumn('message',function($data){
+                    return slotWard($data->message);
+                })
+                ->rawColumns(['message'])
+                // ->editColumn('type',function($data){
+                //     return NOTIFICATION_TYPE[$data->type] ;
+                // })
+                ->make(true);
         return view('school.my-notifications',compact('notification'));
     }
 

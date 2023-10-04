@@ -146,7 +146,15 @@ use App\Http\Controllers\Auths\AuthController;
         } else {
             $msg = str_replace(['{you}', '{your}'], $data->fullname . ':', $data->message);
         }
+        return $msg;
         return str_replace('<br>', ', ', $msg);
+    }
+
+    function slotWard($data){
+            $msg = str_replace(['{you}'], 'you ', $data);
+            $msg = str_replace(['{your}'], 'Your ', $msg);
+       
+        return $msg;
     }
     function schoolTeacher(){
         $cn =['200','205','301','300','303','305','307','500'];

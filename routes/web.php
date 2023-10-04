@@ -305,8 +305,9 @@ Route::middleware('schoolAuth')->group(function(){
    
     Route::get('count-my-notification-tip', [SchoolNotificationController::class, 'countMyNotificationTip'])->name('count.my.notification.tip');
     Route::get('load-my-notification-tip', [SchoolNotificationController::class, 'loadMyNotificationTip'])->name('load.my.notification.tip');
-    Route::get('load-my-notification-details', [SchoolNotificationController::class, 'loadMyNotificationDetails'])->name('load.my.notification.details');
     Route::get('my-notifications', [SchoolNotificationController::class, 'myNotificationDetails'])->name('my.notification');
+    Route::view('all-notifications', 'school.all-notifications')->name('all.notification');
+    Route::get('load-all-my-notification', [SchoolNotificationController::class, 'allNotifications'])->name('load.all.my.notification');
 
     // fee setup 
     Route::view('payment-account', 'school.framework.fees.payment-account')->name('payment.account');
