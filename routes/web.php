@@ -577,13 +577,15 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('delete-assessment', [AssessmentController::class, 'deleteAssessment'])->name('delete.assessment');
     Route::get('load-assessment', [AssessmentController::class, 'loadAssessment'])->name('load.assignment');
     Route::get('load-assessment-student/{id}', [AssessmentController::class, 'loadAssessmentForStudent'])->name('load.assignment.for.student');
+    Route::get('load-student-submitted-assessment/{id}', [AssessmentController::class, 'loadStudentSubmittedAssessment'])->name('load.student.submitted.assignment');
     Route::post('submit-assessment', [AssessmentController::class, 'submitAssessment'])->name('submit.assessment');
-    Route::get('load-submitted-assessments', [AssessmentController::class, 'loadStudentSubmitedAssessments'])->name('load.submitted.assessments');
+    Route::get('load-class-submitted-assessments', [AssessmentController::class, 'loadClassSubmittedAssessments'])->name('load.class.submitted.assessments');
     // student attempt assigment 
     Route::get('attempt-assessment', [AssessmentController::class, 'loadQuestions'])->name('load.questions');
     
     Route::get('mark-assessment', [AssessmentController::class, 'loadSubmittedAssessmentsByStudent'])->name('mark.assessment');
     Route::post('mark-student-assessment', [AssessmentController::class, 'markStudentAssessment'])->name('mark.student.assessment');
+    Route::get('view-assessment', [AssessmentController::class, 'viewSubmittedAssessment'])->name('view.assessment');
 
 
     //student attendance

@@ -9,6 +9,6 @@ class Question extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'school_pid','pid','bank_pid','question','path','mark','type','options'
+        'school_pid','pid','bank_pid','question','path','mark','type','options', 'correct_count'
     ];
 }

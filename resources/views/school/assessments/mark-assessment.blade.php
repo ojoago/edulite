@@ -6,7 +6,6 @@
 <div class="card">
     <div class="card-body">
         <h5 class="card-title mr-4">Assessment: {{$data->arm}} | {{$data->subject}} | {{$data->term}}, {{$data->session}}</h5>
-
         <fieldset class="border rounded-3 p-3">
             <legend class="float-none w-auto px-3">{{$data->title}} | Submitted: <span class="text-danger">{{$questions[0]->submitted_date}}</span> </legend>
             <form class="row g-3 needs-validation" id="submitAssessmentForm">
@@ -60,7 +59,7 @@
                         @if($opn->correct)
                         <i class="bi bi-check-circle text-success"></i>
                         @else
-                        <i class="bi bi-asterisk text-danger"></i>
+                        <big><i class="bi bi-x text-danger"></i></big>
                         @endif
                         <br>
 

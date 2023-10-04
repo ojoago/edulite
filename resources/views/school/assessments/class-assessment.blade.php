@@ -214,27 +214,21 @@
                                 <textarea name="question[]" placeholder="Question 1" value="Question 1" id="question1" question="0" class="questions form-control form-control-sm summer-note"></textarea>
                                 <p class="text-danger question_error"></p>
                                 <button type="button" id="question0" question="0" class="addMoreOption btn btn-sm btn-outline-success"><i class="bi bi-plus"></i></button>
-                                <div class="col-md-8 m-3  px-0" id="question0Option">
+                                <div class="col-md-10 m-3  px-0" id="question0Option">
                                     <div class="row px-0">
-                                        <div class="col-md-6  px-0">
+                                        <div class="col-md-12  px-0">
                                             <div class="input-group mb-2  px-0">
                                                 <input type="radio" answer="0" class="optionAnswer0 m-2 answer" name="answer[0][]">
                                                 <input type="text" option="0" name="option[0][]" id="" placeholder="enter option" class="question0 form-control form-control-sm">
                                                 <i class="bi bi-x-circle-fill text-white m-2"></i>
                                             </div>
                                         </div>
-                                        <div class="col-md-6  px-0">
-                                            <div class="input-group mb-2  px-0">
-                                                <input type="radio" class="non-visible m-2">
-                                                <input type="hidden" mark="0" name="mark[0][]" id="" placeholder="ENter Individual Mark" class="mark0 option-mark form-control form-control-sm">
-                                                <i class="bi bi-x-circle-fill text-white m-2"></i>
-                                            </div>
-                                        </div>
+
                                     </div>
                                     <!-- first option  end here-->
 
                                     <div class="row  px-0">
-                                        <div class="col-md-6  px-0">
+                                        <div class="col-md-12  px-0">
                                             <!-- send option   start here-->
                                             <div class="input-group mb-2  px-0">
                                                 <input type="radio" answer="1" class="optionAnswer0 m-2 answer" name="answer[0][]">
@@ -243,15 +237,7 @@
                                                 <i class="bi bi-x-circle-fill text-white m-2"></i>
                                             </div>
                                         </div>
-                                        <!-- send option   start here-->
-                                        <div class="col-md-6  px-0">
-                                            <div class="input-group mb-2  px-0">
-                                                <input type="radio" class="non-visible m-2">
-                                                <!-- <input type="text" option="1" name="option[0][]" id="" placeholder="enter option " class="question0 form-control form-control-sm"> -->
-                                                <input type="hidden" mark="1" name="mark[0][]" id="" placeholder="Enter Individual Mark" class="mark0 option-mark form-control form-control-sm">
-                                                <i class="bi bi-x-circle-fill text-white m-2"></i>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
                             </fieldset>
@@ -343,7 +329,7 @@
 
                 responsive: true,
                 destroy: true,
-                "ajax": "{{route('load.submitted.assessments')}}",
+                "ajax": "{{route('load.class.submitted.assessments')}}",
                 "columns": [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -450,9 +436,6 @@
                 }
             });
         }
-
-
-
 
         FormMultiSelect2('#newAssignmentCategorySelect2', 'category', 'Select Category');
         $('#newAssignmentCategorySelect2').on('change', function(e) {
@@ -587,44 +570,32 @@
                                     </div>
                                     <div class="col-md-6 px-0 sameMarkRow" style="display:none">
                                         <label for="">Score</label>
-                                        <input name="marks[]" placeholder="allocate Score"  id="mark${qn}" question="${qn}" class="marks form-control form-control-sm">
+                                        <input name="marks[]" placeholder="Score"  id="mark${qn}" question="${qn}" class="marks form-control form-control-sm">
                                     </div>
                                 </div>
                                 <textarea name="question[]" placeholder="Question ${qn+1}"  value="Question ${qn+1}" id="question${qn}" question="${qn}" class="questions form-control form-control-sm summer-note"></textarea>
                                 <p class="text-danger question_error"></p>
                                 <button type="button" id="question${qn}" question="${qn}" class="addMoreOption btn btn-sm btn-outline-success"><i class="bi bi-plus"></i></button>
-                                <div class="col-md-8 m-3 px-0" id="question${qn}Option">
+                                <div class="col-md-10 m-3 px-0" id="question${qn}Option">
                                     <div class="row px-0">
-                                        <div class="col-md-6 px-0">
+                                        <div class="col-md-12 px-0">
                                             <div class="input-group mb-2 px-0">
                                                 <input type="radio" answer="0" class="optionAnswer${qn} answer m-2" name="answer[${qn}][]">
                                                 <input type="text" option="0" name="option[${qn}][]" id="" placeholder="enter option " class="question${qn} form-control form-control-sm">
                                                 <i class="bi bi-x-circle-fill text-white m-2"></i>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 px-0">
-                                            <div class="input-group mb-2 px-0">
-                                                <input type="radio" class="non-visible m-2">
-                                                <input type="hidden" mark="0" name="mark[${qn}][]" id="" placeholder="enter individual mark " class="mark${qn} form-control form-control-sm">
-                                                <i class="bi bi-x-circle-fill text-white m-2"></i>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
                                     <div class="row px-0">
-                                        <div class="col-md-6 px-0">
+                                        <div class="col-md-12 px-0">
                                             <div class="input-group mb-2 px-0">
                                                 <input type="radio" answer="1" class="optionAnswer${qn} answer m-2" name="answer[${qn}][]">
                                                 <input type="text" option="1" name="option[${qn}][]" id="" placeholder="enter option " class="question${qn} form-control form-control-sm">
                                                 <i class="bi bi-x-circle-fill text-white m-2"></i>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 px-0">
-                                            <div class="input-group mb-2 px-0">
-                                                <input type="radio" class="non-visible m-2">
-                                                <input type="hidden" mark="1" name="mark[${qn}][]" id="" placeholder="enter Individual Mark " class="mark${qn} form-control form-control-sm">
-                                                <i class="bi bi-x-circle-fill text-white m-2"></i>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </fieldset>
@@ -651,32 +622,27 @@
             let mark = 'hidden';
             if (type == 2) {
                 type = 'checkbox';
-                if ($('#same_mark').is(':not(:checked)')) {
-                    mark = 'number';
-                    $('.mark' + qn).attr('type', mark)
-                } else {
-                    $('.mark' + qn).attr('type', mark)
-                }
+                // if ($('#same_mark').is(':not(:checked)')) {
+                //     mark = 'number';
+                //     $('.mark' + qn).attr('type', mark)
+                // } else {
+                //     $('.mark' + qn).attr('type', mark)
+                // }
             } else {
                 type = 'radio';
-                $('.mark' + qn).attr('type', mark)
+                // $('.mark' + qn).attr('type', mark)
             }
 
             $('#' + id + 'Option').append(`
                 <div class="row px-0">
-                    <div class="col-md-6 px-0">
+                    <div class="col-md-12 px-0">
                         <div class="input-group mb-2 px-0">
                             <input type="${type}" answer="${n}" class="optionAnswer${qn} m-2 answers" name="answer[${qn}][]">
                             <input type="text" option="${n}" name="option[${qn}][]" id="" placeholder="enter option " class="question${qn} form-control form-control-sm">
                             <i class="bi bi-x-circle-fill btn-danger m-2 removeRowBtn pointer"></i>
                             </div>
                             </div>
-                            <div class="col-md-6 px-0">
-                            <div class="input-group mb-2 px-0">
-                            <input type="radio" class="non-visible m-2">
-                            <input type="${mark}" mark="${n}" name="mark[${qn}][]" id="" placeholder="Enter Individual Mark" class="mark${qn} option-mark form-control form-control-sm">
-                            <i class="bi bi-x-circle-fill text-white m-2"></i>
-                        </div>
+                            
                     </div>
                 </div>
             `);
@@ -769,6 +735,7 @@
                     const mark = $(marks[j]).val();
                     const qn = $(this).attr('question');
                     // alert(qn + ' ' + question);
+
                     const options = $('.question' + qn)
                     const asignMark = $('.mark' + qn)
                     const answer = $('.optionAnswer' + qn)
@@ -790,10 +757,13 @@
                             mark: $(asignMark[i]).val(),
                         })
                     }
+
+                    
                     questionArray.push({
                         question,
                         type,
                         mark,
+                        attr: $('#type' + qn).val() == 2 ? 'checkbox' : 'radio',
                         count: correctCount,
                         options: questionOptions
                     })

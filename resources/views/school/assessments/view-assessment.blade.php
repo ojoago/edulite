@@ -13,41 +13,55 @@
             <form class="row g-3 needs-validation" id="submitAssessmentForm">
                 @csrf
                 <div class="col-md-12" id="fieldQuestions">
-                    <input type="hidden" value="{{$std}}" name="std">
-                    <input type="hidden" value="{{$data->pid}}" name="key">
+
                     @foreach($questions as $row)
                     <fieldset class="border rounded-3 px-2">
                         <legend class="float-none w-auto px-3">Question {{$loop->iteration}} {{$row->mark ? '| '.$row->mark .' Mark(s)' :''}}</legend>
                         @if($data->type ==1)
-                        <label class="form-label text-danger">File 1 mb max </label>
-                        <input type="hidden" name="pid[]" value="{{$row->pid}}">
-                        <input type="hidden" name="type" value="1">
-                        <input type="file" accept=".pdf,.docs,.doc" name="file" class="form-control form-control-sm">
-                        <p class="text-danger file_error"></p>
+
                         @php continue @endphp
                         @endif
-                        @php $options = json_decode($row->options) @endphp
+                        @php
+                        $options = json_decode($row->options);
+                        $answers = json_decode($row->answer);
+                        
+                        @endphp
                         @if(isset($options))
                         {!!$row->question!!}
                         <hr>
-                        @php shuffle($options) @endphp
-                        @foreach($options as $opn)
-                        <input type="{{$row->type==2 ? 'checkbox': 'radio'}}" class="optionAnswer0 m-2 answer big-check" value="{{$opn->id}}" name="answer[{{$row->pid}}][]">
-                        {{$opn->option}}<br>
+                        @foreach($options as $key => $opn)
+                        @foreach($answers->choice as $an)
+                        @if($opn->id == $an)
+                        <input type="{{$row->type==2 ? 'checkbox': 'radio'}}" class="optionAnswer0 m-2 answer big-check" checked>
+                        {{$opn->option}}
+
+                        @if($answers->correct)
+                        <i class="bi bi-check-circle text-success"></i>
+                        @else
+                        <big><i class="bi bi-x text-danger"></i></big>
+                        @endif
+                        <br>
+
+                        @php continue 2 @endphp
+                        @endif
                         @endforeach
+                        <input type="{{$row->type==2 ? 'checkbox': 'radio'}}" class="optionAnswer0 m-2 answer big-check">
+                        {{$opn->option}} <br>
+                        @endforeach
+
                         @else
 
                         <label class="form-label"> {!!$row->question!!}</label>
-                        <input type="hidden" name="pid[]" value="{{$row->pid}}">
-                        <textarea type="text" class="form-control form-control-sm summer-note" name="answer[{{$row->pid}}]" id="newAssignmentNote" placeholder="Type answer"></textarea>
-                        <p class="text-danger note_error"></p>
+                        <p class="form-label"> {!!$row->answer!!}</p>
+
                         @endif
                     </fieldset>
+                     
                     @endforeach
+                    array_sum($questions->score)
                 </div>
 
                 <div class="text-center">
-                    <button class="btn btn-primary" type="button" id="submitAssessmentBtn">Submit</button>
                     <button type="button" class="btn btn-warning" data-bs-dismiss="modal" aria-label="Close"><a href="{{route('student.assessment')}}">Cancel</a></button>
                 </div>
             </form>
