@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\School\SchoolController;
-use App\Http\Controllers\Users\HireAbleController;
+use App\Http\Controllers\Advert\JobAdvertController;
 use App\Http\Controllers\Framework\Select2Controller;
 use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Parent\ParentController;
@@ -707,19 +707,19 @@ Route::middleware('schoolAuth')->group(function(){
     // Route::view()->name('hire.config');
 
     Route::view('hire-config', 'school.framework.hire.hire-config')->name('hire.config');
-    Route::post('load-hire-able', [HireAbleController::class, 'loadPotentialApplicantHireConfig'])->name('hire.hire.able');
-    Route::get('load-advert', [HireAbleController::class, 'loadAdvertConfig'])->name('load.school.recruitment');
-    Route::post('load-job-applicant', [HireAbleController::class, 'loadJobApplicant'])->name('load.job.applicant');
+    Route::post('load-hire-able', [JobAdvertController::class, 'loadPotentialApplicantHireConfig'])->name('hire.hire.able');
+    Route::get('load-advert', [JobAdvertController::class, 'loadAdvertConfig'])->name('load.school.recruitment');
+    Route::post('load-job-applicant', [JobAdvertController::class, 'loadJobApplicant'])->name('load.job.applicant');
     Route::post('load-available-all-school-subject', [Select2Controller::class, 'loadAllSchoolSubject']);
-    Route::post('school-advert', [HireAbleController::class, 'submitAdvert'])->name('school.recruitment');
+    Route::post('create-advert', [JobAdvertController::class, 'createAdvert'])->name('create.advert');
 
     // hireworthy 
     // Route::view('hire-worthy', 'add-on.hire-worthy')->name('hire.worthy')->middleware('auth');
     // available for hire
     Route::view('hire-me', 'add-on.hire-worthy')->name('hire.me')->middleware('auth');
-    Route::post('hire-me-config',[HireAbleController::class, 'hireMeConfig'])->name('hire.me.config');
+    Route::post('hire-me-config',[JobAdvertController::class, 'hireMeConfig'])->name('hire.me.config');
 
-    Route::get('load-me-config', [HireAbleController::class, 'loadHireMeConfig'])->name('load.hire.config');
+    Route::get('load-me-config', [JobAdvertController::class, 'loadHireMeConfig'])->name('load.hire.config');
 
 });
 
@@ -730,6 +730,6 @@ Route::get('admission/{id?}',[AdmissionController::class,'index'])->name('admiss
 Route::post('admission',[AdmissionController::class,'createAdmission']);
 
 // public hiring 
-Route::get('hiring',[HireAbleController::class,'index'])->name('hiring');
-Route::get('apply-job',[HireAbleController::class,'applyJob'])->name('apply.school.job');
+Route::get('hiring',[JobAdvertController::class,'index'])->name('hiring');
+Route::get('apply-job',[JobAdvertController::class,'applyJob'])->name('apply.school.job');
 

@@ -173,7 +173,7 @@
 
         <ul>
             <li> Result and Reports Automation </li>
-            <li> Class Arm Management </li>
+            <li> Class Management </li>
             <li>Student Assignment</li>
             <li>Attendance </li>
             <li> Exam Time-Table </li>

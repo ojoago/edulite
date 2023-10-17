@@ -19,6 +19,13 @@
     <script src="{{asset('themes/js/main.js')}}"></script>
     <script src="{{asset('js/custom.js')}}"></script>
     <script>
+        window.overlay = function(sts = null) {
+            if (sts === 1) {
+                $('.overlay').show();
+            }else{
+                $('.overlay').hide();
+            }
+        }
         window.alert_toast = function($msg, $bg = 'success') {
             Toast.fire({
                 icon: $bg,

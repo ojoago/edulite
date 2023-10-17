@@ -289,7 +289,7 @@ class AuthController extends Controller
         if (auth()->user()) {
             auth()->logout();
         }
-        self::clearAuthSession();
+       session()->flush();;
     }
     public static function clearAuthSession(): void
     {

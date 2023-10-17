@@ -126,7 +126,7 @@ class ClassController extends Controller
             'category' => ['required',Rule::unique('categories')->where(function($param)use ($request){
                 $param->where('school_pid','=',getSchoolPid())->where('pid','!=',$request->pid);
             })],
-            'head_pid'=>'required'
+            // 'head_pid'=>'required'
         ],[
             'head_pid.required'=>'Select Category Head or Principal',
             'category.unique'=>$request->category. ' Category Already exists',
@@ -137,7 +137,7 @@ class ClassController extends Controller
                     'staff_pid' => getSchoolUserPid(),
                     'pid' => $request->pid ?? public_id(),
                     'category' => $request->category,
-                    'head_pid' => $request->head_pid,
+                    'head_pid' => $request->head_pid ?? 'null',
                     'description' => $request->description
                 ];
             $result = $this->insertOrUpdateCategory($data);
