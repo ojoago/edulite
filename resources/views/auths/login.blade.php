@@ -80,8 +80,9 @@
                     </div>
                 </div>
             </div>
-            <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
-
+        </div>
+    </div>
+</section>
             <script>
                 $(document).ready(function() {
                     $('#resetPwdBtn').click(function() {

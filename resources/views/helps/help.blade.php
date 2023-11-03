@@ -37,7 +37,7 @@
                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <strong>Sign up & Verification Step by step guide.</strong>
-                        <iframe class="iframe-video" src="https://www.youtube.com/embed/hnT04nynb7Y">
+                        <iframe class="iframe-video" src="https://www.youtube.com/embed/hnT04nynb7Y" frameborder="5" allowfullscreen>
                         </iframe>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                 <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <strong>Login Step by step guide.</strong>
-                        <iframe class="iframe-video" src="https://www.youtube.com/embed/_kFTF09sgBk">
+                        <iframe class="iframe-video" src="https://www.youtube.com/embed/_kFTF09sgBk" frameborder="5" allowfullscreen>
                         </iframe>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                 <div id="createSchool" class="accordion-collapse collapse" aria-labelledby="createSchool" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <strong>Creating School step by step guide.</strong>
-                        <iframe class="iframe-video" src="https://www.youtube.com/embed/g6eyJnMsuZ8">
+                        <iframe class="iframe-video" src="https://www.youtube.com/embed/g6eyJnMsuZ8" frameborder="5" allowfullscreen>
                         </iframe>
                     </div>
                 </div>
@@ -127,8 +127,9 @@
                             <li>Pick Riders</li>
                         </ul>
                         <p>After Clicking on Staff it will open a page for Staff account. Same goes for Students, Parents and Riders</p>
-                        <iframe class="iframe-video" src="https://www.youtube.com/embed/RtrzvczZjlU">
+                        <iframe class="iframe-video" src="https://www.youtube.com/embed/RtrzvczZjlU" frameborder="5" allowfullscreen>
                         </iframe>
+
                     </div>
                 </div>
             </div>
@@ -144,7 +145,7 @@
                         <p>School Category is an important aspect because classes fall under category, e.g Secondary, Primary, Nursary etc</p>
                         <p>To create School Category, Click on Class Under Framework, a page will open in few seconds,
                             click on the create Category Button, a modal form will be displayed, fill the form accordingly and click on submit</p>
-                        <iframe class="iframe-video" src="https://www.youtube.com/embed/ALokq6LoyYI">
+                        <iframe class="iframe-video" src="https://www.youtube.com/embed/ALokq6LoyYI" frameborder="5" allowfullscreen>
                         </iframe>
                     </div>
                 </div>
@@ -160,7 +161,7 @@
                         <strong>School Class</strong>
                         <p>School Class is the second tab under class page, and each class falls under a category. e.g jss 1 under Secondary, primary 1 under Primary, nursery 1 under Nursery etc</p>
                         <p>To create School Class, Click on Class tab Under Framework, a page will open in few seconds, click on class next to class category, then click on create Class Button, a modal form will be display, fill the form accordingly and click on submit</p>
-                        <iframe class="iframe-video" src="https://www.youtube.com/embed/nXklwUVRwRw">
+                        <iframe class="iframe-video" src="https://www.youtube.com/embed/nXklwUVRwRw" frameborder="5" allowfullscreen>
                         </iframe>
                     </div>
                 </div>
@@ -178,7 +179,7 @@
                         <p>To create a Class Arm, Click on Class Under Framework, a page will open in few seconds, click on Class Arm tab next to class tab,
                             then click on create Class Arm Button, a modal form will be displayed, fill the form accordingly by selecting a category and a
                             class then enter the name of of class arm accordingly click on submit</p>
-                        <iframe class="iframe-video" src="https://www.youtube.com/embed/PCng-q2PQSE">
+                        <iframe class="iframe-video" src="https://www.youtube.com/embed/PCng-q2PQSE" frameborder="5" allowfullscreen>
                         </iframe>
                     </div>
                 </div>
@@ -198,7 +199,7 @@
 
                         <p>To create Subject type, Click on Subjects Under Framework, a page will open in few seconds,
                             then click on create Subject Type Button, a modal form will be displayed, fill the form accordingly by entering the name of the subject type and click on submit</p>
-                        <iframe class="iframe-video" src="https://www.youtube.com/embed/TnbbMRLIT-w">
+                        <iframe class="iframe-video" src="https://www.youtube.com/embed/TnbbMRLIT-w" frameborder="5" allowfullscreen>
                         </iframe>
                     </div>
                 </div>
@@ -216,7 +217,7 @@
 
                         <p>To create Subject, Click on Subjects Under Framework, a page will open in few seconds,
                             then click on create Subject Button, a modal form will be displayed, select the subject type that the subject belongs to and enter the subject name and click on submit</p>
-                        <iframe class="iframe-video" src="https://www.youtube.com/embed/TnbbMRLIT-w">
+                        <iframe class="iframe-video" src="https://www.youtube.com/embed/TnbbMRLIT-w" frameborder="5" allowfullscreen>
                         </iframe>
                     </div>
                 </div>
@@ -270,7 +271,7 @@
 
                         <p>To create Assessment Title, Click on Assessment Under Framework, a page will open in few seconds,
                             then click on Create Assessment Button, a modal form will be displayed, Enter the name of the Assessment as many as you want and as you want it to appear on student report card and click on submit</p>
-                        <iframe class="iframe-video" src="https://www.youtube.com/embed/c3VjNilbkbE">
+                        <iframe class="iframe-video" src="https://www.youtube.com/embed/c3VjNilbkbE" frameborder="5" allowfullscreen>
                         </iframe>
                     </div>
                 </div>
@@ -288,7 +289,7 @@
 
                         <p>To setup Score Settings, Click on Assessment Under Framework, a page will open in few seconds,
                             then click on Score Setting tab next to Assessment and click on Create Score Settings Button, a modal form will be displayed, Enter the name of the Assessment as many as you want and as you want it to appear on student report card and click on submit</p>
-                        <iframe class="iframe-video" src="https://www.youtube.com/embed/c3VjNilbkbE">
+                        <iframe class="iframe-video" src="https://www.youtube.com/embed/c3VjNilbkbE" frameborder="5" allowfullscreen>
                         </iframe>
                     </div>
                 </div>
@@ -646,6 +647,5 @@
 </div>
 
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 @endsection

@@ -147,7 +147,7 @@ body{
 .iframe-video{
     /* width:720px;
     height:530px ; */
-    max-width: 100% !important;
+    /* max-width: 100% !important; */
     max-height: auto !important;
     align-items: center;
     align-content: center;

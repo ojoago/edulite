@@ -1137,6 +1137,27 @@
         }
     }
 
+    $(function() {
+        let width = $(window).innerWidth() / 1.5;
+        $('.iframe-video').css({
+            width: width + 'px',
+            height: $(window).innerHeight() + 'px'
+        });
+
+        $(window).resize(function() {
+            let width = $(window).innerWidth();
+            if(width > 1100){
+                width = width / 1.5;
+            }else{
+                width = width - 100;
+            }
+            // let height = $(window).innerHeight();
+            $('.iframe-video').css({
+                width: width + 'px',
+                height: $(window).innerHeight() + 'px'
+            });
+        });
+    });
 
     function multiSelect2(idOrClass, modal, route, plh, pre = null) {
         let pid = null;

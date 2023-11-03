@@ -167,7 +167,7 @@ Happy Democracy Day Nigerians💚! ',
         However, we noticed that you have not completed your school setup process yet.
         To access all the features and benefits of our platform, you need to create your school head (Principal/Head teacher), Terms, Sessions, Categories,
         Classes, class arms, subject types, and subjects.
-        the process is simplified, it won't take more 30 minutes of your time.
+        the process is simplified, it won't take more 30 than minutes of your time.
         once you are through will the setup, our team will design a custom student report card for your school.";
         $data = [
             'message' => $messages,

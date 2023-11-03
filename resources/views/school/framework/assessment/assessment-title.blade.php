@@ -70,9 +70,7 @@
         $('#title-dataTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+           
             responsive: true,
             "ajax": "{{route('load.school.assessment.title')}}",
             "columns": [{
