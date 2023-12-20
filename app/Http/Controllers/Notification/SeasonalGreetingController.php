@@ -159,6 +159,31 @@ Happy Democracy Day Nigerians💚! ',
         }
     }
 
+    public static function happyXmas()
+    {
+        $messages = 'Merry Christmas and Happy New Year! May this festive season fill your home with joy, peace, and love.';
+        try {
+            //  
+            $data = [
+                'message' => $messages,
+                'blade' => 'greeting',
+                'subject' => 'Happy Christmas',
+            ];
+            $users = (new self)->loadUsers();
+
+            // $data['email'] ='dhasmom01@gmail.com';
+            // $data['name'] = 'OJOago';
+            // sendMail($data);
+            // return;
+            foreach ($users as $user) {
+                $data['email'] = $user->email;
+                $data['name'] = $user->username;
+                sendMail($data);
+            }
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+        }
+    }
     
 
     public static function setupReminder(){
