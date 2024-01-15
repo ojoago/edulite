@@ -31,6 +31,31 @@ Happy Democracy Day Nigerians💚! ',
             sendMail($data);
         }
     }
+    public static function customGreeting()
+    {
+        $users = (new self)->loadUsers();
+        $data = [
+            'message' => " <b>Greetings To Schools, Students, Teachers And Parents </b> <br>
+
+It is no more news that our children resumed to school, to every pupils and students, welcome back from the holidays, it is time to dust the books, open to new chapters and begin another path on your journey to greatness. <br>
+We thank every Teachers, for their contributions to building a better society. <br>
+We use this opportunity to extend our prayers and support to parents and guardians for the sacrifices and commitment for our wards and kids. 
+We pray that our labours, investments and sacrifices on our children will yield good results. <br>
+
+We wish you all happy resumption. We wish everyone an exciting and productive school 2024 second term.",
+            'blade' => 'greeting',
+            'subject' => 'Welcome to Second term 2024',
+            // 'name' => 'Hassan',
+            // 'email' => 'ojoago247@gmail.com'
+        ];
+//         sendMail($data);
+// return ;
+        foreach($users as $user){
+            $data['email']= $user->email;
+            $data['name']= $user->username;
+            sendMail($data);
+        }
+    }
 
     public static function birthdays()
     {
@@ -187,12 +212,13 @@ Happy Democracy Day Nigerians💚! ',
     
 
     public static function setupReminder(){
-      $messages =  "We are excited that you have chosen to use our platform to manage your school.
+      $messages =  "<b>Welcome to Second Term 2024 <b></b><br> 
+        We are excited that you have signed up to use our platform to manage your school.
         We hope that you will find our platform easy to use and effective for your teaching and learning goals.
         However, we noticed that you have not completed your school setup process yet.
         To access all the features and benefits of our platform, you need to create your school head (Principal/Head teacher), Terms, Sessions, Categories,
         Classes, class arms, subject types, and subjects.
-        the process is simplified, it won't take more 30 than minutes of your time.
+        the process is simplified, it won't take more 30 than minutes of your time and you can always reach out to our team.
         once you are through will the setup, our team will design a custom student report card for your school.";
         $data = [
             'message' => $messages,

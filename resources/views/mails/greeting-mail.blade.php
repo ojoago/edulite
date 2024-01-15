@@ -9,7 +9,7 @@
                             <td class="inner-td">
                                 <p class="h2" style="text-align:left !important;">Hello, <b> {{$param['name']}}</b></p>
                                 <p class="text" style="color:#000 !important;">
-                                    {{$param['message']}}
+                                    {!!$param['message']!!}
                                 </p>
                                 <br>
                                 @if(isset($param['url']))
