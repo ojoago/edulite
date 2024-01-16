@@ -212,7 +212,7 @@ We wish you all happy resumption. We wish everyone an exciting and productive sc
     
 
     public static function setupReminder(){
-      $messages =  "<b>Welcome to Second Term 2024 <b></b><br> 
+      $messages =  " 
         We are excited that you have signed up to use our platform to manage your school.
         We hope that you will find our platform easy to use and effective for your teaching and learning goals.
         However, we noticed that you have not completed your school setup process yet.
