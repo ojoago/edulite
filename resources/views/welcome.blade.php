@@ -138,10 +138,10 @@
     <div class="row shadow">
         <div class="col-md-6">
             <div class="hero_left shadow mt-4">
-                <h1>
-                    <span class="ed-color">Learning Today</span>,
-                    <span class="lite-color">Leading Tomorrow</span>
-                </h1>
+                <h3 >
+                    <span class="lite-color h2">Learning Today</span>, <br>
+                    <span class="ed-color h2">Leading Tomorrow</span>
+                </h3>
                 <p>
                     Dear parent, guardian, teacher elders, it is our collective duty to give our children (the next generation) the best education they deserve in-order to make this world a better and safe place.
                 </p>

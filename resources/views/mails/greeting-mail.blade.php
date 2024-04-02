@@ -22,7 +22,7 @@
                                 @endif
                                 <br>
                                 <p class="text" style="color:#000 !important;">
-                                    If you have any questions or need any assistance, please do not hesitate to contact us via email <b>info@edulite.ng</b> or <b>09079311551</b> on WhatsApp <br>
+                                    If you have any questions or need any assistance, please do not hesitate to contact us via email <b>info@edulite.ng</b> or <b>09079585000, 09079311551</b> on WhatsApp <br>
 
                                     Thank you for choosing our platform!
                                     <br>
