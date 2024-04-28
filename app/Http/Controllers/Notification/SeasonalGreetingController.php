@@ -35,16 +35,16 @@ Happy Democracy Day Nigerians💚! ',
     {
         $users = (new self)->loadUsers();
         $data = [
-            'message' => " <b>Greetings To Schools, Students, Teachers And Parents </b> <br>
+            'message' => " <b>Greetings To Schools, Teachers , Students And Parents </b> <br>
 
 It is no more news that our children resumed to school, to every pupils and students, welcome back from the holidays, it is time to dust the books, open to new chapters and begin another path on your journey to greatness. <br>
 We thank every Teachers, for their contributions to building a better society. <br>
 We use this opportunity to extend our prayers and support to parents and guardians for the sacrifices and commitment for our wards and kids. 
 We pray that our labours, investments and sacrifices on our children will yield good results. <br>
 
-We wish you all happy resumption. We wish everyone an exciting and productive school 2024 second term.",
+We wish you all happy resumption. We wish everyone an exciting and productive school 2024 Third Term.",
             'blade' => 'greeting',
-            'subject' => 'Welcome to Second term 2024',
+            'subject' => 'Welcome to Third term 2024',
             // 'name' => 'Hassan',
             // 'email' => 'ojoago247@gmail.com'
         ];

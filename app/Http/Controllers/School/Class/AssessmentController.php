@@ -179,11 +179,12 @@ class AssessmentController extends Controller
                         $question['path'] = 'files/assessments/questions/' . $fileName;
                     }
                    $result =  $this->updateOrCreateQuestion($question);
-                   if($result){
+                if($result){
                     DB::commit();
                        return response()->json(['status' => 1, 'message' => 'Assessment created Successfully']);
-                   }
-                   DB::rollBack();
+                    }
+                    DB::rollBack();
+                    return response()->json(['status' => '2', 'message' => 'Something Went Wrong...']);
                 }
             } catch (\Throwable $e) {
                 logError(['error' => $e->getMessage(), 'line' => __LINE__]);
