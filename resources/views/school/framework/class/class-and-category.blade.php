@@ -373,6 +373,10 @@
 
         // create school class arm
 
+        $(document).on('click', '.updateClassArmBtn', function() {
+            let pid = $(this).attr('pid');
+            submitFormAjax('editClassArmFrom' + pid, 'id' + pid, "{{route('update.class')}}");
+        });
 
 
         // create school class arm

@@ -935,15 +935,11 @@
             <div class="modal-header">
                 <h5 class="modal-title">Create Class Arms
 
-                    <center>
-                        prepend class name to class arm ? <input type="checkbox" name="prepend">
-                        <button id="addMArm" type="button" class="btn btn-danger btn-sm btn-small mb-1">Add More Arm</button>
-                    </center>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" class="" id="createClassArmForm">
+                <form  id="createClassArmForm">
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
@@ -958,8 +954,11 @@
                         </div>
                     </div>
 
+                        <center>prepend class name to class arm ? <input type="checkbox" name="prepend"></center>
 
                     <div class="row">
+                    
+
                         <div class="col-md-6">
                             <label for="arm">Class Arm Name</label>
                             <div class="input-group">
@@ -983,6 +982,9 @@
                         </div>
                     </div>
                     <div id="addMoreArmRow"></div>
+                     <center>
+                        <button id="addMArm" type="button" class="btn btn-danger btn-sm btn-small mb-1">Add More Arm</button>
+                    </center>
                 </form>
             </div>
             <div class="modal-footer">

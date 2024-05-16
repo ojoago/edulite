@@ -68,7 +68,7 @@
             </a>
           </li>
           <li>
-            <a href="{{route('school.class')}}">
+            <a href="{{route('class.category')}}">
               <i class="bi bi-circle"></i><span>Class</span>
             </a>
           </li>

@@ -286,7 +286,7 @@ class ClassController extends Controller
                 'arms' => $request->arm,
                 'numbers' => $request->arm_number,
                 'class_pid' => $request->class_pid,
-                'className'=> $request->prepend ? self::getClassNameByPid($request->class_pid).' ' : ' ',
+                'className'=> $request->prepend ? self::getClassNameByPid($request->class_pid).' ' : '',
             ];
             $result = $this->updateOrCreaateClassArm($data);
             if ($result) {
@@ -315,8 +315,7 @@ class ClassController extends Controller
             }
             return true;
         } catch (\Throwable $e) {
-            $error =  $e->getMessage();
-            logError($error);
+            logError($e->getMessage());
             return false;
         }
     }

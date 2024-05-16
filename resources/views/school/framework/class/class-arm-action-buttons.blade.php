@@ -20,7 +20,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" class="" id="createClassArmForm">
+                <form  id="editClassArmFrom{{$data->pid}}">
                     @csrf
                     <div class="row">
                         <!-- <div class="col-md-6">
@@ -60,7 +60,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-sm" id="createClassArmBtn">Submit</button>
+                <button type="button" class="btn btn-primary btn-sm updateClassArmBtn" id="id{{$data->pid}}" pid="{{$data->pid}}">Submit</button>
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>

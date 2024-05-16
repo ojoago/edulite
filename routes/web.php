@@ -133,7 +133,7 @@ Route::middleware('schoolAuth')->group(function(){
     // sign up with school link direct 
     // Route::post('school-sign-up/{id}',[OrgUserAccessController::class,'store'])->name('school.sign.up');
     // category and class has the same controller 
-    Route::view('school-class', 'school.framework.class.class-and-category')->name('school.class');
+    Route::view('class-and-category', 'school.framework.class.class-and-category')->name('class.category');
     // tab 1 
     Route::get('load-school-category', [ClassController::class, 'loadCategory'])->name('load.school.category');
     // tab 2 
@@ -149,7 +149,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('create-class', [ClassController::class, 'createClass'])->name('create.school.class');
     Route::post('update-class', [ClassController::class, 'updateClass'])->name('update.class');
     // create class arm 
-    Route::post('school-arm', [ClassController::class, 'createClassArm'])->name('create.school.class.arm');
+    Route::post('create-class-arm', [ClassController::class, 'createClassArm'])->name('create.class.arm');
     // create class arm 
     Route::post('create-class-arm-subject', [ClassController::class, 'createClassArmSubject'])->name('create.school.class.arm.subject');
     // create class arm 

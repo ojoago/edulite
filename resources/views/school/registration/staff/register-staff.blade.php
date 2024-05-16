@@ -185,6 +185,7 @@
                             $('.' + prefix + '_error').text(val[0]);
                         });
                     } else if (data.status === 1) {
+                        $('#createStaffForm')[0].reset();
                         alert_toast(data.message, 'success');
                         if (setting != '') {
                             let url = "{{'school-sign-in/'}}" + msg.code;
@@ -192,7 +193,6 @@
                         } else {
 
                         }
-                        $('#createStaffForm')[0].reset();
                         $('.previewImg').removeAttr('src');
                     } else {
                         alert_toast(data.message, 'warning');

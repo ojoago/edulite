@@ -835,7 +835,7 @@
             multiSelect2Post('#ccaClassSelect2', 'createClassArmModal', 'class', id, 'Select Class');
         });
         $('#createClassArmBtn').click(async function() {
-            let s = await submitFormAjax('createClassArmForm', 'createClassArmBtn', "{{route('create.school.class.arm')}}");
+            let s = await submitFormAjax('createClassArmForm', 'createClassArmBtn', "{{route('create.class.arm')}}");
             if (s.status === 1) {
                 $('#setupStepForm').show(500)
             }
