@@ -105,17 +105,11 @@
 
 
 
-
-
-
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 <script type="text/javascript">
     $(window).on('load', function() {
         $('#setupModal').modal('show');
     });
 </script>
-
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {
@@ -124,7 +118,7 @@
         $('#createStaffBtn').click(async function() {
             let s = await submitFormAjax('createStaffForm', 'createStaffBtn', "{{route('create.staff')}}");
             if (s.status === 1) {
-                $('#setupStepForm').show(500)
+                nextStep()
             }
         });
         // step 2 create terms 
@@ -164,14 +158,16 @@
         // });
         // step 7 create session 
         $('#setupStepBtn').click(async function() {
-            let s = await submitFormAjax('setupStepForm', 'setupStepBtn', "{{route('update.setup.stage')}}");
-
-            if (s.status === 1) {
-                location.reload()
-            }
+            nextStep()
         });
 
 
+        function nextStep(){
+            let s = await submitFormAjax('setupStepForm', 'setupStepBtn', "{{route('update.setup.stage')}}");
+            if (s.status === 1) {
+                location.reload()
+            }
+        }
 
         // load page content  
         $('#passport').change(function() {
