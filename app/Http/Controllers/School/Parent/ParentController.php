@@ -15,6 +15,8 @@ use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 
 class ParentController extends Controller
 {
+    private $pwd = 7654321;
+
     public function __construct()
     {
         // $this->middleware('auth');
@@ -115,7 +117,6 @@ class ParentController extends Controller
 
 
     // register parent goes here 
-    private $pwd = 7654321;
 
     public function registerParent(Request $request)
     {

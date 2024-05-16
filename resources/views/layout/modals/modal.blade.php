@@ -57,6 +57,7 @@
         </div>
     </div>
 </div>
+
 <!-- assign class arm rep modal  -->
 <div class="modal fade" id="assignArmToRepModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">

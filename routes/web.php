@@ -125,11 +125,11 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-school-info', [SchoolController::class, 'loadSchoolDetailById'])->name('load.school.info');
     Route::get('delete-school/{id}', [SchoolController::class, 'update'])->name('delete.school');
     // load school user
-    Route::get('school-users', [SchoolUserController::class, 'index'])->name('school.users');
+    // Route::get('school-users', [SchoolUserController::class, 'index'])->name('school.users');
     // add user to school 
-    Route::post('school-users', [SchoolUserController::class, 'create']);
+    // Route::post('school-users', [SchoolUserController::class, 'create']);
     // school user access right 
-    Route::post('school-user-access', [SchoolUserAccessController::class, 'store'])->name('school.user.access');
+    // Route::post('school-user-access', [SchoolUserAccessController::class, 'store'])->name('school.user.access');
     // sign up with school link direct 
     // Route::post('school-sign-up/{id}',[OrgUserAccessController::class,'store'])->name('school.sign.up');
     // category and class has the same controller 
@@ -301,7 +301,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-school-events', [SchoolNotificationController::class, 'loadEvents'])->name('load.events');
 
     // notify parent when time table is ready 
-    Route::post('notify-parent-timetable', [SchoolNotificationController::class, 'createSchoolNotifyParent'])->name('create.school.notify.parent');
+    Route::post('notify-parent-timetable', [SchoolNotificationController::class, 'notifyParentTimetable'])->name('notify.parent.timetable');
    
     Route::get('count-my-notification-tip', [SchoolNotificationController::class, 'countMyNotificationTip'])->name('count.my.notification.tip');
     Route::get('load-my-notification-tip', [SchoolNotificationController::class, 'loadMyNotificationTip'])->name('load.my.notification.tip');
@@ -631,8 +631,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('record-affective-score', [AffectiveDomainController::class, 'recordAffectiveDomainScore'])->name('record.affective.score');
 
     // view student result 
-    Route::view('view-student-termly-result', 'school.student.result.termly-result.view-termly-result-form')->name('view.student.termly.result');
-    Route::post('view-student-termly-result', [StudentTermlyResultController::class, 'loadStudentResult']);
+    Route::view('view-termly-result-form', 'school.student.result.termly-result.view-termly-result-form')->name('view.student.termly.result');
+    Route::post('view-termly-result-form', [StudentTermlyResultController::class, 'loadStudentResult']);
     // redirect to this route 
     Route::get('student-termly-result', [StudentTermlyResultController::class, 'classResult'])->name('view.student.result');
     // particular student money
@@ -649,9 +649,9 @@ Route::middleware('schoolAuth')->group(function(){
 
     // comments 
     // principal comment 
-    Route::view('principal-comment-termly-result', 'school.student.result.comments.principal.principal-comment-form')->name('principal.comment.termly.result');
+    Route::view('principal-comment-form', 'school.student.result.comments.principal.principal-comment-form')->name('principal.comment.termly.result');
     // the view // princal-comment.blade.php
-    Route::post('principal-comment-termly-result', [PrincipalCommentResultController::class, 'loadStudentResult']);
+    Route::post('principal-comment-form', [PrincipalCommentResultController::class, 'loadStudentResult']);
      // pricinpal commenting 
      Route::post('principal-commenting-termly-result', [PrincipalCommentResultController::class, 'principalCommentStudentTermlyResult'])->name('comment.principal.student.termly.result');
     // principal automated comment
@@ -661,9 +661,9 @@ Route::middleware('schoolAuth')->group(function(){
     // the view // princal-comment.blade.php
     Route::post('principal-automated-comment', [PrincipalCommentResultController::class, 'principalAutomatedComment'])->name('principal.add.comment');
     // class teacher comment
-    Route::view('teacher-comment-termly-result', 'school.student.result.comments.teacher.teacher-comment-form')->name('teacher.comment.termly.result');
+    Route::view('teacher-comment-form', 'school.student.result.comments.teacher.teacher-comment-form')->name('teacher.comment.termly.result');
     // load student result
-    Route::post('teacher-comment-termly-result', [TeacherCommentResultController::class, 'loadStudentResult']);
+    Route::post('teacher-comment-form', [TeacherCommentResultController::class, 'loadStudentResult']);
     // commenting student result
     Route::post('teacher-commenting-termly-result', [TeacherCommentResultController::class, 'teacherCommentStudentTermlyResult'])->name('comment.teacher.student.termly.result');
     
@@ -677,14 +677,14 @@ Route::middleware('schoolAuth')->group(function(){
     // class portal comment
     Route::view('portals-comment-termly-result', 'school.student.result.comments.portals.portals-comment-form')->name('portal.comment.termly.result');
 
-    Route::post('portals-comment-termly-result', [PortalCommentResultController::class, 'loadStudentResult']);
+    // Route::post('portals-comment-termly-result', [PortalCommentResultController::class, 'loadStudentResult']);
     // class portal comment
-    Route::post('portals-commenting-termly-result', [PortalCommentResultController::class, 'portalsCommentStudentTermlyResult'])->name('comment.portals.student.termly.result');
+    // Route::post('portals-commenting-termly-result', [PortalCommentResultController::class, 'portalsCommentStudentTermlyResult'])->name('comment.portals.student.termly.result');
 
     // class portal comment
     Route::view('portals-automated-comment', 'school.student.result.comments.portals.portals-automated-comment-form')->name('portal.automated.comments');
 
-    Route::post('portals-automated-comment', [PortalCommentResultController::class, 'loadStudentResult']);
+    // Route::post('portals-automated-comment', [PortalCommentResultController::class, 'loadStudentResult']);
     
     // class subject teacher comment
     Route::view('subject-comment-termly-result', 'school.student.result.comments.principal-comment-form')->name('subject.comment.termly.result');

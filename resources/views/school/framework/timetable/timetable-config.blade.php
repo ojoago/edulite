@@ -365,7 +365,7 @@
         });
         // notify parent 
         $('#createNotificationBtn').click(function() {
-            submitFormAjax('createNotificationForm', 'createNotificationBtn', "{{route('create.school.notify.parent')}}");
+            submitFormAjax('createNotificationForm', 'createNotificationBtn', "{{route('notify.parent.timetable')}}");
         });
     });
 </script>

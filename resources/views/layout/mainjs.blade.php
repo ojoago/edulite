@@ -1034,39 +1034,6 @@
         });
     }
 
-    function FormMultiSelect2(idOrClass, route, plh, pre = null) {
-        let pid = null
-        var url = "{{route('load.available.dropdown')}}";
-        var token = $("input[name='_token']").val();
-        $(idOrClass).addClass('select2');
-        $(idOrClass).select2({
-            placeholder: plh,
-            width: "100%",
-            allowClear: true,
-            ajax: {
-                url: url + route,
-                dataType: 'json',
-                type: "post",
-                delay: 250,
-                data: function(params) {
-                    return {
-                        pid: pid,
-                        _token: token,
-                        q: params.term,
-                        page_limit: 10
-                    }
-                },
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        }).val(pre).trigger('change').trigger('focus');
-    }
-
     <?php if (getSchoolPid()) : ?>
 
         function countMyNotification() {
@@ -1100,6 +1067,39 @@
     //     };
     // }
     // li.select2('data', selected);
+
+    function FormMultiSelect2(idOrClass, route, plh, pre = null) {
+        let pid = null
+        var url = "{{route('load.available.dropdown')}}";
+        var token = $("input[name='_token']").val();
+        $(idOrClass).addClass('select2');
+        $(idOrClass).select2({
+            placeholder: plh,
+            width: "100%",
+            allowClear: true,
+            ajax: {
+                url: url + route,
+                dataType: 'json',
+                type: "post",
+                delay: 250,
+                data: function(params) {
+                    return {
+                        pid: pid,
+                        _token: token,
+                        q: params.term,
+                        page_limit: 10
+                    }
+                },
+                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+                processResults: function(response) {
+                    return {
+                        results: response
+                    };
+                },
+                cache: true
+            }
+        }).val(pre).trigger('change').trigger('focus');
+    }
 
 
     function FormMultiSelect2Post(idOrClass, route, pid, plh, pre = null) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\School\Student\Results\Comments;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -39,7 +40,7 @@ class PrincipalCommentResultController extends Controller
                         ->join('school_staff as s','s.pid','p.principal_pid')
                         ->join('user_details as d','d.user_pid','s.user_pid')
                         ->where(['p.principal_pid'=>getSchoolUserPid(),'p.school_pid'=>getSchoolPid()])
-                        ->select('p.min','p.max','p.comment','c.category','p.created_at','d.fullname')
+                        ->select('p.min','p.max','p.comment','c.category','p.created_at','d.fullname','p.title')
                         ->orderBy('min')
                         ->get();
         return datatables($data)
@@ -65,6 +66,9 @@ class PrincipalCommentResultController extends Controller
     public function principalAutomatedComment(Request $request){
         $validator = Validator::make($request->all(),[
                     'category'=>'required',
+                    'title' => ['required', Rule::unique('principal_comments')->where(function ($query) use ($request) {
+                        $query->where('category_pid', $request->category)->where('id', '<>', $request->id);
+                    })],
                     'min'=> ['required', 'numeric', 'max:' . (float)$request->max, ' between:0,100'],
                     'max'=> ['required','numeric','min:'.(float)$request->min,' between:1,100'],
                     'comment'=> 'required'
@@ -73,6 +77,7 @@ class PrincipalCommentResultController extends Controller
         if(!$validator->fails()){
             $data = [
                 'school_pid'=>getSchoolPid(),
+                'title'=>$request->title,
                 'min'=>$request->min,
                 'max'=>$request->max,
                 'comment'=>$request->comment,

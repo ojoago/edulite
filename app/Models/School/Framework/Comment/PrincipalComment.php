@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class PrincipalComment extends Model
 {
     use HasFactory;
-    protected $fillable = ['school_pid','min','max','comment','principal_pid','category_pid'];
+    protected $fillable = ['school_pid','min','max','comment','principal_pid','category_pid','title'];
 }

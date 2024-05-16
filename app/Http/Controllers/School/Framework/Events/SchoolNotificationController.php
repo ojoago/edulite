@@ -5,13 +5,14 @@ namespace App\Http\Controllers\School\Framework\Events;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\School\Parent\ParentController;
-use App\Http\Controllers\School\Rider\SchoolRiderController;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\School\Staff\StaffController;
+use App\Http\Controllers\School\Parent\ParentController;
+use App\Models\School\Framework\Timetable\TimetableParam;
 use App\Http\Controllers\School\Student\StudentController;
-use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Events\SchoolNotification;
+use App\Http\Controllers\School\Rider\SchoolRiderController;
 
 class SchoolNotificationController extends Controller
 {
@@ -145,32 +146,46 @@ class SchoolNotificationController extends Controller
         return response()->json(['status'=>0,'message'=>'','error'=>$validator->errors()->toArray()]);
     }
 
-    public function createSchoolNotifyParent(Request $request){
+    public function notifyParentTimetable(Request $request){
         $validator = Validator::make($request->all(), [
             'message' => 'required|string',
         ], ['message.required' => 'Please Enter Notification Message']);
 
+        $params = [
+            'term_pid' => activeTerm(),
+            'school_pid' => getSchoolPid(),
+            'session_pid' => activeSession()
+        ];
+        if(!TimetableParam::where($params)->exists()){
+            return response()->json(['status' => 'error', 'message' => 'No Time table created yet!']);
+        }
+
         if (!$validator->fails()) {
-            $data = [
-                'message' => $request->message== 'Student Timetable is ready' ? 'Student Timetable for '. activeTermName().' '.activeSessionName().' is ready' : $request->message,
-                'type' => 2,
-                'school_pid' => getSchoolPid(),
-                'term_pid' => activeTerm(),
-                'session_pid' => activeSession(),
-                'pid' => public_id(),
-            ];
-           
-            $sts = $this->createOrUpdateNotification($data);
-            if ($sts) {
-                if ($data['type'] == 1) {
-                    return response()->json(['status' => 1, 'message' => 'Notification Created']);
+            try {
+                $data = [
+                    'message' => $request->message == 'Student Timetable is ready' ? 'Student Timetable for ' . activeTermName() . ' ' . activeSessionName() . ' is ready' : $request->message,
+                    'type' => 2,
+                    'school_pid' => getSchoolPid(),
+                    'term_pid' => activeTerm(),
+                    'session_pid' => activeSession(),
+                    'pid' => public_id(),
+                ];
+
+                $sts = $this->createOrUpdateNotification($data);
+                if ($sts) {
+                    if ($data['type'] == 1) {
+                        return response()->json(['status' => 1, 'message' => 'Notification Created']);
+                    }
+                    $ps = $this->pushNotification($data);
+                    if ($ps) {
+                        return response()->json(['status' => 1, 'message' => 'Notification Created and scheduled']);
+                    }
                 }
-                $ps = $this->pushNotification($data);
-                if ($ps) {
-                    return response()->json(['status' => 1, 'message' => 'Notification Created and scheduled']);
-                }
+                return response()->json(['status' => 'error', 'message' => 'Failed to Create Notification']);
+            } catch (\Throwable $e) {
+                logError($e->getMessage());
+                return response()->json(['status' => 'error', 'message' => ER_500]);
             }
-            return response()->json(['status' => 'error', 'message' => 'Failed to Create Notification']);
         }
 
         return response()->json(['status' => 0, 'message' => '', 'error' => $validator->errors()->toArray()]);

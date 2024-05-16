@@ -86,9 +86,11 @@ class StudentScoreController extends Controller
 
     // view subject score 
     public function viewStudentScoreRecord(Request $request){
-        if (!self::mySubjects($request->subject)) {
-            $cl = ClassController::GetClassSubjectAndName($request->subject);
-            return redirect()->back()->with('warning', $cl->subject . ' ' . $cl->arm . ' is not assigned to YOU');
+        if(!in_array(getUserActiveRole(),[205,301,500,1])){
+            if (!self::mySubjects($request->subject)) {
+                $cl = ClassController::GetClassSubjectAndName($request->subject);
+                return redirect()->back()->with('warning', $cl->subject . ' ' . $cl->arm . ' is not assigned to YOU');
+            }
         }
         session([
             'session'=> $request->session,

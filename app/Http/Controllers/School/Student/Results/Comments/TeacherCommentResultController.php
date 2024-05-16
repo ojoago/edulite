@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\School\Student\Results\Comments;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -67,36 +68,42 @@ class TeacherCommentResultController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'category' => 'required',
+            'title' => ['required', Rule::unique('form_master_comments')->where(function ($query) use ($request) {
+                $query->where('category_pid', $request->category)->where('id', '<>', $request->id);
+            })],
             'min' => ['required', 'numeric', 'max:' . (float)$request->max, ' between:0,100'],
             'max' => ['required', 'numeric', 'min:' . (float)$request->min, ' between:1,100'],
             'comment' => 'required'
         ]);
 
         if (!$validator->fails()) {
-            $data = [
-                'school_pid' => getSchoolPid(),
-                'min' => $request->min,
-                'max' => $request->max,
-                'comment' => $request->comment,
-                'teacher_pid' => getSchoolUserPid(),
-                'category_pid' => $request->category,
-            ];
-            if ($request->id) {
-                $data['id'] = $request->id;
-            }
-            $result = $this->updateOrCreatePrincipalComment($data);
-            if ($result) {
+           try {
+                $data = [
+                    'school_pid' => getSchoolPid(),
+                    'min' => $request->min,
+                    'max' => $request->max,
+                    'comment' => $request->comment,
+                    'title' => $request->title,
+                    'teacher_pid' => getSchoolUserPid(),
+                    'category_pid' => $request->category,
+                ];
                 if ($request->id) {
-                    return response()->json(['status' => 1, 'message' => 'Comment Updated Successfully']);
+                    $data['id'] = $request->id;
                 }
-                return response()->json(['status' => 1, 'message' => 'Comment Added Successfully']);
-            }
-            return response()->json(['status' => 'error', 'message' => 'Something Went Wrong']);
+                $result = $this->updateOrCreateTeacherComment($data);
+                if ($result) {
+                    return response()->json(['status' => 1, 'message' => $request->id ? 'Comment Updated Successfully' : 'Comment Added Successfully']);
+                }
+                return response()->json(['status' => 'error', 'message' => 'Something Went Wrong']);
+           } catch (\Throwable $e) {
+                logError($e->getMessage());
+
+           }
         }
         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
     }
 
-    private function updateOrCreatePrincipalComment(array|null $data)
+    private function updateOrCreateTeacherComment(array|null $data)
     {
         try {
             $result = FormMasterComment::updateOrCreate(['id' => $data['id'] ?? null], $data);

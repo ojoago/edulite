@@ -3,7 +3,7 @@
 @section('content')
 <section class="section register min-vh-50 d-flex flex-column align-items-center justify-content-center py-4">
     <div class="row justify-content-center">
-        <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+        <div class="col-lg-6 col-md-6 d-flex flex-column align-items-center justify-content-center">
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="pt-4 pb-2">
