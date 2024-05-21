@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\School\Student\Result\StudentClassResult;
 use App\Models\School\Framework\Comment\PrincipalComment;
 use App\Http\Controllers\School\Student\Results\Termly\StudentTermlyResultController;
+use App\Models\School\Framework\Class\Category;
 
 class PrincipalCommentResultController extends Controller
 {
@@ -36,17 +37,18 @@ class PrincipalCommentResultController extends Controller
 
     public function loadPrincipalAutomatedComment(){
         try {
+            $category = Category::where('school_pid',getSchoolPid())->get(['pid','category']);
             $data = DB::table('principal_comments as p')
-            ->leftjoin('categories as c', 'c.pid', 'p.category_pid')
-            ->leftjoin('school_staff as s', 's.pid', 'p.principal_pid')
-            ->leftjoin('user_details as d', 'd.user_pid', 's.user_pid')
+            ->join('categories as c', 'c.pid', 'p.category_pid')
+            ->join('school_staff as s', 's.pid', 'p.principal_pid')
+            ->join('user_details as d', 'd.user_pid', 's.user_pid')
                 ->where(['p.principal_pid' => getSchoolUserPid(), 'p.school_pid' => getSchoolPid()])
-                ->select('p.min', 'p.max', 'p.comment', 'c.category', 'p.created_at', 'd.fullname', 'p.title')
+                ->select('p.min', 'p.max', 'p.comment', 'c.category', 'd.fullname', 'p.title','p.id', 'p.category_pid')
                 ->orderBy('min')
                 ->get();
             return datatables($data)
-                ->editColumn('date', function ($data) {
-                    return date('d F Y', strtotime($data->created_at));
+                ->editColumn('action', function ($data) use($category) {
+                    return view('school.student.result.comments.principal.principal-action-btn',['data' => $data , 'category' => $category]);
                 })
                 ->addIndexColumn()
                 ->make(true);

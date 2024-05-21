@@ -18,7 +18,6 @@
                                     <th>Maximum</th>
                                     <th>Comment</th>
                                     <th>Category</th>
-                                    <th>Date</th>
                                     <th>Principal</th>
                                     <th width="5%">Action</th>
                                 </tr>
@@ -31,6 +30,7 @@
     </div>
 
 </section>
+
 <div class="modal fade" id="automateComment" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog ">
         <div class="modal-content">
@@ -96,9 +96,9 @@
             $('#principalCommentTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
+                // rowReorder: {
+                //     selector: 'td:nth-child(2)'
+                // },
                 responsive: true,
                 destroy: true,
                 type: "GET",
@@ -122,15 +122,13 @@
                     {
                         "data": "category"
                     },
-                    {
-                        "data": "date"
-                    },
+                  
                     {
                         "data": "fullname"
                     },
-                    // {
-                    //     "data": "action",
-                    // },
+                    {
+                        "data": "action",
+                    },
                 ],
             });
         }
