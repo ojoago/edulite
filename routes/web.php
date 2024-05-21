@@ -259,7 +259,8 @@ Route::middleware('schoolAuth')->group(function(){
 
     // subjects & subject type
     // load subject type page 
-    Route::view('subjects', 'school.framework.subject.subjects')->name('school.subject.type');
+    Route::view('subject-types', 'school.framework.subject.subject-types')->name('subject.types');
+    Route::view('subjects', 'school.framework.subject.subjects')->name('subjects');
     // load subject type 
     Route::get('load-subject-type', [SubjectTypeController::class, 'index'])->name('load.school.subject.type');
     // create subject type 

@@ -9,10 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class PsychomotorController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+  
     /**
      * Display a listing of the resource.
      *
@@ -106,9 +103,8 @@ class PsychomotorController extends Controller
         try {
             return  Psychomotor::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
-             
+            logError($e->getMessage());
+            return false;
         }
     }
     /**

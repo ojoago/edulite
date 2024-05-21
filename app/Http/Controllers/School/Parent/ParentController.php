@@ -17,10 +17,6 @@ class ParentController extends Controller
 {
     private $pwd = 7654321;
 
-    public function __construct()
-    {
-        // $this->middleware('auth');
-    }
 
     public function index(){
         $data = SchoolParent::join('user_details', 'school_parents.user_pid', 'user_details.user_pid')
@@ -101,7 +97,7 @@ class ParentController extends Controller
         $parent = SchoolParent::where('pid',$pid)->first(['id','status']);
         $parent->status = $parent->status == 1 ? 0 : 1;
         $parent->save();
-        return 'Status updated';
+        return 'Status Updated';
     }
 
 
@@ -203,9 +199,8 @@ class ParentController extends Controller
                 }
                 return response()->json(['status' => 2, 'message' => 'user account created but detail not complete, login to update details then link parent to school and student']);
             } catch (\Throwable $e) {
-                $error = $e->getMessage();
 
-                logError($error);
+                logError($e->getMessage());
                 return response()->json(['status' => 'error', 'message' => 'contact admin, error has be logged']);
             }
         }

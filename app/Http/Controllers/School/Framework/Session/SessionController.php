@@ -11,11 +11,7 @@ use App\Models\School\Framework\Session\ActiveSession;
 
 class SessionController extends Controller
 {
-    public function __construct()
-    {
-        // school member auth 
-        // $this->middleware('auth');
-    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -115,10 +111,8 @@ class SessionController extends Controller
           return ActiveSession::updateOrCreate(['school_pid' => $data['school_pid']],$data);
             
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
-            
-            dd($error);
+            logError($e->getMessage());
+            return false;
         }
     }
 

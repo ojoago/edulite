@@ -216,9 +216,9 @@ class JobAdvertController extends Controller
     public function loadAdvertConfig(){
         $data = SchoolAdvert::where(['school_pid' => getSchoolPid()])->get();
         return datatables($data)
-            ->editColumn('years', function ($data) {
-                return $data->years ? $data->years . ' year (s)' : '';
-            })
+            // ->editColumn('years', function ($data) {
+            //     return $data->years ? $data->years . ' year (s)' : '';
+            // })
             ->addIndexColumn()
             ->make(true);
     }

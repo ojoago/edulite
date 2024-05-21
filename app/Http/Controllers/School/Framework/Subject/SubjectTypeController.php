@@ -15,23 +15,26 @@ class SubjectTypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct(){
-        $this->middleware('auth');
-    }
+    
     public function index()
     {
-        $data = SubjectType::where(['subject_types.school_pid'=>getSchoolPid()])->get();
-        logError([$data,getSchoolPid()]);
-        return datatables($data)
-        ->addIndexColumn()
-            ->addColumn('action', function ($data) {
-                return view('school.framework.subject.subject-type-action-buttons', ['data' => $data]);
-            })
-            ->editColumn('created_at', function ($data) {
-                return $data->created_at->diffForHumans();
-            })
-            ->rawColumns(['data', 'action'])
-            ->make(true);
+       try {
+            $data = SubjectType::where(['subject_types.school_pid' => getSchoolPid()])->get();
+            // logError([$data,getSchoolPid()]);
+            return datatables($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    return view('school.framework.subject.subject-type-action-buttons', ['data' => $data]);
+                })
+                ->editColumn('created_at', function ($data) {
+                    return $data->created_at->diffForHumans();
+                })
+                ->rawColumns(['data', 'action'])
+                ->make(true);
+       } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return null;
+       }
     }
 
 
@@ -69,7 +72,7 @@ class SubjectTypeController extends Controller
                 'description'=>$request->description
             ];
 
-            $result = $this->createOrUpdateSubjectType($data);
+            $result = self::createOrUpdateSubjectType($data);
             
             if ($result) {
                 return response()->json(['status'=>1,'message'=> $request->pid ? 'Subject Type Updated' : 'Subject Type Created']);
@@ -81,7 +84,7 @@ class SubjectTypeController extends Controller
         
     }
 
-    private function createOrUpdateSubjectType($data)
+    public static function createOrUpdateSubjectType($data)
     {
         try {
             return  SubjectType::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);

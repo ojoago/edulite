@@ -220,8 +220,8 @@ class TimetableController extends Controller
                return $result->pid; 
             }
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
+            logError($e->getMessage());
+            return false;
         }
     }
     private function createOrUpdateTimeTable(array $data){

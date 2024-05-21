@@ -4,20 +4,13 @@ namespace App\Http\Controllers\School\Framework\Attendance;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\School\Framework\Term\Term;
-use App\Models\School\Framework\Class\Category;
-use App\Models\School\Framework\Class\ClassArm;
-use App\Models\School\Framework\Session\Session;
 use App\Models\School\Framework\Attendance\AttendanceType;
 use App\Models\School\Framework\Attendance\ClassAttendance;
 use Illuminate\Support\Facades\Validator;
 
 class AttendanceTypeController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -92,8 +85,7 @@ class AttendanceTypeController extends Controller
         try {
             return ClassAttendance::updateOrCreate(['pid'=>$data['pid'],'school_pid'=>$data['school_pid']],$data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
+            logError($e->getMessage());
            return false;
         }
     }

@@ -10,10 +10,7 @@ use Illuminate\Validation\Rule;
 
 class AssessmentTitleController extends Controller
 {
-    public function __construct()
-    {
-        // $this->middleware('auth');
-    }
+    
     /**
      * Display a listing of the resource.
      *

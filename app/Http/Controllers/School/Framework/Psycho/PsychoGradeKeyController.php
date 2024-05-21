@@ -9,10 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class PsychoGradeKeyController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     public function index(){ {
             $data = PsychoGrade::join('school_staff', 'school_staff.pid', 'psycho_grades.staff_pid')
@@ -75,9 +71,8 @@ class PsychoGradeKeyController extends Controller
         try {
             return  PsychoGrade::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid'], 'grade'=>$data['grade']], $data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
-            
+            logError($e->getMessage());
+            return false;
         }
     }
 

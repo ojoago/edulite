@@ -16,10 +16,6 @@ use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 class SchoolRiderController extends Controller
 {
     private $pwd = 123456;
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
     
     public function index(){
         $data = SchoolRider::join('user_details','user_details.user_pid','school_riders.user_pid')
@@ -136,10 +132,9 @@ class SchoolRiderController extends Controller
                 }
             
            } catch (\Throwable $e) {
-                $error = $e->getMessage();
-                logError($error);
+                logError($e->getMessage());
+                return response()->json(['status'=>'error','message'=>'Something Went Wrong']);
            }
-            return response()->json(['status'=>'error','message'=>'Something Went Wrong']);
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }

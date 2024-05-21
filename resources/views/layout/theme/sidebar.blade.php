@@ -56,8 +56,15 @@
               <i class="bi bi-circle"></i><span>Grade</span>
             </a>
           </li>
+          
+          {{-- <li>
+            <a href="{{route('subject.types')}}">
+              <i class="bi bi-circle"></i><span>Subject Type</span>
+            </a>
+          </li> --}}
+
           <li>
-            <a href="{{route('school.subject.type')}}">
+            <a href="{{route('subjects')}}">
               <i class="bi bi-circle"></i><span>Subjects</span>
             </a>
           </li>

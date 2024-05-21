@@ -94,14 +94,14 @@ class HostelController extends Controller
      
     public function createHostel(Request $request)
     {
-        $n = $request->name;
+        
         $validator = Validator::make($request->all(),[
             'name'=>['required',Rule::unique('hostels')->where(function($param) use ($request){
                     $param->where('school_pid',getSchoolPid())->where('pid','!=',$request->pid);
             })],
             'capacity'=>'required|min:1|int',
             'location'=>'required|string'
-        ],['name.required'=>'Enter Hostel Name','name.unique'=> $n.' Already exists']);
+        ],['name.required'=>'Enter Hostel Name','name.unique'=> $request->name.' Already exists']);
 
         if(!$validator->fails()){
             $data = [
@@ -147,7 +147,7 @@ class HostelController extends Controller
             'hostel_pid.required'=>'Select 1 Hostel, at least',
         ]);
         if(!activeSession() || !activeTerm()){
-            return response()->json(['status' => 'error', 'message' => ' Please set active term and session first']);
+            return response()->json(['status' => 'error', 'message' => ' Please Set Active term and session first']);
         }
         if(!$validator->fails()){
             $data = [

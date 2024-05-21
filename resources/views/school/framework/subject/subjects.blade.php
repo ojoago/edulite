@@ -4,47 +4,16 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Subjects & Types</h5>
+        <h5 class="card-title">Subjects</h5>
 
-        <!-- Default Tabs -->
-        <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">
-            <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-justified" type="button" role="tab">Subject Type</button>
-            </li>
-            <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-justified" type="button" role="tab">Subjects</button>
-            </li>
-
-        </ul>
-        <div class="tab-content pt-2" id="myTabjustifiedContent">
-            <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab">
-                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createSubjectTypeModal">
-                    Create Subject Type
-                </button>
-                <!-- <div class="table-responsive mt-3"> -->
-                <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="SubjectTypeTable">
-                    <thead>
-                        <tr>
-                            <th width="5%">S/N</th>
-                            <th>Subject Type</th>
-                            <th>Description</th>
-                            <th>Date</th>
-                            <th width="5%">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-            <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab">
-                <div class="row">
+        <div class="row">
                     <div class="col-md-6">
                         <button type="button" class="btn btn-primary mb-3 ms-auto" data-bs-toggle="modal" data-bs-target="#createSubjectModal">
                             Create Subject
                         </button>
-                        <button type="button" class="btn btn-primary mb-3 ms-auto" data-bs-toggle="modal" data-bs-target="#dupSubjectTypeModal">
+                        {{-- <button type="button" class="btn btn-primary mb-3 ms-auto" data-bs-toggle="modal" data-bs-target="#dupSubjectTypeModal">
                             Copy Subject Type
-                        </button>
+                        </button> --}}
                     </div>
                     <div class="col-md-6">
                         <select name="class_pid" id="categorySubjectSelect2" class="form-control form-control-sm" style="width: 100%;">
@@ -55,66 +24,31 @@
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="SubjectTable">
                     <thead>
                         <tr>
-                            <th>S/N</th>
+                            <th width="5%">S/N</th>
+                            <th>Category</th>
                             <th>Subject Type</th>
                             <th>Subject</th>
                             <th>Description</th>
                             <th>Status</th>
-                            <th>Date</th>
+                            {{-- <th>Date</th> --}}
                             <th align="center"><i class="bi bi-tools"></i></th>
                         </tr>
                     </thead>
                     <tbody>
                     </tbody>
                 </table>
-            </div>
-
-        </div><!-- End Default Tabs -->
 
     </div>
 </div>
 
 <!-- create school term modal  -->
 
-
 <!-- create school term modal  -->
-
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {
 
-        // load school subject type
-        $('#SubjectTypeTable').DataTable({
-            "processing": true,
-            "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
-            responsive: true,
-            type: "GET",
-            "ajax": "{{route('load.school.subject.type')}}",
-            "columns": [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    // orderable: false,
-                    // searchable: false
-                },
-                {
-                    "data": "subject_type"
-                },
-                {
-                    "data": "description"
-                },
-
-                {
-                    "data": "created_at"
-                },
-                {
-                    "data": "action"
-                },
-            ],
-        });
+        
         // load school subjects
         loadSubjectTable();
 
@@ -122,9 +56,9 @@
             $('#SubjectTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
+                // rowReorder: {
+                //     selector: 'td:nth-child(2)'
+                // },
                 responsive: true,
                 destroy: true,
                 "ajax": {
@@ -140,7 +74,11 @@
                         name: 'DT_RowIndex',
                         // orderable: false,
                         // searchable: false
-                    }, {
+                    },
+                     {
+                        "data": "category"
+                    },
+                     {
                         "data": "subject_type"
                     },
                     {
@@ -152,9 +90,9 @@
                     {
                         "data": "status"
                     },
-                    {
-                        "data": "created_at"
-                    },
+                    // {
+                    //     "data": "created_at"
+                    // },
 
                     {
                         "data": "action"

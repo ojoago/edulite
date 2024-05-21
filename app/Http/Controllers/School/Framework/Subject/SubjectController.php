@@ -4,7 +4,6 @@ namespace App\Http\Controllers\School\Framework\Subject;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Subject\Subject;
@@ -19,32 +18,37 @@ class SubjectController extends Controller
 
     public function index(Request $request)
     {
-        if (isset($request->param)) {
-            $where = ['subjects.school_pid' => getSchoolPid(), 'subjects.category_pid' => $request->param];
-        } else {
-            $where = ['subjects.school_pid' => getSchoolPid()];
-        }
-        $data = Subject::join('subject_types', 'subject_types.pid', 'subjects.subject_type_pid')
-        ->where($where)
-            ->get(['subjects.pid','subject', 'subjects.status','subject_type', 'subjects.created_at', 'subjects.description']);
-        return datatables($data)
+        try {
+            if (isset($request->param)) {
+                $where = ['subjects.school_pid' => getSchoolPid(), 'subjects.category_pid' => $request->param];
+            } else {
+                $where = ['subjects.school_pid' => getSchoolPid()];
+            }
+            $data = Subject::join('subject_types', 'subject_types.pid', 'subjects.subject_type_pid')->join('categories as c','c.pid', 'category_pid')
+                ->where($where)
+                ->get(['subjects.pid', 'subject', 'subjects.status', 'subject_type',  'subjects.description', 'c.category']);
+            return datatables($data)
             ->addColumn('action', function ($data) {
                 // <i class="bi bi-tools"></i>
-            return '
-                    <button type="button" class="btn btn-primary btn-sm edit-subject" pid="'.$data->pid.'">
+                return '
+                    <button type="button" class="btn btn-primary btn-sm edit-subject" pid="' . $data->pid . '">
                         Edit
                     </button>
             ';
             })
-            ->editColumn('created_at', function ($data) {
-                return $data->created_at->diffForHumans();
-            })
+            // ->editColumn('created_at', function ($data) {
+            //     return $data->created_at->diffForHumans();
+            // })
             ->editColumn('status', function ($data) {
                 return $data->status == 1 ? '<span class = "text-succses"> Enabled</span>' : '<span class = "text-danger">Disabled</span>';
             })
             ->addIndexColumn()
             ->rawColumns(['action', 'status'])
             ->make(true);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return null;
+        }
     }
 
     
@@ -67,10 +71,10 @@ class SubjectController extends Controller
                 $param->where([
                     'school_pid'=>getSchoolPid(),
                     'category_pid'=>$request->category_pid,
-                    'subject_type_pid'=>$request->subject_type_pid,
-                ])->where('pid','!=',$request->pid);
+                    // 'subject_type_pid'=>$request->subject_type_pid,
+                ])->where('pid','<>',$request->pid);
             })],
-            'subject_type_pid' => 'required|string',
+            // 'subject_type_pid' => 'required|string',
             'category_pid' => 'required|string'
         ],[
             'subject.required'=>'Enter Subject Name', 
@@ -81,12 +85,24 @@ class SubjectController extends Controller
             // $request['school_pid'] = getSchoolPid();
             // $request['pid'] = public_id();
             // $request['staff_pid'] = getUserPid();
+
+            $data = [
+                'school_pid' => getSchoolPid(),
+                'pid' => public_id(),
+                'staff_pid' => getSchoolUserPid(),
+                'subject_type' => $request->subject,
+                'description' => $request->description
+            ];
+            if (isset($request->pid)) {
+                $data['pid'] = $this->loadSubject($request->pid);
+            }
+            $type = SubjectTypeController::createOrUpdateSubjectType($data);
             $data = [
                 'school_pid'=>getSchoolPid(),
                 'pid'=> $request->pid ?? public_id(),
                 'staff_pid'=>getSchoolUserPid(),
                 'subject'=>$request->subject,
-                'subject_type_pid'=>$request->subject_type_pid,
+                'subject_type_pid'=> $type->pid,
                 'category_pid'=>$request->category_pid,
                 'description'=>$request->description,
             ];
@@ -146,6 +162,15 @@ class SubjectController extends Controller
     {
         try {
             return  Subject::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+
+    private function loadSubject($pid){
+        try {
+            return Subject::where('pid',$pid)->pluck('subject_type_pid')->first();
         } catch (\Throwable $e) {
             logError($e->getMessage());
             return false;

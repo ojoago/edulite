@@ -107,8 +107,8 @@ class PsychomotorBaseController extends Controller
         try {
             return  PsychomotorBase::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
+            logError($e->getMessage());
+            return false;
         }
     }
 
@@ -165,8 +165,8 @@ class PsychomotorBaseController extends Controller
         try {
             return  PsychomotorKey::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
+            logError($e->getMessage());
+            return false;
         }
     }
 

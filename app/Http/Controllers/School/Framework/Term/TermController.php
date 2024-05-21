@@ -63,8 +63,8 @@ class TermController extends Controller
         try {
             return  Term::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
+            logError($e->getMessage());
+            return false;
         }
     }
 
@@ -132,8 +132,8 @@ class TermController extends Controller
             return ActiveTerm::updateOrCreate(['school_pid' => $data['school_pid']], $data);
             
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
+            logError($e->getMessage());
+            return false;
         }
     }
     private function updateOrCreateActiveTermDetail(array $data){
@@ -145,8 +145,8 @@ class TermController extends Controller
                                         ], $data);
             
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
+            logError($e->getMessage());
+            return false;
         }
     }
 

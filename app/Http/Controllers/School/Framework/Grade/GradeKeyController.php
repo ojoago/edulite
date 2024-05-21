@@ -3,20 +3,15 @@
 namespace App\Http\Controllers\School\Framework\Grade;
 
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Grade\GradeKey;
-use App\Models\School\Framework\Grade\SchoolGrade;
 use App\Models\School\Framework\Grade\GradeKeyBase;
 
 class GradeKeyController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+   
     /**
      * Display a listing of the resource.
      *
@@ -104,8 +99,7 @@ class GradeKeyController extends Controller
                 }
                 return response()->json(['status'=>2, 'message'=>'Something Went Wrong']);
             } catch (\Throwable $e) {
-                $error =  $e->getMessage();
-                logError($error);
+                logError($e->getMessage());
                 return response()->json(['status'=>'error', 'message'=>'Something Went Wrong']);
             }
         }
@@ -131,8 +125,7 @@ class GradeKeyController extends Controller
             }
             return $grd;
         } catch (\Throwable $e) {
-            $error = $e->getMessage();
-            logError($error);
+            logError($e->getMessage());
         }
     }
 
@@ -152,8 +145,7 @@ class GradeKeyController extends Controller
             $dtn['updated_at'] = $dtn['created_at'] = date('Y-m-d H:i:s');
             $data[] = $dtn;
         }
-        GradeKey::insert($data);
-        return;
+       return GradeKey::insert($data);
     }
 
     private static function loadClassGrade($class_pid, $arm_pid)

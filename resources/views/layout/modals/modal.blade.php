@@ -1010,7 +1010,7 @@
                     @csrf
                     <input type="text" name="subject_type" class="form-control form-control-sm" placeholder="name of Subject" required>
                     <p class="text-danger subject_type_error"></p>
-                    <input type="text" name="description" class="form-control form-control-sm" placeholder="Subject Description" required>
+                    <textarea type="text" name="description" class="form-control form-control-sm" placeholder="Subject Description" required></textarea>
                     <p class="text-danger description_error"></p>
                 </form>
             </div>
@@ -1036,9 +1036,9 @@
                     <select name="category_pid" style="width:100%" class="form-control form-control-sm createSubjectCategorySelect2" id="createSubjectCategorySelect2">
                     </select>
                     <p class="text-danger category_pid_error"></p>
-                    <select name="subject_type_pid" style="width:100%" class="form-control form-control-sm createSubjectSubjectTypeSelect2" id="createSubjectSubjectTypeSelect2">
+                    {{-- <select name="subject_type_pid" style="width:100%" class="form-control form-control-sm createSubjectSubjectTypeSelect2" id="createSubjectSubjectTypeSelect2">
                     </select>
-                    <p class="text-danger subject_type_pid_error"></p>
+                    <p class="text-danger subject_type_pid_error"></p> --}}
                     <input type="text" name="subject" id="subject" class="form-control form-control-sm" placeholder="subject name" required>
                     <input type="hidden" name="pid" id="pid">
                     <p class="text-danger subject_error"></p>
