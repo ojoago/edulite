@@ -95,7 +95,6 @@ class PrincipalCommentResultController extends Controller
                 $data['id'] = $request->id;
             }
             $result = $this->updateOrCreatePrincipalComment($data);
-            logError($result);
             if($result){
                 if ($request->id) {
                     return response()->json(['status' => 1, 'message' => 'Comment Updated Successfully']);
