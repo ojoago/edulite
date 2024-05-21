@@ -291,7 +291,7 @@ class StaffController extends Controller
         ],['gsm.required'=>'Enter Phone Number','dob.required'=>'Enter staff date of birth','dob.before'=>'Staff must 18 years & above']);
         
         if(!$validator->fails()){
-            try {
+            // try {
                 $data = [
                     'gsm' => $request->gsm,
                     // 'email' => !empty($request->email) ? $request->email : null,
@@ -358,10 +358,10 @@ class StaffController extends Controller
 
                 return response()->json(['status' => 'error', 'message' => 'user account not created']);
 
-            } catch (\Throwable $e) {
-                logError([$e->getMessage(),$e]);
+            // } catch (\Throwable $e) {
+                logError($e->getMessage());
                 return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
-            }
+            // }
         }
 
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
