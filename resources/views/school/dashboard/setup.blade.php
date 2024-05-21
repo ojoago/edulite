@@ -55,13 +55,13 @@
                 Create Class Arm
             </button>
             @endif
-            @if(session('stage')==9)
+            {{-- @if(session('stage')==9)
             <!-- <p class="bg-info text-white p-2"> </p> -->
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createSubjectTypeModal">
                 Create Subject Type
             </button>
-            @endif
-            @if(session('stage')==10)
+            @endif --}}
+            @if(session('stage')==9)
             <!-- <p class="bg-info text-white p-2"> </p> -->
             <button type="button" class="btn btn-primary mb-3 " data-bs-toggle="modal" data-bs-target="#createSubjectModal">
                 Create Subject
@@ -70,21 +70,21 @@
                 Copy Subject Type
             </button>
             @endif
-            @if(session('stage')==11)
+            @if(session('stage')==10)
             <!-- <p class="bg-info text-white p-2"> </p> -->
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createArmSubjectModal">
                 Add Subjects to Class Arm
             </button>
 
             @endif
-            @if(session('stage')==12)
+            @if(session('stage')==11)
             <!-- <p class="bg-info text-white p-2"> </p> -->
             <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createAssessmentModal">
                 Create Assessment
             </button>
 
             @endif
-            @if(session('stage')==13)
+            @if(session('stage')==12)
             <!-- <p class="bg-info text-white p-2"> </p> -->
             <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createScoreSettingModal">
                 Create Score Setting

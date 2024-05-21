@@ -76,7 +76,7 @@ class SchoolController extends Controller
         
         // check if setup is not complete 
         if($schoolUser->sts==2){
-            session(['stage' => $schoolUser->stage+1, 'status' => $schoolUser->sts,'total'=>13]); //user role
+            session(['stage' => $schoolUser->stage+1, 'status' => $schoolUser->sts,'total'=>12]); 
         }else{
             session(['stage' => null, 'status' => null]);
         }
@@ -240,7 +240,7 @@ class SchoolController extends Controller
     public function updateSetupStage(Request $request){
        try {
             $stage = $request->stage;
-            if($stage==13){
+            if($stage==12){
                 DB::table('schools')->where('pid', getSchoolPid())->update(['stage' => $stage, 'status'=>1]);
                 session(['status' => 1]);
             }else{

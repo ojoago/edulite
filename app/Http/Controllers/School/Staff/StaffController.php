@@ -359,7 +359,7 @@ class StaffController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'user account not created']);
 
             } catch (\Throwable $e) {
-                logError($e->getMessage());
+                logError([$e->getMessage(),$e]);
                 return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
             }
         }
