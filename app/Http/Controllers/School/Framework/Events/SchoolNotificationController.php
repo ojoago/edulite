@@ -242,7 +242,7 @@ class SchoolNotificationController extends Controller
                 email
                 fullname 
             */
-            if($param['user']->email){
+            if(isset($param['user']->email)){
                 // send mail 
                 $schoolData = SchoolController::loadSchoolNotificationDetail(getSchoolPid());
                 self::sendSchoolMail($schoolData,$param['user'], str_replace('{you}','You',$param['message']));
