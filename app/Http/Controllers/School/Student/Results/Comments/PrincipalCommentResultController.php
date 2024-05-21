@@ -35,20 +35,25 @@ class PrincipalCommentResultController extends Controller
     }
 
     public function loadPrincipalAutomatedComment(){
-        $data = DB::table('principal_comments as p')
-                        ->join('categories as c','c.pid','p.category_pid')
-                        ->join('school_staff as s','s.pid','p.principal_pid')
-                        ->join('user_details as d','d.user_pid','s.user_pid')
-                        ->where(['p.principal_pid'=>getSchoolUserPid(),'p.school_pid'=>getSchoolPid()])
-                        ->select('p.min','p.max','p.comment','c.category','p.created_at','d.fullname','p.title')
-                        ->orderBy('min')
-                        ->get();
-        return datatables($data)
-                    ->editColumn('date',function($data){
-                        return date('d F Y',strtotime($data->created_at));
-                    })
-                    ->addIndexColumn()
-                    ->make(true);
+        try {
+            $data = DB::table('principal_comments as p')
+            ->join('categories as c', 'c.pid', 'p.category_pid')
+            ->join('school_staff as s', 's.pid', 'p.principal_pid')
+            ->join('user_details as d', 'd.user_pid', 's.user_pid')
+                ->where(['p.principal_pid' => getSchoolUserPid(), 'p.school_pid' => getSchoolPid()])
+                ->select('p.min', 'p.max', 'p.comment', 'c.category', 'p.created_at', 'd.fullname', 'p.title')
+                ->orderBy('min')
+                ->get();
+            return datatables($data)
+                ->editColumn('date', function ($data) {
+                    return date('d F Y', strtotime($data->created_at));
+                })
+                ->addIndexColumn()
+                ->make(true);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            
+        }
     }
 
     public function principalCommentStudentTermlyResult(Request $request){
@@ -88,6 +93,7 @@ class PrincipalCommentResultController extends Controller
                 $data['id'] = $request->id;
             }
             $result = $this->updateOrCreatePrincipalComment($data);
+            logError($result);
             if($result){
                 if ($request->id) {
                     return response()->json(['status' => 1, 'message' => 'Comment Updated Successfully']);
