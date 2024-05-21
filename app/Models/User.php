@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Http\Controllers\Auths\AuthController;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
@@ -30,18 +31,40 @@ class User extends Authenticatable
         'reset_token',
         'code'
     ];
-    public function setPasswordAttribute($value){
-        $this->attributes['password'] = Hash::make($value);
+    // public function setPasswordAttribute($value){
+    //     $this->attributes['password'] = Hash::make($value);
+    // }
+    // public function setUsernameAttribute($value){
+    //     $this->attributes['username'] = strtolower(str_replace('-','_',str_replace(' ','',trim($value))));
+    // }
+
+    // public function setEmailAttribute($value){
+    //     $this->attributes['email'] = Hash::make($value);
+    // }
+
+    protected function password(): Attribute
+    {
+        return new Attribute(
+            set:fn ($val) => strtolower($val),
+        );
     }
-    public function setUsernameAttribute($value){
-        $this->attributes['username'] = strtolower(str_replace(' ','',trim($value)));
+    protected function username(): Attribute
+    {
+        return new Attribute(
+            set:fn ($val) => strtolower(str_replace('-', '_', str_replace(' ', '', trim($val)))),
+        );
     }
-    public function setEmailAttribute($value){
-        $this->attributes['email'] = strtolower($value);
+    protected function email(): Attribute
+    {
+        return new Attribute(
+            set:fn ($val) => strtolower($val),
+        );
     }
-    public function setCodeAttribute($value){
-        $this->attributes['code'] = strtoupper(AuthController::referrerCode());
-    }
+
+
+    // public function setCodeAttribute($value){
+    //     $this->attributes['code'] = strtoupper(AuthController::referrerCode());
+    // }
 
     
     /**

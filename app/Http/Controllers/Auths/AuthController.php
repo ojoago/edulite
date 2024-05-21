@@ -72,8 +72,10 @@ class AuthController extends Controller
 
     public static function createUser($data){
         try {
-        $data['code'] = null;
-        $data['pid']  = $data['pid'] ?? public_id();
+            if(!isset($data['pid'])){
+                $data['code'] = self::referrerCode();
+                $data['pid']  =  public_id();
+             }
            return User::updateOrCreate(['pid'=>$data['pid']],$data);
         } catch (\Throwable $e) {
             $error = $e->getMessage();
