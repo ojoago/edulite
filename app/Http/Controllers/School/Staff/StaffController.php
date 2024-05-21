@@ -347,20 +347,21 @@ class StaffController extends Controller
                             }
                             $message = '{your} Account has been created, Staff Id: ' . $staff['staff_id']  . ' & username is ' . $data['username'].' and Password: '.$this->pwd;
                             $message .= ' <br> Primary Role is ' .matchStaffRole($request->role);
-
+                            DB::commit();
                             SchoolNotificationController::notifyIndividualStaff(message: $message, pid: $result->pid ?? $request->pid);
 
                             return response()->json(['status' => 1, 'message' => 'Staff Registration Successful, Staff Id ' . $staff['staff_id']  . ' & username is ' . $data['username']]);
                         }
-
+                        DB::rollBack();
                         return response()->json(['status' => 1, 'message' => 'user account created, but not linked to school!! use ' . $data['gsm'] . ' or ' . $data['username'] . ' to link to school']);
                     }
                 }
-
+                
                 return response()->json(['status' => 'error', 'message' => 'user account not created']);
-
+                
             } catch (\Throwable $e) {
                 logError($e->getMessage());
+                DB::rollBack();
                 return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
             }
         }
