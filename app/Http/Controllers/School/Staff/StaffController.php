@@ -22,7 +22,7 @@ use Illuminate\Validation\Rule;
 
 class StaffController extends Controller
 {
-    private $pwd = 1234567;
+    private $pwd = 123456;
     // public function __construct()
     // {
     //     $this->middleware('auth');
@@ -317,6 +317,7 @@ class StaffController extends Controller
                     'pid' => $request->pid
                 ];
                 
+                DB::beginTransaction();
                 $user = AuthController::createUser($data);
                 if ($user) {
                     $detail['user_pid'] = $data['pid'] ?? $user->pid;

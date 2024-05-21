@@ -75,6 +75,8 @@ class AuthController extends Controller
             if(!isset($data['pid'])){
                 $data['code'] = self::referrerCode();
                 $data['pid']  =  public_id();
+             }else{
+                unset($data['password']);
              }
            return User::updateOrCreate(['pid'=>$data['pid']],$data);
         } catch (\Throwable $e) {

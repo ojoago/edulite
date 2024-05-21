@@ -45,7 +45,7 @@ class User extends Authenticatable
     protected function password(): Attribute
     {
         return new Attribute(
-            set:fn ($val) => strtolower($val),
+            set:fn ($val) => Hash::make($val),
         );
     }
     protected function username(): Attribute
