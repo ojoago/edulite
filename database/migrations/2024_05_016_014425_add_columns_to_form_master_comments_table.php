@@ -14,8 +14,11 @@ return new class extends Migration
     //form master defined comment
     public function up()
     {
+
         Schema::table('form_master_comments', function (Blueprint $table) {
-            $table->string('title');
+
+            $table->string('title'); // but y
+            
         });
     }
 

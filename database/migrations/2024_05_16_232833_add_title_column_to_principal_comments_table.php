@@ -14,8 +14,11 @@ return new class extends Migration
     //principal defined comments
     public function up()
     {
+
         Schema::table('principal_comments', function (Blueprint $table) {
-            $table->string('title');
+
+            $table->string('title'); //this should add
+            
         });
     }
 
