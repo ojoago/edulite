@@ -2,6 +2,7 @@
 
 namespace App\Models\Users;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,20 +14,24 @@ class UserDetail extends Model
         'address','dob','gender','religion','title','state','lga', 'about'
     ];
 
-    public function setFirstnameAttribute($value)
+
+    protected function firstname(): Attribute
     {
-        $this->attributes['firstname'] = ucfirst(strtolower($value));
+        return new Attribute(
+            set: fn ($value) => ucfirst(strtolower($value))
+        );
     }
-    public function setLastnameAttribute($value)
+    protected function lastname(): Attribute
     {
-        $this->attributes['lastname'] = ucfirst(strtolower($value));
+        return new Attribute(
+            set: fn ($value) => ucfirst(strtolower($value))
+        );
     }
-    public function setOthernameAttribute($value)
+    protected function othername(): Attribute
     {
-        $this->attributes['othername'] = ucfirst(strtolower($value));
+        return new Attribute(
+            set: fn ($value) => ucfirst(strtolower($value))
+        );
     }
-    // public function setFullnameAttribute()
-    // {
-    //     return $this->attributes['fullname'] = ucwords(trim($this->attributes['lastname'] . ' ' . $this->attributes['firstname'] . ' ' . $this->attributes['othername']));
-    // }
+    
 }

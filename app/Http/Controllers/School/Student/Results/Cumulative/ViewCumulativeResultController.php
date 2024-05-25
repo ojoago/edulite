@@ -139,7 +139,7 @@ class ViewCumulativeResultController extends Controller
 
             $subdtl = DB::table('student_subject_results as sr')
             // the next 4 joins bring subject teahcer name 
-            ->leftjoin('student_score_params AS ssp', 'ssp.class_param_pid', 'sr.class_param_pid')
+            ->leftjoin('subject_score_params AS ssp', 'ssp.class_param_pid', 'sr.class_param_pid')
             ->leftjoin('subject_totals AS st', 'ssp.pid', 'st.subject_param_pid')
             ->leftjoin('school_staff AS stf', 'ssp.subject_teacher', 'stf.pid')
             ->leftjoin('user_details AS d', 'd.user_pid', 'stf.user_pid')

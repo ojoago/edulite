@@ -10,21 +10,15 @@ class UserDetailsController extends Controller
 
 
     public static function insertUserDetails($data){
-        $data['fullname'] = self::concatUserFullname($data);
         try {
-            $dupParams = ['user_pid'=>$data['user_pid']];
-            return UserDetail::updateOrCreate($dupParams,$data);
+            return UserDetail::updateOrCreate(['user_pid' => $data['user_pid'] ],$data);
         } catch (\Throwable $e) {
             $error = $e->getMessage();
             logError($error);
         }
     }
 
-    public static function concatUserFullname($data)
-    {
-        $names =  $data['lastname'] . ' ' . $data['firstname'] . ' ' . $data['othername'];
-        return ucwords(trim($names));
-    }
+   
     public static function getFullname($pid){
         return UserDetail::where('pid',$pid)->pluck('fullname')->first();
     }

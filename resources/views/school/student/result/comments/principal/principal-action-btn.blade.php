@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="col-md-6">
                                 <label for="category" class="form-label">Category</label>
-                                <select type="text" name="category" class="form-control" id="formCategorySelect2" required>
+                                <select type="text" name="category" class="form-control  form-control-sm attachSelect2" id="formCategorySelect2" required>
                                     <option disabled selected>Select Category</option>
                                     @foreach($category as $cat)
                                         <option value="{{$cat->pid}}" {{$data->category_pid == $cat->pid ? 'selected' : '' }} >{{$cat->category}}</option>

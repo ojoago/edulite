@@ -296,10 +296,13 @@ class StaffController extends Controller
                     'gsm' => $request->gsm,
                     // 'email' => !empty($request->email) ? $request->email : null,
                     'account_status' => 1,
-                    'password' => $this->pwd,
                     'username' => $request->username ?? AuthController::uniqueUsername($request->firstname),
                     'pid' => $request->pid
                 ];
+
+                if(!isset($request->pid)){
+                    $data['password'] = $this->pwd;
+                }
                 if ($request->email) {
                     $data['email'] = $request->email;
                 }
@@ -314,14 +317,15 @@ class StaffController extends Controller
                     'lga' => $request->lga,
                     'address' => $request->address,
                     'title' => $request->title,
-                    'pid' => $request->pid
+                    // 'pid' => $request->pid 
                 ];
                 
                 DB::beginTransaction();
                 $user = AuthController::createUser($data);
                 if ($user) {
-                    $detail['user_pid'] = $data['pid'] ?? $user->pid;
+                    $detail['user_pid'] = $user->pid;
                     $userDetails = UserDetailsController::insertUserDetails($detail);
+                    logError($userDetails);
                     if ($userDetails) {
                         $staff = ['role' => $request->role, 'user_pid' => $data['pid'] ?? $user->pid,];
                         if (!$request->staff_id) {//skip generating id when updating
@@ -343,6 +347,8 @@ class StaffController extends Controller
                         if ($result) {
                             $this->staffRoleHistory(role: $request->role, pid: $result->pid ?? $request->pid);
                             if($request->pid){
+                                DB::commit();
+
                                 return response()->json(['status' => 1, 'message' => 'Staff Detail updated  Successfully & username is ' . $data['username']]);
                             }
                             $message = '{your} Account has been created, Staff Id: ' . $staff['staff_id']  . ' & username is ' . $data['username'].' and Password: '.$this->pwd;
@@ -411,7 +417,7 @@ class StaffController extends Controller
     public function loadStaffDetailsById(Request $request){
         $data = DB::table('school_staff as t')->join('users as u','u.pid','t.user_pid')
                     ->leftJoin('user_details as d','d.user_pid','t.user_pid')
-                    ->select('t.user_pid', 't.pid as t_pid', 'role', 'u.email','u.username', 'u.gsm', 'u.pid as u_pid','d.*','staff_id')
+                    ->select('t.user_pid', 't.pid as t_pid', 'role', 'u.email','u.username', 'u.gsm', 'u.pid','d.*','staff_id')
                     ->where(['t.pid'=>base64Decode($request->pid),'t.school_pid'=>getSchoolPid()])->first();
         return response()->json($data);
     }
@@ -811,13 +817,20 @@ class StaffController extends Controller
     }
    
     public static function getSubjectTeacherPid(string $session, string $term,string $subject){
-        $teacher = StaffSubject::where([
-            'school_pid'=>getSchoolPid(),
-            'session_pid'=>$session,
-            'term_pid'=>$term,
-            'arm_subject_pid'=>$subject
-            ])->pluck('teacher_pid')->first();
-        return $teacher;
+       $data = DB::table('staff_subjects as s')->join('school_staff as t','t.pid', 's.teacher_pid')
+                                                ->join('user_details as d','d.user_pid','t.user_pid')-> where([
+                                                    's.school_pid' => getSchoolPid(),
+                                                    's.session_pid' => $session,
+                                                    's.term_pid' => $term,
+                                                    's.arm_subject_pid' => $subject
+                                                ])->first(['fullname', 'teacher_pid']);
+        // $teacher = StaffSubject::where([
+        //     'school_pid'=>getSchoolPid(),
+        //     'session_pid'=>$session,
+        //     'term_pid'=>$term,
+        //     'arm_subject_pid'=>$subject
+        //     ])->pluck('teacher_pid')->first();
+        return $data;
     }
 
     public static function getStaffDetailBypId(string $pid)

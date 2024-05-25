@@ -374,7 +374,7 @@
                             @php array_push($columnChart,[$row->subject,$row->total,$row->min,$row->avg,$row->max]) @endphp
                             <td>{{rtnGrade($row->total,$grades)}}</td>
                             <td>{{ordinalFormat($row->position)}}</td>
-                            <td>{{$row->subject_teacher}}</td>
+                            <td>{{$row->subject_teacher_name}}</td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -23,7 +23,7 @@ class TermController extends Controller
             return view('school.framework.terms.term-action-button', ['data' => $data]);
         })->make(true);
     }
-    public function createSchoolTerm(Request $request)
+    public function createTerm(Request $request)
     {
         $in = $request['term'];
         // $request['term'] = strtoupper($request['term']); 
@@ -80,7 +80,7 @@ class TermController extends Controller
         }
         return response()->json($data);
     }
-    public function setSchoolActiveTerm(Request $request)
+    public function setActiveTerm(Request $request)
     {
         $validator = Validator::make($request->all(),[
             'active_session'=>'required|string',

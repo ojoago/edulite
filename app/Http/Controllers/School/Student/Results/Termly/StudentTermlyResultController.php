@@ -84,7 +84,7 @@ class StudentTermlyResultController extends Controller
      try {
             $classParam = StudentClassScoreParam::where('pid', $param)->first(['session_pid', 'term_pid', 'arm_pid']);
             // dd($classParam);
-            // StudentScoreParam::join('student_score_sheets','score_param_pid','student_score_params.pid')->where('class_param_pid',$param)->get()->dd();
+            // StudentScoreParam::join('student_score_sheets','score_param_pid','subject_score_params.pid')->where('class_param_pid',$param)->get()->dd();
             if (!$classParam) {
             } else {
                 $scoreSettings = ScoreSettingsController::loadClassScoreSettings($param);
@@ -92,20 +92,20 @@ class StudentTermlyResultController extends Controller
                 // query subject result 
                 $subdtl = DB::table('student_subject_results as sr')
                     // the next 4 joins bring subject teahcer name 
-                    ->leftjoin('student_score_params AS ssp', 'ssp.class_param_pid', 'sr.class_param_pid')
-                    ->leftjoin('subject_totals AS st', 'ssp.pid', 'st.subject_param_pid')
-                    ->leftjoin('school_staff AS stf', 'ssp.subject_teacher', 'stf.pid')
-                    ->leftjoin('user_details AS d', 'd.user_pid', 'stf.user_pid')
+                    ->leftjoin('subject_score_params AS p', 'p.class_param_pid', 'sr.class_param_pid')
+                    ->leftjoin('subject_totals AS st', 'p.pid', 'st.subject_param_pid')
+                    // ->leftjoin('school_staff AS stf', 'ssp.subject_teacher', 'stf.pid')
+                    // ->leftjoin('user_details AS d', 'd.user_pid', 'stf.user_pid')
                     // end of subject teacher name join 
-                    ->join('subject_types AS s', 's.pid', 'sr.subject_type')
+                    // ->join('subject_types AS s', 's.pid', 'sr.subject_type')
                     ->where([
                         'sr.class_param_pid' => $param,
                         'sr.school_pid' => getSchoolPid()
-                    ])->select(DB::raw('sr.subject_type,s.subject_type as subject,MIN(sr.total) AS min, 
-                                        MAX(sr.total) AS max, AVG(sr.total) AS avg, SUM(sr.total) AS subTotal,d.fullname as subject_teacher')) // subTotal is the sum of all student score for eacher subject 
+                    ])->select(DB::raw('sr.subject_type,p.subject_type_name as subject,MIN(sr.total) AS min, 
+                                        MAX(sr.total) AS max, AVG(sr.total) AS avg, SUM(sr.total) AS subTotal,p.subject_teacher_name')) // subTotal is the sum of all student score for eacher subject 
                     ->groupBy('sr.subject_type')
-                    ->groupBy('d.fullname')
-                    ->groupBy('s.subject_type'); //->get()->dd();
+                    ->groupBy('p.subject_teacher_name')
+                    ->groupBy('p.subject_type_name');//->get()->dd();
                 $subRank = DB::table('student_subject_results as sr')->joinSub($subdtl, 'd', function ($d) {
                     $d->on('sr.subject_type', '=', 'd.subject_type');
                 })
@@ -114,7 +114,7 @@ class StudentTermlyResultController extends Controller
                         'sr.school_pid' => getSchoolPid()
                     ])
                     ->select(DB::raw('total, sr.subject_type AS type,sr.student_pid,min,max,avg,subTotal,subject,
-                                    RANK() OVER (PARTITION BY sr.subject_type ORDER BY total DESC) AS position,d.subject_teacher
+                                    RANK() OVER (PARTITION BY sr.subject_type ORDER BY total DESC) AS position,d.subject_teacher_name
                                     '))
                     ->groupBy('sr.subject_type')
                     ->groupBy('sr.student_pid')
@@ -123,10 +123,10 @@ class StudentTermlyResultController extends Controller
                     ->groupBy('d.max')
                     ->groupBy('d.avg')
                     ->groupBy('d.subTotal')
-                    ->groupBy('d.subject_teacher')
+                    ->groupBy('d.subject_teacher_name')
                     ->groupBy('total');
                 // $select = DB::table('student_subject_results as sr');
-                // $ca = DB::table('student_score_params as ssp')
+                // $ca = DB::table('subject_score_params as ssp')
                 //             ->join('student_score_sheets as sss','score_param_pid','ssp.pid')
                 //             ->joinSub($strSub,'sb',function($sb){
                 //                 $sb->on('ssp.subject_type','=','sb.subject_type');
@@ -134,7 +134,7 @@ class StudentTermlyResultController extends Controller
                 //             ->select(DB::raw("ca_type_pid,sb.subject_type"))
                 //             ->where(['class_param_pid'=> $param,'ssp.school_pid'=>getSchoolPid()])
                 //             ->groupBy('ca_type_pid');//->get()->dd();//->toArray();
-                // $value = DB::table('student_score_params as ssp')
+                // $value = DB::table('subject_score_params as ssp')
                 //             ->join('student_score_sheets as sss','score_param_pid','ssp.pid')
                 //             ->joinSub($ca,'ca',function($sub){
                 //                 $sub->on('ssp.subject_type','=','sb.subject_type');

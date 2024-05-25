@@ -5,6 +5,8 @@
         $("input[type=date]").on('keydown', function() {
             return false;
         })
+
+        $('.attachSelect2').addClass('select2')
         // switch from table to card 
         if ($(window).width() < 760) {
             let tableId = $('.cardTable').attr('id');
@@ -1068,7 +1070,7 @@
     // }
     // li.select2('data', selected);
 
-    function FormMultiSelect2(idOrClass, route, plh, pre = null) {
+    function FormMultiSelect2(idOrClass, route, plh, pre = null,table=null) {
         let pid = null
         var url = "{{route('load.available.dropdown')}}";
         var token = $("input[name='_token']").val();
@@ -1097,8 +1099,28 @@
                     };
                 },
                 cache: true
-            }
-        }).val(pre).trigger('change').trigger('focus');
+            },
+             initSelection: function (pre, callback) {
+                alert(pre)
+                // var id = $(element).val();
+                // if (id !== "") {
+                // $.ajax("ajax.php/get_where", {
+                //     data: {programid: id},
+                //     dataType: "json"
+                // }).done(function (data) {
+                //     $.each(data, function (i, value) {
+                //     callback({"text": value.text, "id": value.id});
+                //     });
+                //     ;
+                // });
+                // }
+            },
+            dropdownCssClass: "bigdrop",
+            escapeMarkup: function (m) { return m; }
+        })//.val(pre).trigger('change').trigger('focus');
+        if (pre != null) {
+            $(idOrClass).val(pre).trigger('change')
+        }
     }
 
 
@@ -1133,31 +1155,14 @@
                     },
                     cache: true
                 }
-            }).val(pre).trigger('change').trigger('focus');
-        }
-    }
-
-    $(function() {
-        let width = $(window).innerWidth() / 1.5;
-        $('.iframe-video').css({
-            width: width + 'px',
-            height: $(window).innerHeight() + 'px'
-        });
-
-        $(window).resize(function() {
-            let width = $(window).innerWidth();
-            if(width > 1100){
-                width = width / 1.5;
-            }else{
-                width = width - 100;
+            })//.val(pre).trigger('change').trigger('focus');
+            if (pre != null) {
+                $(idOrClass).val(pre).trigger('change')
             }
-            // let height = $(window).innerHeight();
-            $('.iframe-video').css({
-                width: width + 'px',
-                height: $(window).innerHeight() + 'px'
-            });
-        });
-    });
+
+        }
+
+    }
 
     function multiSelect2(idOrClass, modal, route, plh, pre = null) {
         let pid = null;
@@ -1190,7 +1195,10 @@
                 },
                 cache: true
             }
-        }).val(pre).trigger('change').trigger('focus');
+        })//.val(pre).trigger('change').trigger('focus');
+        if (pre != null) {
+            $(idOrClass).val(pre).trigger('change')
+        }    
     }
 
     function multiSelect2Post(idOrClass, modal, route, pid, plh, pre = null) {
@@ -1224,9 +1232,37 @@
                     },
                     cache: true
                 }
-            }).val(pre).trigger('change').trigger('focus');
+            })//.val(pre).trigger('change').trigger('focus');
+
+            if (pre != null) {
+                $(idOrClass).val(pre).trigger('change')
+            }            
         }
     }
+
+
+    
+    $(function() {
+        let width = $(window).innerWidth() / 1.5;
+        $('.iframe-video').css({
+            width: width + 'px',
+            height: $(window).innerHeight() + 'px'
+        });
+
+        $(window).resize(function() {
+            let width = $(window).innerWidth();
+            if(width > 1100){
+                width = width / 1.5;
+            }else{
+                width = width - 100;
+            }
+            // let height = $(window).innerHeight();
+            $('.iframe-video').css({
+                width: width + 'px',
+                height: $(window).innerHeight() + 'px'
+            });
+        });
+    });
 
     function successClearForm(formId, msg) {
         jQuery('.select2-offscreen').select2('val', '');

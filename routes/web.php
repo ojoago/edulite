@@ -173,10 +173,10 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('school-session-active', [SessionController::class, 'setActiveSession'])->name('school.session.active');
 
     // terms 
-    Route::view('school-term', 'school.framework.terms.school-terms')->name('school.term');
-    Route::get('list-school-term', [TermController::class, 'index'])->name('school.list.term');
-    Route::post('school-term', [TermController::class, 'createSchoolTerm']);
-    Route::post('school-active-term', [TermController::class, 'setSchoolActiveTerm'])->name('school.term.active');
+    Route::view('terms', 'school.framework.terms.terms')->name('school.term');
+    Route::get('list-terms', [TermController::class, 'index'])->name('school.list.term');
+    Route::post('create-term', [TermController::class, 'createSchoolTerm']);
+    Route::post('school-active-term', [TermController::class, 'setActiveTerm'])->name('school.term.active');
     Route::get('load-active-term', [TermController::class, 'loaSchoolActiveTerm'])->name('load.school.active.term');
     Route::get('load-active-term-detail', [TermController::class, 'loaSchoolActiveTermDetails'])->name('load.school.active.term.details');
 
@@ -209,7 +209,8 @@ Route::middleware('schoolAuth')->group(function(){
     // load classe arm 
     Route::post('load-available-class-arm', [Select2Controller::class, 'loadAvailableClassArm'])->name('load.available.class.arm');
     // load class teacher/form classes 
-    Route::post('load-available-class-teacher-arm', [Select2Controller::class, 'loadClassTeacherClassArms'])->name('load.available.class.arm');
+    Route::post('load-available-class-teacher-class', [Select2Controller::class, 'loadClassTeacherClass'])->name('load.available.class'); // just for classes
+    Route::post('load-available-class-teacher-arm', [Select2Controller::class, 'loadClassTeacherClassArms'])->name('load.available.class.arm');// 4 class n subject
     Route::post('load-available-all-class-arm', [Select2Controller::class, 'loadAllClassArm'])->name('load.all.class.arm');
     // load class arm subject
     Route::post('load-available-class-arm-subject', [Select2Controller::class, 'loadAvailableClassArmSubject'])->name('load.available.class.arm.subject');
@@ -593,7 +594,7 @@ Route::middleware('schoolAuth')->group(function(){
     //student attendance
     Route::view('take-attendance', 'school.student.attendance.take-attendance')->name('student.attendance.form');
     // Route::post('student-attendance-form', [StudentAttendanceController::class, 'loadArmStudent']);
-    Route::post('load-class-student', [StudentAttendanceController::class, 'loadArmStudent'])->name('load.class.student');
+    Route::post('take-attendance', [StudentAttendanceController::class, 'loadArmStudent'])->name('take.attendance');
     Route::post('submit-student-attendance', [StudentAttendanceController::class, 'submitStudentAttendance'])->name('submit.student.attendance');
     // student attendance 
     Route::view('student-attendance-history', 'school.student.attendance.student-attendance-history')->name('student.attendance.history');

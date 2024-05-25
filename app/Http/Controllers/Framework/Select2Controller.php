@@ -591,6 +591,43 @@ class Select2Controller extends Controller
 
 
     // load all classes based on what is assigned to form/class teacher 
+    public function loadClassTeacherClass(Request $request)
+    {
+       
+            if ($request->has('q')){
+                $class = DB::table('class_arms as c')->join('staff_classes as s','s.arm_pid','c.pid')
+                ->where(['s.teacher_pid'=> getSchoolUserPid(),
+                's.school_pid'=>getSchoolPid(),
+                'c.status'=>1, 
+                'c.class_pid' => $request->pid, 
+                's.term_pid' => activeTerm(),
+                's.session_pid' => activeSession()])
+                ->where('c.arm', 'like', '%' . $request->q . '%')
+                ->limit(20)->orderBy('c.arm')
+                ->get(['c.pid as id', 'c.arm as text']);
+            }
+            else{
+                $class = DB::table('class_arms as c')->join('staff_classes as s', 's.arm_pid', 'c.pid')
+                ->where([
+                    's.teacher_pid' => getSchoolUserPid(), 
+                    's.school_pid' => getSchoolPid(), 
+                    'c.status' => 1, 
+                    'c.class_pid' => $request->pid,
+                    's.term_pid' => activeTerm(),
+                    's.session_pid' => activeSession(),
+                    ])
+                    ->limit(20)->orderBy('c.arm')
+                    ->get(['c.pid as id', 'c.arm as text']); //
+            }
+        if ($class->isEmpty()) {
+            logError($class);
+            
+            return response()->json(['id' => null, 'text' => 'No Class Assigned to you']);
+        }
+        
+        return response()->json($class);
+    }
+    // load all classes based on what is assigned to form/class teacher 
     public function loadClassTeacherClassArms(Request $request)
     {
        
@@ -615,7 +652,6 @@ class Select2Controller extends Controller
                 ->where('c.arm', 'like', '%' . $request->q . '%')
                 ->limit(20)->orderBy('c.arm')
                 ->get(['c.pid', 'c.arm']);
-
                 $sbj = DB::table('class_arms as ca')->join('class_arm_subjects as cas','cas.arm_pid','ca.pid')
                                                     ->join('staff_subjects as sb', 'cas.pid', 'sb.arm_subject_pid')
                 ->where(['sb.teacher_pid' => getSchoolUserPid(),
@@ -654,6 +690,8 @@ class Select2Controller extends Controller
                         ])
                         ->limit(20)->orderBy('ca.arm')
                         ->get(['ca.pid', 'ca.arm']);
+          
+
                 $result = $class->merge($sbj);
             }
         }
@@ -661,6 +699,7 @@ class Select2Controller extends Controller
             
             return response()->json(['id' => null, 'text' => 'no class assigned to you']);
         }
+        $result = array_unique($result);
         foreach ($result as $row) {
             $data[] = [
                 'id' => $row->pid,
@@ -669,6 +708,8 @@ class Select2Controller extends Controller
         }
         return response()->json($data);
     }
+
+
     // load class arms subject for teacher or class teacher or previliged staff 
     public function loadClassTeacherClassArmsSubject(Request $request)
     {

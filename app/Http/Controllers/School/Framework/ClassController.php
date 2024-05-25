@@ -386,10 +386,11 @@ class ClassController extends Controller
     }
 
     public static function GetClassArmSubjectType($class_subject){
-        $subject_type = ClassArmSubject::join('subjects','subjects.pid','class_arm_subjects.subject_pid')
-                            ->where(['subjects.school_pid'=>getSchoolPid(),'class_arm_subjects.pid'=> $class_subject])
-                            ->pluck('subject_type_pid')->first();
-        return $subject_type;
+        $data =   DB::table('class_arm_subjects as c')->join('subjects as s','s.pid','c.subject_pid')
+                                            ->join('subject_types as t','t.pid', 's.subject_type_pid')
+                                            ->where(['s.school_pid'=>getSchoolPid(),'c.pid'=> $class_subject])
+                                            ->first(['s.subject', 's.subject_type_pid', 't.subject_type']);
+        return $data;
     }
     public static function GetClassSubjectAndName($class_subject){
         $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
@@ -423,23 +424,43 @@ class ClassController extends Controller
         if ($pid) {
             return $pid;
         }
+        $teacher = self::getClassTeacherPid(session: $data['session_pid'],term: $data['term_pid'],arm: $data['arm_pid']);
         $data['teacher_pid'] = self::getClassTeacherPid(session: $data['session_pid'],term: $data['term_pid'],arm: $data['arm_pid']);
-        if($data['teacher_pid']){
+        if($teacher){
+            $data['teacher_pid'] = $teacher->teacher_pid;
+            $data['teacher_name'] = $teacher->fullname;
             $data['principal_pid'] = self::getCategoryHeadPid($data['arm_pid']);
             $data['pid'] = public_id();
+            $data['term'] = termName($data['term_pid']) ;
+            $data['session'] = sessionName($data['session_pid']);
+            $data['arm'] = getClassArmNameByPid($data['arm_pid']);
             $result = StudentClassScoreParam::create($data); // create class param
             return $result->pid;
         }
         return false;
     }
     public static function getClassTeacherPid($arm,$session,$term){
-        $pid = StaffClass::where([
-            'arm_pid'=>$arm,
-            'session_pid'=>$session,
-            'term_pid'=>$term,
-            'school_pid'=>getSchoolPid()
-            ])->pluck('teacher_pid')->first();
-        return $pid;
+        try {
+           $data = DB::table('staff_classes as c')->join('school_staff as s', 's.pid', 'c.teacher_pid')
+                                                ->join('user_details as d', 'd.user_pid', 's.user_pid')
+                                        ->where([
+                                            'arm_pid' => $arm,
+                                            'session_pid' => $session,
+                                            'term_pid' => $term,
+                                            'school_pid' => getSchoolPid()
+                                        ])->first(['teacher_pid', 'fullname']);
+            return $data;
+            // $pid = StaffClass::where([
+            //         'arm_pid' => $arm,
+            //         'session_pid' => $session,
+            //         'term_pid' => $term,
+            //         'school_pid' => getSchoolPid()
+            //     ])->pluck('teacher_pid')->first();
+            // return $pid;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
     public static function getCategoryHeadPid($arm){
        $pid = DB::table('class_arms as a')

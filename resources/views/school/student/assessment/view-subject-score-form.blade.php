@@ -63,12 +63,12 @@
     </div>
 
 </section>
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
+{{-- <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script> --}}
 <script>
     $(document).ready(function() {
 
-        FormMultiSelect2('#formSessionSelect2', 'session', 'Select Session');
-        FormMultiSelect2('#formTermSelect2', 'term', 'Select Term');
+        FormMultiSelect2('#formSessionSelect2', 'session', 'Select Session',"{{activeSession()}}");
+        FormMultiSelect2('#formTermSelect2', 'term', 'Select Term',"{{activeSession()}}");
         FormMultiSelect2('#formCategorySelect2', 'category', 'Select Category');
         $('#formCategorySelect2').on('change', function(e) {
             var id = $(this).val();

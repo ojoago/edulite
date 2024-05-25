@@ -29,7 +29,7 @@ use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
     }
 
     function getTitleScore($student,$pid,$param=null,$subject=null){
-              return  $score = DB::table('student_score_params as p')
+              return  $score = DB::table('subject_score_params as p')
                                 ->join('student_score_sheets as s','p.pid', 's.score_param_pid')
                                 ->where([
                                     's.student_pid'=>$student,
@@ -45,7 +45,7 @@ use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
         // dd($student, $pid, $param, $sub);
         
         $ca = DB::table('student_score_sheets as s')
-                        ->join('student_score_params as p','s.score_param_pid','p.pid')
+                        ->join('subject_score_params as p','s.score_param_pid','p.pid')
                         ->select(DB::raw("AVG(score) AS score"))
                         ->where([
                             's.student_pid' => $student,

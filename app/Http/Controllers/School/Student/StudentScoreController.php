@@ -5,20 +5,21 @@ namespace App\Http\Controllers\School\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 use App\Models\School\Student\Student;
-use App\Http\Controllers\School\Staff\StaffController;
-use App\Models\School\Student\Result\StudentClassResult;
-use App\Http\Controllers\School\Framework\ClassController;
-use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
-use App\Models\School\Student\Result\StudentSubjectResult;
-use App\Models\School\Student\Assessment\StudentScoreParam;
-use App\Models\School\Student\Assessment\StudentScoreSheet;
-use App\Models\School\Student\Result\SubjectTotal;
-use App\Models\School\Student\Results\Cumulative\CumulativeResult;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Models\School\Student\Result\SubjectTotal;
+use App\Http\Controllers\School\Staff\StaffController;
+use App\Models\School\Student\Result\StudentClassResult;
+use App\Http\Controllers\School\Framework\ClassController;
+use App\Models\School\Student\Result\StudentSubjectResult;
+use App\Models\School\Student\Assessment\StudentScoreSheet;
+use App\Models\School\Student\Assessment\SubjectScoreParam;
+use App\Models\School\Student\Results\Cumulative\CumulativeResult;
+use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
+use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
+
 class StudentScoreController extends Controller
 {
   
@@ -76,8 +77,8 @@ class StudentScoreController extends Controller
             // 'class'=> $request->class,
             // 'session'=> $request->session,
             // 'term'=> $request->term,
-            'subject'=>$request->subject,
-            'arm'=>$request->arm,
+            'subject' => $request->subject,
+            'arm' => $request->arm,
         ]);
         setActionablePid(); //set assessment pid to null
             // self::useClassArmSubjectToGetSubjectScroe();
@@ -213,7 +214,7 @@ class StudentScoreController extends Controller
     {
         try {
             $subject_score = DB::table("student_score_sheets as s")
-            ->join("student_score_params AS p", 'p.pid', 's.score_param_pid')
+            ->join("subject_score_params AS p", 'p.pid', 's.score_param_pid')
             ->where(['s.student_pid' => $student, 'p.subject_pid' => $subject, 'p.pid' => $pid])
             ->groupBy('p.subject_type')
             ->groupBy('p.class_param_pid')
@@ -352,8 +353,8 @@ class StudentScoreController extends Controller
         if(!$class_pid){
             return 'no class';// if class is not assigned to teacher
         }
-        $subject_type = ClassController::GetClassArmSubjectType($subject);
-        $pid = StudentScoreParam::where([
+        $type_data = ClassController::GetClassArmSubjectType($subject);
+        $pid = SubjectScoreParam::where([
                                     'subject_pid'=>$subject,
                                     'class_param_pid'=> $class_pid, 
                                     'school_pid'=>getSchoolPid()
@@ -364,16 +365,21 @@ class StudentScoreController extends Controller
         }
         $teacher = StaffController::getSubjectTeacherPid($session, $term, $subject);
         
+
+
         $param = [
-            'subject_teacher' => $teacher,
+            'subject_teacher' => $teacher->teacher_pid,
+            'subject_teacher_name' => $teacher->fullname,
             'class_param_pid' => $class_pid,
             'subject_pid' => $subject,
             'pid' => public_id(),
-            'subject_type' => $subject_type,
+            'subject_type' => $type_data->subject_type_pid,
+            'subject_name' => $type_data->subject,
+            'subject_type_name' => $type_data->subject_type,
             'staff_pid' => getSchoolUserPid(),
             'school_pid' =>getSchoolPid()
         ];
-        $result = StudentScoreParam::create($param);
+        $result = SubjectScoreParam::create($param);
         setActionablePid($result->pid);
         return true;
     }
