@@ -80,6 +80,7 @@ class UploadStudentController extends Controller
                                     'title' => null,
                                     'user_pid' => $user->pid
                                 ];
+
                                 $student = [
                                     'gender' => GENDER[(int) $row[9]],
                                     'dob' => $row[4],
@@ -100,14 +101,16 @@ class UploadStudentController extends Controller
                                     'current_session_pid' => activeSession(),
                                 ];
                                 $userDetails = UserDetailsController::insertUserDetails($detail);
+                                
                                 if ($userDetails) {
-                                    $student['fullname'] = $userDetails->fullname; //get student fullname and save along with student info
+                                    $student['fullname'] = trim($detail['lastname'].' '. $detail['firstname'].' '. $detail['othername']); //get student fullname and save along with student info
                                     $studentClass = [
                                         'session_pid' => activeSession(),
                                         'arm_pid' => $request->arm_pid,
                                         'school_pid' => $student['school_pid'],
                                         'staff_pid' => getSchoolUserPid(),
                                     ];
+                                    
                                     $studentDetails = SchoolController::createSchoolStudent($student);
                                     if ($studentDetails) {
                                         $studentClass['student_pid'] = $studentDetails->pid;

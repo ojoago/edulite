@@ -96,10 +96,10 @@
         });
         // load dropdown  
         // state select2 
-        FormMultiSelect2('#stateSelect2', 'state', 'Select State of Origin')
+        FormMultiSelect2('#stateSelect2', 'state', 'Select State')
         $('#stateSelect2').change(function() {
             var id = $(this).val();
-            FormMultiSelect2Post('#lgaSelect2', 'state-lga', id, 'Select Lga of Origin')
+            FormMultiSelect2Post('#lgaSelect2', 'state-lga', id, 'Select Lga')
         });
 
 

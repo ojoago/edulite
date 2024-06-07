@@ -698,7 +698,7 @@ class Select2Controller extends Controller
             
             return response()->json(['id' => null, 'text' => 'no class assigned to you']);
         }
-        $result = array_unique($result);
+        // $result = array_unique($result);
         foreach ($result as $row) {
             $data[] = [
                 'id' => $row->pid,

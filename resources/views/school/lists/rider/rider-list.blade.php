@@ -24,18 +24,17 @@
 </div>
 
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 <script>
     $(document).ready(function() {
 
         $('#riderDataTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+            // rowReorder: {
+            //     selector: 'td:nth-child(2)'
+            // },
             responsive: true,
-            "ajax": "{{route('load.school.rider.list')}}",
+            "ajax": "{{route('load.rider.list')}}",
             "columns": [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',

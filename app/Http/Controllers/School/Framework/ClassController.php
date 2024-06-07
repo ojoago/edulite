@@ -444,10 +444,10 @@ class ClassController extends Controller
            $data = DB::table('staff_classes as c')->join('school_staff as s', 's.pid', 'c.teacher_pid')
                                                 ->join('user_details as d', 'd.user_pid', 's.user_pid')
                                         ->where([
-                                            'arm_pid' => $arm,
-                                            'session_pid' => $session,
-                                            'term_pid' => $term,
-                                            'school_pid' => getSchoolPid()
+                                            'c.arm_pid' => $arm,
+                                            'c.session_pid' => $session,
+                                            'c.term_pid' => $term,
+                                            'c.school_pid' => getSchoolPid()
                                         ])->first(['teacher_pid', 'fullname']);
             return $data;
             // $pid = StaffClass::where([

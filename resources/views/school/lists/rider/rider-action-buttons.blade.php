@@ -3,7 +3,7 @@
         <i class="bi bi-tools"></i>
     </button>
     <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="{{route('school.rider.profile',['id'=>base64Encode($data->pid)])}}">Profile</a></li>
+        <li><a class="dropdown-item" href="{{route('rider.profile',['id'=>base64Encode($data->pid)])}}">Profile</a></li>
         <li><a class="dropdown-item">
                 <?php if ($data->status == 1) : ?>
                     <button class="btn btn-sm btn-danger toggleRiderStatus" pid="{{base64Encode($data->pid)}}">Disable</button>

@@ -818,7 +818,8 @@ class StaffController extends Controller
    
     public static function getSubjectTeacherPid(string $session, string $term,string $subject){
        $data = DB::table('staff_subjects as s')->join('school_staff as t','t.pid', 's.teacher_pid')
-                                                ->join('user_details as d','d.user_pid','t.user_pid')-> where([
+                                                ->join('user_details as d','d.user_pid','t.user_pid')
+                                                ->where([
                                                     's.school_pid' => getSchoolPid(),
                                                     's.session_pid' => $session,
                                                     's.term_pid' => $term,

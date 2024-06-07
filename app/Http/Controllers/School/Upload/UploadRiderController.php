@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\School\Upload;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
-use App\Http\Controllers\School\Rider\SchoolRiderController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
+use App\Http\Controllers\School\Rider\SchoolRiderController;
 
 class UploadRiderController extends Controller
 {
@@ -42,6 +43,7 @@ class UploadRiderController extends Controller
                                     'password' => $this->pwd,
                                     'username' =>  $username ? AuthController::uniqueUsername($username) : AuthController::uniqueUsername($row[0]),
                                 ];
+                                DB::beginTransaction(); 
                                 $user = AuthController::createUser($data);
                                 if ($user) {
                                     // dd($user, $data);
@@ -49,9 +51,9 @@ class UploadRiderController extends Controller
                                         'firstname' => $row[0],
                                         'lastname' => $row[1],
                                         'othername' => $row[2],
-                                        'gender' => (int) $row[8],
+                                        'gender' => GENDER[(int) $row[8]],
                                         'dob' => $row[3],
-                                        'religion' => (int) $row[7],
+                                        'religion' => RELIGION[(int) $row[7]],
                                         'state' => null,
                                         'lga' => null,
                                         'address' => $row[6],
@@ -66,23 +68,31 @@ class UploadRiderController extends Controller
                                     $dtl = UserDetailsController::insertUserDetails($userDetail);
                                     if ($dtl) {
                                         $sts = SchoolController::createSchoolRider($rider);
-                                        if (!$sts) {
-                                            $errors[] = 'Rider/Care on row ' . $k . ' not linked to school';
+                                        if ($sts) {
+                                            DB::commit();
+                                        }else{
+                                            DB::rollBack();
+                                            $errors[] = 'Rider/Care on row ' . $k . ' Not inserted';
                                         }
                                         $k++;
-                                        
                                     } else {
+                                        DB::rollBack();
 
-                                        $errors[] = 'Rider/care on row ' . $k . ' partially created use edit to completed it please';
+                                        $errors[] = 'Rider/care on row ' . $k . ' Not inserted';
                                     }
                                 } else {
+                                    DB::rollBack();
 
                                     $errors[] = 'Rider/care on row ' . $k . ' not inserted';
                                 }
                             } else {
+                                DB::rollBack();
+
                                 $errors[] = 'Rider/Care on row ' . $k . ' not inserted because, Phone number already exists';
                             }
                         } else {
+                            DB::rollBack();
+
                             $errors[] = 'Rider on row ' . $k . ' not inserted because of either firstname, surname or gsm is empty';
                         }
                     }
@@ -92,6 +102,7 @@ class UploadRiderController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'use the template without change it please.']);
             } catch (\Throwable $e) {
                 $error = ['message' => $e->getMessage(), 'file' => __FILE__, 'line' => __LINE__, 'code' => $e->getCode()];
+                DB::rollBack();
 
                 logError($error);
                 return response()->json(['status' => 'error', 'message' => 'upload stop on row ' . $k, 'errors' => $errors]);

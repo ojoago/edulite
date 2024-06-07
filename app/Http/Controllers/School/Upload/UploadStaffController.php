@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\School\Upload;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\School\Staff\SchoolStaff;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Staff\StaffController;
-use Illuminate\Support\Facades\Validator;
 
 class UploadStaffController extends Controller
 {
@@ -19,7 +20,7 @@ class UploadStaffController extends Controller
         $validator = Validator::make($request->all(),
                                 ['file'=>'required|file|mimes:xlsx,xls,csv|max:30|min:9'],['filemax'=>'Please do not upload more than 100 recored at a time']);
         if(!$validator->fails()){
-            try {
+            // try {
                 $path = $request->file('file')->getRealPath();
                 // $resource = maatWay(model:new SchoolStaff,path:$path);
                 $resource = phpWay($path);
@@ -43,6 +44,7 @@ class UploadStaffController extends Controller
                                 if($row[5]){
                                     $data['email'] = AuthController::findEmail($row[5]) ? null : $row[5];
                                 }
+                                DB::beginTransaction();
                                 $user = AuthController::createUser($data);
                                 // dd($user, $data);
                                 $detail = [
@@ -68,16 +70,21 @@ class UploadStaffController extends Controller
                                     $sts = SchoolController::createSchoolStaff($staff);
                                     if ($sts) {
                                         $n++;
+                                        DB::commit();
                                     }else{
-                                        $errors[] = 'Staff on row ' . $k . ' not Linked to School';
+                                        DB::rollBack();
+                                        $errors[] = 'Staff on row ' . $k . ' not Created';
                                     }
                                 }else{
-                                    $errors[] = 'Staff on row ' . $k . ' partially created, use edit to completed it please';
+                                DB::rollBack();
+                                    $errors[] = 'Staff on row ' . $k . ' Not created';
                                 }
                             } else {
+                            DB::rollBack();
                                 $errors[] = 'Staff on row ' . $k . ' not inserted because, Phone number already exists';
                             }
                         } else {
+                        DB::rollBack();
                             $errors[] = 'Staff on row ' . $k . ' not inserted because of either firstname, surname or gsm is empty';
                         }
                         $k++;
@@ -88,12 +95,12 @@ class UploadStaffController extends Controller
                 }
                 return response()->json(['status'=>'error','message'=>'use the template without change it please.']);
             
-            } catch (\Throwable $e) {
-                $error = ['error' => $e->getMessage(), 'file' => __FILE__];
+            // } catch (\Throwable $e) {
+            //     $error = ['error' => $e->getMessage(), 'file' => __FILE__];
 
-                logError($error);
-                return response()->json(['status' => 'error', 'message' => 'upload stop on row ' . $k,'errors'=>$errors]);
-            }
+            //     logError($error);
+            //     return response()->json(['status' => 'error', 'message' => 'upload stop on row ' . $k,'errors'=>$errors]);
+            // }
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }

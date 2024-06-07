@@ -33,9 +33,9 @@ class StudentController extends Controller
                 ->select('arm', 's.fullname', 'reg_number', 's.created_at', 'd.fullname as parent', 's.pid', 's.status')->orderByDesc('s.id')->get();
             return $this->addDataTable($data);
        } catch (\Throwable $e) {
-        $error = $e->getMessage();
-        logError($error);
+            logError($e->getMessage());
         }
+
     }
     // in active student 
     public function inActiveStudent()

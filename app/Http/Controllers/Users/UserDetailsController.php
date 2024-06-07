@@ -20,6 +20,6 @@ class UserDetailsController extends Controller
 
    
     public static function getFullname($pid){
-        return UserDetail::where('pid',$pid)->pluck('fullname')->first();
+        return UserDetail::where('user_pid',$pid)->pluck('fullname')->first();
     }
 }

@@ -547,8 +547,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('parent-list', 'school.lists.parent.parent-list')->name('school.parent.list');
     Route::get('load-parent-list', [ParentController::class, 'index'])->name('load.school.parent.list');
     // student list 
-    Route::view('school-rider-list', 'school.lists.rider.rider-list')->name('school.rider.list');
-    Route::get('load-rider-list', [SchoolRiderController::class, 'index'])->name('load.school.rider.list');
+    Route::view('rider-list', 'school.lists.rider.rider-list')->name('school.rider.list');
+    Route::get('load-rider-list', [SchoolRiderController::class, 'index'])->name('load.rider.list');
 
     // student profile 
     Route::get('student-login/{id}', [StudentController::class, 'studentLogin'])->name('student.login');
