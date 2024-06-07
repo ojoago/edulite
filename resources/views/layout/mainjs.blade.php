@@ -694,7 +694,7 @@
 
         // stage 2 create term 
         $('#createTermBtn').click(async function() {
-            let s = await submitFormAjax('createTermForm', 'createTermBtn', "{{route('school.term')}}");
+            let s = await submitFormAjax('createTermForm', 'createTermBtn', "{{route('create.term')}}");
             if (s.status === 1) {
                 $('#setupStepForm').show(500)
             }

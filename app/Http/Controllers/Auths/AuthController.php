@@ -148,7 +148,7 @@ class AuthController extends Controller
                 ];
                 if(sendMail($data)){
                     // $user->reset_token = strtotime(now());
-                    $user->save();
+                    // $user->save();
                     return response()->json(['status'=>1,'message'=>'Password Reset link sent to your mail']);
                 }
                 return response()->json(['status'=>'error','message'=>'Something Went Wrong, try again or contact care@edulite.ng']);

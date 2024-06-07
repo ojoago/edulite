@@ -175,7 +175,7 @@ Route::middleware('schoolAuth')->group(function(){
     // terms 
     Route::view('terms', 'school.framework.terms.terms')->name('school.term');
     Route::get('list-terms', [TermController::class, 'index'])->name('school.list.term');
-    Route::post('create-term', [TermController::class, 'createSchoolTerm']);
+    Route::post('create-term', [TermController::class, 'createTerm'])->name('create.term');
     Route::post('school-active-term', [TermController::class, 'setActiveTerm'])->name('school.term.active');
     Route::get('load-active-term', [TermController::class, 'loaSchoolActiveTerm'])->name('load.school.active.term');
     Route::get('load-active-term-detail', [TermController::class, 'loaSchoolActiveTermDetails'])->name('load.school.active.term.details');

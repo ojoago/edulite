@@ -620,7 +620,6 @@ class Select2Controller extends Controller
                     ->get(['c.pid as id', 'c.arm as text']); //
             }
         if ($class->isEmpty()) {
-            logError($class);
             
             return response()->json(['id' => null, 'text' => 'No Class Assigned to you']);
         }

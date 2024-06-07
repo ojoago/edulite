@@ -325,7 +325,7 @@ class StaffController extends Controller
                 if ($user) {
                     $detail['user_pid'] = $user->pid;
                     $userDetails = UserDetailsController::insertUserDetails($detail);
-                    logError($userDetails);
+                    // logError($userDetails);
                     if ($userDetails) {
                         $staff = ['role' => $request->role, 'user_pid' => $data['pid'] ?? $user->pid,];
                         if (!$request->staff_id) {//skip generating id when updating

@@ -247,7 +247,7 @@ class SchoolController extends Controller
                 DB::table('schools')->where('pid', getSchoolPid())->update(['stage' => $stage]);
                 session(['stage' => $stage+1]);
             }
-            return response()->json(['status' => 1, 'message' => 'stage updated']);
+            return response()->json(['status' => 1, 'message' => 'Stage Updated']);
             
         } catch (\Throwable $e) {
             logError($e->getMessage());

@@ -26,7 +26,7 @@ define('SETUP_STAGE', [
         "This is where you will create class arms under each classes. e.g Primary 1 A, Nursery 1 B etc",
         "Here you will create school Subject Types/groups",
         "Here you will create school Subjects under each subject types",
-        "Here you will assign subjects to each class",
+        // "Here you will assign subjects to each class",
         "Here you will create assessment as it will appear on student report card",
         "This is where you will assign maximum obtainable score to assessment title",
         "",

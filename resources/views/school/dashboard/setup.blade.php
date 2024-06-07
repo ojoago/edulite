@@ -66,9 +66,9 @@
             <button type="button" class="btn btn-primary mb-3 " data-bs-toggle="modal" data-bs-target="#createSubjectModal">
                 Create Subject
             </button>
-            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#dupSubjectTypeModal">
+            {{-- <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#dupSubjectTypeModal">
                 Copy Subject Type
-            </button>
+            </button> --}}
             @endif
             @if(session('stage')==10)
             <!-- <p class="bg-info text-white p-2"> </p> -->
@@ -162,7 +162,7 @@
         });
 
 
-        function nextStep(){
+        async function nextStep(){
             let s = await submitFormAjax('setupStepForm', 'setupStepBtn', "{{route('update.setup.stage')}}");
             if (s.status === 1) {
                 location.reload()

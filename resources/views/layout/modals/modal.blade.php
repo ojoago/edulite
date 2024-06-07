@@ -885,7 +885,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create School Class
-                    <button id="addMoreClass" type="button" class="btn btn-danger btn-sm btn-small m-3">Add More Row</button>
 
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -916,6 +915,7 @@
                         </div>
                     </div>
                     <div id="addMoreClassRow"></div>
+                    <button id="addMoreClass" type="button" class="btn btn-danger btn-sm btn-small m-3">Add More</button>
                     <p>[Class equivalence in number] is used to promote student to the next class automatically by the system if need be</p>
                 </form>
             </div>
