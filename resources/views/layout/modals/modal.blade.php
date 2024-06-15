@@ -1024,7 +1024,7 @@
 <!-- end subject type modal  -->
 <!-- subject modal  -->
 <div class="modal fade" id="createSubjectModal" tabindex="-1" data-bs-backdrop="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create Subject</h5>
@@ -1033,18 +1033,30 @@
             <div class="modal-body">
                 <form method="post" class="" id="createSchoolCategortSubjectForm">
                     @csrf
-                    <select name="category_pid" style="width:100%" class="form-control form-control-sm createSubjectCategorySelect2" id="createSubjectCategorySelect2">
-                    </select>
+                    <div class="input-group">
+                        <select name="category_pid" style="width:100%" class="form-control form-control-sm createSubjectCategorySelect2" id="createSubjectCategorySelect2">
+                        </select>
+                    <i class="bi bi-x-circle-fill text-danger hidden-item "></i>
+                    </div>
                     <p class="text-danger category_pid_error"></p>
                     {{-- <select name="subject_type_pid" style="width:100%" class="form-control form-control-sm createSubjectSubjectTypeSelect2" id="createSubjectSubjectTypeSelect2">
                     </select>
                     <p class="text-danger subject_type_pid_error"></p> --}}
-                    <input type="text" name="subject" id="subject" class="form-control form-control-sm" placeholder="subject name" required>
-                    <input type="hidden" name="pid" id="pid">
-                    <p class="text-danger subject_error"></p>
-                    <textarea type="text" name="description" id="description" class="form-control form-control-sm" placeholder="description" required></textarea>
-                    <p class="text-danger description_error"></p>
-                </form>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" name="subject[]" id="subject" class="form-control form-control-sm" placeholder="subject name" required>
+                            <i class="bi bi-x-circle-fill text-danger hidden-item "></i>
+                        </div>
+                        <input type="hidden" name="pid" id="pid">
+                        <p class="text-danger subject_error"></p>
+                    </div>
+                    <div id="moreSubject"></div>
+                    {{-- <textarea type="text" name="description" id="description" class="form-control form-control-sm" placeholder="description" required></textarea>
+                    <p class="text-danger description_error"></p> --}}
+                    </form>
+                <div class="text-center">
+                    <button id="addMoreSubject" type="button" class="btn btn-info btn-sm btn-sm m-1">Add More</button>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-sm" id="createSubjectBtn">Submit</button>
@@ -1126,7 +1138,7 @@
 
 <!-- asseement type modal  -->
 <div class="modal fade" id="createAssessmentModal" tabindex="-1" data-bs-backdrop="false">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog modal-sm modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create Assessment Title</h5>
@@ -1135,18 +1147,28 @@
             <div class="modal-body">
                 <form method="post" id="createAssessmentForm">
                     @csrf
-                    <input type="text" name="title" class="form-control form-control-sm" autocomplete="off" placeholder="Assessment title">
-                    <p class="text-danger title_error"></p>
-                    <!-- <select type="number" name="category" class="form-control form-control-sm">
-                        <option disabled selected>Select Category</option>
-                        <option value="1" selected>General</option>
-                        <option value="2">Mid Term</option>
-                    </select> -->
-                    <input type="hidden" name="category" value="1">
-                    <p class="text-danger category_error"></p>
-                    <textarea type="text" name="description" class="form-control form-control-sm" placeholder="assessment description" required></textarea>
-                    <p class="text-danger description_error"></p>
-                </form>
+                    <div >
+                        <div class="float-end">
+
+                            <i class="bi bi-x-circle-fill text-danger hidden-item "></i>
+                        </div>
+                            <label for="" class="text-danger">*</label>
+                            <input type="text" name="title[]" class="form-control form-control-sm" autocomplete="off" placeholder="Assessment title">
+                            <p class="text-danger title_error"></p>
+                            <!-- <select type="number" name="category" class="form-control form-control-sm">
+                                <option disabled selected>Select Category</option>
+                                <option value="1" selected>General</option>
+                                <option value="2">Mid Term</option>
+                                </select> -->
+                                <input type="hidden" name="category" value="1">
+                                <p class="text-danger category_error"></p>
+                                <input type="text" name="description[]" class="form-control form-control-sm" autocomplete="off" placeholder="assessment description">
+                        <p class="text-danger description_error"></p>
+                    </div>
+                    <div id="moreTitle"></div>
+                    
+                    </form>
+                <div id="text-center"> <button id="addMoreTitle" class="btn btn-sm btn-info text-white">Add More</button> </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-sm" id="createAssessmentBtn">Submit</button>
@@ -1178,9 +1200,7 @@
                                 <select name="category_pid" id="cssCategorySelect2" style="width: 100%;">
                                 </select>
                                 <p class="text-danger category_pid_error"></p>
-                                <select type="text" name="class_pid" id="cssClassSelect2" style="width: 100%;" class="form-control form-control-sm">
-                                </select>
-                                <p class="text-danger class_pid_error"></p>
+                                
                                 <!-- <select type="text" name="term_pid" id="cssTermSelect2" style="width: 100%;" class="form-control form-control-sm">
                                 </select>
                                 <p class="text-danger term_pid_error"></p> -->
@@ -1190,6 +1210,9 @@
 
                             </div>
                         </div>
+                        <select type="text" name="class_pid[]" id="cssClassSelect2" multiple style="width: 100%;" class="form-control form-control-sm">
+                                </select>
+                                <p class="text-danger class_pid_error"></p>
                         <div class="text-center">
                             <p class="text-info">
                                 Title will appear on student result in the other they are entered.
@@ -1197,7 +1220,6 @@
                             </p>
                             <!-- Multiple ? <input class="custom-check m-1" name="keekVal" type="checkbox" id="gridCheck2"> -->
 
-                            <button id="addMore" type="button" class="btn btn-danger btn-sm btn-small m-1">Add More Row</button>
                             <p class="text-danger title_pid_error"></p>
                         </div>
 
@@ -1218,6 +1240,7 @@
                             </div>
                         </div>
                         <div id="settingParams"></div>
+                            <button id="addMore" type="button" class="btn btn-danger btn-sm btn-sm m-1">Add More Row</button>
                 </form>
             </div>
         </div>

@@ -14,7 +14,7 @@
     <table width="100%">
         <tr>
             <td class="inner-td">
-                <p class="h2" style="text-align:left !important;">Hi {{$param['name']}},</p>
+                <p class="h2" style="text-align:left !important;">Hi {{ucwords($param['name'])}},</p>
                 <p class="text">
                     Welcome to {{env('APP_NAME',APP_NAME)}}. We're honored that you've chosen to use our smart, simple and reliable system.
                     It's our utmost priority to ensure you have an excellent experience with our System/Service.

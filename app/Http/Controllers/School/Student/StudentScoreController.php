@@ -128,6 +128,7 @@ class StudentScoreController extends Controller
         $term = session('term');
         $arm = session('arm');
         $class = session('class');
+        $subject = session('subject');
         
         // load score setting 
         $data = [
@@ -144,14 +145,15 @@ class StudentScoreController extends Controller
 
         $scoreParams = ScoreSettingsController::loadClassScoreSettings($class_param_pid);// load class score seetting 
         
-        $data = Student::where([
+        $data = DB::table('students as s')->where([
             'current_class_pid' => $arm,
             'school_pid' => getSchoolPid(),
-            'current_session_pid' => $session
-        ])->get([
-            'fullname', 'reg_number', 'pid',
-            // 'student_score_sheets.ca_type_pid', 'student_score_sheets.score'
-        ]);
+            'current_session_pid' => $session ,
+            'status' => 1
+        ])->select('fullname', 'reg_number', 'pid',
+            DB::raw("(select seated from subject_totals t where t.student_pid = s.pid and t.class_param_pid = '" . $class_param_pid . "' and t.subject_pid = '" . $subject . "' limit 1) as seated"),
+        )->get();//->dd();
+        
         // load student 
         $class = ClassController::GetClassSubjectAndName(session('subject'));
 
@@ -245,9 +247,12 @@ class StudentScoreController extends Controller
     private function updateCombineSubject($data){
         try {
             $dupParams = $data;
-            $data['total'] = $this->sumStudentCombinedScore($data); // take average of combined score as total and insert into subject type
             unset($dupParams['total']);
+            $total = $this->sumStudentCombinedScore($data); // take average of combined score as total and insert into subject type
+            $data['total'] = $total ?? 0;
+            $data['seated'] = $total ?  1 : 0; // if total is null it means there is only one subject so combine subject should be turned off
             StudentSubjectResult::updateOrCreate($dupParams, $data); //combine subject details
+
             $total = $this->sumStudentTotalScore($data['class_param_pid'], $data['student_pid']); //sum student total score
             $data = [
                 'class_param_pid' => $data['class_param_pid'],
@@ -261,6 +266,7 @@ class StudentScoreController extends Controller
             return false;
         }
     }
+
     private function sumStudentCombinedScore($data){
         try {
             $param = [
@@ -310,8 +316,10 @@ class StudentScoreController extends Controller
     {
        try {
             $status = SubjectTotal::where(['subject_param_pid' => getActionablePid(), 'student_pid' => $request->student_pid])->update(['seated' => $request->seated]);
+            
             if ($status) {
                 $sbj = SubjectTotal::where(['subject_param_pid' => getActionablePid(), 'student_pid' => $request->student_pid])->first();
+                
                 $data = [
                     'class_param_pid' => $sbj->class_param_pid,
                     'student_pid' => $sbj->student_pid,
@@ -319,7 +327,7 @@ class StudentScoreController extends Controller
                     // 'subject_pid' => $sbj->subject_pid,
                     'total' => $sbj->total,
                     'school_pid' => getSchoolPid(),
-                    'seated' => 1,
+                    // 'seated' => 1,
                 ];
                 $this->updateCombineSubject($data);
                 return 'Status Updated';

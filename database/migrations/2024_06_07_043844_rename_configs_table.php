@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::rename('configs', 'result_configs');
         Schema::table('result_configs', function (Blueprint $table) {
             $table->string('school_pid');
-            $table->foreignId('school_pid')->references('pid')->on('schools')->onDelete('cascade');
+            $table->foreign('school_pid')->references('pid')->on('schools')->onDelete('cascade');
             $table->string('category_pid');
-            $table->foreignId('category_pid')->references('pid')->on('categories')->onDelete('cascade');
+            $table->foreign('category_pid')->references('pid')->on('categories')->onDelete('cascade');
             $table->string('class_teacher')->default('Class/Form Teacher');
             $table->string('head_teacher')->default('Principal/Head Teacher');
             $table->string('chart')->default('line');

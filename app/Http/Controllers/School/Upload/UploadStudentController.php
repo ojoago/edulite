@@ -13,7 +13,7 @@ use App\Http\Controllers\School\Student\StudentController;
 
 class UploadStudentController extends Controller
 {
-    private $pwd = 1234567;
+    // private $pwd = 1234567;
     private $header = ['firstname', 'surname', 'othername', 'gsm', 'dob', 'username', 'email', 'address', 'religion', 'gender','type'];
     public function importStudent(Request $request)
     {
@@ -58,7 +58,7 @@ class UploadStudentController extends Controller
                                     'gsm' => ($row[3]),
                                     // 'email' => AuthController::findEmail($username) ? null : $username,
                                     'account_status' => 1,
-                                    'password' => $this->pwd,
+                                    'password' => DEFAULT_PASSWORD ,
                                     'username' =>  $username ? AuthController::uniqueUsername($username) : AuthController::uniqueUsername($row[0]),
                                 ];
                                 if($email){

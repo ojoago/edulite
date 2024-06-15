@@ -7,7 +7,7 @@
                     <table width="100%">
                         <tr>
                             <td class="inner-td">
-                                <p class="h2">Hi {{$param['name']}},</p>
+                                <p class="h2">Hi {{ucwords($param['name'])}},</p>
                                 <p>edulite.ng has received a request to reset the password for your account.</p>
 
                                 <p class="text-red">If you did not request to reset your password, please ignore this email</p>

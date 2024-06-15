@@ -92,18 +92,25 @@
 
             @endif
 
-            <form id="setupStepForm" style="display: none;">
+            <form id="setupStepForm" style="display none;">
                 @csrf
                 <input type="hidden" name="stage" value="{{session('stage')}}">
                 <h3>Completed Step {{session('stage')}} ?</h3>
-                <button type="button" id="setupStepBtn" class="btn btn-small btn-success">Yes</button>
+                <button type="button" id="nextStepBtn" class="btn btn-sm btn-success">Yes</button>
             </form>
+            @if(session('stage')>1)
+            <form id="previousStepForm" >
+                <hr>
+                @csrf
+                <input type="hidden" name="stage" value="{{session('stage')}}">
+                <h3>Wish to go back ?</h3>
+                <button type="button" id="previousStepBtn" class="btn btn-small btn-success">Previous</button>
+            </form>
+            @endif
         </div>
     </fieldset>
 
 </div>
-
-
 
 <script type="text/javascript">
     $(window).on('load', function() {
@@ -150,15 +157,23 @@
         // });
         // step 7 create session 
         // $('#createSubjectBtn').click(async function() {
-        //     let s = await submitFormAjax('createSchoolCategortSubjectForm', 'createSubjectBtn', "{{route('create.school.subject')}}");
+        //     let s = await submitFormAjax('createSchoolCategortSubjectForm', 'createSubjectBtn', "{{route('create.subject')}}");
 
         //     if (s.status === 1) {
         //         $('#setupStepForm').show(500)
         //     }
         // });
         // step 7 create session 
-        $('#setupStepBtn').click(async function() {
+        $('#nextStepBtn').click(async function() {
             nextStep()
+        });
+
+        
+        $('#previousStepBtn').click(async function() {
+            let s = await submitFormAjax('previousStepForm', 'previousStepBtn', "{{route('previous.setup.stage')}}");
+            if (s.status === 1) {
+                location.reload()
+            }
         });
 
 

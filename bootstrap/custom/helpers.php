@@ -156,12 +156,34 @@ use App\Http\Controllers\Auths\AuthController;
        
         return $msg;
     }
+    
     function schoolTeacher(){
         $cn =['200','205','301','300','303','305','307','500'];
         return (in_array(getUserActiveRole(),$cn)|| hasRole());
     }
+    
     function classTeacher(){
         return (getUserActiveRole() == 301 || hasRole());
+    }
+    function subjectTeacher(){
+        return (getUserActiveRole() == 300 || hasRole());
+    }
+    
+    function schoolClerk(){
+        return (getUserActiveRole() == 303 || hasRole());
+    }
+    
+    function schoolSecretary(){
+        return (getUserActiveRole() == 305 || hasRole());
+    }
+
+    function schoolPortal(){
+        return (getUserActiveRole() == 307 || hasRole());
+    }
+    
+    
+    function headTeacher(){
+        return (getUserActiveRole() == 500 || hasRole());
     }
     function schoolAdmin(){
         $cn = ['200', '205'];

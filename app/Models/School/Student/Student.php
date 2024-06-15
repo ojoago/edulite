@@ -2,6 +2,7 @@
 
 namespace App\Models\School\Student;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +17,18 @@ class Student extends Model
     ];
 
 
-    public function setStudentRegNumber($value){
-        $this->attributes['reg_number'] = strtoupper($value);
+
+    protected function regNumber() : Attribute
+    {
+        return new Attribute(
+            set: fn ($value) => strtoupper($value) 
+        );
     }
+    protected function fullname() : Attribute
+    {
+        return new Attribute(
+            set: fn ($value) => ucwords($value) 
+        );
+    }
+
 }

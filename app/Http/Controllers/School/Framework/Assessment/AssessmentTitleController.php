@@ -52,27 +52,32 @@ class AssessmentTitleController extends Controller
     public function createAssessmentTitle(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'title' =>['required','regex:/^[a-zA-Z0-9\s]+$/',
-                        Rule::unique('assessment_titles')->where(function($param){
-                        $param->where('school_pid',getSchoolPid());
-                })
+            'title.*' =>['required','regex:/^[a-zA-Z0-9_\s]+$/',
+                //         Rule::unique('assessment_titles')->where(function($param){
+                //         $param->where('school_pid',getSchoolPid());
+                // })
         ],
             'category' => 'required|int',
-        ],['title.regex'=>'only letters and numbers is allowed', 'title.unique'=> $request->title.' already exists']);
+        ],['title.regex'=>'only letters and numbers is allowed', 'title.unique'=> 'title already exists']);
         
         if(!$validator->fails()){
-            $request['school_pid'] = getSchoolPid();
-            $request['staff_pid'] = getUserPid();
-            $request['pid'] = public_id();
+            // $request['school_pid'] = getSchoolPid();
+            // $request['staff_pid'] = getUserPid();
+            // $request['pid'] = public_id();
             $data = [
                 'school_pid' => getSchoolPid(),
                 'staff_pid' => getSchoolUserPid(),
                 'pid' => public_id(),
-                'title'=>strtoupper($request->title),
                 'category'=>$request->category,
-                'description'=>strtoupper($request->description),
             ];
-            $result = $this->createOrUpdateAssesmentTitle($data);
+            $count = count($request->title);
+            for ($i=0; $i < $count; $i++) {
+                $data['title'] = $request->title[$i];
+                $data['description'] = $request->description[$i];
+                $data['pid'] = public_id();
+                $result = $this->createOrUpdateAssesmentTitle($data);
+            }
+            
             if ($result) {
                 return response()->json(['status'=>1,'message'=> 'Title Created']);
             }

@@ -17,7 +17,7 @@ use App\Http\Controllers\Users\UserDetailsController;
 
 class StudentController extends Controller
 {
-    private  $pwd = 123456;
+    // private  $pwd = 123456;
 
     public function __construct()
     {
@@ -115,30 +115,30 @@ class StudentController extends Controller
         return response()->json($data);
     }
     public function viewStudentProfile(Request $request){
+
         $data = DB::table('users as u')->join('user_details as d', 'd.user_pid', 'u.pid')
             ->join('students as s', 's.user_pid', 'u.pid')
             ->join('class_arms as a', 's.current_class_pid', 'a.pid')
             ->where(['s.school_pid' => getSchoolPid(), 's.pid' => $request->pid])
             ->select('gsm', 'email', 'username', 's.fullname','reg_number', 's.address', 'dob', 'd.gender', 's.religion', 's.passport','s.status','a.arm')->first();
+            
+            
          return response()->json(formatStudentProfile($data));
     }
 
 
     public function viewStudentclassHistroy(Request $request){
-        $data = StudentClass::where([
-                    'student_classes.school_pid' => getSchoolPid(),
-                     'student_classes.student_pid' => $request->pid
-                     ])
-                     ->leftjoin('class_arms', 'class_arms.pid', 'student_classes.arm_pid')
-                     ->join('sessions', 'sessions.pid', 'student_classes.session_pid')
-                     ->get(['session','arm']);
-            // logError($data);
-        return datatables($data)
-
-            // ->editColumn('date',function($data){
-            //     return $data->updated_at->diffForHumans();
-            // })
-            ->make(true);
+        try {
+            $data = DB::table('student_classes as c')->where([
+                'c.school_pid' => getSchoolPid(),
+                'c.student_pid' => $request->pid
+            ])->leftJoin('sessions as s', 's.pid', 'c.session_pid')
+                ->leftJoin('class_arms as a', 'a.pid', 'c.arm_pid')->get(['session', 'arm']);
+            return datatables($data)
+                ->make(true);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+        }
     }
     public function viewStudentResult(Request $request){
         $data = StudentClass::where([
@@ -370,7 +370,7 @@ class StudentController extends Controller
         if (!$validator->fails()) {
             $data = [
                 'account_status' => 1,
-                'password' => $this->pwd,
+                'password' => DEFAULT_PASSWORD,
                 'username' => $request->username ?? AuthController::uniqueUsername($request->firstname),
                 'gsm' => $request->gsm,
                 'pid' => $request->user_pid,

@@ -3,7 +3,7 @@
 
     <tr>
         <td class="inner-td">
-            <p class="h2" style="text-align:left !important;">Dear {{$param['name']}},</p>
+            <p class="h2" style="text-align:left !important;">Dear {{ucwords($param['name'])}},</p>
             <p class="text" style="color:#000 !important;">
                 {!! $param['message'] !!}
             </p>

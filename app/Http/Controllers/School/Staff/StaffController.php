@@ -22,7 +22,7 @@ use Illuminate\Validation\Rule;
 
 class StaffController extends Controller
 {
-    private $pwd = 123456;
+    // private $pwd = 123456;
     // public function __construct()
     // {
     //     $this->middleware('auth');
@@ -301,7 +301,7 @@ class StaffController extends Controller
                 ];
 
                 if(!isset($request->pid)){
-                    $data['password'] = $this->pwd;
+                    $data['password'] = DEFAULT_PASSWORD;
                 }
                 if ($request->email) {
                     $data['email'] = $request->email;
@@ -351,7 +351,7 @@ class StaffController extends Controller
 
                                 return response()->json(['status' => 1, 'message' => 'Staff Detail updated  Successfully & username is ' . $data['username']]);
                             }
-                            $message = '{your} Account has been created, Staff Id: ' . $staff['staff_id']  . ' & username is ' . $data['username'].' and Password: '.$this->pwd;
+                            $message = '{your} Account has been created, Staff Id: ' . $staff['staff_id']  . ' & username is ' . $data['username'].' and Password: '. DEFAULT_PASSWORD;
                             $message .= ' <br> Primary Role is ' .matchStaffRole($request->role);
                             DB::commit();
                             SchoolNotificationController::notifyIndividualStaff(message: $message, pid: $result->pid ?? $request->pid);

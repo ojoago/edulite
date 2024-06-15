@@ -896,10 +896,45 @@
         multiSelect2('#subjectTeacherSelect2', 'createClassSubjectToTeacherModal', 'school-teachers', 'Select Subject Teacher');
         // create subject 
         $('#createSubjectBtn').click(async function() {
-            let s = await submitFormAjax('createSchoolCategortSubjectForm', 'createSubjectBtn', "{{route('create.school.subject')}}");
+            let s = await submitFormAjax('createSchoolCategortSubjectForm', 'createSubjectBtn', "{{route('create.subject')}}");
             if (s.status === 1) {
                 $('#setupStepForm').show(500)
             }
+        });
+
+        $('#addMoreSubject').click(function(){
+            $('#moreSubject').append(`
+                <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" name="subject[]" id="subject" class="form-control form-control-sm" placeholder="subject name" required>
+                            <i class="bi bi-x-circle-fill text-danger removeSubject "></i>
+                        </div>
+                        <p class="text-danger subject_error"></p>
+                    </div>
+            `);
+        })
+        
+        $(document).on('click', '.removeSubject', function() {
+            $(this).parent().parent().remove();
+        });
+        $('#addMoreTitle').click(function(){
+            $('#moreTitle').append(`
+                <div >
+                        <div class="float-end">
+                            <i class="bi bi-x-circle-fill text-danger pointer removeTitleRow "></i>
+                        </div>
+                            <label for="" class="text-danger">*</label>
+                            <input type="text" name="title[]" class="form-control form-control-sm" autocomplete="off" placeholder="Assessment title">
+                        <p class="text-danger title_error"></p>
+                        <input type="text" name="description[]" class="form-control form-control-sm" autocomplete="off" placeholder="Assessment Description">
+
+                        <p class="text-danger description_error"></p>
+                    </div>
+            `);
+        })
+        
+        $(document).on('click', '.removeTitleRow', function() {
+            $(this).parent().parent().remove();
         });
         // create subject 
         $('#createDupSubjectBtn').click(async function() {

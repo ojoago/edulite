@@ -6,13 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\School\Staff\StaffClass;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Class\Classes;
 use App\Models\School\Framework\Class\Category;
 use App\Models\School\Framework\Class\ClassArm;
 use App\Models\School\Framework\Class\ClassArmSubject;
-use App\Models\School\Student\Result\StudentClassScoreParam;
+use App\Models\School\Student\Result\StudentClassResultParam;
 
 class ClassController extends Controller
 {
@@ -420,7 +419,7 @@ class ClassController extends Controller
     {
         // $teacher = $data['teacher_pid'];
         // unset($data['teacher_pid']);// class tec
-        $pid = StudentClassScoreParam::where($data)->pluck('pid')->first();//check if param already created
+        $pid = StudentClassResultParam::where($data)->pluck('pid')->first();//check if param already created
         if ($pid) {
             return $pid;
         }
@@ -434,7 +433,7 @@ class ClassController extends Controller
             $data['term'] = termName($data['term_pid']) ;
             $data['session'] = sessionName($data['session_pid']);
             $data['arm'] = getClassArmNameByPid($data['arm_pid']);
-            $result = StudentClassScoreParam::create($data); // create class param
+            $result = StudentClassResultParam::create($data); // create class param
             return $result->pid;
         }
         return false;

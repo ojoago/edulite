@@ -104,6 +104,7 @@ Route::post('create-school', [SchoolController::class, 'createSchool']);
 Route::get('school-sign-in/{id}', [SchoolController::class, 'schoolLogin'])->name('login.school');
 Route::get('school-setup', [SchoolController::class, 'schoolSetup'])->name('setup.school');
 Route::post('update-setup-stage', [SchoolController::class, 'updateSetupStage'])->name('update.setup.stage');
+Route::post('previous-setup-stage', [SchoolController::class, 'previousSetupStage'])->name('previous.setup.stage');
 //load states
 Route::post('load-available-state', [Select2Controller::class, 'loadStates'])->name('load.available.state');
 //load school states
@@ -119,8 +120,15 @@ Route::post('update-user-detail', [UserController::class, 'updateUserDetail'])->
 Route::middleware('schoolAuth')->group(function(){
     Route::post('reset-user-password', [AuthController::class, 'resetUserPassword'])->name('reset.user.password');
 
-    // user create school 
     Route::get('school-dashboard', [SchoolController::class, 'mySchoolDashboard'])->name('my.school.dashboard');
+    Route::get('admin-dashboard', [SchoolController::class, 'adminDashboard'])->name('admin.dashboard');
+    Route::get('head-teacher-dashboard', [SchoolController::class, 'principalDashboard'])->name('head.teacher.dashboard');
+    Route::get('class-teacher-dashboard', [SchoolController::class, 'classTeacherDashboard'])->name('class.teacher.dashboard');
+    Route::get('teacher-dashboard', [SchoolController::class, 'teacherDashboard'])->name('teacher.dashboard');
+
+
+
+    // user create school 
     Route::get('update-school', [SchoolController::class, 'index'])->name('edit.school.info');
     Route::post('load-school-info', [SchoolController::class, 'loadSchoolDetailById'])->name('load.school.info');
     Route::get('delete-school/{id}', [SchoolController::class, 'update'])->name('delete.school');
@@ -269,7 +277,7 @@ Route::middleware('schoolAuth')->group(function(){
     // load subjects 
     Route::post('load-school-subject', [SubjectController::class, 'index'])->name('load.school.subject');
     // create school category subject 
-    Route::post('create-subject-subject', [SubjectController::class, 'createSchoolSubject'])->name('create.school.subject');
+    Route::post('create-subject-subject', [SubjectController::class, 'createSchoolSubject'])->name('create.subject');
     Route::post('dup-subject-subject', [SubjectController::class, 'dupSubjectTypeAsSubject'])->name('dup.subject.type.subject');
     Route::post('load-subject-by-id', [SubjectController::class, 'loadSubjectById'])->name('load.subject.by.id');
 
@@ -445,7 +453,7 @@ Route::middleware('schoolAuth')->group(function(){
     // student 
     // Route::view('school-registration', 'school.registration.index')->name('school.registration');
     // student 
-    Route::view('register-student', 'school.registration.student.register-student')->name('school.registration.student.form');
+    Route::view('register-student', 'school.registration.student.register-student')->name('register.student');
     Route::post('register-student', [StudentController::class, 'registerStudent'])->name('register.student');
     // edit student 
 
@@ -575,6 +583,9 @@ Route::middleware('schoolAuth')->group(function(){
 
     // student assignment 
     Route::view('class-assessment', 'school.assessments.class-assessment')->name('class.assignment.form');
+    Route::view('manual-assessment', 'school.assessments.manual-assessment')->name('manual.assignment');
+    Route::view('automated-assessment', 'school.assessments.automated-assessment')->name('automated.assignment');
+    
     Route::post('class-assessment', [AssessmentController::class, 'createManualAssessment'])->name('submit.manual.assignment');
     Route::post('submit-automated-assessment', [AssessmentController::class, 'createAutomatedAssessment'])->name('submit.automated.assignment');
     Route::post('delete-assessment', [AssessmentController::class, 'deleteAssessment'])->name('delete.assessment');

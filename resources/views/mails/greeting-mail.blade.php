@@ -7,7 +7,7 @@
                     <table width="100%">
                         <tr>
                             <td class="inner-td">
-                                <p class="h2" style="text-align:left !important;">Hello, <b> {{$param['name']}}</b></p>
+                                <p class="h2" style="text-align:left !important;">Hello, <b> {{ucwords($param['name'])}}</b></p>
                                 <p class="text" style="color:#000 !important;">
                                     {!!$param['message']!!}
                                 </p>

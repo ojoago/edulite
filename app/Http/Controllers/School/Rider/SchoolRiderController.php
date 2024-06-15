@@ -15,7 +15,6 @@ use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 
 class SchoolRiderController extends Controller
 {
-    private $pwd = 123456;
     
     public function index(){
         $data = SchoolRider::join('user_details','user_details.user_pid','school_riders.user_pid')
@@ -70,7 +69,7 @@ class SchoolRiderController extends Controller
             $schoolPid = getSchoolPid();
             $data = [
                 'gsm' => $request->gsm,
-                'password' => $this->pwd,
+                'password' => DEFAULT_PASSWORD,
                 'account_status' => 1,
                 'username' => $request->username ?? AuthController::uniqueUsername($request->firstname),
             ];
@@ -118,7 +117,7 @@ class SchoolRiderController extends Controller
                                     StudentController::linkPickUperRiderToStudent($data);
                                 }
                                 if ($request->email) {
-                                    $msg = "Your registration is successfull, your user username: {$user->username}, and your password is {$this->pwd}. You can always reset your password anytime anywhere. NB. you can login with either your username, phone number or email along with your password";
+                                    $msg = "Your registration is successfull, your user username: {$user->username}, and your password is {DEFAULT_PASSWORD}. You can always reset your password anytime anywhere. NB. you can login with either your username, phone number or email along with your password";
                                     $this->mailNotification(pid: $rider->pid, msg: $msg);
                                 }
                                 

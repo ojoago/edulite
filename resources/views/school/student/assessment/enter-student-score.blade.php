@@ -75,7 +75,7 @@
                         <tr class="studentId" id="{{$student->pid}}">
                             <td>{{$loop->iteration}}</td>
                             <td>{{$student->reg_number}}</td>
-                            <td> <input type="checkbox" name="{{$student->pid}}" class="examStatus" id="{{$student->pid}}" checked> {{ $student->fullname }}</td>
+                            <td> <input type="checkbox" name="{{$student->pid}}" class="examStatus" id="{{$student->pid}}" {{$student->seated == 0 ?: 'checked'  }} > {{ $student->fullname }}</td>
                             @php $total = 0;@endphp
                             @foreach($scoreParams as $row)
                             <td scope="col">

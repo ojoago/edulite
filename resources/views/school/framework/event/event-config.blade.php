@@ -161,25 +161,12 @@
     </div>
 </div>
 <!-- create school category modal  -->
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script src="{{asset('plugins/fullcalendar/lib/moment.min.js')}}"></script>
 <script src="{{asset('plugins/fullcalendar/fullcalendar.min.js')}}"></script>
 <script>
     $(document).ready(function() {
         // add more title 
-
-        // load dropdown on 
-
-        // filter class subject 
-        // FormMultiSelect2('#categoryClassSubjectSelect2', 'category', 'Select Category');
-        // FormMultiSelect2('#categoryClassSubjectSelect2', 'category', 'Select Category');
-        // create school class arm
-        // $('#createClassArmBtn').click(function() {
-        //     submitFormAjax('createClassArmForm', 'createClassArmBtn', "{{route('create.school.class.arm')}}");
-        // });
-
-
         // create school class arm
         $('#createNotificationBtn').click(function() {
             submitFormAjax('createNotificationForm', 'createNotificationBtn', "{{route('create.school.notification')}}");

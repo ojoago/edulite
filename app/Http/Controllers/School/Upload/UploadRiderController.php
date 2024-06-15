@@ -13,7 +13,7 @@ use App\Http\Controllers\School\Rider\SchoolRiderController;
 
 class UploadRiderController extends Controller
 {
-    private $pwd = 123456;
+    // private $pwd = 123456;
     private $header = ['firstname', 'surname', 'othername', 'gsm', 'username', 'email', 'address', 'religion', 'gender'];
     public function importRider(Request $request)
     {
@@ -40,7 +40,7 @@ class UploadRiderController extends Controller
                                     'gsm' => ($row[3]),
                                     'email' => AuthController::findEmail($username) ? null : $username,
                                     'account_status' => 1,
-                                    'password' => $this->pwd,
+                                    'password' => DEFAULT_PASSWORD,
                                     'username' =>  $username ? AuthController::uniqueUsername($username) : AuthController::uniqueUsername($row[0]),
                                 ];
                                 DB::beginTransaction(); 

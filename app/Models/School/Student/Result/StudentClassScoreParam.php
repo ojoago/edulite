@@ -5,7 +5,7 @@ namespace App\Models\School\Student\Result;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StudentClassScoreParam extends Model
+class StudentClassResultParam extends Model
 {
     use HasFactory;
     protected $fillable = [

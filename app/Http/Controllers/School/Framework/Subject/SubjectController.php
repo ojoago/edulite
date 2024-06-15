@@ -67,13 +67,13 @@ class SubjectController extends Controller
     public function createSchoolSubject(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'subject' => ['required', 'string',Rule::unique('subjects')->where(function($param) use($request){
-                $param->where([
-                    'school_pid'=>getSchoolPid(),
-                    'category_pid'=>$request->category_pid,
-                    // 'subject_type_pid'=>$request->subject_type_pid,
-                ])->where('pid','<>',$request->pid);
-            })],
+            // 'subject.*' => ['required', 'string',Rule::unique('subjects')->where(function($param) use($request){
+            //     $param->where([
+            //         'school_pid'=>getSchoolPid(),
+            //         'category_pid'=>$request->category_pid,
+            //         // 'subject_type_pid'=>$request->subject_type_pid,
+            //     ])->where('pid','<>',$request->pid);
+            // })],
             // 'subject_type_pid' => 'required|string',
             'category_pid' => 'required|string'
         ],[
@@ -86,27 +86,32 @@ class SubjectController extends Controller
             // $request['pid'] = public_id();
             // $request['staff_pid'] = getUserPid();
 
-            $data = [
-                'school_pid' => getSchoolPid(),
-                'pid' => public_id(),
-                'staff_pid' => getSchoolUserPid(),
-                'subject_type' => $request->subject,
-                'description' => $request->description
-            ];
+            
             if (isset($request->pid)) {
                 $data['pid'] = $this->loadSubject($request->pid);
             }
-            $type = SubjectTypeController::createOrUpdateSubjectType($data);
-            $data = [
-                'school_pid'=>getSchoolPid(),
-                'pid'=> $request->pid ?? public_id(),
-                'staff_pid'=>getSchoolUserPid(),
-                'subject'=>$request->subject,
-                'subject_type_pid'=> $type->pid,
-                'category_pid'=>$request->category_pid,
-                'description'=>$request->description,
-            ];
-            $result = $this->createOrUpdateSubject($data);
+            foreach($request->subject as $subject){
+                $data = [
+                    'school_pid' => getSchoolPid(),
+                    'pid' => public_id(),
+                    'staff_pid' => getSchoolUserPid(),
+                    'subject_type' => $subject,
+                    'description' => $request->description
+                ];
+                $type = SubjectTypeController::createOrUpdateSubjectType($data);
+                $data = [
+                    'school_pid' => getSchoolPid(),
+                    'pid' => $request->pid ?? public_id(),
+                    'staff_pid' => getSchoolUserPid(),
+                    'subject' => $subject,
+                    'subject_type_pid' => $type->pid,
+                    'category_pid' => $request->category_pid,
+                    'description' => $request->description,
+                ];
+                
+                $result = $this->createOrUpdateSubject($data);
+            }
+            
             if ($result) {
                 return response()->json(['status'=>1,'message'=> $request->pid ? 'Subject Updated Successfully': 'Subject Created Successfully']);
             }

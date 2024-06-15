@@ -32,12 +32,12 @@ class GradeKeyController extends Controller
     {
        
         $data = DB::table("grade_keys as k")
-                    ->join('student_class_score_params as p','p.pid','k.class_param_pid')
-                    ->join('terms as t','t.pid','p.term_pid')
-                    ->join('sessions as s','s.pid','p.session_pid')
-                    ->join('class_arms as a','a.pid','p.arm_pid')
+                    ->join('student_class_result_params as p','p.pid','k.class_param_pid')
+                    // ->join('terms as t','t.pid','p.term_pid')
+                    // ->join('sessions as s','s.pid','p.session_pid')
+                    // ->join('class_arms as a','a.pid','p.arm_pid')
                 ->where('k.school_pid', getSchoolPid())
-                ->select('title', 'grade', 'grade_point', 'remark', 'min_score', 'max_score', 'k.created_at', 'a.arm','term','session')->get();
+                ->select('title', 'grade', 'grade_point', 'remark', 'min_score', 'max_score', 'k.created_at', 'p.arm','p.term','p.session')->get();
         // $data = GradeKey::where('school_pid', getSchoolPid())->get(['title','grade','grade_point','remark','min_score','max_score','created_at','pid']);
         return datatables($data)
             ->editColumn('created_at', function ($data) {

@@ -49,9 +49,10 @@ class SchoolController extends Controller
     {
         $id=base64Decode($id);
         $schoolUser = DB::table('school_users as u')->join('schools as s','s.pid','u.school_pid')
+                                                ->join('school_staff as ss', 'ss.pid','u.pid')
                                                 ->leftJoin('staff_accesses as a','a.staff_pid','u.pid')
                         ->where(['u.school_pid' => $id, 'u.user_pid' => getUserPid()])
-                        ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'u.status','access','s.status as sts','s.stage']);
+                        ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'ss.status','a.access','s.status as sts','s.stage']);
         // dd($schoolUser);
         if(!$schoolUser){
             return redirect()->back()->with('error','you are doing it wrong');
@@ -60,7 +61,7 @@ class SchoolController extends Controller
             return redirect()->back()->with('error', $schoolUser->school_name.' Has been denied access, please contact your management');
         }
         if ($schoolUser && $schoolUser->status != 1) {
-            return redirect()->back()->with('warning', 'you Have been denied access, contact your school.');
+            return redirect()->back()->with('warning', 'you Have been denied access, please contact your school.');
         }
 
         setUserActiveRole($schoolUser->role);// set staff primary role
@@ -96,6 +97,33 @@ class SchoolController extends Controller
                 if (session('status') && session('status') == 2) {
                     return redirect()->route('setup.school');
                 }
+                if(schoolAdmin()){
+                    return redirect()->route('admin.dashboard');;
+                    
+                }
+                if(headTeacher()){
+                    return redirect()->route('head.teacher.dashboard');;
+                    
+                }
+                if(classTeacher()){
+                    return redirect()->route('class.teacher.dashboard');;
+                }
+                if(subjectTeacher()){
+                    return redirect()->route('teacher.dashboard');;
+
+                }
+                if(schoolClerk()){
+                    return redirect()->route('student.dashboard');;
+
+                }
+                if(schoolSecretary()){
+                    return redirect()->route('student.dashboard');;
+
+                }
+                if(schoolPortal()){
+                    return redirect()->route('student.dashboard');;
+
+                }
                 return $this->staffLogin();
             case parentRole():
                 return redirect()->route('parent.dashboard');
@@ -110,6 +138,59 @@ class SchoolController extends Controller
         return redirect()->route('my.school.dashboard');
         
     }
+
+
+    public function adminDashboard(){
+        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $students = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $parents = DB::table('school_parents as p') ->join('students as s', 's.parent_pid', 'p.pid')
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->distinct('p.pid')->count('p.id');
+        $data = ['staff' => $staff, 'students' => $students, 'riders' => $riders, 'parents' => $parents];
+
+        // dd($this->growthStatistics());
+        return view('school.dashboard.admin-dashboard', compact('data'));
+    }
+
+
+    public function principalDashboard(){
+        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $students = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $parents = DB::table('school_parents as p') ->join('students as s', 's.parent_pid', 'p.pid')
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->distinct('p.pid')->count('p.id');
+        $data = ['staff' => $staff, 'students' => $students, 'riders' => $riders, 'parents' => $parents];
+
+        // dd($this->growthStatistics());
+        return view('school.dashboard.head-teacher-dashboard', compact('data'));
+    }
+    
+    
+    public function classTeacherDashboard(){
+        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $students = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $parents = DB::table('school_parents as p') ->join('students as s', 's.parent_pid', 'p.pid')
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->distinct('p.pid')->count('p.id');
+        $data = ['staff' => $staff, 'students' => $students, 'riders' => $riders, 'parents' => $parents];
+
+        // dd($this->growthStatistics());
+        return view('school.dashboard.class-teacher-dashboard', compact('data'));
+    }
+
+    public function teacherDashboard(){
+        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $students = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $parents = DB::table('school_parents as p') ->join('students as s', 's.parent_pid', 'p.pid')
+            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->distinct('p.pid')->count('p.id');
+        $data = ['staff' => $staff, 'students' => $students, 'riders' => $riders, 'parents' => $parents];
+
+        // dd($this->growthStatistics());
+        return view('school.dashboard.teacher-dashboard', compact('data'));
+    }
+
+
     public function switchRole($role){
         if(!in_array(getUserActiveRole(), getUserAccess())){
             $access= getUserAccess();
@@ -247,13 +328,28 @@ class SchoolController extends Controller
                 DB::table('schools')->where('pid', getSchoolPid())->update(['stage' => $stage]);
                 session(['stage' => $stage+1]);
             }
-            return response()->json(['status' => 1, 'message' => 'Stage Updated']);
+            return response()->json(['status' => 1, 'message' => 'Stage Updated, loading next stage...']);
             
         } catch (\Throwable $e) {
             logError($e->getMessage());
             return response()->json(['status' => 0, 'message' => 'failed']);
        }
     }
+    
+    public function previousSetupStage(Request $request){
+       try {
+            $stage = $request->stage;
+            
+            session(['stage' => $stage - 1]);
+            
+            return response()->json(['status' => 1, 'message' => 'Loading previous Stage...']);
+            
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return response()->json(['status' => 0, 'message' => 'failed']);
+       }
+    }
+
     public static function createSchoolUser(string $userId, string $pid, string $role){//school user pid is the same as either staff pid, parent pid, student pid or rider pid
         $data = $dupParam = ['user_pid'=>$userId,'pid'=>$pid,'school_pid'=>getSchoolPid()];
         $data['role']= $role;

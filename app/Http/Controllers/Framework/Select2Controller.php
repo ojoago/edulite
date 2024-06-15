@@ -743,7 +743,12 @@ class Select2Controller extends Controller
         if (!$result) {
             return response()->json(['id' => 0, 'text' => null]);
         }
-        foreach ($result as $row) {
+        // $result = array();
+        // foreach ($array as $key => $value) {
+        //     if (!in_array($value, $result))
+        //     $result[$key] = $value;
+        // }
+        foreach ($result as $key => $row) {
             $data[] = [
                 'id' => $row->pid,
                 'text' => $row->subject . ' - ' . $row->arm,

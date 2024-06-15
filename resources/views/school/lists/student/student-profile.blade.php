@@ -29,6 +29,7 @@
                     <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="activeStudent-tab">
                         <div id="profileDetail"></div>
                     </div>
+                    
                     <div class="tab-pane fade" id="class" role="tabpanel">
                         <table class="table table-hover table-striped table-bordered cardTable" id="classDataTable">
                             <thead>
@@ -64,6 +65,13 @@
     </div>
 </div>
 
+@php
+$id = null;
+if(isset($_GET['id'])){
+    $id = base64Decode($_GET['id']);
+}
+@endphp
+
 <script>
     $(document).ready(function() {
 
@@ -75,7 +83,7 @@
                 url: "{{route('load.student.profile')}}",
                 type: "post",
                 data: {
-                    pid: "{{studentPid()}}",
+                    pid: "{{studentPid() ?? $id}}",
                     _token: "{{csrf_token()}}"
                 },
                 success: function(data) {
@@ -94,14 +102,13 @@
             $('#classDataTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-
                 responsive: true,
                 destroy: true,
                 "ajax": {
                     method: "POST",
                     url: "{{route('load.student.class')}}",
                     data: {
-                        pid: "{{studentPid()}}",
+                        pid: "{{studentPid() ?? $id}}",
                         _token: "{{csrf_token()}}"
                     },
                 },
@@ -134,7 +141,7 @@
                     method: "POST",
                     url: "{{route('load.student.result')}}",
                     data: {
-                        pid: "{{studentPid()}}",
+                        pid: "{{studentPid() ?? $id}}",
                         _token: "{{csrf_token()}}"
                     },
                 },

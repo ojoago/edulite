@@ -27,7 +27,7 @@
                             <th>Phone Number</th>
                             <th>Email</th>
                             <th>Primary Role</th>
-                            <th>Date</th>
+                            {{-- <th>Date</th> --}}
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -35,7 +35,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="in-active-staff" role="tabpanel" aria-labelledby="in-active-staff-tab">
-                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="activedataTable">
+                <table class="table table-hover table-responsive table-striped table-bordered cardTable" id="disabledTable">
                     <thead>
                         <tr>
                             <th>S/N</th>
@@ -44,7 +44,7 @@
                             <th>Phone Number</th>
                             <th>Email</th>
                             <th>Primary Role</th>
-                            <th>Date</th>
+                            {{-- <th>Date</th> --}}
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -95,19 +95,22 @@
                     "data": "role"
                 },
 
-                {
-                    "data": "created_at"
-                },
+                // {
+                //     "data": "created_at"
+                // },
                 {
                     "data": "action"
                 },
             ],
         });
         $('#in-active-staff-tab').click(function() {
-            $('#activedataTable').DataTable({
+            disabledStaff()
+        });
+
+        function disabledStaff(){
+                $('#disabledTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                
                 responsive: true,
                 "ajax": "{{route('load.inactive.staff.list')}}",
                 "columns": [{
@@ -133,16 +136,19 @@
                         "data": "role"
                     },
 
-                    {
-                        "data": "created_at"
-                    },
+                    // {
+                    //     "data": "created_at"
+                    // },
+
                     {
                         "data": "action"
                     },
                 ],
             });
-        });
-
+        }
+        
     });
+
+    
 </script>
 @endsection

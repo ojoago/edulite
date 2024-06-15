@@ -23,10 +23,10 @@ class AssessmentController extends Controller
                                                 // ->join('questions as q','q.bank_pid','b.pid')
                     ->join('class_arm_subjects as cas','cas.pid','b.subject_pid')
                     ->join('subjects as s','s.pid','cas.subject_pid')
-                    ->join('student_class_score_params as p','p.pid', 'b.class_param_pid')
-                    ->join('class_arms as a','a.pid','p.arm_pid')
+                    ->join('student_class_result_params as p','p.pid', 'b.class_param_pid')
+                    // ->join('class_arms as a','a.pid','p.arm_pid')
                     ->where(['b.school_pid'=>getSchoolPid()])->where('b.status','<>',0)
-                    ->select('s.subject','b.title','a.arm','b.pid','b.end_date','b.created_at')->get();
+                    ->select('s.subject','b.title','p.arm','b.pid','b.end_date','b.created_at')->get();
         return datatables($data)
         ->addIndexColumn()
         ->editColumn('subject', function ($data) {
@@ -40,13 +40,15 @@ class AssessmentController extends Controller
         })
         ->make(true);
     }
+
+
     public function loadAssessmentForStudent($pid){
         $data = DB::table('question_banks as b')
                                                 ->join('questions as q','q.bank_pid','b.pid')
                                                 ->join('class_arm_subjects as cas','cas.pid','b.subject_pid')
                                                 ->join('subjects as s','s.pid','cas.subject_pid')
-                                                ->join('student_class_score_params as p','p.pid', 'b.class_param_pid')
-                                                ->join('class_arms as a','a.pid','p.arm_pid')
+                                                ->join('student_class_result_params as p','p.pid', 'b.class_param_pid')
+                                                // ->join('class_arms as a','a.pid','p.arm_pid')
                                                 ->join('students as std', 'std.current_class_pid','a.pid')
                                                 ->where(['b.school_pid'=>getSchoolPid(),'std.pid'=>$pid])->where('b.status', '<>', 0)
                                                 ->whereNotIn('q.pid', function ($query) use($pid) {
@@ -54,7 +56,7 @@ class AssessmentController extends Controller
                                                         ->from('question_answers')->where('student_pid',$pid);
                                                 })
                                                 ->distinct('title')
-                                                ->select('s.subject','b.title','a.arm','b.pid','b.end_date','b.created_at','std.pid as std','b.type','q.path')->get();
+                                                ->select('s.subject','b.title','p.arm','b.pid','b.end_date','b.created_at','std.pid as std','b.type','q.path')->get();
         return datatables($data)
         ->addIndexColumn()
         ->editColumn('subject', function ($data) {
@@ -68,13 +70,15 @@ class AssessmentController extends Controller
         })
         ->make(true);
     }
+
+
     public function loadStudentSubmittedAssessment($pid){
         $data = DB::table('question_banks as b')
         ->join('questions as q', 'q.bank_pid', 'b.pid')
         ->join('class_arm_subjects as cas', 'cas.pid', 'b.subject_pid')
         ->join('subjects as s', 's.pid', 'cas.subject_pid')
-        ->join('student_class_score_params as p', 'p.pid', 'b.class_param_pid')
-        ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+        ->join('student_class_result_params as p', 'p.pid', 'b.class_param_pid')
+        // ->join('class_arms as a', 'a.pid', 'p.arm_pid')
         ->join('students as std', 'std.current_class_pid', 'a.pid')
         ->where(['b.school_pid' => getSchoolPid(), 'std.pid' => $pid])->where('b.status', '<>', 0)
             ->whereIn('q.pid', function ($query) use ($pid) {
@@ -82,7 +86,7 @@ class AssessmentController extends Controller
                 ->from('question_answers')->where('student_pid', $pid);
             })
             ->distinct('title')
-            ->select('s.subject', 'b.title', 'a.arm', 'b.pid', 'b.end_date', 'b.created_at', 'std.pid as std', 'b.type', 'q.path',
+            ->select('s.subject', 'b.title', 'p.arm', 'b.pid', 'b.end_date', 'b.created_at', 'std.pid as std', 'b.type', 'q.path',
             DB::raw("(SELECT SUM(a.mark) FROM question_answers AS a WHERE a.student_pid = '" . $pid . "' AND a.question_pid = q.pid GROUP BY q.bank_pid) AS mark"))->get();
         return datatables($data)
         ->addIndexColumn()
@@ -98,6 +102,8 @@ class AssessmentController extends Controller
         ->make(true);
     }
 
+
+
     public function loadClassSubmittedAssessments(){
       $data = DB::table('question_banks as b')
                                                 ->join('questions as q','q.bank_pid','b.pid')
@@ -105,11 +111,11 @@ class AssessmentController extends Controller
                                                 ->join('students as std', 'std.pid','an.student_pid')
                                                 ->join('class_arm_subjects as cas','cas.pid','b.subject_pid')
                                                 ->join('subjects as s','s.pid','cas.subject_pid')
-                                                ->join('student_class_score_params as p','p.pid', 'b.class_param_pid')
-                                                ->join('class_arms as a','a.pid','p.arm_pid')
+                                                ->join('student_class_result_params as p','p.pid', 'b.class_param_pid')
+                                                // ->join('class_arms as a','a.pid','p.arm_pid')
                                                 ->where(['b.school_pid'=>getSchoolPid()])->where('b.status', '<>', 0)->orderBy('an.status')->orderBy('b.title')
                                                ->distinct('title')
-                                                ->select('s.subject','b.title','a.arm','b.pid','b.end_date','an.created_at','std.pid as std','b.type','std.fullname','std.reg_number','an.status','an.mark')->get();
+                                                ->select('s.subject','b.title','p.arm','b.pid','b.end_date','an.created_at','std.pid as std','b.type','std.fullname','std.reg_number','an.status','an.mark')->get();
         return datatables($data)
         ->addIndexColumn()
         ->editColumn('subject', function ($data) {
@@ -124,19 +130,20 @@ class AssessmentController extends Controller
         ->make(true);
     }
 
+
     public function loadQuestions(Request $request){
         // dd($request->all());
         $data = DB::table('question_banks as b')
         // ->join('questions as q', 'q.bank_pid', 'b.pid')
         ->join('class_arm_subjects as cas', 'cas.pid', 'b.subject_pid')
         ->join('subjects as s', 's.pid', 'cas.subject_pid')
-        ->join('student_class_score_params as p', 'p.pid', 'b.class_param_pid')
-        ->join('class_arms as a', 'a.pid', 'p.arm_pid')
-        ->join('terms as t', 't.pid', 'p.term_pid')
-        ->join('sessions as e', 'e.pid', 'p.session_pid')
+        ->join('student_class_result_params as p', 'p.pid', 'b.class_param_pid')
+        // ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+        // ->join('terms as t', 't.pid', 'p.term_pid')
+        // ->join('sessions as e', 'e.pid', 'p.session_pid')
         // ->join('students as std', 'std.current_class_pid', 'a.pid')
         ->where(['b.school_pid' => getSchoolPid(), 'b.pid' => $request->key])
-            ->select('s.subject', 'b.title', 'a.arm', 'b.end_date', 'b.created_at','term','session', 'b.type','b.pid')->first();
+            ->select('s.subject', 'b.title', 'p.arm', 'b.end_date', 'b.created_at','p.term','p.session', 'b.type','b.pid')->first();
 
         $questions = DB::table('questions')
         ->where(['school_pid' => getSchoolPid(), 'bank_pid' => $request->key])
@@ -145,9 +152,11 @@ class AssessmentController extends Controller
         return view('school.assessments.attempt-assessment', compact('questions','data','std'));
 
     }
+
+
     // create manual Assessment 
     public function createManualAssessment(Request $request){
-       
+       logError($request->type);
         $validator = Validator::make($request->all(),
                                 [
                                     'subject'=>'required',
@@ -161,7 +170,7 @@ class AssessmentController extends Controller
             try {
                 
                 DB::beginTransaction();
-               $bank = self::createQuestionBank($request);
+                    $bank = self::createQuestionBank($request);
                 if ($bank) {
                     $question = [
                         'school_pid' => getSchoolPid(),
@@ -170,7 +179,7 @@ class AssessmentController extends Controller
                         'question' => $request->question,
                         'path' => null,
                         'mark' => $request->total_mark ?? null,
-                        // 'type', 
+                        'type' => $request->type, 
                         // 'options'
                     ];
                     if($request->type == 1){
@@ -179,13 +188,14 @@ class AssessmentController extends Controller
                         $question['path'] = 'files/assessments/questions/' . $fileName;
                     }
                    $result =  $this->updateOrCreateQuestion($question);
-                if($result){
-                    DB::commit();
-                       return response()->json(['status' => 1, 'message' => 'Assessment created Successfully']);
+                    if($result){
+                            DB::commit();
+                            return response()->json(['status' => 1, 'message' => 'Assessment created Successfully']);
+                        }
+                        DB::rollBack();
+                        return response()->json(['status' => '2', 'message' => 'Something Went Wrong...']);
                     }
-                    DB::rollBack();
-                    return response()->json(['status' => '2', 'message' => 'Something Went Wrong...']);
-                }
+
             } catch (\Throwable $e) {
                 logError(['error' => $e->getMessage(), 'line' => __LINE__]);
                 DB::rollBack();
@@ -220,7 +230,7 @@ class AssessmentController extends Controller
             'end_date'=>$request->end_date ?? null,
             'start_time' => $request->start_time ?? null,
             'end_time' => $request->end_time ?? null, 
-            'teacher_pid' => $teacher,
+            'teacher_pid' => $teacher->teacher_pid,
             'subject_pid' => $request->subject,
             'creator' => getSchoolUserPid(),
             // 'access'=>0
@@ -418,12 +428,12 @@ class AssessmentController extends Controller
             $data = DB::table('question_banks as b')
                 ->join('class_arm_subjects as cas', 'cas.pid', 'b.subject_pid')
                 ->join('subjects as s', 's.pid', 'cas.subject_pid')
-                ->join('student_class_score_params as p', 'p.pid', 'b.class_param_pid')
-                ->join('class_arms as a', 'a.pid', 'p.arm_pid')
-                ->join('terms as t', 't.pid', 'p.term_pid')
-                ->join('sessions as e', 'e.pid', 'p.session_pid')
+                ->join('student_class_result_params as p', 'p.pid', 'b.class_param_pid')
+                // ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+                // ->join('terms as t', 't.pid', 'p.term_pid')
+                // ->join('sessions as e', 'e.pid', 'p.session_pid')
                 ->where(['b.school_pid' => getSchoolPid(), 'b.pid' => $request->key])
-                ->select('b.pid as key', 'mark',  'type', 's.subject', 'b.title', 'a.arm', 'term', 'session', 'b.end_date')->first();
+                ->select('b.pid as key', 'mark',  'type', 's.subject', 'b.title', 'p.arm', 'p.term', 'p.session', 'b.end_date')->first();
             
             $questions = DB::table('questions as q')
                 ->join('question_answers as an', 'an.question_pid', 'q.pid')
@@ -445,12 +455,12 @@ class AssessmentController extends Controller
             $data = DB::table('question_banks as b')
                 ->join('class_arm_subjects as cas', 'cas.pid', 'b.subject_pid')
                 ->join('subjects as s', 's.pid', 'cas.subject_pid')
-                ->join('student_class_score_params as p', 'p.pid', 'b.class_param_pid')
-                ->join('class_arms as a', 'a.pid', 'p.arm_pid')
-                ->join('terms as t', 't.pid', 'p.term_pid')
-                ->join('sessions as e', 'e.pid', 'p.session_pid')
+                ->join('student_class_result_params as p', 'p.pid', 'b.class_param_pid')
+                // ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+                // ->join('terms as t', 't.pid', 'p.term_pid')
+                // ->join('sessions as e', 'e.pid', 'p.session_pid')
                 ->where(['b.school_pid' => getSchoolPid(), 'b.pid' => $request->key])
-                ->select('b.pid as key', 'mark',  'type', 's.subject', 'b.title', 'a.arm', 'term', 'session', 'b.end_date')->first();
+                ->select('b.pid as key', 'mark',  'type', 's.subject', 'b.title', 'p.arm', 'p.term', 'p.session', 'b.end_date')->first();
             
             $questions = DB::table('questions as q')
                 ->join('question_answers as an', 'an.question_pid', 'q.pid')

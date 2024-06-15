@@ -37,7 +37,7 @@ class ScoreSettingsController extends Controller
     public function createScoreSettings(Request $request){
         $validator = Validator::make($request->all(), [
             // 'session_pid'=>'required|string',
-            'class_pid' => 'required|string',
+            'class_pid.*' => 'required|string|min:1',
             // 'term_pid' => 'required|string',
             'title_pid.*' => 'required|min:1',
             'title_pid' => 'required|array|min:1',
@@ -61,14 +61,18 @@ class ScoreSettingsController extends Controller
             }
             $data = [
                 'school_pid' => getSchoolPid(),
-                'class_pid' => $request->class_pid,
+                // 'class_pid' => $request->class_pid,
                 'arm_pid' => $request->arm_pid,
                 'staff_pid' => getSchoolUserPid(),
                 'title_pid' => $request->title_pid,
                 'score' => $request->score,
                 'mid' => $request->mid,
             ];
-           $result = $this->createOrUpdateScoreSetting($data);
+            foreach ($request->class_pid as $class_pid) {
+                $data['class_pid'] = $class_pid;
+                $result = $this->createOrUpdateScoreSetting($data);
+            }
+
            if($result){
 
                return response()->json(['status' => 1, 'message' => 'Score Setting Saved']);

@@ -35,7 +35,7 @@ class ViewCumulativeResultController extends Controller
         return redirect()->route('view.class.cumulative.result',['key'=> $request->arm]);
 
 
-        $class = DB::table('student_class_score_params')->where($data)->pluck('pid')->first();
+        $class = DB::table('student_class_result_params')->where($data)->pluck('pid')->first();
         $dtl = DB::table('student_class_results as r')
         ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
         ->join('students as s', 's.pid', 'r.student_pid')
@@ -80,7 +80,7 @@ class ViewCumulativeResultController extends Controller
     public function loadClassCumulativeResult(Request $request){
 
         $data = Cache::get($request->key);
-        $rank = DB::table('student_class_results as r')->join('student_class_score_params as p','p.pid', 'r.class_param_pid')
+        $rank = DB::table('student_class_results as r')->join('student_class_result_params as p','p.pid', 'r.class_param_pid')
                     ->where(['p.school_pid'=>getSchoolPid(),'p.session_pid'=>$data['session_pid'],'arm_pid'=>$data['arm_pid']])
                     ->select(DB::raw('r.student_pid,AVG(r.total) AS total,COUNT(DISTINCT(r.class_param_pid)) AS terms,RANK() OVER (ORDER BY AVG(r.total) DESC) AS position'))
         ->groupBy('r.student_pid')
@@ -104,19 +104,19 @@ class ViewCumulativeResultController extends Controller
     public function studentCumulativeReportCard($session, $spid)
     { //class param & student pid
 
-        $arm_pid = DB::table('student_class_results as r')->join('student_class_score_params as p', 'p.pid', 'r.class_param_pid')
+        $arm_pid = DB::table('student_class_results as r')->join('student_class_result_params as p', 'p.pid', 'r.class_param_pid')
         ->where(['p.school_pid' => getSchoolPid(), 'p.session_pid' => $session, 'r.student_pid' => $spid])->pluck('arm_pid')->first();
 
         $rank = DB::table('student_class_results as r')
-        ->join('student_class_score_params as p', 'p.pid', 'r.class_param_pid')
-        ->join('class_arms as a', 'a.pid', 'p.arm_pid')
-        ->join('sessions as s', 's.pid', 'p.session_pid')
+        ->join('student_class_result_params as p', 'p.pid', 'r.class_param_pid')
+        // ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+        // ->join('sessions as s', 's.pid', 'p.session_pid')
         ->where(['p.school_pid' => getSchoolPid(), 'p.session_pid' => $session, 'arm_pid' => $arm_pid])
-        ->select(DB::raw('s.session,a.arm,p.session_pid,r.student_pid,AVG(r.total) AS total,COUNT(DISTINCT(r.class_param_pid)) AS terms,RANK() OVER (ORDER BY AVG(r.total) DESC) AS position'))
+        ->select(DB::raw('p.session,p.arm,p.session_pid,r.student_pid,AVG(r.total) AS total,COUNT(DISTINCT(r.class_param_pid)) AS terms,RANK() OVER (ORDER BY AVG(r.total) DESC) AS position'))
         ->groupBy('r.student_pid')
         ->groupBy('p.session_pid')
-        ->groupBy('a.arm')
-        ->groupBy('s.session');
+        ->groupBy('p.arm')
+        ->groupBy('p.session');
         $result = DB::table('students as s')->joinSub($rank, 'rank', function ($sub) {
             $sub->on('s.pid', '=', 'rank.student_pid');
         })->leftjoin('attendance_records as ar', function ($join) {
@@ -131,7 +131,7 @@ class ViewCumulativeResultController extends Controller
 // dd($result);
         $subjectResults = [];
         $scoreSettings = [];
-        $params = DB::table('student_class_results as r')->join('student_class_score_params as p', 'p.pid', 'r.class_param_pid')->join('terms as t','t.pid','p.term_pid')
+        $params = DB::table('student_class_results as r')->join('student_class_result_params as p', 'p.pid', 'r.class_param_pid')->join('terms as t','t.pid','p.term_pid')
             ->where(['p.school_pid' => getSchoolPid(), 'p.session_pid' => $session, 'arm_pid' => $arm_pid,'student_pid'=>$spid])->orderBy('p.created_at')->select('term','p.pid')->get();//->dd();
             foreach($params as $pm):
                 $param = $pm->pid;
