@@ -296,7 +296,7 @@ Route::middleware('schoolAuth')->group(function(){
 
     // Psychomotor, effective domain and grade key 
     // Psychomotor 
-    Route::view('extra-curricular', 'school.framework.psychomotor.psychomotor-config')->name('school.psychomotor.config');
+    Route::view('extra-curricular', 'school.framework.extra-curricular.extra-curricular-config')->name('school.psychomotor.config');
 
     Route::view('timetable-config', 'school.framework.timetable.timetable-config')->name('timetable.config');
 
@@ -585,7 +585,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('class-assessment', 'school.assessments.class-assessment')->name('class.assignment.form');
     Route::view('manual-assessment', 'school.assessments.manual-assessment')->name('manual.assignment');
     Route::view('automated-assessment', 'school.assessments.automated-assessment')->name('automated.assignment');
-    
+
     Route::post('class-assessment', [AssessmentController::class, 'createManualAssessment'])->name('submit.manual.assignment');
     Route::post('submit-automated-assessment', [AssessmentController::class, 'createAutomatedAssessment'])->name('submit.automated.assignment');
     Route::post('delete-assessment', [AssessmentController::class, 'deleteAssessment'])->name('delete.assessment');

@@ -1182,7 +1182,7 @@
 <!-- score settings  -->
 
 <div class="modal fade" id="createScoreSettingModal" tabindex="-1" data-bs-backdrop="false">
-    <div class="modal-dialog modal-lg  modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Score Setting</h5>

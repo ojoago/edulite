@@ -82,7 +82,7 @@
           <li>
             <a href="{{route('school.psychomotor.config')}}">
               <i class="bi bi-circle"></i><span>
-                Psychomotor
+                Extra Curricular
                 <!-- cycomfrence -->
               </span>
             </a>
@@ -495,18 +495,18 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#psychomotor-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-layout-text-window-reverse"></i><span>Psychomotor</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-layout-text-window-reverse"></i><span>Extra Curricular</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="psychomotor-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="{{route('load.psychomotor.keys')}}">
-              <i class="bi bi-circle"></i><span>Psychomotor Assessment</span>
+              <i class="bi bi-circle"></i><span>Extra Curricular Assessment</span>
             </a>
           </li>
 
           <li>
             <a href="{{route('view.psychomotor.form')}}">
-              <i class="bi bi-circle"></i><span> View Psychomotor Score</span>
+              <i class="bi bi-circle"></i><span> View Extra Curricular Score</span>
             </a>
           </li>
 

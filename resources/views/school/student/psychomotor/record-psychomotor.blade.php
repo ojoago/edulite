@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','Record Student Psychomotor')
+@section('title','Record Student Extra Curricular activities')
 @section('content')
 <div class="container-fluid">
     <div class="card">
@@ -35,7 +35,7 @@
         </form>
         <div class="card-body">
             @if(isset($params))
-            <h5 class="card-title m-0 ">{{$params['arm']}} <small>{{$title}}</small> <i class="bi bi-calendar-event-fill"></i> {{activeTermName()}} {{activeSessionName()}}</h5>
+            <h5 class="card-title m-0 ">{{$params['arm']}} <small>{{$base->psychomotor}}</small> <i class="bi bi-calendar-event-fill"></i> {{activeTermName()}} {{activeSessionName()}}</h5>
             @endif
 
             <!-- Primary Color Bordered Table -->
@@ -49,7 +49,7 @@
                         </th>
                         <th scope="col">Names</th>
                         @foreach($psycho as $row)
-                        <th scope="col">{{$row->title}} max-[{{$row->max_score}}]</th>
+                        <th scope="col">{{$row->title}} max-[{{$base->score}}]</th>
                         @endforeach
                     </tr>
                 </thead>
@@ -62,7 +62,7 @@
                         <form>
                             @csrf
                             @foreach($psycho as $row)
-                            <td scope="col"><input type="number" value="{{getPsychoKeyScore(student:$student->pid,param:$params['param'],key:$row->pid)}}" step="0.01" class="form-control form-control-sm studentPsycho" id="{{$row->pid}}" placeholder="max obtainable {{$row->max_score}}" max_score="{{$row->max_score}}"> </td>
+                            <td scope="col"><input type="number" value="{{getPsychoKeyScore(student:$student->pid,param:$params['param'],key:$row->pid)}}" step="0.01" class="form-control form-control-sm studentPsycho" id="{{$row->pid}}" placeholder="max obtainable {{$base->score}}" max_score="{{$base->score}}"> </td>
                             @endforeach
                     </tr>
                     @endforeach

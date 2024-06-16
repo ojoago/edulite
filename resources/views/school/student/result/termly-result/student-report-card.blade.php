@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>{{env('APP_NAME',APP_NAME)}} - {{$std->fullname}} Report card</title>
+    <title>{{env('APP_NAME',APP_NAME)}} - {{$std->fullname}} Report Card</title>
     <meta content="description" name="Upgrade your school with edulite suite, 
                                     and ease the stress of school manual process at less cost.
                                      get accurate and accessible information about students, staff remotely.
@@ -32,6 +32,7 @@
     <link href="{{asset('themes/css/style.css')}}" rel="stylesheet">
     <link href="{{asset('plugins/select2/css/select2.min.css')}}" rel="stylesheet">
     <link href="{{asset('themes/css/custom/style.css')}}" rel="stylesheet">
+
     <style>
         body {
             margin: 20px 160px;
@@ -41,6 +42,8 @@
         .flex-row {
             display: flex;
             justify-content: space-between;
+            /* flex-wrap: wrap; */
+            align-items: flex-start;
         }
 
         .text-content {
@@ -206,7 +209,8 @@
 <link href="{{asset('printThis/css/skeleton.css')}}" rel="stylesheet"> -->
 
     <div class="container-fluid">
-        @include('school.student.result.headers.top')
+        <div id="document">
+            @include('school.student.result.headers.top')
         <hr>
         <div class="flex-row">
             <div class="personal-detail">
@@ -409,23 +413,25 @@
 
                     </table>
                     @foreach($psycho as $row)
-                    <div class="card-header text-center bg-transparent text-dark"><small>{{$row->psychomotor}}</small></div>
-                    <table class="table table-hover table-striped table-bordered w-30">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Score</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($row->baseKey as $rw)
-                            <tr>
-                                <td> {{$rw->title}} </td>
-                                <td>{{getPsychoKeyScore(student:$results->student_pid,param:$param,key:$rw->pid)}} </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                        @if($row->baseKey->isNotEmpty())
+                            <div class="card-header text-center bg-transparent text-dark"><small>{{$row->psychomotor}}</small></div>
+                            <table class="table table-hover table-striped table-bordered w-30">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($row->baseKey as $rw)
+                                    <tr>
+                                        <td> {{$rw->title}} </td>
+                                        <td>{{getPsychoKeyScore(student:$results->student_pid,param:$param,key:$rw->pid)}} </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
                     @endforeach
                 </div>
             </div>
@@ -466,9 +472,12 @@
         <div class="col-md-12">
             <div id="column_Chart" class="chartZoomable" style="width:90%;height:auto;"></div>
         </div>
+        </div>
         <button class="btn btn-success" id="printResult"> <i class="bi bi-printer"></i> </button>
 
     </div>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script> --}}
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {
@@ -510,9 +519,26 @@
             chart.draw(view, options);
         }
     </script>
-    <script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
+     <script src="{{asset('js/jquery.3.7.0.min.js')}}"></script>
+
     <script src="{{asset('printThis/printThis.js')}}"></script>
     <script>
+          function generatePDF() {
+            // Select the content you want to print
+            const element = document.getElementById('document');
+
+            // Options for html2pdf
+            const opt = {
+                margin:       1,
+                filename:     '{{$std->fullname}}  Report Card.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Generate the PDF
+            html2pdf().from(element).set(opt).save();
+        }
         $(document).ready(function() {
             $('#printResult').click(function() {
                 $('.container-fluid').printThis({
