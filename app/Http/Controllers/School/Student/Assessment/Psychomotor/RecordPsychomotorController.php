@@ -66,7 +66,7 @@ class RecordPsychomotorController extends Controller
         ];
         $class_pid = ClassController::createClassParam($data);
         $arm = ClassController::getClassArmNameByPid($request->arm);
-        $base= PsychomotorBase::where(['school_pid' => getSchoolPid(), 'pid' => $request->psychomotor_pid])->first(['obtainable_score as score', 'psychomotor']);
+        $base = PsychomotorBase::where(['school_pid' => getSchoolPid(), 'pid' => $request->psychomotor_pid])->first(['obtainable_score as score', 'psychomotor']);
         $params = ['param'=>$class_pid,'arm'=>$arm,'term'=>$request->term,'session'=>$request->session];
         $psycho = PsychomotorKey::where(['school_pid'=>getSchoolPid(),'status'=>1, 'psychomotor_pid'=>$request->psychomotor_pid])
                                 ->get(['title', 'pid', 'max_score']);
@@ -79,9 +79,21 @@ class RecordPsychomotorController extends Controller
             'fullname', 'reg_number', 'pid',
         ]);
         
+        if($psycho->isNotEmpty() && $data->isNotEmpty()){            
+            return view('school.student.psychomotor.record-psychomotor',compact('data','psycho','params', 'base'));
+        }
         
-        return view('school.student.psychomotor.record-psychomotor',compact('data','psycho','params', 'base'));
+        if($psycho->isEmpty()){
+            return redirect()->back()->with('warning','Contact Admin to add key to '. $base->psychomotor);
+        }
+
+        if($data->isEmpty()){
+            return redirect()->back()->with('info', 'No Student in the selected class');
+        }
+
     }
+
+
     public function loadPsychomotoScore(Request $request){
         $data = [
             'session_pid' => $request->session,

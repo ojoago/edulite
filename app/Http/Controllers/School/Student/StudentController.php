@@ -14,6 +14,7 @@ use App\Models\School\Registration\SchoolParent;
 use App\Http\Controllers\School\SchoolController;
 use App\Models\School\Student\StudentPickUpRider;
 use App\Http\Controllers\Users\UserDetailsController;
+use App\Models\SchoolUser;
 
 class StudentController extends Controller
 {
@@ -200,10 +201,13 @@ class StudentController extends Controller
     {
         try {
             $student = Student::where(['school_pid' => getSchoolPid(), 'pid' => base64Decode($pid)])->first(['id', 'status']);
+            $user = SchoolUser::where(['school_pid' => getSchoolPid(), 'pid' => base64Decode($pid)])->first(['id', 'status']);
             if ($student) {
                 $student->status = $student->status == 1 ? 0 : 1;
+                $user->status = $user->status == 1 ? 0 : 1;
                 // send notification mail 
                 $student->save();
+                $user->save();
                 return 'Student Account Updated';
             }
             return 'Something Went Wrong';
@@ -425,7 +429,11 @@ class StudentController extends Controller
                     // create user detail 
                     $userDetails = UserDetailsController::insertUserDetails($detail);
                     if ($userDetails) {
-                        $student['fullname'] = $userDetails->fullname ?? UserDetailsController::getFullname($request->pid); //get student fullname and save along with student info
+                        if($request->othername){
+                            $student['fullname'] =  $request->firstname.' '.$request->othername . ' '. $request->lastname  ; // UserDetailsController::getFullname($request->pid); //get student fullname and save along with student info
+                        }else{
+                            $student['fullname'] =  $request->firstname. ' '. $request->lastname  ; // UserDetailsController::getFullname($request->pid); //get student fullname and save along with student info
+                        }
                         $student['user_pid'] = $request->user_pid ?? $user->pid; //get student user pid and save along with student info
                         // and prevent update if student leaves school 
                         if ($request->passport) {

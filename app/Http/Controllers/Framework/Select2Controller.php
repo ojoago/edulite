@@ -10,6 +10,8 @@ use App\Models\School\Student\Student;
 use App\Models\School\System\StateLga;
 use App\Models\School\Rider\SchoolRider;
 use App\Models\School\Staff\SchoolStaff;
+use App\Models\School\Framework\Term\Term;
+use App\Models\School\Framework\Fees\FeeItem;
 use App\Models\School\Framework\Class\Classes;
 use App\Models\School\Framework\Hostel\Hostel;
 use App\Models\School\Framework\Class\Category;
@@ -19,7 +21,7 @@ use App\Models\School\Framework\Subject\Subject;
 use App\Models\School\Registration\SchoolParent;
 use App\Models\School\Framework\Subject\SubjectType;
 use App\Models\School\Framework\Class\ClassArmSubject;
-use App\Models\School\Framework\Fees\FeeItem;
+use App\Models\School\Framework\Assessment\AssessmentTitle;
 use App\Models\School\Framework\Psychomotor\PsychomotorBase;
 
 class Select2Controller extends Controller
@@ -967,5 +969,33 @@ class Select2Controller extends Controller
         }
         return response()->json($data);
     }
+
+    public function loadSchoolTerm()
+    {
+        $result = Term::where(['school_pid' => getSchoolPid()])
+            ->limit(10)->orderBy('id', 'DESC')
+            ->get(['pid', 'term']);
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->term,
+            ];
+        }
+        return response()->json($data);
+    }
+
+    public function loadAvailableTitle()
+    {
+        $result = AssessmentTitle::where(['school_pid' => getSchoolPid(), 'status' => 1])
+            ->orderBy('title')->get(['pid', 'title']); //
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->title,
+            ];
+        }
+        return response()->json($data);
+    }
+
 
 }

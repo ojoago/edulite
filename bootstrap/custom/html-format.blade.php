@@ -299,7 +299,7 @@ function formatStudentProfile($row)
                     <hr>
                     Date of Birth: ' . $row->dob . '
                     <hr>
-                    Gender: ' . GENDER[$row->gender] . '
+                    Gender: ' . $row->gender . '
                     <hr>
                     Religion: ' . $row->religion . '
                     <hr>

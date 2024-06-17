@@ -13,7 +13,7 @@ use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 
-class SchoolRiderController extends Controller
+class RiderController extends Controller
 {
     
     public function index(){
@@ -39,7 +39,7 @@ class SchoolRiderController extends Controller
     }
 
 
-    public function submitSchoolRiderForm(Request $request){
+    public function submitRiderForm(Request $request){
         // return response()->json(['status' => 5, 'mr' => $request->all()]);
         $validator = Validator::make($request->all(),[
             'firstname'=> "required|regex:/^[a-zA-Z0-9'\s]+$/",

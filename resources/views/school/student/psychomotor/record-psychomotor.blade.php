@@ -3,41 +3,14 @@
 @section('content')
 <div class="container-fluid">
     <div class="card">
-        <form class="row g-3" action="{{route('load.psychomotor.keys')}}" method="post">
-            @csrf
-            <div class="col-md-3">
-                <!-- <label for="category" class="form-label">Category</label> -->
-                <select type="text" name="category" class="form-control" id="formCategorySelect2" required>
-                </select>
-            </div>
-
-            <div class="col-md-3">
-                <!-- <label for="class" class="form-label">Class</label> -->
-                <select type="text" name="class" class="form-control" id="formClassSelect2">
-                </select>
-            </div>
-
-            <div class="col-md-3">
-                <!-- <label for="arm" class="form-label">Class Arm</label> -->
-                <select type="text" name="arm" class="form-control" id="formArmSelect2">
-                </select>
-            </div>
-            <div class="col-md-3">
-                <!-- <label for="arm" class="form-label">Psychomotor Type</label> -->
-                <div class="input-group">
-                    <select type="text" name="psychomotor_pid" class="form-control" id="psychomotorBaseSelect2">
-                    </select>
-                </div>
-                <button class="btn btn-primary btn-sm" type="submit">Go</button>
-            </div>
-            <!-- <div class="col-md-1">
-                </div> -->
-        </form>
+        
         <div class="card-body">
             @if(isset($params))
             <h5 class="card-title m-0 ">{{$params['arm']}} <small>{{$base->psychomotor}}</small> <i class="bi bi-calendar-event-fill"></i> {{activeTermName()}} {{activeSessionName()}}</h5>
             @endif
-
+            <div class="float-end">
+                <button class="btn btn-primary btn-sm" type="button" data-bs-target="#filterModal" data-bs-toggle="modal" >Filter</button>
+            </div>
             <!-- Primary Color Bordered Table -->
             @if(isset($psycho))
             <table class="table table-bordered border-primary cardTable" id="scoreTable">
@@ -76,7 +49,7 @@
                 </form>
             </table>
             @else
-            Assessment key not Defined
+            <h4>Click On filter to select class</h4>
             @endif
             <!-- End Primary Color Bordered Table -->
 
@@ -84,7 +57,46 @@
     </div>
 </div>
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
+<!-- create psycho Base modal  -->
+<div class="modal fade" id="filterModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h6">Create Extra Curricular Name</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="g-3" action="{{route('load.psychomotor.keys')}}" method="post">
+            <div class="modal-body">
+                @csrf
+           
+                <label for="category" class="form-label">Category</label>
+                <select type="text" name="category" class="form-control" id="formCategorySelect2" required>
+                </select>
+            
+                <label for="class" class="form-label">Class</label> 
+                <select type="text" name="class" class="form-control" id="formClassSelect2" required>
+                </select>
+          
+          
+                <label for="arm" class="form-label">Class Arm</label>
+                <select type="text" name="arm" class="form-control" id="formArmSelect2" required>
+                </select>
+          
+                <label for="arm" class="form-label">Psychomotor Type</label> 
+                <div class="input-group">
+                    <select type="text" name="psychomotor_pid" class="form-control" id="psychomotorBaseSelect2" required>
+                    </select>
+                </div>
+               
+            </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary btn-sm" >Submit</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+    </div>
+</div>
+</form>
+    </div>
+</div><!-- End Psychomotro Modal-->
 <script>
     $(document).ready(function() {
         $('#scoreTable').DataTable({
@@ -125,24 +137,16 @@
         });
 
 
-        FormMultiSelect2('#formCategorySelect2', 'category', 'Select Category');
+        multiSelect2('#formCategorySelect2', 'filterModal', 'category', 'Select Category');
         $('#formCategorySelect2').on('change', function(e) {
             var id = $(this).val();
-            FormMultiSelect2Post('#formClassSelect2', 'class', id, 'Select Class');
-            FormMultiSelect2Post('#psychomotorBaseSelect2', 'psychomotors', id, 'Select Psychomotor');
+            multiSelect2Post('#formClassSelect2','filterModal', 'class', id, 'Select Class');
+            multiSelect2Post('#psychomotorBaseSelect2', 'filterModal','psychomotors', id, 'Select Psychomotor');
         });
         $('#formClassSelect2').on('change', function(e) {
             var id = $(this).val();
-            FormMultiSelect2Post('#formArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
+            multiSelect2Post('#formArmSelect2','filterModal', 'class-teacher-arm', id, 'Select Class Arm');
         });
-        // $('#formArmSelect2').on('change', function(e) {
-        //     var id = $(this).val();
-        //     FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
-        // });
-
-        // function getClassArms(id) {
-        //     FormMultiSelect2Post('#formArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
-        // }
 
     });
 </script>

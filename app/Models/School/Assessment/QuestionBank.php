@@ -9,7 +9,7 @@ class QuestionBank extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'school_pid','class_param_pid','pid','note','mark','type','category','status','start_date',
-        'end_date','start_time','end_time','teacher_pid','subject_pid','access', 'title'
+        'school_pid','class_param_pid','pid','note','mark','type','category','status','start_date', 'recordable',
+        'end_date','start_time','end_time','teacher_pid','subject_pid','access', 'title', 'same_mark' , 'assessment_type'
     ];
 }

@@ -11,7 +11,7 @@ use App\Http\Controllers\School\SchoolController;
 
 class UploadParentController extends Controller
 {
-    private $pwd = 1243657;
+    // private $pwd = 1243657;
     private $header = ['firstname','surname','othername','gsm','username','email','address','religion','gender'];
     public function importParent(Request $request){
         $validator = Validator::make(
@@ -38,7 +38,7 @@ class UploadParentController extends Controller
                                     'gsm' => ($row[3]),
                                     // 'email' => AuthController::findEmail($username) ? null : $username,
                                     'account_status' => 1,
-                                    'password' => $this->pwd,
+                                    'password' => DEFAULT_PASSWORD,
                                     'username' =>  $username ? AuthController::uniqueUsername($username) : AuthController::uniqueUsername($row[0]),
                                 ];
                                 if ($row[5]) {

@@ -68,18 +68,7 @@ class TermController extends Controller
         }
     }
 
-    public function loadSchoolTerm(){
-        $result = Term::where(['school_pid' => getSchoolPid()])
-            ->limit(10)->orderBy('id', 'DESC')
-            ->get(['pid', 'term']);
-        foreach ($result as $row) {
-            $data[] = [
-                'id' => $row->pid,
-                'text' => $row->term,
-            ];
-        }
-        return response()->json($data);
-    }
+    
     public function setActiveTerm(Request $request)
     {
         $validator = Validator::make($request->all(),[

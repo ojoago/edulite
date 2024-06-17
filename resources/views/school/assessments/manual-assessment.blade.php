@@ -74,15 +74,15 @@
                             Yes <input type="checkbox" class="radio" name="recordable" id="newAssignmentRecordable">
                             <p class="text-danger recordable_error"></p>
                             <label class="form-label">Same Mark?</label><br>
-                            Yes <input type="checkbox" class="radio" name="same_make" id="same_make">
-                            <p class="text-danger recordable_error"></p>
+                            Yes <input type="checkbox" class="radio" value="1" name="same_mark" id="same_mark">
+                            <p class="text-danger same_mark_error"></p>
                         </div>
 
                         <div class="col-md-8" style="display:none" id="newAssignmentCaType">
                             <label class="form-label">Link to Assessment</label>
-                            <select name="ca_type" id="newAssignmentCaTypeSelect2" style="width: 100%;" class="form-control form-control-sm">
+                            <select name="assessment_type" id="newAssignmentCaTypeSelect2" style="width: 100%;" class="form-control form-control-sm">
                             </select>
-                            <p class="text-danger ca_type_error"></p>
+                            <p class="text-danger assessment_type_error"></p>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Type?</label><br>
@@ -134,7 +134,8 @@
         });
         $('#newAssignmentClassArmSelect2').on('change', function(e) {
             var id = $(this).val();
-            FormMultiSelect2Post('#newAssignmentCaTypeSelect2', 'class-arm-subject', id, 'Select Class Subject');
+            
+            FormMultiSelect2Post('#newAssignmentCaTypeSelect2', 'assessment-types', id, 'Select Assessment');
         });
 
         

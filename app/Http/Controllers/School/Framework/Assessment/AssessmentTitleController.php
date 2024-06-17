@@ -37,18 +37,8 @@ class AssessmentTitleController extends Controller
         ->make(true);
         // return view('school.framework.assessment.index',compact('data','session','term','classes','arm'));
     }
-    public function loadAvailableTitle()
-    {
-        $result = AssessmentTitle::where(['school_pid'=>getSchoolPid(),'status'=>1])
-            ->orderBy('title')->get(['pid','title']); //
-        foreach ($result as $row) {
-            $data[] = [
-                'id' => $row->pid,
-                'text' => $row->title,
-            ];
-        }
-        return response()->json($data);
-    }
+    
+    
     public function createAssessmentTitle(Request $request)
     {
         $validator = Validator::make($request->all(),[

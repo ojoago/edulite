@@ -6,6 +6,7 @@ use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Advert\JobAdvertController;
 use App\Http\Controllers\Framework\Select2Controller;
+use App\Http\Controllers\School\Rider\RiderController;
 use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Parent\ParentController;
 use App\Http\Controllers\School\Framework\ClassController;
@@ -105,12 +106,6 @@ Route::get('school-sign-in/{id}', [SchoolController::class, 'schoolLogin'])->nam
 Route::get('school-setup', [SchoolController::class, 'schoolSetup'])->name('setup.school');
 Route::post('update-setup-stage', [SchoolController::class, 'updateSetupStage'])->name('update.setup.stage');
 Route::post('previous-setup-stage', [SchoolController::class, 'previousSetupStage'])->name('previous.setup.stage');
-//load states
-Route::post('load-available-state', [Select2Controller::class, 'loadStates'])->name('load.available.state');
-//load school states
-Route::post('load-available-state-lga', [Select2Controller::class, 'loadStatesLga'])->name('load.available.state.lga');
-// load all the subject of every school in a state 
-Route::post('load-available-all-state-subjects', [Select2Controller::class, 'loadAllStateSchoolSubject'])->name('load.available.all.state.subject');
 
 
 Route::get('load-user-detail', [UserController::class, 'loadUserDetail'])->name('load.user.detail');
@@ -197,64 +192,7 @@ Route::middleware('schoolAuth')->group(function(){
     //load score settings 
     Route::get('load-score-setting', [ScoreSettingsController::class, 'index'])->name('load.score.setting');
 
-    // load dropdon select2
-    // load school on dropdon using select2  
-    Route::post('load-available-', [Select2Controller::class, 'loadSchoolSession'])->name('load.available.dropdown');
-    
-    Route::post('load-available-session', [Select2Controller::class, 'loadSchoolSession'])->name('load.available.session');
-    // load category 
-    Route::post('load-available-category', [Select2Controller::class, 'loadAvailableCategory'])->name('load.available.category');
-    // load assessment title 
-    Route::post('load-available-title', [AssessmentTitleController::class, 'loadAvailableTitle'])->name('load.available.title');
-    // load term 
-    Route::post('load-available-term', [TermController::class, 'loadSchoolTerm'])->name('load.available.term');
-    // load classes 
-    Route::post('load-available-class', [Select2Controller::class, 'loadAvailableClass'])->name('load.available.class');
-    // load all category classes 
-    Route::post('load-available-all-class', [Select2Controller::class, 'loadAvailableAllClasses'])->name('load.available.all.class');
-    // admission class
-    Route::post('load-available-admission-class', [Select2Controller::class, 'loadAvailableAdmissionClass'])->name('load.available.admission.class');
-    // load classe arm 
-    Route::post('load-available-class-arm', [Select2Controller::class, 'loadAvailableClassArm'])->name('load.available.class.arm');
-    // load class teacher/form classes 
-    Route::post('load-available-class-teacher-class', [Select2Controller::class, 'loadClassTeacherClass'])->name('load.available.class'); // just for classes
-    Route::post('load-available-class-teacher-arm', [Select2Controller::class, 'loadClassTeacherClassArms'])->name('load.available.class.arm');// 4 class n subject
-    Route::post('load-available-all-class-arm', [Select2Controller::class, 'loadAllClassArm'])->name('load.all.class.arm');
-    // load class arm subject
-    Route::post('load-available-class-arm-subject', [Select2Controller::class, 'loadAvailableClassArmSubject'])->name('load.available.class.arm.subject');
-    // load subjects of all arms under class
-    Route::post('load-available-all-arms-subject', [Select2Controller::class, 'loadAvailableClassAllArmsSubject']);
-    // load category subject 
-    Route::post('load-available-category-subject', [Select2Controller::class, 'loadAvailableSelectedCategorySubject'])->name('load.available.category.subject');
-    // load school head of staff 
-    Route::post('load-available-school-category-head', [Select2Controller::class, 'loadAvailableCategoryHead'])->name('load.available.school.category.head');
-    //load school teachers
-    Route::post('load-available-school-teachers', [Select2Controller::class, 'loadAvailableTeacher'])->name('load.available.school.teacher');
-    //load all school student
-    Route::post('load-available-student', [Select2Controller::class, 'loadStudents'])->name('load.available.school.student');
-    //load boarding school student
-    Route::post('load-available-boarding-student', [Select2Controller::class, 'loadBoardingStudents'])->name('load.available.boarding.student');
-    //load school student
-    Route::post('load-available-class-arm-student', [Select2Controller::class, 'loadClassArmStudents'])->name('load.available.school.arm.student');
-    //load school parents
-    Route::post('load-available-parent', [Select2Controller::class, 'loadSchoolParent'])->name('load.available.parent');
-
-    Route::post('load-available-rider', [Select2Controller::class, 'loadSchoolRider'])->name('load.available.rider');
-    // load subject type 
-    Route::post('load-available-subject-type', [Select2Controller::class, 'loadAvailableSubjectType'])->name('load.available.subject.type');
-    // score settings 
     Route::post('school-score-settings', [ScoreSettingsController::class, 'createScoreSettings'])->name('create.school.score.settings');
-    // load hostel 
-    Route::post('load-available-hostels', [Select2Controller::class, 'loadAvailableHostels']);
-    // portal 
-    Route::post('load-available-portals', [Select2Controller::class, 'loadAvailablePortals']);
-    
-    // psychomotor 
-    // load psychomotor by school cateogry
-    Route::post('load-available-psychomotors', [Select2Controller::class, 'loadAvailablePsychomotors']);
-    // load all psychomotor 
-    Route::post('load-available-psychomotors-all', [Select2Controller::class, 'loadAvailableAllPsychomotors']);
-
 
 
 
@@ -472,9 +410,9 @@ Route::middleware('schoolAuth')->group(function(){
 
     // parent assistance 
     Route::view('create-rider-form', 'school.registration.rider.register-rider')->name('school.rider.form');
-    Route::post('create-rider', [SchoolRiderController::class, 'submitSchoolRiderForm'])->name('create.school.rider');
+    Route::post('create-rider', [RiderController::class, 'submitRiderForm'])->name('create.school.rider');
     // link Rider to student 
-    Route::post('link-student-to-rider', [SchoolRiderController::class, 'linkStudentToRider'])->name('link.student.to.rider');
+    Route::post('link-student-to-rider', [RiderController::class, 'linkStudentToRider'])->name('link.student.to.rider');
 
     // uploads 
     // upload staff 
@@ -556,7 +494,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-parent-list', [ParentController::class, 'index'])->name('load.school.parent.list');
     // student list 
     Route::view('rider-list', 'school.lists.rider.rider-list')->name('school.rider.list');
-    Route::get('load-rider-list', [SchoolRiderController::class, 'index'])->name('load.rider.list');
+    Route::get('load-rider-list', [RiderController::class, 'index'])->name('load.rider.list');
 
     // student profile 
     Route::get('student-login/{id}', [StudentController::class, 'studentLogin'])->name('student.login');
@@ -577,9 +515,9 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('parent-profile/{id}', [ParentController::class, 'parentProfile']);
     Route::get('view-parent-profile', [ParentController::class, 'viewParentProfile'])->name('view.parent.profile');
     // student profile 
-    Route::get('rider-profile/{id}', [SchoolRiderController::class, 'riderProfile'])->name('rider.profile');
-    Route::post('view-rider-profile', [SchoolRiderController::class, 'viewRiderProfile'])->name('view.rider.profile');
-    Route::post('load-rider-student', [SchoolRiderController::class, 'viewRiderStudent'])->name('load.rider.student');
+    Route::get('rider-profile/{id}', [RiderController::class, 'riderProfile'])->name('rider.profile');
+    Route::post('view-rider-profile', [RiderController::class, 'viewRiderProfile'])->name('view.rider.profile');
+    Route::post('load-rider-student', [RiderController::class, 'viewRiderStudent'])->name('load.rider.student');
 
     // student assignment 
     Route::view('class-assessment', 'school.assessments.class-assessment')->name('class.assignment.form');
@@ -734,6 +672,76 @@ Route::middleware('schoolAuth')->group(function(){
 
     Route::get('load-me-config', [JobAdvertController::class, 'loadHireMeConfig'])->name('load.hire.config');
 
+
+
+    // drop down 
+
+    // load dropdon select2
+    // load school on dropdon using select2  
+    Route::post('load-available-', [Select2Controller::class, 'loadSchoolSession'])->name('load.available.dropdown');
+
+    //load states
+    Route::post('load-available-state', [Select2Controller::class, 'loadStates'])->name('load.available.state');
+    //load school states
+    Route::post('load-available-state-lga', [Select2Controller::class, 'loadStatesLga'])->name('load.available.state.lga');
+    // load all the subject of every school in a state 
+    Route::post('load-available-all-state-subjects', [Select2Controller::class, 'loadAllStateSchoolSubject'])->name('load.available.all.state.subject');
+
+    Route::post('load-available-session', [Select2Controller::class, 'loadSchoolSession'])->name('load.available.session');
+    // load category 
+    Route::post('load-available-category', [Select2Controller::class, 'loadAvailableCategory'])->name('load.available.category');
+    // load assessment title 
+    Route::post('load-available-title', [Select2Controller::class, 'loadAvailableTitle'])->name('load.available.title');
+    // load term 
+    Route::post('load-available-term', [Select2Controller::class, 'loadSchoolTerm'])->name('load.available.term');
+    // load classes 
+    Route::post('load-available-class', [Select2Controller::class, 'loadAvailableClass'])->name('load.available.class');
+    // load all category classes 
+    Route::post('load-available-all-class', [Select2Controller::class, 'loadAvailableAllClasses'])->name('load.available.all.class');
+    // admission class
+    Route::post('load-available-admission-class', [Select2Controller::class, 'loadAvailableAdmissionClass'])->name('load.available.admission.class');
+    // load classe arm 
+    Route::post('load-available-class-arm', [Select2Controller::class, 'loadAvailableClassArm'])->name('load.available.class.arm');
+    // load class teacher/form classes 
+    Route::post('load-available-class-teacher-class', [Select2Controller::class, 'loadClassTeacherClass'])->name('load.available.class'); // just for classes
+    Route::post('load-available-class-teacher-arm', [Select2Controller::class, 'loadClassTeacherClassArms'])->name('load.available.class.arm'); // 4 class n subject
+    Route::post('load-available-all-class-arm', [Select2Controller::class, 'loadAllClassArm'])->name('load.all.class.arm');
+    // load class arm subject
+    Route::post('load-available-class-arm-subject', [Select2Controller::class, 'loadAvailableClassArmSubject'])->name('load.available.class.arm.subject');
+    // load subjects of all arms under class
+    Route::post('load-available-all-arms-subject', [Select2Controller::class, 'loadAvailableClassAllArmsSubject']);
+    // load category subject 
+    Route::post('load-available-category-subject', [Select2Controller::class, 'loadAvailableSelectedCategorySubject'])->name('load.available.category.subject');
+    // load school head of staff 
+    Route::post('load-available-school-category-head', [Select2Controller::class, 'loadAvailableCategoryHead'])->name('load.available.school.category.head');
+    //load school teachers
+    Route::post('load-available-school-teachers', [Select2Controller::class, 'loadAvailableTeacher'])->name('load.available.school.teacher');
+    //load all school student
+    Route::post('load-available-student', [Select2Controller::class, 'loadStudents'])->name('load.available.school.student');
+    //load boarding school student
+    Route::post('load-available-boarding-student', [Select2Controller::class, 'loadBoardingStudents'])->name('load.available.boarding.student');
+    //load school student
+    Route::post('load-available-class-arm-student', [Select2Controller::class, 'loadClassArmStudents'])->name('load.available.school.arm.student');
+    //load school parents
+    Route::post('load-available-parent', [Select2Controller::class, 'loadSchoolParent'])->name('load.available.parent');
+
+    Route::post('load-available-rider', [Select2Controller::class, 'loadSchoolRider'])->name('load.available.rider');
+    // load subject type 
+    Route::post('load-available-subject-type', [Select2Controller::class, 'loadAvailableSubjectType'])->name('load.available.subject.type');
+    // score settings 
+    // load hostel 
+    Route::post('load-available-hostels', [Select2Controller::class, 'loadAvailableHostels']);
+    // portal 
+    Route::post('load-available-portals', [Select2Controller::class, 'loadAvailablePortals']);
+
+    // psychomotor 
+    // load psychomotor by school cateogry
+    Route::post('load-available-psychomotors', [Select2Controller::class, 'loadAvailablePsychomotors']);
+    // load all psychomotor 
+    Route::post('load-available-psychomotors-all', [Select2Controller::class, 'loadAvailableAllPsychomotors']); 
+
+    Route::post('load-available-assessment-types', [AssessmentController::class, 'loadAssessmentTypes']);
+    
 });
 
 

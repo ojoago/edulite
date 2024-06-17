@@ -436,11 +436,14 @@ class StaffController extends Controller
     public function updateStaffStatus($pid){
         try {
             $staff = SchoolStaff::where(['school_pid' => getSchoolPid(),'pid' => base64Decode($pid)])->first(['id','status']);
+            $user = SchoolUser::where(['school_pid' => getSchoolPid(),'pid' => base64Decode($pid)])->first(['id','status']);
             if ($staff) {
-                $staff->status= $sts = $staff->status == 1 ? 0 : 1;
-                // send notification mail 
+                $staff->status = $sts = $staff->status == 1 ? 0 : 1;
+                $user->status = $sts = $user->status == 1 ? 0 : 1;
                 $staff->save();
+                $user->save();
                 $message = '{your} Account status has being '. ACCOUNT_STATUS[$sts];
+                // send notification mail 
                 SchoolNotificationController::notifyIndividualStaff(message: $message, pid: base64Decode($pid));
 
                 return 'staff Account updated';
@@ -717,6 +720,7 @@ class StaffController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
         
     }
+
     private function assignClassArmSubjectToTeacher(array $data)
     {
         // $dupParams = [
@@ -753,6 +757,7 @@ class StaffController extends Controller
             return false;
         }
     }
+
     // re assign previous subject to staff 
     public function reAssignStaffSubject(Request $request){
             $validator = Validator::make($request->all(),[

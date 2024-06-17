@@ -12,6 +12,7 @@ use App\Models\School\Assessment\QuestionAnswer;
 use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Framework\ClassController;
 use App\Http\Controllers\School\Student\StudentController;
+use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 
 class AssessmentController extends Controller
 {
@@ -48,7 +49,7 @@ class AssessmentController extends Controller
                                                 ->join('class_arm_subjects as cas','cas.pid','b.subject_pid')
                                                 ->join('subjects as s','s.pid','cas.subject_pid')
                                                 ->join('student_class_result_params as p','p.pid', 'b.class_param_pid')
-                                                // ->join('class_arms as a','a.pid','p.arm_pid')
+                                                ->join('class_arms as a','a.pid','p.arm_pid')
                                                 ->join('students as std', 'std.current_class_pid','a.pid')
                                                 ->where(['b.school_pid'=>getSchoolPid(),'std.pid'=>$pid])->where('b.status', '<>', 0)
                                                 ->whereNotIn('q.pid', function ($query) use($pid) {
@@ -156,7 +157,7 @@ class AssessmentController extends Controller
 
     // create manual Assessment 
     public function createManualAssessment(Request $request){
-       logError($request->type);
+    //    logError($request->type);
         $validator = Validator::make($request->all(),
                                 [
                                     'subject'=>'required',
@@ -224,6 +225,9 @@ class AssessmentController extends Controller
             'note' => $request->note,
             'mark' => $request->total_mark,
             'type' => $request->type,
+            'assessment_type' => $request->assessment_type ,
+            'recordable' => $request->recordable ? 1 : 0 ,
+            'same_mark' => $request->same_mark ? 1 : 0 ,
             'category' => 1,
             'start_date' => justDate(),
             'title' => $request->title,
@@ -309,6 +313,38 @@ class AssessmentController extends Controller
 
         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
 
+    }
+
+
+    // load score setting 
+    public function loadAssessmentTypes(Request $request){
+        // load score setting 
+        try {
+            $data = [
+                'school_pid' => getSchoolPid(),
+                'session_pid' => activeSession(),
+                'term_pid' => activeTerm(),
+                'arm_pid' => $request->pid,
+            ];
+            $class = loadClassByArm($request->pid);
+            $class_param_pid = ClassController::createClassParam($data); // create class param key and return the pid
+
+            ScoreSettingsController::createClassSoreSetting(param_pid: $class_param_pid, class_pid: $class); //copy score setting from base score setting
+            $scoreParams = ScoreSettingsController::loadClassScoreSettings($class_param_pid); // load class score seetting 
+            $data = [];
+            foreach ($scoreParams as $row) {
+                $data[] = [
+                    'id' => $row->assessment_title_pid,
+                    'text' => $row->title .' | ' .$row->score ,
+                ];
+            }
+            return response()->json($data);
+
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return [];
+        }
+       
     }
 
     private function updateOrCreateQuestionBank(array $data){

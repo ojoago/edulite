@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','School Grade Key')
+@section('title','Grade Key')
 @section('content')
 <div class="card">
     <div class="card-body">
@@ -26,13 +26,14 @@
                 <table class="table display nowrap table-bordered table-striped table-hover mt-3 cardTable" width="100%" id="GradeKeyTable">
                     <thead>
                         <tr>
+                            <th>Arm</th>
                             <th>Grade</th>
                             <th>Title</th>
                             <th>Min Score</th>
                             <th>Max Score</th>
                             <th>Grade Point</th>
                             <th>Remark</th>
-                            <th>Date</th>
+                            {{-- <th>Date</th> --}}
                             <!-- <th>Action</th> -->
                         </tr>
                     </thead>
@@ -41,7 +42,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="class-grade" role="tabpanel">
-                <small>This is will be computed by system when school enter student termly score</small>
+                <small class="info">This is will be computed by system when school enter student termly score</small>
                 <div class="row mb-3 mt-2">
                     <div class="col-md-3">
                         <select name="category_pid" id="classGradeKeyCategorySelect2" class="form-control form-control-sm">
@@ -81,9 +82,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane fade" id="contact-justified" role="tabpanel" aria-labelledby="contact-tab">
-                Saepe animi et soluta ad odit soluta sunt. Nihil quos omnis animi debitis cumque. Accusantium quibusdam perspiciatis qui qui omnis magnam. Officiis accusamus impedit molestias nostrum veniam. Qui amet ipsum iure. Dignissimos fuga tempore dolor.
-            </div>
+           
         </div><!-- End Default Tabs -->
 
     </div>
@@ -94,7 +93,7 @@
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create School Grade </h5>
+                <h5 class="modal-title">Create Assessment Grade </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -107,17 +106,12 @@
                     <!-- <select type="text" name="session_pid" id="gradeSessionSelect2" class="form-control form-control-sm" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger session_pid_error"></p> -->
-                    <select type="text" name="class_pid" id="gradeClassSelect2" class="form-control form-control-sm" placeholder="" required style="width: 100%;">
+                    <select type="text" name="class_pid[]" id="gradeClassSelect2" multiple class="form-control form-control-sm" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger class_pid_error"></p>
                     <!-- <select type="text" name="term_pid" id="gradeTermSelect2" class="form-control form-control-sm" placeholder="" required style="width: 100%;">
                     </select>
                     <p class="text-danger term_pid_error"></p> -->
-
-                    <div class="text-center">
-                        <button type="button" class="btn btn-danger btn-sm" id="addMore" title="Add More" data-bs-toggle="tooltip"><i class="bi bi-plus-circle"></i> </button>
-
-                    </div>
 
                     <div class="row">
                         <div class="col-md-6">
@@ -156,6 +150,10 @@
                         </div>
                     </div>
                     <div id="moreRows"></div>
+                     <div class="text-center">
+                        <button type="button" class="btn btn-primary btn-sm" id="addMore" title="Add More"><i class="bi bi-plus-circle"></i> </button>
+
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -165,7 +163,6 @@
         </div>
     </div>
 </div>
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {
@@ -175,8 +172,8 @@
             $('#moreRows').append(
                 `
                 <div class="row">
-                     <div class="text-center">
-                        <button type="button" class="btn btn-danger btn-sm removeRow"><i class="bi bi-x-circle-fill text-white"></i> </button>
+                     <div class="float-end">
+                        <i class="bi bi-x-circle-fill text-danger removeRow pointer"></i> 
                     </div>
                         <div class="col-md-6">
                             <label for=""><small>Grade</small></label>
@@ -219,18 +216,23 @@
         $(document).on('click', '.row .removeRow', function() {
             $(this).parent().parent().remove()
         });
+        loadGradeKey()
         // load school grade
-        $('#GradeKeyTable').DataTable({
+        function loadGradeKey(){
+            $('#GradeKeyTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+            // rowReorder: {
+            //     selector: 'td:nth-child(2)'
+            // },
             responsive: true,
             type: "get",
             "ajax": "{{route('load.school.grade.key')}}",
             "columns": [
 
+                {
+                    "data": "class"
+                },
                 {
                     "data": "grade"
                 },
@@ -250,14 +252,43 @@
                 {
                     "data": "remark"
                 },
-                {
-                    "data": "created_at"
-                },
+                // {
+                //     "data": "created_at"
+                // },
                 // {
                 //     "data": "action"
                 // },
+                ],
+                "columnDefs": [{
+                    targets: [0],
+                    visible: false
+                },
+                // {
+                //     targets: [5],
+                //     className: "align-right"
+                // }
             ],
-        });
+            "drawCallback": function(settings) {
+                var api = this.api();
+                var rows = api.rows({
+                    page: 'current'
+                }).nodes();
+                var last = null;
+
+                api.column(0, {
+                    page: 'current'
+                }).data().each(function(group, i) {
+                    if (last !== group) {
+                        $(rows).eq(i).before(
+                            '<tr class="group"><td colspan="8">' + group + '</td></tr>'
+                        );
+
+                        last = group;
+                    }
+                });
+            }
+            });
+        }
         // filter class subject 
         FormMultiSelect2('#classGradeKeyCategorySelect2', 'category', 'Select Category');
         FormMultiSelect2('#classGradeKeyTermSelect2', 'term', 'Select Term');
@@ -287,9 +318,9 @@
         $('#classGradeKeyTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+            // rowReorder: {
+            //     selector: 'td:nth-child(2)'
+            // },
             responsive: true,
             type: "get",
             "ajax": "{{route('load.class.grade.key')}}",
@@ -345,8 +376,11 @@
         });
 
 
-        $('#createGradeKeyBtn').click(function() {
-            submitFormAjax('createGradeKeyForm', 'createGradeKeyBtn', "{{route('school.grade.key')}}");
+        $('#createGradeKeyBtn').click(async function() {
+            let s = await submitFormAjax('createGradeKeyForm', 'createGradeKeyBtn', "{{route('school.grade.key')}}");
+            if(s.status == 1){
+                loadGradeKey()
+            }
         });
 
     });

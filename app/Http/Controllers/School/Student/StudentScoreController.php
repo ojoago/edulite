@@ -244,6 +244,7 @@ class StudentScoreController extends Controller
            return false;
         }
     }
+
     private function updateCombineSubject($data){
         try {
             $dupParams = $data;
@@ -339,7 +340,6 @@ class StudentScoreController extends Controller
        }
     }
     
-
     private function createScoreSheetParams(){
         $session =  session('session');
         $term =     session('term');
@@ -392,7 +392,6 @@ class StudentScoreController extends Controller
         return true;
     }
    
-
     // view subject result goes here  
     public function viewStudentScore(Request $request)
     {
@@ -409,6 +408,8 @@ class StudentScoreController extends Controller
         setActionablePid(); //set assessment pid to null
         return redirect()->route('view.student.score');
     }
+
+    
     public function loadStudentScore()
     {
         $params = $this->loadStudentAndScoreSetting();

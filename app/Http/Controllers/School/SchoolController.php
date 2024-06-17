@@ -14,10 +14,9 @@ use App\Models\School\Staff\SchoolStaff;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Users\UserController;
 use App\Models\School\Registration\SchoolParent;
+use App\Http\Controllers\School\Rider\RiderController;
 use App\Http\Controllers\School\Staff\StaffController;
-// use App\Http\Controllers\School\Parent\ParentController;
 use App\Http\Controllers\School\Student\StudentController;
-use App\Http\Controllers\School\Rider\SchoolRiderController;
 
 class SchoolController extends Controller
 {
@@ -48,11 +47,16 @@ class SchoolController extends Controller
     public function schoolLogin($id)
     {
         $id=base64Decode($id);
-        $schoolUser = DB::table('school_users as u')->join('schools as s','s.pid','u.school_pid')
-                                                ->join('school_staff as ss', 'ss.pid','u.pid')
-                                                ->leftJoin('staff_accesses as a','a.staff_pid','u.pid')
-                        ->where(['u.school_pid' => $id, 'u.user_pid' => getUserPid()])
-                        ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'ss.status','a.access','s.status as sts','s.stage']);
+        // $schoolUser = DB::table('school_users as u')->join('schools as s','s.pid','u.school_pid')
+        //                                         ->join('school_staff as ss', 'ss.pid','u.pid')
+        //                                         ->leftJoin('staff_accesses as a','a.staff_pid','u.pid')
+        //                 ->where(['u.school_pid' => $id, 'u.user_pid' => getUserPid()])
+        //                 ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'ss.status','a.access','s.status as sts','s.stage']);
+        // dd($schoolUser);
+        $schoolUser = DB::table('school_users as u')->join('schools as s', 's.pid', 'u.school_pid')
+        ->leftJoin('staff_accesses as a', 'a.staff_pid', 'u.pid')
+        ->where(['u.school_pid' => $id, 'u.user_pid' => getUserPid()])
+            ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'u.status', 'access', 's.status as sts', 's.stage']);
         // dd($schoolUser);
         if(!$schoolUser){
             return redirect()->back()->with('error','you are doing it wrong');
@@ -60,8 +64,8 @@ class SchoolController extends Controller
         if ($schoolUser && $schoolUser->sts === 0) {
             return redirect()->back()->with('error', $schoolUser->school_name.' Has been denied access, please contact your management');
         }
-        if ($schoolUser && $schoolUser->status != 1) {
-            return redirect()->back()->with('warning', 'you Have been denied access, please contact your school.');
+        if ($schoolUser && $schoolUser->status != 1) { // if status not eqaul to 1 then deny login
+            return redirect()->route('users.home')->with('warning', 'you Have been denied access, please contact your school.');
         }
 
         setUserActiveRole($schoolUser->role);// set staff primary role
@@ -623,7 +627,7 @@ class SchoolController extends Controller
             'school_pid' => getSchoolPid(),
             'user_pid' => $request->pid,
             'pid' => public_id(),
-            'rider_id' => SchoolRiderController::riderUniqueId(),
+            'rider_id' => RiderController::riderUniqueId(),
         ];
       
         $sts = self::createSchoolRider($data);

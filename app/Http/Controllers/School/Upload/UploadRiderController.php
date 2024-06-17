@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
+use App\Http\Controllers\School\Rider\RiderController;
 use App\Http\Controllers\School\Rider\SchoolRiderController;
 
 class UploadRiderController extends Controller
@@ -63,7 +64,7 @@ class UploadRiderController extends Controller
                                         'user_pid' => $user->pid,
                                         'school_pid' => getSchoolPid(),
                                         'pid' => public_id(),
-                                        'rider_id' => SchoolRiderController::riderUniqueId()
+                                        'rider_id' => RiderController::riderUniqueId()
                                     ];
                                     $dtl = UserDetailsController::insertUserDetails($userDetail);
                                     if ($dtl) {

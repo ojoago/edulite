@@ -83,9 +83,9 @@
 
                         <div class="col-md-8" style="display:none" id="newAssignmentCaType">
                             <label class="form-label">Link to Assessment</label>
-                            <select name="ca_title" id="newAssignmentCaTypeSelect2" style="width: 100%;" class="form-control form-control-sm">
+                            <select name="assessment_type" id="newAssignmentCaTypeSelect2" style="width: 100%;" class="form-control form-control-sm">
                             </select>
-                            <p class="text-danger ca_title_error"></p>
+                            <p class="text-danger assessment_type_error"></p>
                         </div>
                         <input type="hidden" name="type" id="newAutomatedAssignmentType" value="3" checked>
 
@@ -167,6 +167,12 @@
         $('#newAutomatedAssignmentClassArmSelect2').on('change', function(e) {
             var id = $(this).val();
             FormMultiSelect2Post('#newAutomatedAssignmentSubjectSelect2', 'class-arm-subject', id, 'Select Class Subject');
+        });
+
+        $('#newAutomatedAssignmentClassArmSelect2').on('change', function(e) {
+            var id = $(this).val();
+            
+            FormMultiSelect2Post('#newAssignmentCaTypeSelect2', 'assessment-types', id, 'Select Assessment');
         });
 
         

@@ -470,7 +470,7 @@
             @endif
         </div>
         <div class="col-md-12">
-            <div id="column_Chart" class="chartZoomable" style="width:90%;height:auto;"></div>
+            <div id="column_Chart" class="chartZoomable" style="width:98%;height:auto;"></div>
         </div>
         </div>
         <button class="btn btn-success" id="printResult"> <i class="bi bi-printer"></i> </button>
@@ -484,7 +484,7 @@
             'packages': ['corechart']
         });
         google.charts.load('current', {
-            'packages': ['bar']
+            'packages': ['line']
         });
 
         google.charts.setOnLoadCallback(drawColumnChart);
@@ -515,7 +515,7 @@
                     position: "top"
                 },
             };
-            var chart = new google.visualization.ColumnChart(document.getElementById("column_Chart"));
+            var chart = new google.visualization.LineChart(document.getElementById("column_Chart"));
             chart.draw(view, options);
         }
     </script>

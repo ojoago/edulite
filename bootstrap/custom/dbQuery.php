@@ -304,6 +304,15 @@ function activeTermName()
        $data = ClassArm::where(['school_pid'=>getSchoolPid(),'class_pid'=>$pid])->get(['pid','arm']);
        return $data;
     }
+    // load class arm by class pid 
+    function loadClassByArm($pid){
+       try {
+            return ClassArm::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->pluck('class_pid')->first();
+       } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+       }
+    }
 
     function getSubjectNameByPid($pid){
         return Subject::where(['pid'=>$pid])->pluck('subject')->first();

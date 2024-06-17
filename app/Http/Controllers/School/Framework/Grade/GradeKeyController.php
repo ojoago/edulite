@@ -20,11 +20,11 @@ class GradeKeyController extends Controller
     public function index()
     {
        
-        $data = GradeKeyBase::where('school_pid', getSchoolPid())->get(['title','grade','grade_point','remark','min_score','max_score','created_at','pid']);
+        $data = DB::table('grade_key_bases as b')->join('classes as c','c.pid','class_pid')->where('b.school_pid', getSchoolPid())->get(['title','grade','grade_point','remark','min_score','max_score', 'class']);
         return datatables($data)
-            ->editColumn('created_at', function ($data) {
-                return $data->created_at->diffForHumans();
-            })
+            // ->editColumn('created_at', function ($data) {
+            //     return $data->created_at->diffForHumans();
+            // })
             ->make(true);
       
     }
@@ -58,7 +58,7 @@ class GradeKeyController extends Controller
             'grade.*'=>'required|string|min:1',
             // 'grade'=>'required|max:3|string',
             // 'grade_point'=>'nullable|numeric',
-            'class_pid'=>'required|string',
+            'class_pid.*'=>'required|string',
         ],[
             'title.required'=>'Enter Grade Title',
             'title.*.required'=>'Enter this Grade Title',
@@ -74,26 +74,31 @@ class GradeKeyController extends Controller
             'class_pid.required'=>'Select Class',
         ]);
         if(!$validator->fails()){
-            $data = [
-                'titles'=>$request->title,
-                'min'=>$request->min_score,
-                'max'=>$request->max_score,
-                'grades'=>$request->grade,
-                // 'grade_point'=>$request->grade_point,
-                // 'category_pid'=>$request->category_pid,
-                // 'session_pid'=>$request->session_pid,
-                'class_pid'=>$request->class_pid,
-                // 'term_pid'=>$request->term_pid,
-                // 'color'=>$request->color,
-                // 'remark'=>$request->remark,
-                // 'school_pid'=>getSchoolPid(),
-                // 'staff_pid'=>getSchoolUserPid(),
-            ];
+            
             // $pid = $this->createSchoolGrade($data);
             // $data['grade_pid'] = $pid;
-            $data['pid'] = public_id();
+            // $data['pid'] = public_id();
             try {
-                $result =    $this->updateOrCreateGradeBase($data);
+
+                foreach ($request->class_pid as $class_pid) {
+                    $data = [
+                        'titles' => $request->title,
+                        'min' => $request->min_score,
+                        'max' => $request->max_score,
+                        'grades' => $request->grade,
+                        // 'grade_point'=>$request->grade_point,
+                        // 'category_pid'=>$request->category_pid,
+                        // 'session_pid'=>$request->session_pid,
+                        'class_pid' => $class_pid,
+                        'pid' => public_id(),
+                        // 'term_pid'=>$request->term_pid,
+                        // 'color'=>$request->color,
+                        // 'remark'=>$request->remark,
+                        // 'school_pid'=>getSchoolPid(),
+                        // 'staff_pid'=>getSchoolUserPid(),
+                    ];
+                    $result =    $this->updateOrCreateGradeBase($data);
+                }
                 if($result){
                     return response()->json(['status'=>1, 'message'=>'grade created']);
                 }

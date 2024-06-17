@@ -12,6 +12,7 @@ use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
+use App\Models\SchoolUser;
 
 class ParentController extends Controller
 {
@@ -94,8 +95,11 @@ class ParentController extends Controller
 
     public static function updateParentStatus($pid){
         $parent = SchoolParent::where('pid',$pid)->first(['id','status']);
+        $user = SchoolUser::where('pid',$pid)->first(['id','status']);
         $parent->status = $parent->status == 1 ? 0 : 1;
+        $user->status = $user->status == 1 ? 0 : 1;
         $parent->save();
+        $user->save();
         return 'Status Updated';
     }
 
