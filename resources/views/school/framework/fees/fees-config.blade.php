@@ -33,7 +33,7 @@
                             <th>Account Name</th>
                             <th>Account Number</th>
                             <th>Account Bank</th>
-                            <th>status</th>
+                            {{-- <th>status</th> --}}
                             <th width="5%">Action</th>
                         </tr>
                     </thead>
@@ -50,10 +50,11 @@
                     <thead>
                         <tr>
                             <th width="5%">S/N</th>
+                            <th>account name</th>
                             <th>Name</th>
                             <th>Description</th>
                             <th>status</th>
-                            <th>Date</th>
+                            {{-- <th>Date</th> --}}
                             <th width="5%">Action</th>
                         </tr>
                     </thead>
@@ -128,19 +129,27 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" class="" id="createFeeForm">
+                <form action="" method="post" class="" id="createAccountForm">
                     @csrf
                     <label for="account_number">Account Number</label>
-                    <input type="text" name="account_number" class="form-control form-control-sm" placeholder="example school fee" required>
+                    <input type="text" name="account_number" maxlength="10" class="form-control form-control-sm" placeholder="example school fee" required>
                     <p class="text-danger account_number_error"></p>
-
-                    <!-- <input type="text" name="account_number" class="form-control form-control-sm" placeholder="example school fee" required>
-                    <p class="text-danger account_number_error"></p> -->
+                    <label for="account_name">Account Name</label>
+                    <input type="text" name="account_name" class="form-control form-control-sm" placeholder="example school fee" required>
+                    <p class="text-danger account_name_error"></p>
+                    <label for="bank_name">Bank</label>
+                    <select name="bank_name" class="form-control form-control-sm" >
+                        <option disabled selected>Select Bank</option>
+                        @foreach (BANKS as $bank)
+                            <option >{{$bank}}</option>
+                        @endforeach
+                    </select>
+                    <p class="text-danger bank_name_error"></p>
 
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createFeeBtn">Submit</button>
+                <button type="button" class="btn btn-primary" id="createAccountBtn">Submit</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -157,7 +166,11 @@
             <div class="modal-body">
                 <form action="" method="post" class="" id="createFeeForm">
                     @csrf
-                    <input type="text" name="fee_name" class="form-control form-control-sm" placeholder="example school fee" required>
+                    <select name="account_pid" class="form-control form-control-sm" id="feeAccountSelect2">
+                    </select>
+                    <p class="text-danger account_pid_error"></p>
+                    <label for="">Fee Name</label>
+                    <input type="text" name="fee_name" class="form-control form-control-sm" placeholder="e.g school fee" required>
                     <p class="text-danger fee_name_error"></p>
                     <textarea type="text" name="fee_description" class="form-control form-control-sm" placeholder="fee description" required></textarea>
                     <p class="text-danger fee_description_error"></p>
@@ -323,6 +336,9 @@
                     name: 'DT_RowIndex',
                 },
                 {
+                    "data": "account_name"
+                },
+                {
                     "data": "fee_name"
                 },
                 {
@@ -331,15 +347,14 @@
                 {
                     "data": "status"
                 },
-                {
-                    "data": "date",
-                },
+              
                 {
                     "data": "action",
                 },
 
             ],
         });
+
         $('#termFeeSelect2').change(function() {
             let term = $(this).val();
             let session = $('#sessionFeeSelect2').val();
@@ -351,6 +366,54 @@
         $('#itemFeeAmount').click(function() {
             loadFeeAmount()
         })
+
+        function feeAccount(term = null, session = null) {
+            $('#feeAccountTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                // rowReorder: {
+                //     selector: 'td:nth-child(2)'
+                // },
+                responsive: true,
+                destroy: true,
+                // type: "GET",
+                "ajax": {
+                    url: "{{route('load.fee.account')}}",
+                    type: "POST",
+                    data: {
+                        _token: "{{csrf_token()}}",
+                        session_pid: session,
+                        term_pid: term,
+                        // arm_pid: arm,
+                    }
+                },
+                
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                    },
+                    {
+                        "data": "account_name"
+                    },
+                    {
+                        "data": "account_number"
+                    },
+                    {
+                        "data": "bank_name"
+                    },
+                   
+                    // {
+                    //     "data": "bank_code",
+                    // },
+                   
+                    {
+                        "data": "action",
+                    },
+
+                ],
+            });
+        }
+
 
         function loadFeeAmount(term = null, session = null) {
             $('#feeAmountTable').DataTable({
@@ -455,7 +518,23 @@
         FormMultiSelect2('#termFeeSelect2', 'term', 'Select Term');
         FormMultiSelect2('#sessionFeeSelect2', 'session', 'Select Session');
         multiSelect2('#feeItem', 'FeeConfigModal', 'fee-items', 'Select Fee');
+        multiSelect2('#feeAccountSelect2', 'createFeeModal', 'fee-account', 'Select Account');
 
+        // create fee name 
+        feeAccount()
+        $('#createAccountBtn').click(async function() {
+            let s = await submitFormAjax('createAccountForm', 'createAccountBtn', "{{route('create.fee.account')}}");
+             if(s.status == 1){
+                feeAccount()
+            }
+        });
+        $(document).on('click','.createAccountBtn', async function(){
+            let id = $(this).attr('pid')
+            let s = await submitFormAjax('createAccountForm'+id, 'createAccountBtn'+id, "{{route('create.fee.account')}}");
+             if(s.status == 1){
+                feeAccount()
+            }
+        })
         // create fee name 
         $('#createFeeBtn').click(function() {
             submitFormAjax('createFeeForm', 'createFeeBtn', "{{route('create.fee.name')}}");
@@ -539,8 +618,9 @@
             }
         });
         // configure fee
-        $('#feeConfigBtn').click(function() {
-            submitFormAjax('feeConfigForm', 'feeConfigBtn', "{{route('configure.fee')}}");
+        $('#feeConfigBtn').click(async function() {
+            let s = await submitFormAjax('feeConfigForm', 'feeConfigBtn', "{{route('configure.fee')}}");
+           
         });
 
     });

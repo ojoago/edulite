@@ -22,6 +22,7 @@ use App\Models\School\Registration\SchoolParent;
 use App\Models\School\Framework\Subject\SubjectType;
 use App\Models\School\Framework\Class\ClassArmSubject;
 use App\Models\School\Framework\Assessment\AssessmentTitle;
+use App\Models\School\Framework\Fees\FeeAccount;
 use App\Models\School\Framework\Psychomotor\PsychomotorBase;
 
 class Select2Controller extends Controller
@@ -889,6 +890,30 @@ class Select2Controller extends Controller
     }
 
     // load fee name 
+    public function loadAvailableFeeAccount(Request $request)
+    {
+        $data = null;
+        if ($request->has('q'))
+        $result = FeeAccount::where(['school_pid' => getSchoolPid()])->where('account_name', 'like', '%' . $request->q . '%')
+            ->orderBy('bank_name')->limit(25)->get(['pid', 'account_name' , 'bank_name']); //
+        else
+        $result = FeeAccount::where(['school_pid' => getSchoolPid()])
+        ->orderBy('bank_name')->limit(25)->get(['pid', 'account_name', 'bank_name']); //
+        if (!$result) {
+            $data[] = ['id' => null, 'text' => null];
+            return response()->json($data);
+        }
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->account_name.' | ' . $row->account_name ,
+            ];
+        }
+        return response()->json($data);
+    }
+
+    
+    // load fee name 
     public function loadAvailableFeeItem(Request $request)
     {
         $data = null;
@@ -910,6 +935,9 @@ class Select2Controller extends Controller
         }
         return response()->json($data);
     }
+
+
+
     public function loadAvailableOnDemandFee(Request $request)
     {
         $data = null;

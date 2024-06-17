@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Student Profile</h5>
+        <h5 class="card-title">Student Results</h5>
 
         <!-- Default Tabs -->
         <ul class="nav nav-tabs d-flex" id="myTabjustified" role="tablist">

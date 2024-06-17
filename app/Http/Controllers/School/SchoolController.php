@@ -17,6 +17,7 @@ use App\Models\School\Registration\SchoolParent;
 use App\Http\Controllers\School\Rider\RiderController;
 use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Student\StudentController;
+use App\Models\School\Student\Result\StudentClassResult;
 
 class SchoolController extends Controller
 {
@@ -234,8 +235,23 @@ class SchoolController extends Controller
     public function studentLogin(){
         $data = Student::where(['school_pid' => getSchoolPid(), 'pid' => getSchoolUserPid()])->first(['pid','status']);
         setStudentPid($data->pid); 
-
-        return view('school.dashboard.student-dashboard', compact('data'));
+        $result = StudentClassResult::where('student_pid',$data->pid)->count('id');
+        
+        
+        $attendance =  DB::table('attendances as a')->join('attendance_records as r', 'r.pid', 'a.record_pid')
+                ->join('students as s', 's.pid', 'a.student_pid')
+                ->select(DB::raw("  COUNT(CASE WHEN a.status = 1 THEN 'present' END) as 'present',
+                                    COUNT(CASE WHEN a.status = 0 THEN 'absent' END) as 'absent',
+                                    COUNT(CASE WHEN a.status = 2 THEN 'excused' END) as 'excused'
+                                     "))
+                ->where( [
+                'r.school_pid' => getSchoolPid(),
+                'a.student_pid' => $data->pid ,
+                'r.term_pid' => activeTerm(),
+                'r.session_pid' => activeSession()
+            ])->first();
+           
+        return view('school.dashboard.student-dashboard', compact('data', 'attendance', 'result'));
 
         return redirect()->route('student.login',['id'=>base64Encode($data->pid)]);
     }

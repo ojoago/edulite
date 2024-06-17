@@ -174,8 +174,7 @@ class StudentTermlyResultController extends Controller
                         $dt->on('r.student_pid', '=', 'dtl.student_pid');
                     })->select(DB::raw('r.student_pid,r.total,
                                 RANK() OVER (ORDER BY r.total DESC) AS position,
-                                reg_number,student_name,type,
-                                dtl.class_teacher_comment,dtl.principal_comment,
+                                reg_number,student_name,type, dtl.class_teacher_comment,dtl.principal_comment,
                                 dtl.portal_comment,r.class_param_pid,principal,exam_status'))
                     ->groupBy('r.student_pid')
                     ->orderBy('r.total', 'DESC')
@@ -185,12 +184,11 @@ class StudentTermlyResultController extends Controller
                     $rank->on('sr.student_pid', '=', 'rn.student_pid');
                 })->select(DB::raw(
                     'COUNT(subject_type) as count,
-                rn.total/COUNT(subject_type) as average,
-                rn.total,position,
-                rn.student_pid,reg_number,type,
-                student_name,rn.class_teacher_comment,
-                rn.principal_comment,rn.portal_comment,
-                rn.class_param_pid,principal,exam_status'
+                    rn.total/COUNT(subject_type) as average,
+                    rn.total,position,
+                    rn.student_pid,reg_number,type, student_name,rn.class_teacher_comment, 
+                    rn.principal_comment,rn.portal_comment,
+                    rn.class_param_pid,principal,exam_status'
                 ))->groupBy('sr.student_pid')->orderBy('position')
                     ->where(['sr.class_param_pid' => $param, 'seated' => 1]); //->get()->dd();
                 $results = DB::table('student_class_results as r')
@@ -257,12 +255,12 @@ class StudentTermlyResultController extends Controller
                 foreach($params as $pid):
                     $dtl = DB::table('student_class_results as r')
                     ->join('student_class_result_params as p', 'p.pid', 'r.class_param_pid')
-                    ->join('terms as t', 't.pid', 'p.term_pid')
-                    ->join('sessions as ss', 'ss.pid', 'p.session_pid')
-                    ->join('class_arms as a', 'a.pid', 'p.arm_pid')
+                    // ->join('terms as t', 't.pid', 'p.term_pid')
+                    // ->join('sessions as ss', 'ss.pid', 'p.session_pid')
+                    // ->join('class_arms as a', 'a.pid', 'p.arm_pid')
                         // ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
                         ->select(DB::raw('distinct(r.student_pid),
-                                r.class_param_pid,r.total,term,session,p.id,a.arm'))->where(['r.school_pid' => getSchoolPid(), 'r.class_param_pid' => $pid]);
+                                r.class_param_pid,r.total,term,session,p.id,p.arm'))->where(['r.school_pid' => getSchoolPid(), 'r.class_param_pid' => $pid]);
                     $rank = DB::table('student_class_results as r')
                     ->joinSub($dtl, 'dtl', function ($dt) {
                         $dt->on('r.student_pid', 'dtl.student_pid');

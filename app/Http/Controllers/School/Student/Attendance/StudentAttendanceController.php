@@ -31,7 +31,7 @@ class StudentAttendanceController extends Controller
         return view('school.student.attendance.take-attendance',compact('data', 'arm'));
     }
     public function submitStudentAttendance(Request $request){
-        logError($request->check);
+        // logError($request->check);
         if($request->check && $request->student){
            if(!$this->exclodeWeekend($request->date ?? justDate())){
                return response()->json(['status' => 'error', 'message' => "No Class! it's weekend"]);

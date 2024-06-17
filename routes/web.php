@@ -261,6 +261,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('payment-account', 'school.framework.fees.payment-account')->name('payment.account');
     Route::view('fees-config', 'school.framework.fees.fees-config')->name('fee.config');
     Route::get('load-fee-items', [FeeItemController::class,'loadFeeItems'])->name('load.fee.items');
+    Route::post('load-fee-account', [FeeItemController::class, 'loadFeeAccount'])->name('load.fee.account');
     Route::post('load-fee-amount', [FeeItemController::class, 'loadFeeAmount'])->name('load.fee.amount');
     Route::post('load-student-invoice', [FeeItemController::class, 'loadStudentInvoice'])->name('load.student.invoice');
     // load a particular student invoice for payment 
@@ -285,6 +286,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-admission-details', [AdmissionConfigController::class,'index'])->name('load.admission.details');
     Route::get('load-admission-setup', [AdmissionConfigController::class,'setup'])->name('load.admission.setup');
     
+    Route::post('create-fee-account', [FeeItemController::class, 'createFeeAccount'])->name('create.fee.account');
     Route::post('create-fee-name', [FeeItemController::class, 'createFeeName'])->name('create.fee.name');
     
     Route::post('configure-fee', [FeeItemController::class, 'feeConfigurationAndAmount'])->name('configure.fee');
@@ -739,6 +741,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-available-psychomotors', [Select2Controller::class, 'loadAvailablePsychomotors']);
     // load all psychomotor 
     Route::post('load-available-psychomotors-all', [Select2Controller::class, 'loadAvailableAllPsychomotors']); 
+    
+    Route::post('load-available-fee-account', [Select2Controller::class, 'loadAvailableFeeAccount']); 
 
     Route::post('load-available-assessment-types', [AssessmentController::class, 'loadAssessmentTypes']);
     

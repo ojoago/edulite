@@ -14,6 +14,13 @@
             <div class="modal-body">
                 <form action="" method="post" class="" id="feeForm{{$data->pid}}">
                     @csrf
+                    <select name="account_pid" class="form-control form-control-sm" >
+                        <option disabled selected>Select Account</option>
+                        @foreach ($accounts as $item)
+                            <option value="{{$item->pid}}" {{$item->pid == $data->account_pid ? 'selected' :''}} >{{$item->account_name}} {{$item->bank_name}}</option>
+                        @endforeach
+                    </select>
+                    <p class="text-danger account_pid_error"></p>
                     <input type="text" name="fee_name" value="{{$data->fee_name}}" class="form-control form-control-sm" placeholder="example school fee" required>
                     <input type="hidden" name="pid" value="{{$data->pid}}">
                     <p class="text-danger fee_name_error"></p>

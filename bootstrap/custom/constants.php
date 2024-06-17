@@ -34,3 +34,31 @@ define('SETUP_STAGE', [
         "","","","","",""
     ]
 );
+define('BANKS',[
+    'Access Bank Plc' , 
+'Citibank Nigeria Limited' , 
+'Ecobank Nigeria Plc' , 
+'Fidelity Bank Plc'  ,
+'First Bank Nigeria Limited'  ,
+'First City Monument Bank Plc'  ,
+'Globus Bank Limited'  ,
+'Guaranty Trust Bank Plc'  ,
+'Heritage Banking Company Ltd.'  , 
+'Keystone Bank Limited'  ,
+'Optimus Bank'  ,
+'Parallex Bank Ltd'  ,
+'Polaris Bank Plc'  ,
+'Premium Trust Bank'  ,
+'Providus Bank'  ,
+'Signature Bank Limited'  ,
+'Stanbic IBTC Bank Plc'  ,
+'Standard Chartered Bank Nigeria Ltd.'  ,
+'Sterling Bank Plc'  ,
+'SunTrust Bank Nigeria Limited'  ,
+'Titan Trust Bank Ltd'  ,
+'Union Bank of Nigeria Plc'  ,
+'United Bank For Africa Plc'  ,
+'Unity Bank Plc'  ,
+'Wema Bank Plc'  ,
+'Zenith Bank Plc'  ,
+]);

@@ -9,6 +9,6 @@ class FeeAccount extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'school_pid','pid','bank_name','account_number','account_name', 'bank_code'
+        'school_pid' , 'pid' , 'bank_name' , 'account_number' , 'account_name' , 'bank_code'
     ];
 }

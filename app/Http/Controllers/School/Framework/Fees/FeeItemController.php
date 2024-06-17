@@ -14,21 +14,36 @@ use App\Models\School\Framework\Fees\StudentInvoice;
 use App\Models\School\Framework\Fees\FeeConfiguration;
 use App\Models\School\Framework\Fees\ClassInvoiceParam;
 use App\Http\Controllers\School\Framework\ClassController;
+use App\Models\School\Framework\Fees\FeeAccount;
 
 class FeeItemController extends Controller
 {
     
+    public function loadFeeAccount(){
+        $data = FeeAccount::where(['school_pid'=>getSchoolPid()])->get();
+        return datatables($data)
+        
+        ->addColumn('action',function($data){
+            return view('school.framework.fees.fee-account-action-button',['data'=>$data]);
+        })
+        ->addIndexColumn()
+        ->make(true);
+    }
+
+
     public function loadFeeItems(){
-        $data = FeeItem::where(['school_pid'=>getSchoolPid()])->get();
+        $result = FeeAccount::where(['school_pid' => getSchoolPid()])
+            ->orderBy('bank_name')->get(['pid', 'account_name', 'bank_name']); //
+        $data = DB::table('fee_items as f')->join('fee_accounts as a','a.pid','f.account_pid')->where(['f.school_pid' => getSchoolPid()])->select('a.account_name','f.*')->get();
         return datatables($data)
         ->editColumn('status',function($data){
             return $data->status == 1 ? 'Enabled' : 'Disabled';
         })
-        ->editColumn('date',function($data){
-            return $data->created_at->diffForHumans();
-        })
-        ->addColumn('action',function($data){
-            return view('school.framework.fees.fee-item-action-button',['data'=>$data]);
+        // ->editColumn('date',function($data){
+        //     return $data->created_at->diffForHumans();
+        // })
+        ->addColumn('action',function($data) use ($result){
+            return view('school.framework.fees.fee-item-action-button',['data'=>$data,'accounts'=> $result]);
         })
         ->addIndexColumn()
         ->make(true);
@@ -135,6 +150,7 @@ class FeeItemController extends Controller
             ->get();
         return $this->addDatatable($data);
     }
+
     public function loadStudentPaidInvoice(Request $request)
     {
 
@@ -202,7 +218,7 @@ class FeeItemController extends Controller
         } else {
             $where = ['p.term_pid' => activeTerm(), 'p.session_pid' => activeSession(), 'p.school_pid' => getSchoolPid(), 'si.status' => 0, 'si.student_pid'=>$request->pid];
         }
-        logError($request->pid);
+        // logError($request->pid);
         $data = DB::table('student_invoices as si')
         ->join('fee_item_amounts as fa', 'fa.pid', 'si.item_amount_pid')
         ->join('fee_configurations as fc', 'fa.config_pid', 'fc.pid')
@@ -226,6 +242,7 @@ class FeeItemController extends Controller
             ->get();
         return $this->addDatatable($data);
     }
+
     // load particular student invoice 
     public function loadParticularStudentPayment(Request $request)
     {
@@ -234,7 +251,7 @@ class FeeItemController extends Controller
         // } else {
         //     $where = ['p.term_pid' => activeTerm(), 'p.session_pid' => activeSession(), 'p.school_pid' => getSchoolPid(), 'si.status' => 0, 'si.student_pid'=>base64Decode($request->pid)];
         // }
-        logError($request->pid);
+        // logError($request->pid);
         $data = DB::table('student_invoice_payments as sip')
             ->where(['sip.student_pid'=>$request->pid,'school_pid'=>getSchoolPid(),'sip.status'=>1])
             ->select(
@@ -269,12 +286,14 @@ class FeeItemController extends Controller
                 'string',
                 Rule::unique('fee_items')->where(function($param) use($request){
                     $param->where('school_pid',getSchoolPid())->where('pid','<>',$request->pid);
-                })]
+                })],
+            'account_pid' => 'required'
         ]);
 
         if(!$validator->fails()){
             $data = [
                 'fee_name'=>$request->fee_name,
+                'account_pid'=>$request->account_pid,
                 'fee_description'=>$request->fee_description,
                 'pid'=>$request->pid ?? public_id(),
                 'school_pid'=>getSchoolPid(),
@@ -293,11 +312,43 @@ class FeeItemController extends Controller
         }
         return response()->json(['status'=>0,'error' => $validator->errors()->toArray()]);
     }
-    // create the name 
-    private function updateOrCreateFeeName(array $data){
 
-        return FeeItem::updateOrCreate(['pid'=>$data['pid'],'school_pid'=>$data['school_pid']],$data);
+    // create the name 
+    
+    // create school fee names 
+    public function createFeeAccount(Request $request){
+        $validator = Validator::make($request->all(),[
+            'account_number'=>[
+                'required',
+                'digits:10',
+                Rule::unique('fee_accounts')->where(function($param) use($request){
+                    $param->where('school_pid',getSchoolPid())->where('pid','<>',$request->pid);
+                })],
+            'account_name' => 'required' ,
+            'bank_name' => 'required'
+        ]);
+
+        if(!$validator->fails()){
+            $data = [
+                'account_number' => $request->account_number ,
+                'account_name' => $request->account_name ,
+                'bank_name' => $request->bank_name ,
+                'bank_code' => ' ' ,
+                'pid'=> $request->pid ?? public_id() ,
+                'school_pid' => getSchoolPid() ,
+                // 'staff_pid'=>getSchoolUserPid()
+            ];
+            // 
+            $result = $this->updateOrCreateFeeAccount($data);
+            if($result){
+                return response()->json(['status'=>1,'message' => $request->pid ? 'Bank Account updated' : 'Bank Account Added']);
+            }
+        }
+        return response()->json(['status'=>0,'error' => $validator->errors()->toArray()]);
     }
+
+    // create the name 
+
 
 
     // fee and amount configuration goes here 
@@ -352,6 +403,23 @@ class FeeItemController extends Controller
 
     }
 
+    private function updateOrCreateFeeAccount(array $data) {
+        try {
+            return FeeAccount::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+
+    private function updateOrCreateFeeName(array $data) {
+        try {
+            return FeeItem::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
 
     // this method sort class and amount based on category selected 
     private function prepareFeeAmount(string $pid, array $param){
