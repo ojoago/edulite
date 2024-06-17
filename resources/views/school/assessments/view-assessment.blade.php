@@ -8,7 +8,7 @@
         <h5 class="card-title mr-4">Assessment: {{$data->arm}} | {{$data->subject}} | {{$data->term}}, {{$data->session}}</h5>
 
         <fieldset class="border rounded-3 p-3">
-            <legend class="float-none w-auto px-3">{{$data->title}} | Deadline: <span class="text-danger">{{$data->end_date}}</span> </legend>
+            <legend class="float-none w-auto px-3 h5">{{$data->title}} | Deadline: <span class="text-danger">{{$data->end_date}}</span> </legend>
 
             <form class="row g-3 needs-validation" id="submitAssessmentForm">
                 @csrf
@@ -52,13 +52,13 @@
                         @else
 
                         <label class="form-label"> {!!$row->question!!}</label>
-                        <p class="form-label"> {!!$row->answer!!}</p>
+                        <p class="form-label"> {!!json_decode($row->answer)!!}</p>
 
                         @endif
                     </fieldset>
                      
                     @endforeach
-                    array_sum($questions->score)
+                    {{-- array_sum($questions->score) --}}
                 </div>
 
                 <div class="text-center">

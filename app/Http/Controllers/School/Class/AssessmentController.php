@@ -10,9 +10,11 @@ use App\Models\School\Assessment\Question;
 use App\Models\School\Assessment\QuestionBank;
 use App\Models\School\Assessment\QuestionAnswer;
 use App\Http\Controllers\School\Staff\StaffController;
+use App\Models\School\Framework\Assessment\ScoreSetting;
 use App\Http\Controllers\School\Framework\ClassController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
+use App\Http\Controllers\School\Student\StudentScoreController;
 
 class AssessmentController extends Controller
 {
@@ -44,21 +46,22 @@ class AssessmentController extends Controller
 
 
     public function loadAssessmentForStudent($pid){
+        
         $data = DB::table('question_banks as b')
                                                 ->join('questions as q','q.bank_pid','b.pid')
                                                 ->join('class_arm_subjects as cas','cas.pid','b.subject_pid')
                                                 ->join('subjects as s','s.pid','cas.subject_pid')
                                                 ->join('student_class_result_params as p','p.pid', 'b.class_param_pid')
-                                                ->join('class_arms as a','a.pid','p.arm_pid')
-                                                ->join('students as std', 'std.current_class_pid','a.pid')
+                                                // ->join('class_arms as a','a.pid','p.arm_pid')
+                                                ->join('students as std', 'std.current_class_pid', 'p.arm_pid')
                                                 ->where(['b.school_pid'=>getSchoolPid(),'std.pid'=>$pid])->where('b.status', '<>', 0)
                                                 ->whereNotIn('q.pid', function ($query) use($pid) {
                                                     $query->select('question_pid')
                                                         ->from('question_answers')->where('student_pid',$pid);
                                                 })
                                                 ->distinct('title')
-                                                ->select('s.subject','b.title','p.arm','b.pid','b.end_date','b.created_at','std.pid as std','b.type','q.path')->get();
-        return datatables($data)
+                                                ->select('s.subject','b.title','p.arm','b.pid','b.end_date','b.created_at','std.pid as std','b.type','q.path')->get();   
+                                                return datatables($data)
         ->addIndexColumn()
         ->editColumn('subject', function ($data) {
             return $data->arm .' - '.$data->subject;
@@ -80,7 +83,7 @@ class AssessmentController extends Controller
         ->join('subjects as s', 's.pid', 'cas.subject_pid')
         ->join('student_class_result_params as p', 'p.pid', 'b.class_param_pid')
         // ->join('class_arms as a', 'a.pid', 'p.arm_pid')
-        ->join('students as std', 'std.current_class_pid', 'a.pid')
+        ->join('students as std', 'std.current_class_pid', 'p.arm_pid')
         ->where(['b.school_pid' => getSchoolPid(), 'std.pid' => $pid])->where('b.status', '<>', 0)
             ->whereIn('q.pid', function ($query) use ($pid) {
                 $query->select('question_pid')
@@ -355,6 +358,7 @@ class AssessmentController extends Controller
             return false;
         }
     }
+
     private function updateOrCreateQuestion(array $data){
         try {
             return Question::updateOrCreate(['pid'=>$data['pid'],'bank_pid'=>$data['bank_pid']],$data);
@@ -363,8 +367,6 @@ class AssessmentController extends Controller
             return false;
         }
     }
-
-
     // manual Assessment ends here 
 
     public function submitAssessment(Request $request){
@@ -393,40 +395,52 @@ class AssessmentController extends Controller
                     else
                         return response()->json(['status' => 'error', 'message' => ER_500]);
                 }
-                if (isset($request->answer)) {
-                    $result = false;
-                    // load all questions and compare correct answer in the loop 
-                    $questions = $this->loadAllQuestions($request->key);
+                else if($request->type==2){
                     foreach ($request->answer as $key => $row) {
-                        $index = array_search($key, array_column($questions, 'pid')); //extract a particular question
-                        $options = json_decode($questions[$index]['options']);
-                        $count = $questions[$index]['correct_count'];
-                        $mark = $questions[$index]['mark'];
-                        $correct = 0;
-                        foreach($row as $an){
-                            foreach($options as $opn){
-                                if($opn->id == $an){
-                                    if($opn->correct){
-                                        $correct++;
-                                    }
-                                }
-                            }
-                        }
-                        if($correct == $count){
-                            $data['mark'] = $mark; 
-                            $right = true;
-                        }else{
-                            $data['mark'] = 0; 
-                            $right = false;
-                        }
                         $data['question_pid'] = $key;
-                        $data['answer'] = json_encode(['choice' => $row, 'correct' => $right ]);
+                        $data['answer'] = json_encode($row);
                         $result = $this->updateOrCreateAnswer($data);
                     }
                     if ($result)
-                        return response()->json(['status' => 1, 'message' => 'Assessment submitted Successfully']);
+                        return response()->json(['status' => 1, 'message' => 'Assessment Submitted Successfully']);
                     else
                         return response()->json(['status' => 'error', 'message' => ER_500]);
+                }else{
+                    if (isset($request->answer)) {
+                        $result = false;
+                        // load all questions and compare correct answer in the loop 
+                        $questions = $this->loadAllQuestions($request->key);
+                        foreach ($request->answer as $key => $row) {
+                            $index = array_search($key, array_column($questions, 'pid')); //extract a particular question
+                            $options = json_decode($questions[$index]['options']);
+                            $count = $questions[$index]['correct_count'];
+                            $mark = $questions[$index]['mark'];
+                            $correct = 0;
+                            foreach ($row as $an) {
+                                foreach ($options as $opn) {
+                                    if ($opn->id == $an) {
+                                        if ($opn->correct) {
+                                            $correct++;
+                                        }
+                                    }
+                                }
+                            }
+                            if ($correct == $count) {
+                                $data['mark'] = $mark;
+                                $right = true;
+                            } else {
+                                $data['mark'] = 0;
+                                $right = false;
+                            }
+                            $data['question_pid'] = $key;
+                            $data['answer'] = json_encode(['choice' => $row, 'correct' => $right]);
+                            $result = $this->updateOrCreateAnswer($data);
+                        }
+                        if ($result)
+                            return response()->json(['status' => 1, 'message' => 'Assessment submitted Successfully']);
+                        else
+                            return response()->json(['status' => 'error', 'message' => ER_500]);
+                    }
                 }
                 
                 return response()->json(['status' => 'error', 'message' => 'answer question first']);
@@ -458,7 +472,7 @@ class AssessmentController extends Controller
     }
 
 
-    // load asseement for marking 
+    // load asseement for marking for a particular student
     public function loadSubmittedAssessmentsByStudent(Request $request){
         try {
             $data = DB::table('question_banks as b')
@@ -485,6 +499,7 @@ class AssessmentController extends Controller
             return redirect()->back()->with('error','failed to load student answer');
         }        
     }
+    
     // load asseement for marking 
     public function viewSubmittedAssessment(Request $request){
         try {
@@ -514,13 +529,43 @@ class AssessmentController extends Controller
     }
 
     public function markStudentAssessment(Request $request){
-        
         try {
+            $query = DB::table('question_banks as b')
+            ->join('questions as q', 'q.bank_pid', 'b.pid')->where('q.pid', $request->question_pid[0])->first(['b.mark', 'assessment_type', 'recordable', 'b.subject_pid', 'teacher_pid', 'class_param_pid']);
+            if ($query->recordable == 1) {
+                $param = ScoreSetting::join('assessment_titles', 'assessment_titles.pid', 'score_settings.assessment_title_pid')
+                ->where([
+                    'score_settings.assessment_title_pid' => $query->assessment_type
+                ])->first(['title', 'score']);
+                if ($query->mark != $param->score) {
+                    return response()->json(['status' => 1, 'message' => 'Total Mark can not be greater than ' . $param->title.' '.$param->score]);
+                }
+                $data = [
+                    'student_pid' => $request->std ,
+                    'score' => array_sum($request->mark) ,
+                    'titlePid' => $query->assessment_type ,
+                    'subject' => $query->subject_pid ,
+                    'class_param_pid' => $query->class_param_pid ,
+                ]; 
+                  
+            }
+
             $count = count($request->question_pid);
+            
             for ($i=0; $i < $count; $i++) { 
                 QuestionAnswer::where(['student_pid' => $request->std, 'question_pid' => $request->question_pid[$i] ])
                 ->update([ 'mark' => $request->mark[$i] , 'status' => 1 ]);
             }
+            if ($query->recordable == 1) {
+               
+                $result = StudentScoreController::mapAssignmentToCA($data);
+                if($result){
+                    return response()->json(['status' => 1, 'message' => 'Score Updated and added Score to CA ']);
+                }
+                 return response()->json(['status' => 1, 'message' => 'Score Updated but Failed to Add to CA']);
+            }
+            //recordable
+//             
             return response()->json(['status' => 1, 'message' => 'Score updated Successfully']);
             
         } catch (\Throwable $e) {

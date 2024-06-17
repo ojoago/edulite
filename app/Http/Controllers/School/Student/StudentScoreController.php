@@ -5,7 +5,6 @@ namespace App\Http\Controllers\School\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\School\Student\Student;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -16,6 +15,7 @@ use App\Http\Controllers\School\Framework\ClassController;
 use App\Models\School\Student\Result\StudentSubjectResult;
 use App\Models\School\Student\Assessment\StudentScoreSheet;
 use App\Models\School\Student\Assessment\SubjectScoreParam;
+use App\Models\School\Student\Result\StudentClassResultParam;
 use App\Models\School\Student\Results\Cumulative\CumulativeResult;
 use App\Http\Controllers\School\Framework\Grade\GradeKeyController;
 use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
@@ -23,7 +23,35 @@ use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 class StudentScoreController extends Controller
 {
   
-    
+    public static function mapAssignmentToCA(array $data){
+        $arm_pid = StudentClassResultParam::where('pid',$data['class_param_pid'])->pluck('arm_pid')->first();//check if param already created
+        // createScoreSheetParams
+        session([
+            'session' => activeSession(),
+            'term' => activeTerm(),
+            'subject' => $data['subject'] ,
+            'arm' => $arm_pid ,
+            'class_param_pid' => $data['class_param_pid'] ,
+        ]);
+
+        $param = (new self)->createScoreSheetParams();
+      
+        if($param === 'no class' || $param === false){
+            return false;
+        }
+      
+        $data = [
+            'score_param_pid' => getActionablePid(),
+            'student_pid' => $data['student_pid'],
+            'ca_type_pid' => $data['titlePid'],
+            'school_pid' => getSchoolPid(),
+            'score' => $data['score']
+        ];
+        
+        return (new self)->processStudentScore($data);
+        
+    }
+
 //
     public function enterStudentScoreRecord(Request $request){
         $request['session'] = activeSession();
@@ -189,6 +217,7 @@ class StudentScoreController extends Controller
     }
 
     private function processStudentScore($data){
+        logError($data);
         $dupParams = $data;
         unset($dupParams['score']);
         try {

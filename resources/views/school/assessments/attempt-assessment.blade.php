@@ -19,12 +19,12 @@
                     <fieldset class="border rounded-3 px-2">
                         <legend class="float-none w-auto px-3">Question {{$loop->iteration}} {{$row->mark ? '| '.$row->mark .' Mark(s)' :''}}</legend>
                         @if($data->type ==1)
-                        <label class="form-label text-danger">File 1 mb max </label>
-                        <input type="hidden" name="pid[]" value="{{$row->pid}}">
-                        <input type="hidden" name="type" value="1">
-                        <input type="file" accept=".pdf,.docs,.doc" name="file" class="form-control form-control-sm">
-                        <p class="text-danger file_error"></p>
-                        @php continue @endphp
+                            <label class="form-label text-danger">File 1 mb max </label>
+                            <input type="hidden" name="pid[]" value="{{$row->pid}}">
+                            <input type="hidden" name="type" value="1">
+                            <input type="file" accept=".pdf,.docs,.doc" name="file" class="form-control form-control-sm">
+                            <p class="text-danger file_error"></p>
+                            @php continue @endphp
                         @endif
                         @php $options = json_decode($row->options) @endphp
                         @if(isset($options))
@@ -39,6 +39,7 @@
 
                         <label class="form-label"> {!!$row->question!!}</label>
                         <input type="hidden" name="pid[]" value="{{$row->pid}}">
+                        <input type="hidden" name="type" value="2">
                         <textarea type="text" class="form-control form-control-sm summer-note" name="answer[{{$row->pid}}]" id="newAssignmentNote" placeholder="Type answer"></textarea>
                         <p class="text-danger note_error"></p>
                         @endif

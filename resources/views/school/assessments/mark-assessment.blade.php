@@ -7,7 +7,7 @@
     <div class="card-body">
         <h5 class="card-title mr-4">Assessment: {{$data->arm}} | {{$data->subject}} | {{$data->term}}, {{$data->session}}</h5>
         <fieldset class="border rounded-3 p-3">
-            <legend class="float-none w-auto px-3">{{$data->title}} | Submitted: <span class="text-danger">{{$questions[0]->submitted_date}}</span> </legend>
+            <legend class="float-none w-auto px-3 h5">{{$data->title}} | Submitted: <span class="text-danger">{{$questions[0]->submitted_date}}</span> </legend>
             <form class="row g-3 needs-validation" id="submitAssessmentForm">
                 @csrf
                 <div class="col-md-12" id="fieldQuestions">
@@ -15,7 +15,7 @@
                     @foreach($questions as $row)
                     <input type="hidden" name="question_pid[]" value="{{$row->question_pid}}">
                     <fieldset class="border rounded-3 px-2">
-                        <legend class="float-none w-auto px-3">Question {{$loop->iteration}} {{$row->mark ? '| '.$row->mark .'Mark(s)' :''}}</legend>
+                        <legend class="float-none w-auto px-3 h6">Question {{$loop->iteration}} {{$row->mark ? '| '.$row->mark .'Mark(s)' :''}}</legend>
                         @if($data->type == 1)
                         @php $path = $row->path ? $row->path : '#' @endphp
                         <div class="row">
