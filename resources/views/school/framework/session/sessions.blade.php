@@ -29,7 +29,7 @@
                         <tr>
                             <!-- <th>SN</th> -->
                             <th>Session</th>
-                            <th>Date</th>
+                            {{-- <th>Date</th> --}}
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -78,11 +78,10 @@
 
         // update session 
         $(document).on('click', '.createSessionBtn', function() {
-            let pid = $(this).attr('pid');
-            let formId = 'sessionForm' + pid;
-            let btnId = 'id' + pid;
-            submitFormAjax(formId, btnId, "{{route('school.session')}}");
+            let id = $(this).attr('pid');
+            submitFormAjax('sessionForm'+id, 'createSessionBtn'+id, "{{route('create.session')}}");
         })
+
         // load school session
         $('#dataTable').DataTable({
             "processing": true,
@@ -91,9 +90,9 @@
             "columns": [{
                     "data": "session"
                 },
-                {
-                    "data": "date"
-                },
+                // {
+                //     "data": "date"
+                // },
                 {
                     "data": "action"
                 },

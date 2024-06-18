@@ -744,14 +744,14 @@
             <div class="modal-body">
                 <form action="" method="post" class="" id="createTermForm">
                     @csrf
-                    <input type="text" name="term" autocomplete="off" class="form-control" placeholder="lite term e.g first term" required>
+                    <input type="text" name="term" autocomplete="off" class="form-control" placeholder="e.g first term" required>
                     <p class="text-danger term_error"></p>
-                    <textarea type="text" name="description" autocomplete="off" class="form-control" placeholder="lite term description"></textarea>
+                    <textarea type="text" name="description" autocomplete="off" class="form-control" placeholder="term description"></textarea>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createTermBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createTermBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -813,8 +813,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createSessionBtn">Submit</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-sm" id="createSessionBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

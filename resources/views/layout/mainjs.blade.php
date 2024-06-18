@@ -699,7 +699,7 @@
                 $('#setupStepForm').show(500)
             }
         });
-
+        
         // session dropdown active term
         multiSelect2('#setTermSessionSelect2', 'setActiveTermModal', 'session', 'Select Session');
         // term dropdown for active term 
@@ -717,7 +717,7 @@
 
         // stage 3 create sessions 
         $('#createSessionBtn').click(async function() {
-            let s = await submitFormAjax('createSessionForm', 'createSessionBtn', "{{route('school.session')}}");
+            let s = await submitFormAjax('createSessionForm', 'createSessionBtn', "{{route('create.session')}}");
             if (s.status === 1) {
                 $('#setupStepForm').show(500)
             }

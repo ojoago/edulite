@@ -48,13 +48,14 @@ class ClassController extends Controller
         $data = Classes::join('categories', 'categories.pid', 'classes.category_pid')
         ->where(['classes.school_pid' => getSchoolPid()])
             ->get(['classes.pid', 'category', 'classes.created_at', 'class', 'classes.status', 'classes.category_pid','class_number']);
+        $cat = DB::table('categories')->select('pid','category')->where('school_pid', getSchoolPid())->get();
         return datatables($data)
-            ->addColumn('action', function ($data) {
-                return view('school.framework.class.class-action-buttons',['data'=>$data]);
+            ->addColumn('action', function ($data) use ($cat) {
+                return view('school.framework.class.class-action-buttons',['data'=>$data, 'cat' => $cat]);
             })
-            ->editColumn('created_at', function ($data) {
-                return $data->created_at->diffForHumans();
-            })
+            // ->editColumn('created_at', function ($data) {
+            //     return $data->created_at->diffForHumans();
+            // })
             ->editColumn('status', function ($data) {
                 $html = $data->status == 1 ? '<span class="text-success">Enabled</span>' : '<span class="text-danger">Disabled</span>';
                 return $html;
@@ -72,9 +73,10 @@ class ClassController extends Controller
             ->get(['a.pid', 'class','arm', 'a.created_at', 'a.status',
             // 'fullname',
             'arm_number','category_pid','class_pid']);
+            $class = DB::table('classes')->where(['school_pid'=>getSchoolPid()])->select('class', 'pid')->get();
         return datatables($data)
-            ->addColumn('action', function ($data) {
-                return view('school.framework.class.class-arm-action-buttons', ['data' => $data]);
+            ->addColumn('action', function ($data) use($class){
+                return view('school.framework.class.class-arm-action-buttons', ['data' => $data,'class'=>$class]);
             })
             // ->editColumn('created_at', function ($data) {
             //     return $data->created_at->diffForHumans();
@@ -87,6 +89,8 @@ class ClassController extends Controller
             // ->rawColumns(['data', 'status'])
             ->make(true);
     }
+
+
     public function loadClassArmSubject(Request $request)
     {
         if(isset($request->param)){
@@ -121,9 +125,10 @@ class ClassController extends Controller
     
     public function createCategory(Request $request)
     {
+        
         $validator = Validator::make($request->all(),[
             'category' => ['required',Rule::unique('categories')->where(function($param)use ($request){
-                $param->where('school_pid','=',getSchoolPid())->where('pid','!=',$request->pid);
+                $param->where('school_pid','=',getSchoolPid())->where('pid','<>',$request->pid);
             })],
             // 'head_pid'=>'required'
         ],[
@@ -131,7 +136,8 @@ class ClassController extends Controller
             'category.unique'=>$request->category. ' Category Already exists',
         ]);
         if(!$validator->fails()){
-            $data = [
+            try {
+                $data = [
                     'school_pid' => getSchoolPid(),
                     'staff_pid' => getSchoolUserPid(),
                     'pid' => $request->pid ?? public_id(),
@@ -139,15 +145,22 @@ class ClassController extends Controller
                     'head_pid' => $request->head_pid ?? 'null',
                     'description' => $request->description
                 ];
-            $result = $this->insertOrUpdateCategory($data);
-            if ($result) {
-                $msg = 'New School Category created successfully';
-                if(isset($request->pid)){
-                    $msg = 'School category update successfully';
+                $result = $this->insertOrUpdateCategory($data);
+                if ($result) {
+                    $msg = 'New School Category created successfully';
+                    if (isset($request->pid)) {
+                        $msg = 'School category update successfully';
+                    }
+                    return response()->json(['status' => 1, 'message' => $msg]);
                 }
-                return response()->json(['status'=>1,'message'=>$msg]);
+                return response()->json(['status' => '2', 'message' => 'Operation Failed']);
+            } catch (\Throwable $e) {
+                logError($e->getMessage());
+                return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
+
             }
-            return response()->json(['status'=>'2', 'message'=>'Operation Failed']);
+
+
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
@@ -176,30 +189,36 @@ class ClassController extends Controller
             ]
         );
         if(!$validator->fails()){
-            $data = [
-                'school_pid' => getSchoolPid(),
-                'staff_pid' => getSchoolUserPid(),
-                'number' => $request->class_number,
-                'classes' => $request->class,
-                'pids' => $request->pid,
-                'category_pid' => $request->category_pid,
-            ];
+           try {
+                $data = [
+                    'school_pid' => getSchoolPid(),
+                    'staff_pid' => getSchoolUserPid(),
+                    'number' => $request->class_number,
+                    'classes' => $request->class,
+                    'pids' => $request->pid,
+                    'category_pid' => $request->category_pid,
+                ];
 
-            $result = $this->prepareClassData($data);
-            if ($result) {
-                $msg = 'school class created successfully';
-                if(isset($request->pid)){
-                    $msg = 'class updated successfully';
+                $result = $this->prepareClassData($data);
+                if ($result) {
+                    $msg = 'school class created successfully';
+                    if (isset($request->pid)) {
+                        $msg = 'class updated successfully';
+                    }
+                    return response()->json(['status' => 1, 'message' => $msg]);
                 }
-                return response()->json(['status'=>1,'message'=> $msg]);
-            }
-            return response()->json(['status'=>'error','message'=> 'operation failed']);
+                return response()->json(['status' => 'error', 'message' => 'operation failed']);
+           } catch (\Throwable $e) {
+                logError($e->getMessage());
+                return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
+           }
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
 
     public function updateClass(Request $request)
     {
+       
         $validator = Validator::make($request->all(),[
             'category_pid' => 'required',
                 'class' => [
@@ -217,23 +236,28 @@ class ClassController extends Controller
             ]
         );
         if(!$validator->fails()){
-            $data = [
-                'school_pid' => getSchoolPid(),
-                'staff_pid' => getSchoolUserPid(),
-                'number' => $request->class_number,
-                'pids' => $request->pid,
-                'classes' => $request->class,
-                'category_pid' => $request->category_pid,
-            ];
-            $result = $this->prepareClassData($data);
-            if ($result) {
-                $msg = 'school class created successfully';
-                if(isset($request->pid)){
-                    $msg = 'class updated successfully';
+            try {
+                $data = [
+                    'school_pid' => getSchoolPid(),
+                    'staff_pid' => getSchoolUserPid(),
+                    'number' => $request->class_number,
+                    'pids' => $request->pid,
+                    'classes' => $request->class,
+                    'category_pid' => $request->category_pid,
+                ];
+                $result = $this->prepareClassData($data);
+                if ($result) {
+                    $msg = 'school class created successfully';
+                    if (isset($request->pid)) {
+                        $msg = 'class updated successfully';
+                    }
+                    return response()->json(['status' => 1, 'message' => $msg]);
                 }
-                return response()->json(['status'=>1,'message'=> $msg]);
+                return response()->json(['status' => 'error', 'message' => 'operation failed']);
+            } catch (\Throwable $e) {
+                logError($e->getMessage());
+                return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
             }
-            return response()->json(['status'=>'error','message'=> 'operation failed']);
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
@@ -293,6 +317,47 @@ class ClassController extends Controller
                 if(isset($request->pid)){
                     $msg = 'Class arm updated successfully';
                 }
+                return response()->json(['status'=>1,'message'=> $msg]);
+            }
+            return response()->json(['status'=>'error','message'=> 'Operation Failed']);
+        }
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+    }
+
+
+    public function updateClassArm(Request $request)
+    {
+
+        
+
+// category_pid
+
+// arm_number
+        $validator = Validator::make($request->all(),[
+            'arm' => 'required',
+            'arm_number' => 'required',
+            'class_pid' => 'required',
+            'pid' => 'required',
+        ],[
+            'class_pid.required' => 'select school category',
+            'arm.required' => 'Enter class Arm e.g grade 1 a for grade 1 & jss 1 a for jss 1',
+            'arm.max' => 'Maxismum of 25 character',
+            'arm.min' => 'Minimum of 3 character',
+        ]);
+        if(!$validator->fails()){
+            $data = [
+                'school_pid' => getSchoolPid(),
+                // 'staff_pid' => getSchoolUserPid(),
+                'arm' => $request->arm,
+                'arm_number' => $request->arm_number,
+                'class_pid' => $request->class_pid,
+                'pid' => $request->pid,
+            ];
+            $result = ClassArm::updateOrCreate(['school_pid' => $data['school_pid'], 'pid' => $data['pid']], $data);;
+            if ($result) {
+                
+                    $msg = 'Class arm updated successfully';
+                
                 return response()->json(['status'=>1,'message'=> $msg]);
             }
             return response()->json(['status'=>'error','message'=> 'Operation Failed']);

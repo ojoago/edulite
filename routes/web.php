@@ -153,6 +153,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('update-class', [ClassController::class, 'updateClass'])->name('update.class');
     // create class arm 
     Route::post('create-class-arm', [ClassController::class, 'createClassArm'])->name('create.class.arm');
+    Route::post('update-class-arm', [ClassController::class, 'updateClassArm'])->name('update.class.arm');
     // create class arm 
     Route::post('create-class-arm-subject', [ClassController::class, 'createClassArmSubject'])->name('create.school.class.arm.subject');
     // create class arm 
@@ -163,9 +164,9 @@ Route::middleware('schoolAuth')->group(function(){
     // create class arm rep 
     Route::post('assign-class-arm-rep', [StudentClassController::class, 'assignClassRep'])->name('assign.class.arm.rep');
     // academic session
-    Route::view('school-session', 'school.framework.session.school-session')->name('school.session');
+    Route::view('sessions', 'school.framework.session.sessions')->name('school.session');
     // create new session 
-    Route::post('school-session', [SessionController::class, 'createSession']);
+    Route::post('school-session', [SessionController::class, 'createSession'])->name('create.session');
     // load session on tab with datatable server  
     Route::get('load-school-session', [SessionController::class, 'index'])->name('load.school.session');
 
@@ -741,7 +742,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-available-psychomotors', [Select2Controller::class, 'loadAvailablePsychomotors']);
     // load all psychomotor 
     Route::post('load-available-psychomotors-all', [Select2Controller::class, 'loadAvailableAllPsychomotors']); 
-    
+
     Route::post('load-available-fee-account', [Select2Controller::class, 'loadAvailableFeeAccount']); 
 
     Route::post('load-available-assessment-types', [AssessmentController::class, 'loadAssessmentTypes']);

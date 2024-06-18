@@ -19,8 +19,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary createSessionBtn" id="id{{$data->pid}}" pid="{{$data->pid}}">Update</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary createSessionBtn btn-sm" id="createSessionBtn{{$data->pid}}" pid="{{$data->pid}}">Update</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

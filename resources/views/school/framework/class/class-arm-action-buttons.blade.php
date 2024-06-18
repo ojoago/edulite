@@ -5,7 +5,7 @@
     <ul class="dropdown-menu">
         <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#editClassArmModal{{$data->pid}}">Edit</a></li>
         <!-- <li><a class="dropdown-item" href="#">Details</a></li> -->
-        <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#createArmTeacherModal">Assign to Teacher</a></li>
+        {{-- <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#createArmTeacherModal">Assign to Teacher</a></li> --}}
         <!-- <li><a class="dropdown-item" href="#">Class Subject</a></li> -->
     </ul>
 </div>
@@ -13,7 +13,7 @@
 <!-- edit class arm modal  -->
 
 <div class="modal fade" id="editClassArmModal{{$data->pid}}" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create School Class Arm</h5>
@@ -34,20 +34,28 @@
                             <p class="text-danger class_pid_error"></p>
                         </div> -->
 
-                        <input type="hidden" name="class_pid" value="{{$data->class_pid}}">
+                        <div class="col-md-12">
+                            <select name="class_pid" class="form-control form-control-sm" >
+                            <option disabled selected>Select Class</option>
+                            @foreach ($class as $item)
+                                <option value="{{$item->pid}}" {{$data->class_pid == $item->pid ? 'selected' : ''}}>{{$item->class}}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                        <input type="hidden" name="pid" value="{{$data->pid}}">
                         <input type="hidden" name="category_pid" value="{{$data->category_pid}}">
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <label for="arm">Class Arm Name</label>
-                            <input type="text" name="arm[]" placeholder="class arm" value="{{$data->arm}}" class="form-control form-control-sm">
+                            <input type="text" name="arm" placeholder="class arm" value="{{$data->arm}}" class="form-control form-control-sm">
                             <p class="text-danger arm_error"></p>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="number">Class Arm Serial Number</label>
                             <div class="input-group mb-3">
-                                <select name="arm_number[]" id="classNumberSelect" class="form-control form-control-sm">
+                                <select name="arm_number" id="classNumberSelect" class="form-control form-control-sm">
                                     <option disabled selected>Select Class Number</option>
                                     @foreach(CLASS_NUMBER as $key=> $nm)
                                     <option value="{{$key}}" @if($key==$data->arm_number){{'selected'}} @endif>{{$nm}}</option>

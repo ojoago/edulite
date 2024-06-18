@@ -12,7 +12,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="post" id="termForm{{$data->pid}}">
+                    <form action="" method="post" id="createTermForm{{$data->pid}}">
                         @csrf
                         <input type="text" name="term" autocomplete="off" value="{{$data->term}}" class="form-control" placeholder="term e.g first term" required>
                         <input type="hidden" name="pid" value="{{$data->pid}}">
@@ -21,8 +21,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary createTermBtn" id="id{{$data->pid}}" pid="{{$data->pid}}">Update</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary createTermBtn btn-sm" id="createTermForm{{$data->pid}}" pid="{{$data->pid}}">Update</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

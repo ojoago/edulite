@@ -1,9 +1,9 @@
 @extends('layout.mainlayout')
-@section('title','lite')
+@section('title','Term Setup')
 @section('content')
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">School Terms</h5>
+        <h5 class="card-title">Term Setup</h5>
         <!-- Bordered Tabs Justified -->
         <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
             <li class="nav-item flex-fill" role="presentation">
@@ -35,7 +35,7 @@
                             <!-- <th>SN</th> -->
                             <th>Term</th>
                             <th>Description</th>
-                            <th>Date</th>
+                            {{-- <th>Date</th> --}}
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -95,27 +95,24 @@
 
 
 <!-- End Basic Modal-->
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {
        
         // validate signup form on keyup and submit
        
-        $(document).on('click', '.createTermBtn', function() {
-            let pid = $(this).attr('pid');
-            let formId = 'termForm' + pid;
-            let btnId = 'id' + pid;
-            submitFormAjax(formId, btnId, "{{route('school.term')}}");
-            $('#' + formId)[0].reset();
+        $(document).on('click','.createTermBtn', async function(){ 
+            let id = $(this).attr('pid')       
+           let s = await submitFormAjax('createTermForm'+id, 'createTermBtn'+id, "{{route('create.term')}}");
         })
         // load school session
         $('#term-dataTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+            // rowReorder: {
+            //     selector: 'td:nth-child(2)'
+            // },
+            
             responsive: true,
             "ajax": "{{route('school.list.term')}}",
             "columns": [{
@@ -124,9 +121,9 @@
                 {
                     "data": "description"
                 },
-                {
-                    "data": "created_at"
-                },
+                // {
+                //     "data": "created_at"
+                // },
                 {
                     "data": "action"
                 },
@@ -135,9 +132,9 @@
         $('#active-term-table').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+            // rowReorder: {
+            //     selector: 'td:nth-child(2)'
+            // },
             responsive: true,
             "ajax": "{{route('load.school.active.term')}}",
             "columns": [{

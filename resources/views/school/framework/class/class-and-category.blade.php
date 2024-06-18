@@ -50,7 +50,7 @@
                             <th>Category</th>
                             <th>Class</th>
                             <th>Status</th>
-                            <th>Date</th>
+                            {{-- <th>Date</th> --}}
                             <!-- <th>Created By</th> -->
                             <th>Action</th>
                         </tr>
@@ -130,7 +130,6 @@
 
 <!-- create class subject  -->
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {
@@ -177,9 +176,9 @@
                 {
                     "data": "status"
                 },
-                {
-                    "data": "created_at"
-                },
+                // {
+                //     "data": "created_at"
+                // },
                 // {
                 //     "data": "username"
                 // },
@@ -375,7 +374,7 @@
 
         $(document).on('click', '.updateClassArmBtn', function() {
             let pid = $(this).attr('pid');
-            submitFormAjax('editClassArmFrom' + pid, 'id' + pid, "{{route('update.class')}}");
+            submitFormAjax('editClassArmFrom' + pid, 'id' + pid, "{{route('update.class.arm')}}");
         });
 
 

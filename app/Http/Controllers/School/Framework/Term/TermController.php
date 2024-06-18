@@ -34,23 +34,24 @@ class TermController extends Controller
         ],['term.required'=>'Enter Term name','term.unique'=>$in.' already exists']);
    
         if(!$validator->fails()){
-            $data = [
-                'pid'=> $request->pid ?? public_id(),
-                'school_pid'=>getSchoolPid(),
-                'term'=>$request->term,
-                'description'=>$request->description,
-            ];
-            $result = $this->createOrUpdateTerm($data);
-            if ($result) {
-                if($request->pid){
+            try {
+                $data = [
+                    'pid' => $request->pid ?? public_id(),
+                    'school_pid' => getSchoolPid(),
+                    'term' => $request->term,
+                    'description' => $request->description,
+                ];
+                $result = $this->createOrUpdateTerm($data);
+                if ($result) {
 
-                    return response()->json(['status'=>1,'message'=>'Term Updated']);
+                        return response()->json(['status' => 1, 'message' => $request->pid ? 'Term Updated' : 'Term Created']);
                 }
-                return response()->json(['status'=>1,'message'=>'Term Created']);
 
+                return response()->json(['status' => 2, 'message' => 'failed to create term']);
+            } catch (\Throwable $e) {
+                logError($e->getMessage());
+                return response()->json(['status' => 'error', 'message' => 'Something Went Wrong... error logged']);
             }
-
-            return response()->json(['status'=>2,'message'=>'failed to create term']);
 
         }
 
