@@ -151,6 +151,7 @@ class FeeItemController extends Controller
         return $this->addDatatable($data);
     }
 
+
     public function loadStudentPaidInvoice(Request $request)
     {
 

@@ -17,8 +17,12 @@
                 <div class="card-header">Attendance</div>
                 <div class="card-body p-1">
                         <small class="h6">Present: {{$attendance->present}}</small> <br>
-                        <small class="h6">Absent: {{$attendance->absent}}</small>  <br> 
-                        <small class="h6">Excused: {{$attendance->excused}}</small>
+                        <div class="d-flex align-items-center">
+                            <small class="h6">Absent: {{$attendance->absent}}</small> &nbsp; 
+                            <small class="h6">Excused: {{$attendance->excused}}</small>
+
+                            </span>
+                        </div>
                 </div>
             </div>
         </div>
@@ -29,7 +33,7 @@
                 <div class="card-header">Result</div>
                 <div class="card-body p-1">
                     <a href="#">
-                        <h5 class="card-title">Results {{$result}}</span></h5>
+                        <h5 class="card-title"> {{$result}}</span></h5>
                         <div class="d-flex align-items-center">
                             
                             </span>
@@ -44,7 +48,7 @@
                 <div class="card-header">Invoice</div>
                 <div class="card-body p-1">
                     <a href="#">
-                        <h5 class="card-title">Click to</span></h5>
+                        <h5 class="card-title">{{$invoices}}</span></h5>
                         <div class="d-flex align-items-center">
 
                             </span>

@@ -280,8 +280,8 @@ function formatStudentProfile($row)
              <img src="' . $imgUrl . '" alt="Profile" class="rounded-circle"  style="max-height:200px !important;max-width:200px">
         </div>
                 <h1 class="ellipsis-text h6">' . $row->fullname . '</h1>
-                <h5>'. $row->arm. '</h5>
-                <h5>'. matchStudentStatus($row->status). '</h5></div>';
+                <h6 >'. $row->arm. '</h6>
+                <h6>'. matchStudentStatus($row->status). '</h6></div>';
             //     <div class="social-links mt-2">
             //         <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
             //         <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>

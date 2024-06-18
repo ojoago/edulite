@@ -118,15 +118,15 @@ class SchoolController extends Controller
 
                 }
                 if(schoolClerk()){
-                    return redirect()->route('student.dashboard');;
+                    return redirect()->route('admin.dashboard');;
 
                 }
                 if(schoolSecretary()){
-                    return redirect()->route('student.dashboard');;
+                    return redirect()->route('admin.dashboard');;
 
                 }
                 if(schoolPortal()){
-                    return redirect()->route('student.dashboard');;
+                    return redirect()->route('admin.dashboard');;
 
                 }
                 return $this->staffLogin();
@@ -250,10 +250,11 @@ class SchoolController extends Controller
                 'r.term_pid' => activeTerm(),
                 'r.session_pid' => activeSession()
             ])->first();
-           
-        return view('school.dashboard.student-dashboard', compact('data', 'attendance', 'result'));
 
-        return redirect()->route('student.login',['id'=>base64Encode($data->pid)]);
+        $invoices = DB::table('student_invoices as i')->join('class_invoice_params as p', 'p.pid', 'i.param_pid')->where([ 'i.student_pid'=>$data->pid , 'p.term_pid' =>activeTerm() , 'p.session_pid' => activeSession() ])->count('i.pid');
+
+        return view('school.dashboard.student-dashboard', compact('data', 'attendance', 'result', 'invoices'));
+
     }
     public function riderLogin(){
         $data = SchoolRider::where(['school_pid' => getSchoolPid(), 'user_pid' => getUserPid()])->first(['pid']);//->dd();
