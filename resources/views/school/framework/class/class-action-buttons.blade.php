@@ -28,7 +28,7 @@
                     </select>
                     <p class="text-danger category_pid_error"></p>
 
-                    <input type="text" name="pid[]" value="{{$data->pid}}">
+                    <input type="hidden" name="pid[]" value="{{$data->pid}}">
                     <div class="row">
                         <div class="col-md-7">
                             <input type="text" name="class[]" placeholder="class e.g JSS 1" value="{{$data->class}}" class="form-control form-control-sm" required>

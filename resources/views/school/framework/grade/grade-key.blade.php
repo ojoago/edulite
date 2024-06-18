@@ -379,7 +379,7 @@
         $('#createGradeKeyBtn').click(async function() {
             let s = await submitFormAjax('createGradeKeyForm', 'createGradeKeyBtn', "{{route('school.grade.key')}}");
             if(s.status == 1){
-                loadGradeKey()
+                // loadGradeKey()
             }
         });
 
