@@ -146,9 +146,10 @@ class SchoolController extends Controller
 
 
     public function adminDashboard(){
-        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
-        $students = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
-        $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count('id');
+        $students = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->count('id');
+        // $gender = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->groupBy('gender')->count('id');
+        $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count('id');
         $parents = DB::table('school_parents as p') ->join('students as s', 's.parent_pid', 'p.pid')
             ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->distinct('p.pid')->count('p.id');
         $data = ['staff' => $staff, 'students' => $students, 'riders' => $riders, 'parents' => $parents];
@@ -394,6 +395,8 @@ class SchoolController extends Controller
             logError($error);
         }
     }
+
+
     public static function createSchoolStudent($data){
         try {
             self::createSchoolUser(userId: $data['user_pid'], pid: $data['pid'], role: '600');
@@ -423,6 +426,8 @@ class SchoolController extends Controller
             logError($error);
         }
     }
+
+
     public static function createSchoolRider($data){
         try {
             self::createSchoolUser(userId: $data['user_pid'], pid: $data['pid'], role: '610');
@@ -437,12 +442,15 @@ class SchoolController extends Controller
         }
     }
 
+
     public function schoolHandle()
     {
         $id = $this->countSchool() + 1;
         $id = strlen($id) == 1 ? '0' . $id : $id;
         return strtoupper(date('yM')) . $id;
     }
+
+
     public function countSchool()
     {
         return School::where('school_handle', 'like', '%' . date('yM') . '%')->count('id');
@@ -452,6 +460,7 @@ class SchoolController extends Controller
     {
         return School::where(['pid' => getSchoolPid()])->pluck('school_handle')->first();
     }
+
     public static function getSchoolCode()
     {
         return School::where(['pid' => getSchoolPid()])->pluck('school_code')->first();

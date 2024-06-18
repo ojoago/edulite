@@ -31,8 +31,8 @@
                             <th>Title</th>
                             <th>Min Score</th>
                             <th>Max Score</th>
-                            <th>Grade Point</th>
-                            <th>Remark</th>
+                            {{-- <th>Grade Point</th>
+                            <th>Remark</th> --}}
                             {{-- <th>Date</th> --}}
                             <!-- <th>Action</th> -->
                         </tr>
@@ -246,12 +246,12 @@
                 {
                     "data": "max_score"
                 },
-                {
-                    "data": "grade_point"
-                },
-                {
-                    "data": "remark"
-                },
+                // {
+                //     "data": "grade_point"
+                // },
+                // {
+                //     "data": "remark"
+                // },
                 // {
                 //     "data": "created_at"
                 // },
