@@ -13,7 +13,7 @@ class Student extends Model
         'reg_number', 'user_pid', 'pid', 'type', 'school_pid', 'status',
         'passport', 'address', 'date', 'title', 'fullname',
         'admitted_class', 'current_session_pid', 'address', 'religion', 'session_pid','parent_pid',
-        'current_class_pid', 'admitted_term', 'admitted_session_pid','gender',
+        'current_class_pid', 'admitted_term', 'admitted_session_pid','gender', 'height' , 'weight'
     ];
 
 
@@ -24,6 +24,7 @@ class Student extends Model
             set: fn ($value) => strtoupper($value) 
         );
     }
+
     protected function fullname() : Attribute
     {
         return new Attribute(

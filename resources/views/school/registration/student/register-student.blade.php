@@ -54,7 +54,7 @@
             </div>
             <div class="col-md-4">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control form-control-sm" id="email" name="email" placeholder="e.g eulite@gmail.com">
+                <input type="email" class="form-control form-control-sm" id="email" name="email" placeholder="e.g edulite@gmail.com">
             </div>
             <div class="col-md-4">
                 <label for="gender" class="form-label">Gender <small class="text-danger">*</small></label>
@@ -80,7 +80,7 @@
                 </select>
                 <p class="text-danger religion_error"></p>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <label for="type" class="form-label">Student Type <small class="text-danger">*</small></label>
                 <select name="type" class="form-control  form-control-sm" id="studentType" required>
                     @if(getSchoolType()==1)
@@ -96,17 +96,28 @@
                 </select>
                 <p class="text-danger type_error"></p>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label for="state" class="form-label small">State Of Origin <small class="text-danger">*</small></label>
                 <select id="stateSelect2" value="1" name="state" class="form-control form-control-sm" style="width: 100%;">
                 </select>
                 <p class="text-danger state_error"></p>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label for="inputCity" class="form-label small">LGA <small class="text-danger">*</small></label>
                 <select id="lgaSelect2" value="1" name="lga" class="form-control form-control-sm select2" style="width: 100%;">
                 </select>
                 <p class="text-danger lga_error"></p>
+            </div>
+
+            <div class="col-md-4">
+                <label for="parent_pid" class="form-label small">Height</label>
+                <input type="number" step=".5" class="form-control form-control-sm" id="height" placeholder="Enter Height"  name="height" required>
+                <p class="text-danger height_error"></p>
+            </div>
+            <div class="col-md-4">
+                <label for="parent_pid" class="form-label small">Weight</label>
+                <input type="number" step=".5" class="form-control form-control-sm" id="weight"  placeholder="Enter Weight" name="weight" required>
+                <p class="text-danger weight_error"></p>
             </div>
             <div class="col-md-4">
                 <label for="parent_pid" class="form-label small">Parent/Guardian</label>
@@ -117,6 +128,8 @@
                 </div>
                 <p class="text-danger parent_pid_error"></p>
             </div>
+
+
             <div class="col-md-12">
                 <label for="address" class="form-label">Address <small class="text-danger">*</small></label>
                 <textarea type="text" class="form-control form-control-sm" id="address" name="address" placeholder="e.g no 51  offeoke"></textarea>
@@ -239,6 +252,8 @@
                     $('#username').val(data.username) //.attr('disabled', true);
                     $('#email').val(data.email);
                     $('#dob').val(data.dob);
+                    $('#weight').val(data.weight);
+                    $('#height').val(data.height);
                     $('#address').val(data.address);
                     $('#user_pid').val(data.user_pid);
                     $('#pid').val(data.pid);

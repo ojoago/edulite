@@ -396,6 +396,8 @@ class StudentController extends Controller
             $student = [
                 'gender' => $request->gender,
                 'dob' => $request->dob,
+                'height' => $request->height,
+                'weight' => $request->weight,
                 'religion' => $request->religion,
                 'state' => $request->state,
                 'lga' => $request->lga,

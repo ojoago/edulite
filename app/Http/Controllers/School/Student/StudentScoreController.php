@@ -217,7 +217,7 @@ class StudentScoreController extends Controller
     }
 
     private function processStudentScore($data){
-        logError($data);
+        // logError($data);
         $dupParams = $data;
         unset($dupParams['score']);
         try {
