@@ -286,9 +286,10 @@ class StudentController extends Controller
 
     public static function studentUniqueId()
     {
-        $id = sprintNumber(self::countStudent() + 1);
+        $pattern = date('y') . MONTH_CODE[date('m')];
+        $id = sprintNumber(self::countStudent($pattern) + 1);
         // $id = strlen($id) == 1 ? '0' . $id : $id;
-        return (SchoolController::getSchoolCode() ?? SchoolController::getSchoolHandle()) . '/' . strtoupper(date('yM')) . $id; // concatenate shool handle with student id
+        return (SchoolController::getSchoolCode() ?? SchoolController::getSchoolHandle()) . '/' . $pattern . $id; // concatenate shool handle with student id
     }
     public static function getStudentDetailBypId($pid)
     {
@@ -298,10 +299,10 @@ class StudentController extends Controller
                 ->where(['s.pid' => $pid, 's.school_pid' => getSchoolPid()])->first();
         return $data;
     }
-    public static function countStudent()
+    public static function countStudent($pattern)
     {
         return Student::where(['school_pid' => getSchoolPid()])
-            ->where('reg_number', 'like', '%' . date('yM') . '%')->count('id');
+            ->where('reg_number', 'like', '%' .$pattern . '%')->count('id');
     }
 
 

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('chart')->default('line');
             $table->string('title')->default('Continuous Assessment');
             $table->string('template')->default('default');
-            $table->tinyInteger('grading')->default(1)->comment('1:position, 2:average, 3:cgpa');
+            $table->tinyInteger('grading')->default(1)->comment('1:position, 2:average, 3:cgpa, 4:none');
             $table->tinyInteger('subject_position')->default(0);
             $table->tinyInteger('subject_teacher')->default(0);
         });
@@ -37,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('configs');
+        Schema::dropIfExists('result_configs');
     }
 };

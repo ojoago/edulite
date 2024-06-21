@@ -5,10 +5,11 @@ namespace App\Http\Controllers\School\Student\Assessment\Psychomotor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\School\Student\Student;
-use App\Models\School\Framework\Psycho\Psychomotor;
+use App\Models\School\Student\Result\StudentClassResult;
 use App\Http\Controllers\School\Framework\ClassController;
-use App\Models\School\Framework\Psychomotor\PsychomotorBase;
+use App\Http\Controllers\School\Student\StudentScoreController;
 use App\Models\School\Framework\Psychomotor\PsychomotorKey;
+use App\Models\School\Framework\Psychomotor\PsychomotorBase;
 use App\Models\School\Student\Assessment\Psychomotor\PsychomotorRecord;
 
 class RecordPsychomotorController extends Controller
@@ -119,20 +120,39 @@ class RecordPsychomotorController extends Controller
 
     public function recordPsychomotorScore(Request $request){
         $data = [
-            'student_pid'=>$request->student_pid,
-            'key_pid'=>$request->key_pid,
-            'score'=>$request->score,
-            'school_pid'=>getSchoolPid(),
-            'class_param_pid'=>$request->param
+            'student_pid' => $request->student_pid,
+            'key_pid' => $request->key_pid,
+            'score' => $request->score,
+            'school_pid' => getSchoolPid(),
+            'class_param_pid' => $request->param
         ];
+        try {
 
-        $dupParams = $data;
-        unset($dupParams['score']);
-        $result = PsychomotorRecord::updateOrCreate($dupParams,$data);
-        if($result){
-            return 'Score recorded';
+            $dupParams = $data;
+            unset($dupParams['score']);
+            $result = PsychomotorRecord::updateOrCreate($dupParams, $data);
+            if ($result) {
+                $param = [
+                    'class_param_pid' => $data['class_param_pid'],
+                    'student_pid' => $data['student_pid'],
+                    // 'total' => 0,
+                    'school_pid' => $data['school_pid']
+                ];
+                $exists = StudentClassResult::where($param)->exists();
+                // logError($exists);
+                if (!$exists) {
+                    $param['total'] = 0;
+                    StudentScoreController::computeClassResultForNonExaminableClass($param);
+                }
+
+                return 'Score recorded';
+            }
+            return 'Score not recorded';
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return 'Something Went Wrong... error logged';
         }
-        return 'Score not recorded';
+        
     }
     /**
      * Remove the specified resource from storage.

@@ -29,7 +29,7 @@
                             <th>Extra Curricular Names</th>
                             <th>Obtainable Score</th>
                             <th>Grade Style</th>
-                            <th>Description</th>
+                            {{-- <th>Description</th> --}}
                             {{-- <th>Status</th> --}}
                             {{-- <th>Date</th> --}}
                            
@@ -50,9 +50,10 @@
                         </select>
                     </div>
                 </div>
-                <table class="table table-hover table-striped cardTable" id="psychomotorKeyDataTable" width="100%">
+                <table class="table table-hover table-striped table-bordered cardTable" id="psychomotorKeyDataTable" width="100%">
                     <thead>
                         <tr>
+                            <th width="5%" >S/N</th>
                             <th>Extra Curricular</th>
                             <th>Title</th>
                             {{-- <th>Score</th> --}}
@@ -89,7 +90,7 @@
 
 <!-- create psycho Base modal  -->
 <div class="modal fade" id="createPsychomotorBaseModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title h6">Create Extra Curricular Name</h5>
@@ -110,9 +111,10 @@
                             <label for="">Grade System</label>
                             <select type="text" name="grade" class="form-control form-control-sm" required>
                                 <option disabled selected> Select Grade</option>
-                                <option >Number</option>
-                                <option >Alphabet</option>
-                                <option >Checked</option>
+                                <option value="1" >Number</option>
+                                <option value="2" >Alphabet</option>
+                                <option value="3" >Checked</option>
+                                <option value="4" >Sentence</option>
                             </select>
                             <p class="text-danger grade_error"></p> 
                         </div>
@@ -120,21 +122,29 @@
                     <div class="row">
                         <div class="col-md-7">
                             <label for="">Extra Curricular Name</label>
-                            <input type="text" name="psychomotor" class="form-control form-control-sm" placeholder="Create Base Psychomotor">
+                            <input type="text" name="psychomotor[]" class="form-control form-control-sm" placeholder="Create Base Psychomotor">
                             <p class="text-danger psychomotor_error"></p>
                         </div>
                         <div class="col-md-5">
                             <label for="">Maximum Score</label>
-                            <input type="number" name="score" class="form-control form-control-sm" placeholder="obtainable score" required>
+                            <div class="input-group">
+                                <input type="number" name="score[]" class="form-control form-control-sm" placeholder="obtainable score" required>
+                                <i class="bi bi-x-circle-fill text-danger hidden-item mx-1"></i>
+                            </div>
                             <p class="text-danger score_error"></p> 
                         </div>
                     </div>
+
+                     <div id="moreExtra"></div>
+                    <button id="addMoreExtra" type="button" class="btn btn-danger btn-sm btn-sm m-1">Add More</button>
                     
-                    <label for="">Description</label>
+
+                    {{-- <label for="">Description</label>
                     <textarea type="text" name="description" class="form-control form-control-sm" placeholder="Description"></textarea>
-                    <p class="text-danger description_error"></p>
+                    <p class="text-danger description_error"></p> --}}
                     
                 </form>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-sm" id="createPsychomotorBaseBtn">Submit</button>
@@ -233,6 +243,31 @@
 
 <script>
     $(document).ready(function() {
+        $('#addMoreExtra').click(function(){
+            $('#moreExtra').append(`
+                 <div class="row">
+                        <div class="col-md-7">
+                            <label for="">Extra Curricular Name</label>
+                            <input type="text" name="psychomotor[]" class="form-control form-control-sm" placeholder="Create Base Psychomotor">
+                            <p class="text-danger psychomotor_error"></p>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="">Maximum Score</label>
+                            <div class="input-group">
+                                <input type="number" name="score[]" class="form-control form-control-sm" placeholder="obtainable score" required>
+                                <i class="bi bi-x-circle-fill text-danger pointer removeExtraKey mx-1"></i>
+                            </div>
+                            <p class="text-danger score_error"></p> 
+                        </div>
+                    </div>
+            `)
+        })
+
+         $(document).on('click', '.removeExtraKey', function() {
+            $(this).parent().parent().parent().remove();
+        });
+
+
         $('#addMoreKey').click(function(){
             $('#moreKeys').append(`
                 <div class="form-group">
@@ -285,9 +320,9 @@
                 {
                     "data": "grade"
                 },
-                 {
-                    "data": "description"
-                },
+                //  {
+                //     "data": "description"
+                // },
                 // {
                 //     "data": "created_at"
                 // },
@@ -413,7 +448,13 @@
                     pid: pid
                 }
             },
-            "columns": [{
+            "columns": [
+                
+                {
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                    },
+                {
                     "data": "psychomotor"
                 },
                 {
@@ -435,6 +476,29 @@
                 //     "data": "action"
                 // },
             ],
+            "columnDefs": [{
+                    "visible": false,
+                    "targets": 1
+                }],
+                "drawCallback": function(settings) {
+                    var api = this.api();
+                    var rows = api.rows({
+                        page: 'current'
+                    }).nodes();
+                    var last = null;
+
+                    api.column(1, {
+                        page: 'current'
+                    }).data().each(function(group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="5"><b>' + group + '</b></td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
         });
     }
 </script>

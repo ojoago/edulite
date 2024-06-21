@@ -11,7 +11,6 @@ use App\Http\Controllers\School\Student\StudentController;
 use App\Models\School\Framework\Psychomotor\PsychomotorBase;
 use App\Models\School\School;
 use App\Models\School\Student\Result\StudentClassResultParam;
-use App\Models\School\Student\Result\StudentClassScoreParam;
 
 class StudentTermlyResultController extends Controller
 {
@@ -33,16 +32,16 @@ class StudentTermlyResultController extends Controller
         $result = self::studentResultParams($data);
         $data = $result['data'];
         $class = $result['class'];
-        // $param = $result['param'];
-        return view('school.student.result.termly-result.view-termly-result', compact('data', 'class',));
+        $subjects = $result['subjects'];
+        return view('school.student.result.termly-result.view-termly-result', compact('data', 'class', 'subjects'));
     }
 
     public static function studentResultParams(array $data)
     {
         $class = DB::table('student_class_result_params')->where($data)->pluck('pid')->first();
         $dtl = DB::table('student_class_results as r')
-                    ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
                     ->join('students as s','s.pid','r.student_pid')
+                    ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
                     ->select(DB::raw('distinct(r.student_pid),reg_number,fullname,
                                         class_teacher_comment,principal_comment,
                                         portal_comment,r.class_param_pid,r.total'))
@@ -71,11 +70,19 @@ class StudentTermlyResultController extends Controller
             rn.class_param_pid
             '))->groupBy('sr.student_pid')->orderBy('position')
             ->where(['sr.class_param_pid' => $class, 'seated' => 1])->get();//->dd();
+
+        $subjects = true;
+        if($result->empty()){
+            $result = DB::table('student_class_results as r')
+                ->join('students as s', 's.pid', 'r.student_pid')
+                ->where('r.class_param_pid', $class)->select('reg_number','fullname','class_teacher_comment','principal_comment','portal_comment', 'total', 'class_param_pid', 'student_pid')->get();//->dd();
+            $subjects = false;
+        }
         $className = ClassController::getClassArmNameByPid($data['arm_pid']);
         return [
             'class' => $className,
             'data' => $result,
-            // 'param' => $param
+            'subjects' => $subjects
         ];
     }
 
@@ -161,13 +168,13 @@ class StudentTermlyResultController extends Controller
                 // individual student result and class position 
                 $dtl = DB::table('student_class_results as r')
                     ->join('student_class_result_params as p', 'p.pid', 'r.class_param_pid')
-                    ->leftjoin('school_staff as stf', 'stf.pid', 'p.principal_pid')
-                    ->leftjoin('user_details as d', 'd.user_pid', 'stf.user_pid')
+                    // ->leftjoin('school_staff as stf', 'stf.pid', 'p.principal_pid')
+                    // ->leftjoin('user_details as d', 'd.user_pid', 'stf.user_pid')
                     ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
                     ->join('students as s', 's.pid', 'r.student_pid')
                     ->select(DB::raw('distinct(r.student_pid),reg_number,s.fullname as student_name,type,
                                         class_teacher_comment,principal_comment,
-                                        portal_comment,r.class_param_pid,r.total,d.fullname as principal,p.status as exam_status'))
+                                        portal_comment,r.class_param_pid,r.total,principal_name,teacher_name,p.status as exam_status'))
                     ->where('r.class_param_pid', $param); //->get()->dd();
                 $rank = DB::table('student_class_results as r')
                     ->joinSub($dtl, 'dtl', function ($dt) {
@@ -175,7 +182,7 @@ class StudentTermlyResultController extends Controller
                     })->select(DB::raw('r.student_pid,r.total,
                                 RANK() OVER (ORDER BY r.total DESC) AS position,
                                 reg_number,student_name,type, dtl.class_teacher_comment,dtl.principal_comment,
-                                dtl.portal_comment,r.class_param_pid,principal,exam_status'))
+                                dtl.portal_comment,r.class_param_pid,principal_name,exam_status,teacher_name'))
                     ->groupBy('r.student_pid')
                     ->orderBy('r.total', 'DESC')
                     ->groupBy('r.total')
@@ -188,17 +195,17 @@ class StudentTermlyResultController extends Controller
                     rn.total,position,
                     rn.student_pid,reg_number,type, student_name,rn.class_teacher_comment, 
                     rn.principal_comment,rn.portal_comment,
-                    rn.class_param_pid,principal,exam_status'
+                    rn.class_param_pid,principal_name,exam_status,teacher_name'
                 ))->groupBy('sr.student_pid')->orderBy('position')
                     ->where(['sr.class_param_pid' => $param, 'seated' => 1]); //->get()->dd();
                 $results = DB::table('student_class_results as r')
                     ->join('student_class_result_params  as srp', 'srp.pid', 'r.class_param_pid')
-                    ->join('terms as t', 't.pid', 'srp.term_pid')
-                    ->join('sessions as s', 's.pid', 'srp.session_pid')
-                    ->join('class_arms as a', 'a.pid', 'srp.arm_pid')
+                    // ->join('terms as t', 't.pid', 'srp.term_pid')
+                    // ->join('sessions as s', 's.pid', 'srp.session_pid')
+                    // ->join('class_arms as a', 'a.pid', 'srp.arm_pid')
                     ->leftjoin('school_staff as st', 'st.pid', 'srp.teacher_pid')
                     ->leftjoin('user_details as d', 'd.user_pid', 'st.user_pid')
-                    ->join('active_term_details as atm', function ($join) {
+                    ->join('active_term_details as atm', function ($join) { // term begin / term end details
                         $join->on('atm.term_pid', 'srp.term_pid')->on('atm.session_pid', 'srp.session_pid');
                     })
                     // ->leftJoin('attendances as ad','')
@@ -207,7 +214,7 @@ class StudentTermlyResultController extends Controller
                     })->leftjoin('attendance_records as ar', function ($join) {
                         $join->on('srp.term_pid', 'ar.term_pid')->on('srp.session_pid', 'ar.session_pid');
                     })->leftjoin('attendances as an', 'an.record_pid', 'ar.pid')
-                    ->select(DB::raw("rs.*,d.fullname as class_teacher,st.signature,t.term,s.session,a.arm,atm.begin,atm.end,rs.student_pid,
+                    ->select(DB::raw("rs.*,st.signature,term,session,arm,atm.begin,atm.end,rs.student_pid,
                                 COUNT(CASE WHEN an.status = 1 THEN 'Present' END) as 'present',
                                 COUNT(CASE WHEN an.status = 2 THEN 'Excused' END) as 'excused',
                                     COUNT(CASE WHEN an.status = 0 THEN 'Absent' END) as 'absent'
@@ -227,20 +234,43 @@ class StudentTermlyResultController extends Controller
                     if (!$results->class_teacher_comment || ($results->class_teacher_comment && $results->exam_status == 1)) {
                         $results->class_teacher_comment = $this->getClassTeacherComment($results->class_param_pid, $results->average);
                     }
+                }else{
+                    $results = DB::table('student_class_results as r')
+                        ->join('student_class_result_params  as srp', 'srp.pid', 'r.class_param_pid')
+                        // ->join('terms as t', 't.pid', 'srp.term_pid')
+                        // ->join('sessions as s', 's.pid', 'srp.session_pid')
+                        // ->join('class_arms as a', 'a.pid', 'srp.arm_pid')
+                        ->leftjoin('school_staff as st', 'st.pid', 'srp.teacher_pid')
+                        ->leftjoin('user_details as d', 'd.user_pid', 'st.user_pid')
+                        ->join('active_term_details as atm', function ($join) {// term begin and term end details
+                            $join->on('atm.term_pid', 'srp.term_pid')->on('atm.session_pid', 'srp.session_pid');
+                        })
+                        ->join('students as s', 's.pid', 'r.student_pid')
+                        
+                        ->where(['r.class_param_pid' => $param , 'r.student_pid' => $spid])
+                        ->select('term', 'session' , 'arm', 'teacher_name', 'principal_name', 'portal_name', 'reg_number', 's.fullname', 'class_teacher_comment', 'principal_comment', 'portal_comment', 'total', 'class_param_pid', 'student_pid')->first();
                 }
 
 
+
+
                 // dd($results);
+
                 $psycho = PsychomotorBase::where(['school_pid' => getSchoolPid()])
-                    ->get(['psychomotor', 'pid']);
+                    ->get(['psychomotor', 'pid']);//->dd();
+
                 $school = School::where('pid', getSchoolPid())
                     ->first(['school_email', 'school_website', 'school_logo', 'school_moto', 'school_address', 'school_contact']);
                 $grades = DB::table('grade_keys AS g')->where('class_param_pid', $param)->get(['grade', 'title', 'min_score', 'max_score']);
             }
-            return view('school.student.result.termly-result.student-report-card', compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'results', 'grades', 'school'));
+            $basePath = 'school.student.result.';
+            $path = 'termly-result.student-report-card';
+            $path = 'ais.creche';
+            return view($basePath.$path, compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'results', 'grades', 'school'));
 
      } catch (\Throwable $e) {
         logError($e->getMessage());
+        dd($e);
      }
     }
 

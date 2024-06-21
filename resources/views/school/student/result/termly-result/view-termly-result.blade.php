@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h5 class="card-title">{{$class}} <small>Result</small></h5>
-                    <p> <i class="bi bi-calendar-event-fill"></i> {{termName(session('term'))}} {{sessionName(session('session'))}}</p>
+                    <p> <i class="bi bi-calendar-event-fill"></i> {{termName(session('term_pid'))}} {{sessionName(session('session_pid'))}}</p>
                 </div>
                 <div class="col-md-6">
                     <form action="{{route('change.arm.subject')}}" method="post">
@@ -37,7 +37,8 @@
             <!-- Primary Color Bordered Table -->
             <table class="table table-bordered border-primary cardTable" id="resultTable">
                 <thead>
-                    <tr>
+                    @if ($subjects)
+                        <tr>
                         <th scope="col">S/N</th>
                         <th scope="col">Position</th>
                         <th scope="col">Reg-Number</th>
@@ -51,23 +52,50 @@
                         <th scope="col">Portal's Comment</th>
                         @endif
                     </tr>
+                    @else
+                    <tr>
+                        <th scope="col">S/N</th>
+                        <th scope="col">Reg-Number</th>
+                        <th scope="col">Names</th>
+                        <th scope="col">Class Teacher's Comment</th>
+                        <th scope="col">Principal's Comment</th>
+                        @if(getSchoolType()!=1)
+                        <th scope="col">Portal's Comment</th>
+                        @endif
+                    </tr>
+                    @endif
+                    
                 </thead>
                 <tbody>
                     @foreach($data as $row)
-                    <tr class="studentId">
+                    
+                    @if ($subjects)
+                        <tr class="studentId">
                         <td>{{$loop->iteration}}</td>
-                        <td>{{ordinalFormat($row->position)}}</td>
+                        <td>{{ordinalFormat(@$row->position)}}</td>
                         <td> <a href="{{ route('student.report.card',['param'=>$row->class_param_pid,'pid'=>$row->student_pid])}}" target="_blank" rel="noopener noreferrer">{{$row->reg_number}}</a></td>
                         <td>{{$row->fullname}}</td>
-                        <td>{{$row->count}}</td>
+                        <td>{{@$row->count}}</td>
                         <td>{{number_format($row->total,2)}}</td>
-                        <td>{{number_format($row->average,1)}}</td>
+                        <td>{{number_format(@$row->average,1)}}</td>
                         <td>{{--$row->class_teacher_comment--}}</td>
                         <td>{{--$row->principal_comment--}}</td>
                         @if(getSchoolType()!=1)
                         <td>{{--$row->portal_comment--}}</td>
                         @endif
                     </tr>
+                    @else
+                        <tr class="studentId">
+                        <td>{{$loop->iteration}}</td>
+                        <td> <a href="{{ route('student.report.card',['param'=>$row->class_param_pid,'pid'=>$row->student_pid])}}" target="_blank" rel="noopener noreferrer">{{$row->reg_number}}</a></td>
+                        <td>{{$row->fullname}}</td>
+                        <td>{{--$row->class_teacher_comment--}}</td>
+                        <td>{{--$row->principal_comment--}}</td>
+                        @if(getSchoolType()!=1)
+                        <td>{{--$row->portal_comment--}}</td>
+                        @endif
+                    </tr>
+                    @endif
                     @endforeach
                 </tbody>
 

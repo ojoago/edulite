@@ -5,15 +5,20 @@
     <div class="card">
         
         <div class="card-body">
-            @if(isset($params))
-            <h5 class="card-title m-0 ">{{$params['arm']}} <small>{{$base->psychomotor}}</small> <i class="bi bi-calendar-event-fill"></i> {{activeTermName()}} {{activeSessionName()}}</h5>
-            @endif
-            <div class="float-end">
-                <button class="btn btn-primary btn-sm" type="button" data-bs-target="#filterModal" data-bs-toggle="modal" >Filter</button>
-            </div>
+            <h5 class="card-title m-0 ">
+                @if(isset($params))
+                {{$params['arm']}} <small>{{$base->psychomotor}}</small> <i class="bi bi-calendar-event-fill"></i> {{activeTermName()}} {{activeSessionName()}}
+            
+                @endif
+                <div class="float-end">
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-target="#filterModal" data-bs-toggle="modal" >Filter</button>
+                </div>
+            </h5>
             <!-- Primary Color Bordered Table -->
             @if(isset($psycho))
-            <table class="table table-bordered border-primary cardTable" id="scoreTable">
+            
+                <div class="table-responsive">
+                    <table class="table table-bordered border-primary cardTable" id="scoreTable">
                 <thead>
                     <tr>
                         <th width="5%">S/N</th>
@@ -35,19 +40,20 @@
                         <form>
                             @csrf
                             @foreach($psycho as $row)
-                            <td scope="col"><input type="number" value="{{getPsychoKeyScore(student:$student->pid,param:$params['param'],key:$row->pid)}}" step="0.01" class="form-control form-control-sm studentPsycho" id="{{$row->pid}}" placeholder="max obtainable {{$base->score}}" max_score="{{$base->score}}"> </td>
+                            <td scope="col"><input type="number" value="{{getPsychoKeyScore(student:$student->pid,param:$params['param'],key:$row->pid)}}" step="0.01" class="form-control form-control-sm studentPsycho" key="{{$row->pid}}" id="{{$student->pid}}{{$row->pid}}" placeholder="max obtainable {{$base->score}}" max_score="{{$base->score}}"> </td>
                             @endforeach
                     </tr>
                     @endforeach
                 </tbody>
-                <tbody>
+                {{-- <tfoot>
                     <td colspan="{{$psycho->count()+2}}"></td>
                     <td colspan="2">
-                        <button type="button" class="btn btn-primary">Confirm</button>
                     </td>
-                </tbody>
-                </form>
-            </table>
+                </tfoot> --}}
+            </form>
+        </table>
+        </div>
+        <button type="button" class="btn btn-primary">Confirm</button>
             @else
             <h4>Click On filter to select class</h4>
             @endif
@@ -105,11 +111,14 @@
             "info": false,
             "searchable": false,
         });
+
+
         $('.studentPsycho').change(function() {
             var score = $(this).val(); //CA score
-            var key = $(this).attr('id'); //CA score
+            var key = $(this).attr('key'); //CA score
             var max = $(this).attr('max_score'); //CA score
             var spid = $(this).closest('tr').attr('id'); // student pid 
+            // alert(spid)
             var token = $("input[name='_token']").val();
             if (max >= score) {
                 $.ajax({
@@ -126,9 +135,10 @@
                         // showTipMessage(data)
                     },
                     error: function(data) {
+                        // alert(data)
                         showTipMessage('Last Score not saved!!!');
                     }
-                });
+                })
             } else {
                 showTipMessage('Maximum Score ' + max);
                 $(this).val('');

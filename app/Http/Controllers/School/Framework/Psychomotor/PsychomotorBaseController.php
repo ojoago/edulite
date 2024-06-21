@@ -50,33 +50,35 @@ class PsychomotorBaseController extends Controller
         }
         
         return datatables($data)
-            ->editColumn('created_at', function ($data) {
-                return date('d F Y', strtotime($data->created_at));
-            })
-            ->editColumn('status', function ($data) {
-                return $data->status == 1 ? '<span class="text-success">Enabled</span>' : '<span class="text-danger">Disabled</span>';
-            })
-            ->rawColumns(['data', 'status'])
+        ->addIndexColumn()
+            // ->editColumn('created_at', function ($data) {
+            //     return date('d F Y', strtotime($data->created_at));
+            // })
+            // ->editColumn('status', function ($data) {
+            //     return $data->status == 1 ? '<span class="text-success">Enabled</span>' : '<span class="text-danger">Disabled</span>';
+            // })
+            // ->rawColumns(['data', 'status'])
             ->make(true);
     }
 
 
     public function createPsychomotorBase(Request $request){
         $validator = Validator::make($request->all(), [
-            'psychomotor' => [
+            'psychomotor.*' => [
                             'required',
                             'max:30',
                             "regex:/^[a-zA-Z0-9,'\s]+$/",
-                            Rule::unique('psychomotor_bases')->where(function($param) use ($request){
-                                $param->where('school_pid',getSchoolPid())->where('pid','<>',$request->pid)->where('category_pid',$request->category);
-                            }
-                        )],
+                        //     Rule::unique('psychomotor_bases')->where(function($param) use ($request){
+                        //         $param->where('school_pid',getSchoolPid())->where('pid','<>',$request->pid)->where('category_pid',$request->category);
+                        //     }
+                        // )
+                    ],
             'category'=>'required' ,
             'grade'=>'required' ,
-            'score'=> 'required|numeric|digits_between:1,5'
+            'score.*'=> 'required|numeric|digits_between:1,5'
         ], [
             'psychomotor.max' => 'Maximum of 30 character',
-            'psychomotor.unique' => $request->psychomotor.' Already Exist',
+            // 'psychomotor.unique' => $request->psychomotor.' Already Exist',
             'psychomotor.regex' => 'only number and text is allowed',
         ]);
 
@@ -84,16 +86,25 @@ class PsychomotorBaseController extends Controller
 
             try {
                 $data = [
-                    'psychomotor' => $request->psychomotor ,
-                    'description' => $request->description ,
-                    'obtainable_score' => $request->score ,
-                    'grade' => $request->grade ,
-                    'category_pid' => $request->category ,
-                    'pid' => public_id() ,
-                    'school_pid' => getSchoolPid() ,
+                    // 'psychomotor' => $request->psychomotor,
+                    // 'description' => $request->description,
+                    // 'obtainable_score' => $request->score,
+                    'grade' => $request->grade,
+                    'category_pid' => $request->category,
+                    'pid' => public_id(),
+                    'school_pid' => getSchoolPid(),
                     'staff_pid' => getSchoolUserPid()
                 ];
-                $result = $this->createOrUpdatePsychomotorBase($data);
+
+                $count = count($request->psychomotor);
+
+                for ($i=0; $i < $count ; $i++) { 
+                    $data['pid'] = public_id();
+                    $data['psychomotor'] = $request->psychomotor[$i];
+                    $data['obtainable_score'] = $request->score[$i];
+                    $result = $this->createOrUpdatePsychomotorBase($data);
+                }
+                
                 if ($result) {
                     $msg = 'Psychomotor created successfully';
                     if ($request->pid) {
@@ -129,8 +140,8 @@ class PsychomotorBaseController extends Controller
             'title.*' => 
                         [
                             'required',
-                            'max:30',
-                            "regex:/^[a-zA-Z0-9,'\s]+$/",
+                            // 'max:30',
+                            "regex:/^[a-zA-Z0-9-._,'\s]+$/",
                             // Rule::unique('psychomotor_keys')->where(function($param) use($request){
                             //     $param->where([
                             //                 'school_pid'=>getSchoolPid(),

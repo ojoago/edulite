@@ -216,6 +216,11 @@ class StudentScoreController extends Controller
         }
     }
 
+    // this only applies to students that do not write subject exams. especial creche that onle do extra curicula
+    public static function computeClassResultForNonExaminableClass(array $data){
+        return (new self)->recordStudentTotal($data);
+    }
+
     private function processStudentScore($data){
         // logError($data);
         $dupParams = $data;

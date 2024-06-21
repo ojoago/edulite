@@ -29,8 +29,8 @@ class TeacherCommentResultController extends Controller
         $result = StudentTermlyResultController::studentResultParams($data);
         $data = $result['data'];
         $class = $result['class'];
-        // $param = $result['param'];
-        return view('school.student.result.comments.teacher.teacher-comment', compact('data', 'class'));
+        $subjects = $result['subjects'];
+        return view('school.student.result.comments.teacher.teacher-comment', compact('data', 'class','subjects'));
     }
 
     public function loadTeacherAutomatedComment()

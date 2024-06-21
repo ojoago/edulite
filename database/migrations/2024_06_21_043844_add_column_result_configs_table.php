@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('students', function (Blueprint $table) {
-            $table->string('height')->nullable()->after('role');
-            $table->string('weight')->nullable()->after('height');
+        Schema::table('result_configs', function (Blueprint $table) {
+            $table->string('base_dir')->default('school.student.result')->nullable();
+            $table->string('sub_dir')->default('termly-result')->nullable();
+            $table->string('file_name')->default('student-report-card')->nullable();
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('students');
+        Schema::dropIfExists('result_configs');
     }
 };

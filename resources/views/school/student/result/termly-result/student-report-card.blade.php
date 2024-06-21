@@ -412,6 +412,7 @@
                         </tbody>
 
                     </table>
+                    
                     @foreach($psycho as $row)
                         @if($row->baseKey->isNotEmpty())
                             <div class="card-header text-center bg-transparent text-dark"><small>{{$row->psychomotor}}</small></div>

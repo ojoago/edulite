@@ -93,13 +93,19 @@ function activeTermName()
     // psychomoter 
 
     function getPsychoKeyScore($student,$param,$key){
-        $score = PsychomotorRecord::where([
-                            'student_pid'=>$student,
-                            'class_param_pid'=>$param,
-                            'key_pid'=>$key,
-                            'school_pid' => getSchoolPid()
-                        ])->pluck('score')->first();
-        return $score;
+        try {
+            $score = PsychomotorRecord::where([
+                'student_pid' => $student,
+                'class_param_pid' => $param,
+                'key_pid' => $key,
+                'school_pid' => getSchoolPid()
+            ])->pluck('score')->first();
+            // logError($score);
+            return $score;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
     // psychomoter 
 

@@ -43,6 +43,7 @@ use App\Http\Controllers\School\Framework\Events\SchoolNotificationController;
 use App\Http\Controllers\School\Framework\Assessment\AssessmentTitleController;
 use App\Http\Controllers\School\Student\Attendance\StudentAttendanceController;
 use App\Http\Controllers\School\Framework\Psychomotor\PsychomotorBaseController;
+use App\Http\Controllers\School\Framework\Result\ResultConfigController;
 use App\Http\Controllers\School\Student\Results\Termly\StudentTermlyResultController;
 use App\Http\Controllers\School\Student\Result\Comments\PortalCommentResultController;
 use App\Http\Controllers\School\Student\Results\Comments\TeacherCommentResultController;
@@ -365,8 +366,8 @@ Route::middleware('schoolAuth')->group(function(){
 
 
     // result config 
-    Route::view('school-assessment-config', 'school.framework.result.assessment-config')->name('school.assessment.config');
-    Route::view('school-result-config', 'school.framework.result.result-config')->name('school.result.config');
+    Route::view('assessment-config', 'school.framework.result.assessment-config')->name('school.assessment.config');
+    Route::get('result-config', [ResultConfigController::class,'index'])->name('school.result.config');
 
     Route::view('register-staff', 'school.registration.staff.register-staff')->name('create.staff.form');
     Route::view('staff-list', 'school.staff.staff-list')->name('school.staff.list');

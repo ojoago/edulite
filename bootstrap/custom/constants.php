@@ -62,3 +62,18 @@ define('BANKS',[
 'Wema Bank Plc'  ,
 'Zenith Bank Plc'  ,
 ]);
+
+define('MONTH_CODE',[
+    '01' =>'JA' , 
+    '02' =>'FE' , 
+    '03' =>'MR' , 
+    '04' =>'AP' , 
+    '05' =>'MA' , 
+    '06' =>'JN' , 
+    '07' =>'JL' , 
+    '08' =>'AG' , 
+    '09' =>'SE' , 
+    '10' =>'OC' , 
+    '11' =>'NO' , 
+    '12' =>'DC' , 
+]);
