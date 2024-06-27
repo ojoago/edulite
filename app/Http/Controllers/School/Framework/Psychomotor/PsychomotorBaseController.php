@@ -37,23 +37,27 @@ class PsychomotorBaseController extends Controller
     {
         if(isset($request->pid)){
             $data = DB::table('psychomotor_keys as k')->join('psychomotor_bases as b', 'k.psychomotor_pid', 'b.pid')
+                ->join('categories as c', 'c.pid', 'b.category_pid')
+
                 // ->join('school_staff as s', 's.pid', 'k.staff_pid')
                 // ->join('users as u', 'u.pid', 's.user_pid')
-                ->where(['k.school_pid' => getSchoolPid(), 'k.psychomotor_pid'=>$request->pid])
-        ->get(['k.pid', 'psychomotor', 'title', 'k.created_at', 'k.status',  'max_score',/*'username',*/]);
+                ->where(['k.school_pid' => getSchoolPid(), 'k.psychomotor_pid'=>$request->pid])->orderBy('category')
+        ->get(['k.pid', 'psychomotor', 'title', 'k.created_at', 'k.status',  'max_score','category']);
         }else{
             $data = DB::table('psychomotor_keys as k')->join('psychomotor_bases as b', 'k.psychomotor_pid', 'b.pid')
+                ->join('categories as c', 'c.pid', 'b.category_pid')
+
             // ->join('school_staff as s', 's.pid', 'k.staff_pid')
             // ->join('users as u', 'u.pid', 's.user_pid')
-                ->where(['k.school_pid' => getSchoolPid()])
-                ->get(['k.pid', 'psychomotor', 'title', 'k.created_at', 'k.status', 'max_score',/*'username',*/]);
+                ->where(['k.school_pid' => getSchoolPid()])->orderBy('category')
+                ->get(['k.pid', 'psychomotor', 'title', 'k.created_at', 'k.status', 'max_score','category']);
         }
         
         return datatables($data)
         ->addIndexColumn()
-            // ->editColumn('created_at', function ($data) {
-            //     return date('d F Y', strtotime($data->created_at));
-            // })
+            ->editColumn('category', function ($data) {
+                return $data->category.', '.$data->psychomotor;
+            })
             // ->editColumn('status', function ($data) {
             //     return $data->status == 1 ? '<span class="text-success">Enabled</span>' : '<span class="text-danger">Disabled</span>';
             // })
@@ -67,7 +71,7 @@ class PsychomotorBaseController extends Controller
             'psychomotor.*' => [
                             'required',
                             'max:30',
-                            "regex:/^[a-zA-Z0-9,'\s]+$/",
+                            "regex:/^[a-zA-Z0-9,-_.()'\s\/]+$/",
                         //     Rule::unique('psychomotor_bases')->where(function($param) use ($request){
                         //         $param->where('school_pid',getSchoolPid())->where('pid','<>',$request->pid)->where('category_pid',$request->category);
                         //     }
@@ -122,6 +126,58 @@ class PsychomotorBaseController extends Controller
         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
     }
 
+    public function clonePsychomotorBase(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'psychomotor.*' => 'required',
+            'category.*' => 'required' ,
+        ], );
+
+        if (!$validator->fails()) {
+
+            try {
+                $result = false;
+                foreach($request->category as $category){
+                    $bases = PsychomotorBase::whereIn('pid',$request->psychomotor)->where('school_pid',getSchoolPid())->get()->toArray();
+                    foreach($bases as $base){
+                        $exists = PsychomotorBase::where(['category_pid' => $category, 'psychomotor' => $base['psychomotor'] , 'school_pid' => getSchoolPid()])->exists(); 
+                        if($exists){
+                            continue;
+                        }
+                        $base['staff_pid'] = getSchoolUserPid();
+                        $base['created_at'] = $base['updated_at'] = fullDate();
+                        unset($base['id']);
+                        $base['category_pid'] = $category;
+                        $base_keys = PsychomotorKey::where(['psychomotor_pid' => $base['pid'], 'school_pid' => getSchoolPid()])->get()->toArray();
+                        $base['pid'] = public_id(); // update the pid to a new one
+                        $result = $this->createOrUpdatePsychomotorBase($base);
+                        foreach($base_keys as $array){
+                            $array['created_at'] = $array['updated_at'] = fullDate();
+                            $array['staff_pid'] = getSchoolUserPid();
+                            $array['pid'] = public_id();
+                            $array['psychomotor_pid'] = $result->pid;
+                            unset($array['id']);
+                            $results = $this->createOrUpdatePsychomotorKey($array);
+                        }
+                    }
+                   
+                }
+               
+                if ($result) {
+                    // DB::commit();
+                    return response()->json(['status' => 1, 'message' => 'Selected Extra Curricula Cloned']);
+                }
+                // DB::rollBack();
+                return response()->json(['status' => 'error', 'message' => 'Failed to clone']);
+            } catch (\Throwable $e) {
+                // DB::rollBack();
+                logError($e->getMessage());
+            }
+        }
+
+        return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+    }
+
     private function createOrUpdatePsychomotorBase($data)
     {
         try {
@@ -141,7 +197,7 @@ class PsychomotorBaseController extends Controller
                         [
                             'required',
                             // 'max:30',
-                            "regex:/^[a-zA-Z0-9-._,'\s]+$/",
+                            "regex:/^[a-zA-Z0-9-._,\/()'\s]+$/",
                             // Rule::unique('psychomotor_keys')->where(function($param) use($request){
                             //     $param->where([
                             //                 'school_pid'=>getSchoolPid(),

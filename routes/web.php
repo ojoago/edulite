@@ -12,7 +12,6 @@ use App\Http\Controllers\School\Parent\ParentController;
 use App\Http\Controllers\School\Framework\ClassController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Http\Controllers\School\Class\AssessmentController;
-use App\Http\Controllers\School\Rider\SchoolRiderController;
 use App\Http\Controllers\Organisation\OrganisationController;
 use App\Http\Controllers\School\Upload\UploadRiderController;
 use App\Http\Controllers\School\Upload\UploadStaffController;
@@ -353,6 +352,7 @@ Route::middleware('schoolAuth')->group(function(){
     // Route::post('creat-psychomotor', [PsychomotorController::class, 'index'])->name('load.psychomotor');
     
     Route::post('create-psychomotor-base', [PsychomotorBaseController::class, 'createPsychomotorBase'])->name('create.psychomotor.base');
+    Route::post('clone-psychomotor-base', [PsychomotorBaseController::class, 'clonePsychomotorBase'])->name('clone.psychomotor.base');
     // create psychomotor
     Route::post('create-psychomotor-key', [PsychomotorBaseController::class, 'createPsychomotorkey'])->name('create.psychomotor.key');
     // load effective domain 
@@ -558,10 +558,10 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-student-attendance-count', [StudentAttendanceController::class, 'loadStudentAttendanceCount'])->name('load.student.attendance.count');
 
     // student assessment 
-    Route::view('student-subject-score-form', 'school.student.assessment.student-subject-score-form')->name('student.assessment.form');
-    Route::post('student-subject-score-form', [StudentScoreController::class, 'enterStudentScoreRecord']);
+    Route::view('enter-student-score', 'school.student.assessment.enter-student-score')->name('enter.student.score');
+    Route::post('enter-student-score', [StudentScoreController::class, 'enterStudentScoreRecord']);
     Route::post('change-arm-subject', [StudentScoreController::class, 'changeSubject'])->name('change.arm.subject');
-    Route::get('enter-student-score', [StudentScoreController::class, 'enterStudentScore'])->name('enter.student.score');
+    // Route::get('enter-student-score', [StudentScoreController::class, 'enterStudentScore'])->name('enter.student.score');
     Route::post('submit-student-ca', [StudentScoreController::class, 'submitCaScore'])->name('submit.student.ca');
     Route::post('change-student-ca-student', [StudentScoreController::class, 'changeSubjectResultStatus'])->name('change.student.ca.student');
     // export student list 

@@ -506,6 +506,7 @@ class StaffController extends Controller
        }
        return $sts;
     }
+    
     public function staffAccessRight(Request $request){
        
         $validator = Validator::make($request->all(), [

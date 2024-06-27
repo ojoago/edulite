@@ -271,7 +271,7 @@
                             Class
                         </td>
                         <td>
-                            {{$results->arm}}
+                            {{$result->arm}}
                         </td>
                     </tr>
                     <tr>
@@ -279,7 +279,7 @@
                             Term
                         </td>
                         <td>
-                            {{$results->term}}
+                            {{$result->term}}
                         </td>
                     </tr>
                     <tr>
@@ -287,7 +287,7 @@
                             Session
                         </td>
                         <td>
-                            {{$results->session}}
+                            {{$result->session}}
                         </td>
                     </tr>
                 </table>
@@ -302,16 +302,16 @@
                             Number of Times Open
                         </td>
                         <td>
-                            {{date_diff_weekdays($results->begin,$results->end)}}
+                            {{date_diff_weekdays($result->begin,$result->end)}}
                         </td>
                     </tr>
                     <tr>
-                        @if($results->present>0 || $results->absent>0)
+                        @if($result->present>0 || $result->absent>0)
                         <td>
-                            Present: {{$results->present}}
+                            Present: {{$result->present}}
                         </td>
                         <td>
-                            Absent: {{$results->absent}}
+                            Absent: {{$result->absent}}
                         </td>
                         @else
                         <td colspan="2" align="center">
@@ -427,7 +427,7 @@
                                     @foreach($row->baseKey as $rw)
                                     <tr>
                                         <td> {{$rw->title}} </td>
-                                        <td>{{getPsychoKeyScore(student:$results->student_pid,param:$param,key:$rw->pid)}} </td>
+                                        <td>{{getPsychoKeyScore(student:$result->student_pid,param:$param,key:$rw->pid)}} </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -441,29 +441,29 @@
         <div class="flex-row">
             <div class="section">
                 <div class="card-header">Principal/Head Teacher</div>
-                Name: {{$results->principal}}<br>
-                Comment: {{$results->principal_comment}}<br>
+                Name: {{$result->principal}}<br>
+                Comment: {{$result->principal_comment}}<br>
                 <div class="signature-base">
-                    @php $imgUrl = $results->signature ? asset("/files/images/".$results->signature) :'' @endphp
+                    @php $imgUrl = $result->signature ? asset("/files/images/".$result->signature) :'' @endphp
                     <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
                 </div>
             </div>
             <div class="section">
                 <div class="card-header">Class/Form Teacher</div>
-                Name: {{$results->class_teacher}}<br>
-                Comment: {{$results->class_teacher_comment}}<br>
+                Name: {{$result->class_teacher}}<br>
+                Comment: {{$result->class_teacher_comment}}<br>
                 <div class="signature-base">
-                    @php $imgUrl = $results->signature ? asset("/files/images/".$results->signature) :'' @endphp
+                    @php $imgUrl = $result->signature ? asset("/files/images/".$result->signature) :'' @endphp
                     <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
                 </div>
             </div>
-            @if($results->type==2)
+            @if($result->type==2)
             <div class="section">
                 <div class="card-header">Class/Form Teacher</div>
-                Name: {{$results->teacher}}<br>
-                Comment: {{$results->portal_comment}}<br>
+                Name: {{$result->teacher}}<br>
+                Comment: {{$result->portal_comment}}<br>
                 <div class="signature-base">
-                    @php $imgUrl = $results->signature ? asset("/files/images/".$results->signature) :'' @endphp
+                    @php $imgUrl = $result->signature ? asset("/files/images/".$result->signature) :'' @endphp
                     <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
                 </div>
 
@@ -485,7 +485,7 @@
             'packages': ['corechart']
         });
         google.charts.load('current', {
-            'packages': ['line']
+            'packages': ['bar']
         });
 
         google.charts.setOnLoadCallback(drawColumnChart);
@@ -516,7 +516,7 @@
                     position: "top"
                 },
             };
-            var chart = new google.visualization.LineChart(document.getElementById("column_Chart"));
+            var chart = new google.visualization.ColumnChart(document.getElementById("column_Chart"));
             chart.draw(view, options);
         }
     </script>

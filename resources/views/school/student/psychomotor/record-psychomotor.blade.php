@@ -103,6 +103,8 @@
 </form>
     </div>
 </div><!-- End Psychomotro Modal-->
+
+
 <script>
     $(document).ready(function() {
         $('#scoreTable').DataTable({

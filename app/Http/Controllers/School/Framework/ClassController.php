@@ -23,12 +23,10 @@ class ClassController extends Controller
    
     public function loadCategory()
     {
-        $data = Category::where(['school_pid' => getSchoolPid()])
-            ->get(['pid', 'category', 'created_at', 'description']);
+        $data = Category::from('categories as c')->leftJoin('school_staff as s','s.pid', 'c.head_pid')->leftJoin('user_details as d','d.user_pid','s.user_pid')->where(['c.school_pid' => getSchoolPid()])
+            ->select('c.pid', 'category', 'd.fullname', 'description')->get();
         return datatables($data)
-            ->editColumn('created_at', function ($data) {
-                return $data->created_at->diffForHumans();
-            })
+            
             ->addColumn('action', function ($data) {
                 return view('school.framework.class.category-action-buttons', ['data' => $data]);
             })
@@ -457,20 +455,35 @@ class ClassController extends Controller
         return $data;
     }
     public static function GetClassSubjectAndName($class_subject){
-        $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
+        try {
+            $result = ClassArmSubject::join('class_arms', 'class_arms.pid', 'arm_pid')
             ->join('subjects', 'subjects.pid', 'subject_pid')
             ->where(['class_arms.school_pid' => getSchoolPid(), 'class_arm_subjects.pid' => $class_subject])
-            ->first(['arm','subject']); 
-        return $result;
+            ->first(['arm', 'subject']);
+            return $result;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 
     public static function getClassNameByPid($pid){
-        $class = Classes::where(['school_pid'=>getSchoolPid(),'pid'=>$pid])->pluck('class')->first();
-        return $class;
+        try {
+            $class = Classes::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->pluck('class')->first();
+            return $class;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
     public static function getClassArmNameByPid($pid){
-        $arm = ClassArm::where(['school_pid'=>getSchoolPid(),'pid'=>$pid])->pluck('arm')->first();
-        return $arm;
+        try {
+            $arm = ClassArm::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->pluck('arm')->first();
+            return $arm;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 
     // public static function getClassSubjectByPid($pid){
@@ -491,9 +504,10 @@ class ClassController extends Controller
         $teacher = self::getClassTeacherPid(session: $data['session_pid'],term: $data['term_pid'],arm: $data['arm_pid']);
         $data['teacher_pid'] = self::getClassTeacherPid(session: $data['session_pid'],term: $data['term_pid'],arm: $data['arm_pid']);
         if($teacher){
+            $result = self::getCategoryHeadPid($data['arm_pid']);
             $data['teacher_pid'] = $teacher->teacher_pid;
             $data['teacher_name'] = $teacher->fullname;
-            $data['principal_pid'] = self::getCategoryHeadPid($data['arm_pid']);
+            $data['principal_pid'] = $result->head_pid;
             $data['pid'] = public_id();
             $data['term'] = termName($data['term_pid']) ;
             $data['session'] = sessionName($data['session_pid']);
@@ -527,11 +541,16 @@ class ClassController extends Controller
         }
     }
     public static function getCategoryHeadPid($arm){
-       $pid = DB::table('class_arms as a')
-                ->join('classes as c','c.pid','a.class_pid')
-                ->join('categories as cg','cg.pid','c.category_pid')
-                ->where(['a.pid'=>$arm,'a.school_pid'=>getSchoolPid()])->pluck('head_pid')->first();
-        return $pid;
+       try {
+            $pid = DB::table('class_arms as a')
+            ->join('classes as c', 'c.pid', 'a.class_pid')
+            ->join('categories as cg', 'cg.pid', 'c.category_pid')
+            ->where(['a.pid' => $arm, 'a.school_pid' => getSchoolPid()])->first(['head_pid','category']);
+            return $pid;
+       } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+       }
     }
 
     // load class arms 

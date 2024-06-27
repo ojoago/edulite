@@ -217,13 +217,13 @@ class StudentController extends Controller
         }
     }
     public static function studentName($pid){
-        $std = Student::where(['students.pid'=>$pid, 'students.school_pid'=>getSchoolPid()])->leftjoin('user_details', 'user_details.user_pid','students.user_pid')
+        $std = Student::where(['students.pid'=>$pid, 'students.school_pid'=>getSchoolPid()])
                         ->first([
-                            'students.reg_number', 
-                            'students.fullname', 
-                            'students.passport',
-                            'user_details.gender',
-                            'dob','students.pid'
+                            'reg_number', 
+                            'fullname', 
+                            'passport',
+                            'gender',
+                            'pid','height','weight'
                             ]);
 
         return $std;

@@ -35,97 +35,113 @@
 </head>
 
     <style>
+        *{
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+        }
         body {
             margin: 20px 160px;
         }
 
-        .flex-container,
-        .flex-row {
+        body::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('{{asset("/files/logo/".$school->school_logo)}}') no-repeat center center;
+            background-size: 50%;
+            opacity: 0.2; /* Adjust the opacity as needed */
+            z-index: -1;
+        }
+        .top-header{
             display: flex;
-            justify-content: space-between;
-            /* flex-wrap: wrap; */
-            align-items: flex-start;
         }
 
-        .text-content {
-            flex-basis: 60%;
-            text-align: center;
+        .logo-side{
+            flex-basis: 25%;
+        }
+        .text-content{
+            flex-basis: 50%;
+            color: #000;
+        }
+        .school-name{
+            font-weight: bold;
         }
 
-        .text-content>.h4,
-        .text-content>.h3 {
-            margin-bottom: 1px;
+        #moto{
+            border: solid 3px #0001;
+            padding: 5px;
+            background: rgb(117, 75, 88);
+            color: #fff;
         }
 
-        .text-content>p {
-            margin: 1px;
-            font-size: small;
-        }
-
-        .logo-image {
-            width: 100px !important;
-            border-radius: 15px;
-        }
-
-        .logo-image>img {
-            width: 100%;
-        }
-
-        .flex-row {
-            /* height: 200px; */
-            justify-content: space-between;
-        }
-
-        .personal-detail,
-        .flex-col {
-            flex-basis: 40%;
-            margin: 3px;
-            /* justify-content: space-between; */
-        }
-
-        .student-img {
-            flex-basis: 15%;
-            border-radius: 5px;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #000;
-            max-height: 200px;
-        }
-
-        .student-img>img {
-            width: 100%;
-            height: 100%;
-        }
-
-        .signature-base {
-            width: 60px !important;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .signature-base>img {
-            width: 100%;
+        .address-side{
+            flex-basis: 25%;
+            font-size: 9px;
+            font-weight: bold;
         }
 
 
         table {
-            /* background: #fff; */
-            /* box-shadow: 0 0 0 10px #fff; */
-
-            /* width: calc(100% - 20px); */
             border-spacing: 5px;
+            font-family: Calibri, sans-serif
+
         }
 
-        tr>th,
-        tr>td {
-            padding: 5px !important;
-        }
 
-        .flat-row {
-            padding: 3px !important;
-            width: auto !important;
-            /* padding-right: 0 !important; */
-        }
+           #studentDetailTable{
+        border: solid 1px #000;
+    }
+    #studentDetailTable tr td{
+        border: solid 1px #f1ff;
+    }
+
+    .psychoTable{
+        border: solid 1px #000;
+        margin-bottom: 15px;
+    }
+    .psychoTable tr th{
+        background: #000;
+        color: #fff;
+        text-align: center;
+
+    }
+    .psychoTable tr td{
+        border: solid 1px #000;
+        text-align: center;
+    }
+
+    #teacherTable{
+        border: solid 1px #000;
+    }
+    
+    #teacherTable tr td{
+        border: solid 1px #000;
+    }
+
+.rating{
+    margin-bottom: 10px;
+}
+#examTable{
+
+}
+#examTable{
+        border: solid 1px #000;
+        margin-bottom: 15px;
+    }
+    #examTable tr th{
+        background: #000;
+        color: #fff;
+        text-align: center;
+
+    }
+    #examTable tr td{
+        border: solid 1px #000;
+        text-align: center;
+    }
+
 
         .rotate-up {
             vertical-align: bottom;
@@ -150,74 +166,43 @@
             /* box-sizing: border-box; */
         }
 
-        @media screen and (max-width:560px) {
-            .student-img {
-                border: none !important;
-                display: none !important;
-            }
-
-            .flex-container {
-                flex-direction: column !important;
-            }
-
-            .examTable {
-                width: 100% !important;
-            }
-
-            body {
-                margin: 1px;
-            }
+        .signature-container{
+           display: flex;
+            align-items: center;
+        }
+        .signature-base {
+            width: 60px !important;
+            align-items: center;
+            justify-content: center;
         }
 
-        @media print {
-
-            .header,
-            #header,
-            button {
-                display: none !important;
-            }
-
-            .rotate-up {
-                vertical-align: bottom !important;
-                height: 120px;
-                text-align: center !important;
-            }
-
-            .rotate-up {
-                -ms-writing-mode: tb-rl !important;
-                -webkit-writing-mode: vertical-rl !important;
-                writing-mode: vertical-rl !important;
-                white-space: nowrap !important;
-                transform: rotate(90deg) !important;
-                width: 30px !important;
-                transform: translate(45px, -20px)
-            }
-
-            .student-img {
-                border: none;
-            }
-
-            #column_Chart {
-                width: auto;
-            }
+        
+        .signature-base>img {
+            width: 100%;
+            margin-left: 15px;
         }
-    </style>
+
+  
+
+
+
+ </style>
 
 
 <body>
-
-<div class="flex-row">
-    <div class="img-left logo-image">
-        <img src="{{asset("/files/logo/".$school->school_logo)}}" alt="" class="img img-responsive">
+    
+<div class="top-header">
+    <div class="logo-side">
+        <img src="{{asset("/files/logo/".$school->school_logo)}}" alt="logo" >
     </div>
     <div class="text-content">
-        <h3 class="text-success h4">{{strtoupper(getSchoolName())}}</h3>
-        <small>{{@$school->school_moto}}</small>
+        <h3 class="school-name">{{strtoupper(getSchoolName())}}</h3>
+        <small id="moto">{{@$school->school_moto}}</small>
         
     </div>
-    <div class="img-left logo-image">
+    <div class="address-side">
        <p>{{$school->school_address}}</p>
-        <span>{{$school->school_contact}}</span>
+        Tel: <span>{{$school->school_contact}}</span>
         {{-- <p>{{$school->school_email}}</p> --}}
     </div>
 </div>

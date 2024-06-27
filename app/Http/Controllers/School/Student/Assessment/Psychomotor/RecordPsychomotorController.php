@@ -67,10 +67,11 @@ class RecordPsychomotorController extends Controller
         ];
         $class_pid = ClassController::createClassParam($data);
         $arm = ClassController::getClassArmNameByPid($request->arm);
-        $base = PsychomotorBase::where(['school_pid' => getSchoolPid(), 'pid' => $request->psychomotor_pid])->first(['obtainable_score as score', 'psychomotor']);
+        $base = PsychomotorBase::where(['school_pid' => getSchoolPid(), 'pid' => $request->psychomotor_pid])->first(['obtainable_score as score', 'psychomotor', 'pid']);
+        // dd($base);
         $params = ['param'=>$class_pid,'arm'=>$arm,'term'=>$request->term,'session'=>$request->session];
         $psycho = PsychomotorKey::where(['school_pid'=>getSchoolPid(),'status'=>1, 'psychomotor_pid'=>$request->psychomotor_pid])
-                                ->get(['title', 'pid', 'max_score']);
+                                ->get(['title', 'pid', 'max_score']);//->dd();
         $data = Student::where([
             'current_class_pid' => $request->arm,
             'school_pid' => getSchoolPid(),

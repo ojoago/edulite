@@ -1,10 +1,98 @@
 
 @include('school.student.result.ais.header')
 
+{{-- extra-curricular --}}
+<style>
+    .extra-curricular{
+        display: flex;
+        justify-content: space-between
+    }
+    .result-header{
 
+    }
 
+    .f-row{
+        display: flex;
+        justify-content: space-between
+    }
+    
+    .dotted{    
+        border-bottom: 2px dotted  #000;
+        color: #000;
+        margin: 5px 10px;
+    }
+    .lf{
+        flex-basis: 60%;
+        text-align: left;
+        
+    }
+    .rt{
+        flex-basis: 40%;
+        text-align: left;
+    }
+    .f1,.f2,.f3{
+        flex-basis: 33%;
+        text-align: left;
+    }
+
+    .b-row{
+        display: flex;
+
+    }
+    .br{
+        flex-basis: 100%;
+    }
+    
+    .bd,.bc{
+        flex-basis: 50%;
+        margin: 5px 10px;
+
+    }
+    .solid{
+        border-bottom: 1px solid #000;
+    }
+</style>
 <hr>
 
+
+{{-- reust header  --}}
+
+<div class="result-header">
+    
+<h3>
+    NURSERY PUPIL PERFORMANCE REPORT 
+</h3>
+
+
+    <div class="f-row">
+        <div class="lf dotted">
+            Name of Pupil: 
+        </div>
+        <div class="rt dotted">Gender: </div>
+    </div>
+
+    <div class="f-row">
+
+        <div class="f1 dotted">
+            Class: 
+        </div>
+        <div class="f2 dotted">Age: </div>
+        <div class="f3 dotted">Next Term Begins: </div>
+        
+    </div>
+    <div class="f-row">
+
+        <div class="f1 dotted">
+            Class Average: 
+        </div>
+        <div class="f2 dotted">Personal Total: </div>
+        <div class="f3 dotted">Personal Average: </div>
+
+    </div>
+
+</div>
+
+<span>Keys to Grades: <i>A – Distinction – 70% & Above, C- Credit – 60% to 69%, P- Pass – 40% to 59%, F – Fail below 40%</i></span>
 
     {{-- subject result  --}}
 
@@ -74,55 +162,122 @@
     {{-- extra curricular  --}}
 
     <div class="extra-curricular">
-
-        <div class="legend"></div>
+        <div class="legend">
+            Key:
+            <p>5 - Excellent</p>
+            <p>4 - Very Good </p>
+            <p>3 - Good</p>
+            <p>2 - Fair </p>
+            <p>1 - Poor</p>
+        </div>
         <div class="rating">
-
-             @foreach($psycho as $row)
-                @if($row->baseKey->isNotEmpty())
-                    <table class="table table-hover table-striped table-bordered w-30">
-                        <thead>
-                            <tr>
-                                <th>S/N</th>
-                                <th>{{$row->psychomotor}}</th>
-                                <th>RATING</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($row->baseKey as $rw)
-                            <tr>
-                                <td> {{$rw->title}} </td>
-                                <td>{{getPsychoKeyScore(student:$results->student_pid,param:$param,key:$rw->pid)}} </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                @endif
-            @endforeach
+            @include('school.student.result.curricula-type.'.$psycho[0]->grade)
         </div>
     </div>
 
-    <table class="table table-bordered w-30">
-        <tr>
-            <td colspan="3">Name of Teacher</td>
-        </tr>
-        <tr>
-            <td colspan="3">Teacher's Comment:</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>Sign </td>
-            <td>Date:</td>
-        </tr>
+     <div class="result-footer">
+        <div class="b-row">
+            <div class="br solid">
+               Teacher‘s  Comment: {{$result->class_teacher_comment}}
+            </div>
+        </div>
 
-       
-        <tr>
-            <td colspan="3">Principal's Comment:</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>Sign </td>
-            <td>Date:</td>
-        </tr>
+        <div class="b-row">
+            <div class="bd solid">
+                Signature: 
+            </div>
+            <div class="bc solid">Date: </div>
+        </div>
 
-    </table>
+        <div class="b-row">
+            <div class="br solid">
+               Principal’s  Comment: {{$result->principal_comment}}
+            </div>
+        </div>
+
+        <div class="b-row">
+            <div class="bd solid">
+                Signature: 
+            </div>
+            <div class="bc solid">Date: </div>
+        </div>
+     </div>
+
+     
+     <div class="col-md-12">
+            <div id="column_Chart" class="chartZoomable" style="width:98%;height:auto;"></div>
+        </div>
+
+
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    {{-- <script type="text/javascript">
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
+        google.charts.load('current', {
+            'packages': ['line']
+        });
+
+        google.charts.setOnLoadCallback(drawColumnChart);
+        let dataset = <?php echo json_encode($columnChart, JSON_NUMERIC_CHECK) ?>
+        // console.log(dataset);
+        function drawColumnChart() {
+
+            var data = google.visualization.arrayToDataTable(dataset);
+
+            var view = new google.visualization.DataView(data);
+            // view.setColumns([0, 4,
+            //     {
+            //         calc: "stringify",
+            //         sourceColumn: 1,
+            //         type: "string",
+            //         role: "annotation"
+            //     },
+            //     3
+            // ]);
+
+            var options = {
+                title: "Student Score Against total, MIN, MAX & AVG",
+                // subtitle: "based on meter type and installation status",
+                bar: {
+                    groupWidth: "20%"
+                },
+                legend: {
+                    position: "top"
+                },
+            };
+            var chart = new google.visualization.LineChart(document.getElementById("column_Chart"));
+            chart.draw(view, options);
+        }
+    </script> --}}
+     <script type="text/javascript">
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
+        google.charts.load('current', {
+            'packages': ['bar']
+        });
+
+        google.charts.setOnLoadCallback(drawColumnChart);
+        let dataset = <?php echo json_encode($columnChart, JSON_NUMERIC_CHECK) ?>
+        // console.log(dataset);
+        function drawColumnChart() {
+
+            var data = google.visualization.arrayToDataTable(dataset);
+
+            var view = new google.visualization.DataView(data);
+
+            var options = {
+                title: "Student Score Against total, MIN, MAX & AVG",
+                // subtitle: "based on meter type and installation status",
+                bar: {
+                    groupWidth: "20%"
+                },
+                legend: {
+                    position: "top"
+                },
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById("column_Chart"));
+            chart.draw(view, options);
+        }
+    </script>

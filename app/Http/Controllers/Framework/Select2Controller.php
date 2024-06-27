@@ -638,10 +638,10 @@ class Select2Controller extends Controller
             if ($request->has('q'))
                 $result = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1, 'class_pid' => $request->pid])
                     ->where('arm', 'like', '%' . $request->q . '%')
-                    ->limit(20)->orderBy('arm')->get(['pid', 'arm']); //
+                    ->limit(20)->orderBy('arm')->distinct('ca.arm')->get(['pid', 'arm']); //
             else
                 $result = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1, 'class_pid' => $request->pid])
-                    ->limit(20)->orderBy('arm')->get(['pid', 'arm']); //
+                    ->limit(20)->orderBy('arm')->distinct('ca.arm')->get(['pid', 'arm']); //
         }else{
             if ($request->has('q')){
                 $class = DB::table('class_arms as c')->join('staff_classes as s','s.arm_pid','c.pid')
@@ -653,6 +653,7 @@ class Select2Controller extends Controller
                 's.session_pid' => activeSession()])
                 ->where('c.arm', 'like', '%' . $request->q . '%')
                 ->limit(20)->orderBy('c.arm')
+                    ->distinct('ca.arm')
                 ->get(['c.pid', 'c.arm']);
                 $sbj = DB::table('class_arms as ca')->join('class_arm_subjects as cas','cas.arm_pid','ca.pid')
                                                     ->join('staff_subjects as sb', 'cas.pid', 'sb.arm_subject_pid')
@@ -664,6 +665,7 @@ class Select2Controller extends Controller
                         'cas.status' => 1])
                         ->where('c.arm', 'like', '%' . $request->q . '%')
                 ->limit(20)->orderBy('ca.arm')
+                    ->distinct('ca.arm')
                 ->get(['ca.pid', 'ca.arm']);
                 $result = $class->merge($sbj);
             }
@@ -678,6 +680,7 @@ class Select2Controller extends Controller
                     's.session_pid' => activeSession(),
                     ])
                     ->limit(20)->orderBy('c.arm')
+                    ->distinct('ca.arm')
                     ->get(['c.pid', 'c.arm']); //
                     
                     $sbj = DB::table('class_arms as ca')->join('class_arm_subjects as cas', 'cas.arm_pid', 'ca.pid')
@@ -691,6 +694,7 @@ class Select2Controller extends Controller
                         'cas.status' => 1
                         ])
                         ->limit(20)->orderBy('ca.arm')
+                        ->distinct('ca.arm')
                         ->get(['ca.pid', 'ca.arm']);
           
 

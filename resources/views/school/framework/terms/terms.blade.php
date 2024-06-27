@@ -71,9 +71,10 @@
                         <tr>
                             <!-- <th>SN</th> -->
                             <th>Session</th>
-                            <th>Active term</th>
-                            <th>Begin</th>
-                            <th>End</th>
+                            <th>Active Term</th>
+                            <th>Term Begin</th>
+                            <th>Term End</th>
+                            <th>Next Term Begin</th>
                             <th>Note</th>
                             <!-- <th>Action</th> -->
                         </tr>
@@ -162,6 +163,9 @@
                 },
                 {
                     "data": "end"
+                },
+                {
+                    "data": "next_term"
                 },
                 {
                     "data": "note"

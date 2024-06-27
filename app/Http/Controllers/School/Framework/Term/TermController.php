@@ -18,11 +18,12 @@ class TermController extends Controller
     {
         $data = Term::where('school_pid',getSchoolPid())->get(['pid','term','description','created_at']);
                 return datatables($data)->editColumn('created_at', function ($data) {
-                    return date('d F Y', strtotime($data->created_at));
+                    return formatDate($data->created_at);
                 })->addColumn('action', function ($data) {
             return view('school.framework.terms.term-action-button', ['data' => $data]);
         })->make(true);
     }
+    
     public function createTerm(Request $request)
     {
         $in = $request['term'];
@@ -77,6 +78,7 @@ class TermController extends Controller
             'active_term'=>'required|string',
             'term_begin'=>'required',
             'term_end'=>'required',
+            'next_term'=>'required',
         ],[
             'term_begin:requred'=>'enter begin of term date',
             'term_end:requred'=>'enter end date'
@@ -88,6 +90,7 @@ class TermController extends Controller
                 'term_pid'=>$request->active_term,
                 'begin'=>$request->term_begin,
                 'end'=>$request->term_end,
+                'next_term'=>$request->next_term,
                 'note'=>$request->note,
             ];
             $term = [
@@ -147,7 +150,7 @@ class TermController extends Controller
         ->where(['terms.school_pid' => getSchoolPid()])
             ->select(['term', 'active_terms.updated_at'])->get();
         return datatables($data)->editColumn('date',function($data){
-            return date('d F Y', strtotime($data->updated_at));
+            return formatDate($data->updated_at);
         })->make(true);
     }
     public function loaSchoolActiveTermDetails(){
@@ -155,7 +158,7 @@ class TermController extends Controller
         $data = Term::join('active_term_details', 'terms.pid', 'active_term_details.term_pid')
                         ->join('sessions','sessions.pid', 'active_term_details.session_pid')
         ->where(['terms.school_pid' => getSchoolPid()])
-            ->select(['term', 'begin','end','note','session'])->orderByDesc('active_term_details.id')->get();
+            ->select(['term', 'begin','end','note','session', 'next_term'])->orderByDesc('active_term_details.id')->get();
         return datatables($data)->make(true);
 
     }

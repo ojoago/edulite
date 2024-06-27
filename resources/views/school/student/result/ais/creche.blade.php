@@ -2,35 +2,42 @@
 @include('school.student.result.ais.header')
 
 
+<style>
+ 
+</style>
+
 
 <hr>
 
 {{-- student infor  --}}
 
-<table border="1">
+<table id="studentDetailTable">
     <tr>
-        <td colspan="2">Pupil Name</td>
-        <td colspan="2">Term</td>
+        <td colspan="2"> <b>PUPIL NAME</b> {{$std->fullname}}</td>
+        <td colspan="2"> <b>TERM</b> {{$results->term}}</td>
     </tr>
     <tr>
-        <td >Gender</td>
-        <td></td>
-        <td>Session</td>
-        <td>next Term begins</td>
+        <td > <b> GENDER</b> </td>
+        <td>{{$std->gender}}</td>
+        <td><b>SESSION</b> {{$results->session}}</td>
+        <td> <b>NEXT TERM BEGINS</b> </td>
     </tr>
     <tr>
-        <td >Height</td>
-        <td></td>
-        <td>Weight</td>
-        <td></td>
+        <td ><b>HEIGHT</b>  </td>
+        <td>{{$std->height}}</td>
+        <td><b>WEIGHT</b></td>
+        <td>{{$std->weight}}</td>
     </tr>
 </table>
 
+<b class="rating">KEY TO RATINGS: 5 - EXCELLENT, 4 - VERY GOOD, 3 - GOOD 2 - FAIR 1 - POOR </b>
+
 {{-- student infor  --}}
+
 
     @foreach($psycho as $row)
         @if($row->baseKey->isNotEmpty())
-            <table class="table table-hover table-striped table-bordered w-30">
+            <table class="psychoTable">
                 <thead>
                     <tr>
                         <th>S/N</th>
@@ -51,13 +58,12 @@
         @endif
     @endforeach
 
-
-    <table class="table table-bordered w-30">
+    <table id="teacherTable">
         <tr>
-            <td colspan="3">Name of Teacher</td>
+            <td colspan="3"><b>Name of Teacher:</b> {{$results->teacher_name}}</td>
         </tr>
         <tr>
-            <td colspan="3">Teacher's Comment:</td>
+            <td colspan="3"><b>Teacher's Comment:</b> {{$results->class_teacher_comment}}</td>
         </tr>
         <tr>
             <td></td>
@@ -67,7 +73,7 @@
 
        
         <tr>
-            <td colspan="3">Principal's Comment:</td>
+            <td colspan="3"><b>Principal's Comment:</b> {{$results->principal_comment}} </td>
         </tr>
         <tr>
             <td></td>

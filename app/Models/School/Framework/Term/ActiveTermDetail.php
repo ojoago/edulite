@@ -9,6 +9,6 @@ class ActiveTermDetail extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'term_pid','school_pid','begin','end','note','session_pid'
+        'term_pid','school_pid','begin','end','note','session_pid', 'next_term'
     ];
 }

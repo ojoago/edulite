@@ -781,6 +781,9 @@
                     <label for="">Term End</label>
                     <input type="date" name="term_end" autocomplete="off" class="form-control" placeholder="lite term e.g first term" required>
                     <p class="text-danger term_end_error"></p>
+                    <label for="">Next Term Begins</label>
+                    <input type="date" name="next_term" autocomplete="off" class="form-control" placeholder="lite term e.g first term" required>
+                    <p class="text-danger next_term_error"></p>
                     Re-asign last term class ? <input type="checkbox" name="clone_class" value="1" class="checkbox"> <br>
                     Re-asign last term subjects ? <input type="checkbox" name="clone_subject" value="1" class="checkbox">
                     <textarea type="text" name="note" autocomplete="off" class="form-control" placeholder="lite term description"></textarea>
@@ -1034,7 +1037,7 @@
                 <form method="post" class="" id="createSchoolCategortSubjectForm">
                     @csrf
                     <div class="input-group">
-                        <select name="category_pid" style="width:100%" class="form-control form-control-sm createSubjectCategorySelect2" id="createSubjectCategorySelect2">
+                        <select name="category_pid[]" multiple style="width:100%" class="form-control form-control-sm createSubjectCategorySelect2" id="createSubjectCategorySelect2">
                         </select>
                     <i class="bi bi-x-circle-fill text-danger hidden-item "></i>
                     </div>
@@ -1232,9 +1235,9 @@
                             <div class="col-md-7">
                                 <div class="input-group mb-3">
                                     <input type="number" step=".0" min="1" max="100" class="form-control form-control-sm" name="score[]" placeholder="obtainable score">
-                                    <span class="input-group-text">Mid-Term?</span>
-                                    <input class="custom-check m-1" value="2" name="mid[]" type="checkbox" id="gridCheck2">
-                                    <i class="bi bi-x-circle-fill text-danger hidden-item m-2"></i>
+                                    {{-- <span class="input-group-text">Mid-Term?</span>
+                                    <input class="custom-check m-1" value="2" name="mid[]" type="checkbox" id="gridCheck2"> --}}
+                                    <i class="bi bi-x-circle-fill text-danger hidden-item mx-2"></i>
                                 </div>
                                 <p class="text-danger score0_error"></p>
                             </div>

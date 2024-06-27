@@ -907,7 +907,7 @@
                 <div class="form-group">
                         <div class="input-group">
                             <input type="text" name="subject[]" id="subject" class="form-control form-control-sm" placeholder="subject name" required>
-                            <i class="bi bi-x-circle-fill text-danger removeSubject "></i>
+                            <i class="bi bi-x-circle-fill text-danger removeSubject pointer "></i>
                         </div>
                         <p class="text-danger subject_error"></p>
                     </div>
@@ -1002,9 +1002,9 @@
                             <div class="col-md-7">
                                 <div class="input-group mb-3">
                                     <input type="number" step=".0" min="1" max="100" class="form-control form-control-sm" name="score[]" placeholder="obtainable score">
-                                    <span class="input-group-text">Mid-Term?</span>
-                                    <input class="custom-check m-1" value="2" name="mid[]" type="checkbox" id="gridCheck2">
-                                    <i class="bi bi-x-circle-fill text-danger removeRowBtn pointer m-2"></i>
+                                    {{--<span class="input-group-text">Mid-Term?</span>
+                                    <input class="custom-check m-1" value="2" name="mid[]" type="checkbox" id="gridCheck2"> --}}
+                                    <i class="bi bi-x-circle-fill text-danger removeRowBtn pointer mx-2"></i>
                                 </div>
                                 <p class="text-danger score${pid}_error"></p>
                             </div>

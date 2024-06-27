@@ -23,86 +23,77 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-body">
-            <form action="{{route('change.arm.subject')}}" method="post">
-                @csrf
-                <div class="row">
-                    <div class="col-md-4 mb-2">
-                        <!-- <label for="arm" class="form-label">Class Arm</label> -->
-                        <select type="text" name="arm" class="form-control" id="formArmSelect2">
-
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                        <!-- <label for="subject" class="form-label">Class Subject</label> -->
-                        <select type="text" name="subject" class="form-control" id="formArmSubjectSelect2">
-
-                        </select>
-                    </div>
-
-                    <div class="col-md-4">
-                        <button class="btn btn-primary btn-sm" type="submit">Change</button>
-                    </div>
+            <h5 class="card-title">
+                @if(isset($class))
+                    {{$class->arm}} <small>{{$class->subject}} <i class="bi bi-calendar-event-fill"></i> {{activeTermName()}} {{activeSessionName()}}</small>
+                @endif
+                <div class="float-end">
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-target="#filterModal" data-bs-toggle="modal" >Filter</button>
                 </div>
-            </form>
+            </h5>
+            
             <!-- Primary Color Bordered Table -->
-            <h5 class="card-title">{{$class->arm}} <small>{{$class->subject}} <i class="bi bi-calendar-event-fill"></i> {{activeTermName()}} {{activeSessionName()}}</small></h5>
-            @if($scoreParams->isNotEmpty())
-            @if($data->isNotEmpty())
-            <div class="btn-group">
-                <a href="{{route('export.student.list')}}"><button class="btn btn-primary btn-sm" type="btn" id="exportStudentList" data-bs-toggle="tooltip" title="Export Student list to excel to enter score offline">export</button></a>
-                <button class="btn btn-success btn-sm" type="button" id="importStudentScore" data-bs-toggle="tooltip" title="Import Student Scores">import</button>
-            </div>
-            <table class="table table-bordered border-primary  cardTable" id="scoreTable">
-                <thead>
-                    <tr>
-                        <th scope="col" width="5%">S/N</th>
-                        <th scope="col">
-                            Reg-Number
-                        </th>
-                        <th scope="col">Names</th>
-                        @foreach($scoreParams as $row)
-                        <th scope="col">{{$row->title}} [{{$row->score}}]</th>
-                        @endforeach
-                        <th scope="col" width="5%">Total
-                            [100]
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <form>
-                        @csrf
-                        @foreach($data as $student)
-                        <tr class="studentId" id="{{$student->pid}}">
-                            <td>{{$loop->iteration}}</td>
-                            <td>{{$student->reg_number}}</td>
-                            <td> <input type="checkbox" name="{{$student->pid}}" class="examStatus" id="{{$student->pid}}" {{$student->seated == 0 ?: 'checked'  }} > {{ $student->fullname }}</td>
-                            @php $total = 0;@endphp
-                            @foreach($scoreParams as $row)
-                            <td scope="col">
-                                @php
-                                $score = getTitleScore($student->pid,$row->assessment_title_pid);
-                                $total += $score;
-                                @endphp
-                                <input type="number" step="0.01" class="form-control form-control-sm studentCaScore score{{$student->pid}}" id="{{$row->assessment_title_pid}}" value="{{$score}}" max_score="{{$row->score}}" placeholder="max obtainable {{--$row->score--}}">
-                            </td>
-                            @endforeach
-                            <td scope="col" id="total{{$student->pid}}">{{$total}}</td>
-                        </tr>
-                        @endforeach
-                </tbody>
-                {{-- <tfoot>
-                        <td colspan="{{$scoreParams->count()+2}}"></td>
-                <td colspan="2">
-                </td>
-                </tfoot> --}}
-                </form>
-            </table>
-            <button type="button" class="btn btn-primary" id="confirmBtn">Confirm</button>
-            @else
-            <h3 class="card-title bg-warning text-center">No Student Assign to {{$class->arm}} in {{sessionName(session('session'))}} , Please contact the School Admin...</h3>
-            @endif
-            @else
-            <h3 class="card-title bg-warning text-center">Please Contact school admin to set Score Settings for {{--termName(session('term'))--}} {{--sessionName(session('session'))--}} for {{$class->arm}} </h3>
+            @if(isset($class))
+                @if($scoreParams->isNotEmpty())
+                    @if($data->isNotEmpty())
+                    <div class="btn-group">
+                        <a href="{{route('export.student.list')}}"><button class="btn btn-primary btn-sm" type="btn" id="exportStudentList" data-bs-toggle="tooltip" title="Export Student list to excel to enter score offline">export</button></a>
+                        <button class="btn btn-success btn-sm" type="button" id="importStudentScore" data-bs-toggle="tooltip" title="Import Student Scores">import</button>
+                    </div>
+                    <table class="table table-bordered border-primary  cardTable" id="scoreTable">
+                        <thead>
+                            <tr>
+                                <th scope="col" width="5%">S/N</th>
+                                <th scope="col">
+                                    Reg-Number
+                                </th>
+                                <th scope="col">Names</th>
+                                @foreach($scoreParams as $row)
+                                <th scope="col">{{$row->title}} [{{$row->score}}]</th>
+                                @endforeach
+                                <th scope="col" width="5%">Total
+                                    [100]
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <form>
+                                @csrf
+                                @foreach($data as $student)
+                                <tr class="studentId" id="{{$student->pid}}">
+                                    <td>{{$loop->iteration}}</td>
+                                    <td>{{$student->reg_number}}</td>
+                                    <td> <input type="checkbox" name="{{$student->pid}}" class="examStatus" id="{{$student->pid}}" {{$student->seated == 0 ?: 'checked'  }} > {{ $student->fullname }}</td>
+                                    @php $total = 0;@endphp
+                                    @foreach($scoreParams as $row)
+                                    <td scope="col">
+                                        @php
+                                        $score = getTitleScore($student->pid,$row->assessment_title_pid);
+                                        $total += $score;
+                                        @endphp
+                                        <input type="number" step="0.01" class="form-control form-control-sm studentCaScore score{{$student->pid}}" id="{{$row->assessment_title_pid}}" value="{{$score}}" max_score="{{$row->score}}" placeholder="max obtainable {{--$row->score--}}">
+                                    </td>
+                                    @endforeach
+                                    <td scope="col" id="total{{$student->pid}}">{{$total}}</td>
+                                </tr>
+                                @endforeach
+                        </tbody>
+                        {{-- <tfoot>
+                                <td colspan="{{$scoreParams->count()+2}}"></td>
+                        <td colspan="2">
+                        </td>
+                        </tfoot> --}}
+                        </form>
+                    </table>
+                    <button type="button" class="btn btn-primary" id="confirmBtn">Confirm</button>
+                    @else
+                    <h3 class="card-title bg-warning text-center">No Student Assign to {{$class->arm}} in {{sessionName(session('session'))}} , Please contact the School Admin...</h3>
+                    @endif
+                @else
+                <h3 class="card-title bg-warning text-center">Please Contact school admin to set Score Settings {{--termName(session('term'))--}} {{--sessionName(session('session'))--}} for {{$class->arm}} </h3>
+                @endif
+            @else 
+                <h3 class="card-title text-center">Click On filter to select class </h3>
             @endif
             <!-- End Primary Color Bordered Table -->
 
@@ -110,15 +101,73 @@
     </div>
 </div>
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
+<!-- filter subject form modal  -->
+<div class="modal fade" id="filterModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                {{-- <h5 class="modal-title h6">Create Extra Curricular Name</h5> --}}
+                 <p class="text-center small">load Student Assessment for <span class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</span></p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post">
+            <div class="modal-body">
+                @csrf
+                <label for="category" class="form-label">Category</label>
+                <select type="text" name="category" class="form-control" id="assessmentCategorySelect2" required>
+                </select>
+            
+                <label for="class" class="form-label">Class</label> 
+                <select type="text" name="class" class="form-control" id="assessmentClassSelect2" required>
+                </select>
+          
+                <label for="arm" class="form-label">Class Arm</label>
+                <select type="text" name="arm" class="form-control" id="assessmentArmSelect2" required>
+                </select>
+          
+                <div class="col-12">
+                    <label for="subject" class="form-label">Class Subject</label>
+                    <select type="text" name="subject" class="form-control" id="assessmentArmSubjectSelect2">
+                    </select>
+                </div>
+               
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-sm" >Submit</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </form>
+    </div>
+</div><!-- filter form-->
+
+
 <script>
     $(document).ready(function() {
+
+          multiSelect2('#assessmentCategorySelect2', 'filterModal', 'category', 'Select Category');
+        $('#assessmentCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#assessmentClassSelect2','filterModal', 'class', id, 'Select Class');
+        });
+        $('#assessmentClassSelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#assessmentArmSelect2','filterModal', 'class-teacher-arm', id, 'Select Class Arm');
+        });
+        $('#assessmentArmSelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#assessmentArmSubjectSelect2','filterModal', 'class-arm-subject', id, 'Select Arm Subject');
+        });
+
+
+
         $('#scoreTable').DataTable({
             fixedHeader: true,
             paging: false,
             "info": false,
             "searchable": false,
         });
+        
         $('.studentCaScore').change(function() {
             var score = $(this).val(); //CA score
             var max = Number($(this).attr('max_score')); // obtainable score
@@ -198,27 +247,6 @@
         var class_pid = "{{session('class')}}";
         if (class_pid != null) {
             getClassArms(class_pid)
-        }
-
-        // $('#formClassSelect2').on('change', function(e) {
-        //     var id = $(this).val();
-        //     FormMultiSelect2Post('#formArmSelect2', 'class-arm', id, 'Select Class Arm');
-        // });
-        // $('#formArmSelect2').on('change', function(e) {
-        //     var id = $(this).val();
-        //     FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
-        // });
-        $('#formArmSelect2').on('change', function(e) {
-            var id = $(this).val();
-            FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
-        });
-
-        function getClassArms(id) {
-            FormMultiSelect2Post('#formArmSelect2', 'class-teacher-arm', id, 'Select Class Arm');
-        }
-
-        function getArmSubject(id) {
-            FormMultiSelect2Post('#formArmSubjectSelect2', 'class-arm-subject', id, 'Select Class Arm Subject');
         }
 
         // export student list 

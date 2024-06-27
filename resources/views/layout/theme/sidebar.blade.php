@@ -474,7 +474,7 @@
         </a>
         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="{{route('student.assessment.form')}}">
+            <a href="{{route('enter.student.score')}}">
               <i class="bi bi-circle"></i><span>Record CA's</span>
             </a>
           </li>

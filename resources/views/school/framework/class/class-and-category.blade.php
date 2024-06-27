@@ -29,6 +29,7 @@
                     <thead>
                         <tr>
                             <th>Category</th>
+                            <th>Head</th>
                             <th>Description</th>
                             <!-- <th>Date</th> -->
                             <!-- <th>Created By</th> -->
@@ -146,6 +147,9 @@
             "ajax": "{{route('load.school.category')}}",
             "columns": [{
                     "data": "category"
+                },
+                {
+                    "data": "fullname"
                 },
                 {
                     "data": "description"

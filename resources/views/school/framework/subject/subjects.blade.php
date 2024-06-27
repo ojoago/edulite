@@ -11,8 +11,8 @@
                         <button type="button" class="btn btn-primary mb-3 ms-auto" data-bs-toggle="modal" data-bs-target="#createSubjectModal">
                             Create Subject
                         </button>
-                        {{-- <button type="button" class="btn btn-primary mb-3 ms-auto" data-bs-toggle="modal" data-bs-target="#dupSubjectTypeModal">
-                            Copy Subject Type
+                        {{-- <button type="button" class="btn btn-primary btn-sm mb-3 ms-auto" data-bs-toggle="modal" data-bs-target="#cloneSubjectModal">
+                            Clone Subject 
                         </button> --}}
                     </div>
                     <div class="col-md-6">

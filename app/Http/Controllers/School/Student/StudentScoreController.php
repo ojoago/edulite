@@ -56,14 +56,21 @@ class StudentScoreController extends Controller
     public function enterStudentScoreRecord(Request $request){
         $request['session'] = activeSession();
         $request['term'] = activeTerm();
-       $request->validate([
-            'category'=>'required',
-            'class'=>'required',
-            'arm'=>'required',
-            'subject'=>'required',
-            'term'=>'required',
-            'session'=>'required',
-       ]);
+        $request->validate([
+                'category'=>'required',
+                'class'=>'required',
+                'arm'=>'required',
+                'subject'=>'required',
+                'term'=>'required',
+                'session'=>'required',
+        ]);
+
+        
+       $head = ClassController::getCategoryHeadPid($request->arm);
+     
+       if($head->head_pid == null){
+            return redirect()->back()->with('warning', 'Contact School Admin to assign head to '. $head->category);
+       }
 
        if(!self::mySubjects($request->subject)){
             $cl = ClassController::GetClassSubjectAndName($request->subject);
@@ -71,20 +78,34 @@ class StudentScoreController extends Controller
        }
         
         // retrieve form data 
-    session([
-        'category'=> $request->category,
-        'class'=> $request->class,
-        'session'=> $request->session,
-        'term'=> $request->term,
-        'subject'=>$request->subject,
-        'arm'=>$request->arm,
-    ]);
+       $data = [
+            'category' => $request->category,
+            'class' => $request->class,
+            'session' => $request->session,
+            'term' => $request->term,
+            'subject' => $request->subject,
+            'arm' => $request->arm,
+        ];
 
 
-    setActionablePid(); //set assessment pid to null
+        setActionablePid(); //set assessment pid to null
         // self::useClassArmSubjectToGetSubjectScroe();
-    return redirect()->route('enter.student.score');
+        $params = $this->loadStudentAndScoreSetting();
+        $data = $params['data']; //list of student in selected class
+        $scoreParams = $params['scoreParams']; //score header
+        $class = $params['class']; //selected class and subject
+        if (!$this->createScoreSheetParams() || $this->createScoreSheetParams() === 'no class') {
+            if ($this->createScoreSheetParams() === 'no class') {
+                return redirect()->back()->with('error', ClassController::getClassArmNameByPid(session('arm')) . '  not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')));
+            }
+            return redirect()->back()->with('error', 'Subject not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')) . ' & make sure proper term/session is set');
+        }
+
+        return view('school.student.assessment.enter-student-score', compact('data', 'scoreParams', 'class'));
+    // return redirect()->route('enter.student.score');
     }
+
+
     public static function mySubjects($pid){
         if(schoolAdmin()){
             return true;
@@ -137,18 +158,7 @@ class StudentScoreController extends Controller
 //
     public function enterStudentScore(){
         // load student names and score settings 
-        $params = $this->loadStudentAndScoreSetting();
-        $data = $params['data']; //list of student in selected class
-        $scoreParams = $params['scoreParams']; //score header
-        $class = $params['class'];//selected class and subject
-        if(!$this->createScoreSheetParams() || $this->createScoreSheetParams() === 'no class'){
-            if($this->createScoreSheetParams()==='no class'){
-                return redirect()->back()->with('error', ClassController::getClassArmNameByPid(session('arm')). '  not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')));
-            }
-            return redirect()->back()->with('error', 'Subject not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')).' & make sure proper term/session is set');
-        }
-       
-        return view('school.student.assessment.enter-student-score', compact('data', 'scoreParams','class'));
+        
     }
 //
     private function loadStudentAndScoreSetting(){

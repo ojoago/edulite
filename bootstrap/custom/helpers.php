@@ -405,11 +405,29 @@ use App\Http\Controllers\Auths\AuthController;
             return $ret;
     }
     function dateToAge($date){
-        return Carbon::parse($date)->age;
+       $age = Carbon::parse($date)->age;
+       if($age < 1){
+            $age = date('n', strtotime($date)). ' Month';
+       }
+       return $age;
     // $date = new DateTime($date);
     // return $date->diff(Carbon::now())
     // ->format('%y years, %m months and %d days');
     }
+function getMonths($startDate, $endDate = null)
+{
+    $start = new DateTime($startDate);
+    $end = new DateTime($endDate);
+    $interval = $start->diff($end);
+
+    $years = $interval->y;
+    $months = $interval->m;
+
+    // Total number of months
+    $totalMonths = $years * 12 + $months;
+
+    return $totalMonths;
+}
 function dateDiff($date, $e)
 {
     $b = new DateTime($date);
@@ -417,6 +435,7 @@ function dateDiff($date, $e)
     $d = $b->diff($e);
     return $d->format("%R%a");
 }
+
 function diffForHumans($date)
 {
     $timestamp = strtotime($date);
@@ -457,6 +476,7 @@ function diffForHumans($date)
     //     }
     // }
 }
+
     function ordinalFormat($num){
         try {
             if(class_exists('NumberFormatter')){
@@ -554,6 +574,14 @@ function date_diff_weekdays($from, $to)
     }
     function fullDate(){
         return date('Y-m-d H:i:s');
+    }
+
+    function formatDate($date)
+    {
+        if (empty($date)) {
+            return;
+        }
+        return date('d M, Y', strtotime($date));
     }
 
     function sendMail($param){

@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','Psychomotor & Affective Domain')
+@section('title','Extra Curricular Activities')
 @section('content')
 <div class="card">
     <div class="card-body">
@@ -21,6 +21,9 @@
             <div class="tab-pane fade show active" id="psychomotor" role="tabpanel" aria-labelledby="home-tab">
                 <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createPsychomotorBaseModal">
                     Create Extra Curricular
+                </button>
+                <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#clonePsychomotorBaseModal">
+                    Clone Extra Curricular
                 </button>
                 <table class="table table-hover table-striped cardTable" id="psychomotorBaseDataTable" width="100%">
                     <thead>
@@ -153,6 +156,59 @@
         </div>
     </div>
 </div><!-- End Psychomotro Modal-->
+
+<!-- create psycho Base modal  -->
+<div class="modal fade" id="clonePsychomotorBaseModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h6">CLone Extra Curricular Name and Keys</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="clonePsychomotorBaseForm">
+                    @csrf
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="">Category</label>
+                            <select type="text" class="form-control" id="cloneFromCategorySelect2" required>
+                            </select>
+                            <p class="text-danger category_error"></p>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="">Extra Curricular Name</label>
+                            <select type="text" name="psychomotor[]" multiple class="form-control" id="clonePsychomotorSelect2" required>
+                            </select>
+                            <p class="text-danger psychomotor_error"></p>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="">School Category</label>
+                            <select type="text" name="category[]" multiple class="form-control" id="cloneToCategorySelect2" required>
+                            </select>
+                            <p class="text-danger category_error"></p>
+                        </div>
+                    </div>
+                    
+                    {{-- <label for="">Description</label>
+                    <textarea type="text" name="description" class="form-control form-control-sm" placeholder="Description"></textarea>
+                    <p class="text-danger description_error"></p> --}}
+                    
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="clonePsychomotorBaseBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div><!-- End Psychomotro Modal-->
+
+
+
+
 <!-- create psycho modal  -->
 <div class="modal fade" id="createPsychomotorKeyModal" tabindex="-1">
     <div class="modal-dialog  modal-dialog-scrollable">
@@ -290,6 +346,15 @@
             var id = $(this).val();
             multiSelect2Post('#psychomotorkeySelect2', 'createPsychomotorKeyModal', 'psychomotors', id, 'Select Psychomotor');
         });
+
+
+        multiSelect2('#cloneToCategorySelect2', 'clonePsychomotorBaseModal', 'category', 'Select Category');
+        multiSelect2('#cloneFromCategorySelect2', 'clonePsychomotorBaseModal', 'category', 'Select Category');
+
+        $('#cloneFromCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#clonePsychomotorSelect2', 'clonePsychomotorBaseModal', 'psychomotors', id, 'Select Psychomotor');
+        });
         // psychomotor-dataTable
         loadBase()
         function loadBase(){
@@ -386,6 +451,15 @@
                 loadBase(id)
             }
         });
+        
+        // clone psychomotor  
+        $('#clonePsychomotorBaseBtn').click(async function() {
+            let sts = await  submitFormAjax('clonePsychomotorBaseForm', 'clonePsychomotorBaseBtn', "{{route('clone.psychomotor.base')}}")
+            if(sts.status ===1){
+                loadBase(id)
+            }
+        });
+
         $('#createPsychomotorkeyBtn').click(function(e) {
             e.preventDefault()
             submitFormAjax('createPsychomotorkeyForm', 'createPsychomotorkeyBtn', "{{route('create.psychomotor.key')}}")
@@ -455,7 +529,7 @@
                         name: 'DT_RowIndex',
                     },
                 {
-                    "data": "psychomotor"
+                    "data": "category"
                 },
                 {
                     "data": "title"
