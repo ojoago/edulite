@@ -171,6 +171,9 @@
             /* transform-origin: left bottom; */
             /* box-sizing: border-box; */
         }
+        .subject-column{
+            text-align: left !important;
+        }
 
         .signature-container{
            display: flex;

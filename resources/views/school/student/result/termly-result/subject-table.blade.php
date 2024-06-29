@@ -4,9 +4,9 @@
                     <thead>
                         <tr>
                             @if (@$setting->serial_number == 1)
-                             <th>S/N</th>
+                             <th width="5%">S/N</th>
                             @endif
-                            <th class="flat-row p-2 subject" align="left" >SUBJECTS</th>
+                            <th class="flat-row p-2 subject-column" align="left" >SUBJECTS</th>
                             @foreach($scoreSettings as $row)
                             <th class="rotate-up">{{$row->title}} ({{$row->score}}%)</th>
                             @endforeach
@@ -39,7 +39,7 @@
                             @if (@$setting->serial_number == 1)
                              <td>{{$loop->iteration}}</td>
                             @endif
-                            <td align="left" class="subject">{{$row->subject}}</td>
+                            <td align="left" class="subject-column">{{$row->subject}}</td>
                             @foreach($scoreSettings as $hrow)
                             <td>
                                 {{ number_format(getTitleAVGScore(student:$std->pid,pid:$hrow->assessment_title_pid,param:$param,sub:$row->type),1)}}
@@ -56,7 +56,7 @@
                             </td>
                            
                              @if (@$setting->subject_grade == 1)
-                                <td>{{rtnGrade($row->total,$grades)}}</td>
+                                <td>  {{ $row->grade ?? rtnGrade($row->total,$grades)}}</td>
                             @endif
                             @if (@$setting->subject_average == 1)
                                 <td>{{$row->avg}}</td>

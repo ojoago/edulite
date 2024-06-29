@@ -200,7 +200,7 @@ class StudentTermlyResultController extends Controller
                     })->select(DB::raw('r.student_pid,r.total,
                                 RANK() OVER (ORDER BY r.total DESC) AS position,
                                 reg_number,type, dtl.class_teacher_comment,dtl.principal_comment,
-                                dtl.portal_comment,r.class_param_pid,principal_name,exam_status,teacher_name,date,principal_signature,class_average,students'))
+                                dtl.portal_comment,r.class_param_pid,principal_name,exam_status,teacher_name,date,principal_signature,class_average,students,r.grade'))
                     ->groupBy('r.student_pid')
                     ->orderBy('r.total', 'DESC')
                     ->groupBy('r.total')
@@ -213,7 +213,7 @@ class StudentTermlyResultController extends Controller
                     rn.total,position,
                     rn.student_pid,reg_number,type,rn.class_teacher_comment, 
                     rn.principal_comment,rn.portal_comment,
-                    rn.class_param_pid,principal_name,exam_status,teacher_name,date,principal_signature,class_average,students'
+                    rn.class_param_pid,principal_name,exam_status,teacher_name,date,principal_signature,class_average,students,rn.grade'
                 ))->groupBy('sr.student_pid')->orderBy('position')
                     ->where(['sr.class_param_pid' => $param, 'seated' => 1]);//->get()->dd();
                 $result = DB::table('student_class_results as r')
@@ -282,12 +282,11 @@ class StudentTermlyResultController extends Controller
                                                             ->where(['p.pid' => $param, 'b.school_pid' => getSchoolPid()])->select('b.psychomotor','b.pid', 'obtainable_score as max', 'grade')->get();//->dd();
                                                             
 
-                // $psycho = PsychomotorBase::where(['school_pid' => getSchoolPid()])
-                //     ->get(['psychomotor', 'pid'])->dd();
-
                 $school = School::where('pid', getSchoolPid())
                     ->first(['school_email', 'school_website', 'school_logo', 'school_moto', 'school_address', 'school_contact']);
-                $grades = DB::table('grade_keys AS g')->where('class_param_pid', $param)->get(['grade', 'title', 'min_score', 'max_score']);
+                
+                $grades = DB::table('grade_key_bases as b')->join('class_arms as a','a.class_pid','b.class_pid')->where('a.pid',$classParam->arm_pid)->select('grade', 'title', 'min_score', 'max_score')->get();//->dd();
+                // $grades = DB::table('grade_keys AS g')->where('class_param_pid', $param)->get([]);
             }
 
             $basePath = 'school.student.result.';
@@ -299,7 +298,7 @@ class StudentTermlyResultController extends Controller
             if($result_config){
                 $basePath = $result_config->base_dir;
                 $path = $result_config->sub_dir. $result_config->file_name;
-            }  
+            }
             
             return view($basePath.$path, compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'result', 'grades', 'school', 'terms', 'result_config'));
 

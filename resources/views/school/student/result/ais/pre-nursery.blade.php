@@ -17,7 +17,7 @@
         <td > <b> GENDER</b> </td>
         <td>{{$std->gender}}</td>
         <td><b>SESSION</b> {{$result->session}}</td>
-        <td> <b>NEXT TERM BEGINS</b> </td>
+        <td> <b>NEXT TERM BEGINS:</b> {{formatDate($result->next_term)}} </td>
     </tr>
     <tr>
         <td ><b>HEIGHT</b>  </td>
@@ -70,8 +70,16 @@
         </tr>
         <tr>
             <td></td>
-            <td>Sign </td>
-            <td>Date:</td>
+            <td>
+               <div class="bd solid signature-container">
+                Signature: 
+                <div class="signature-base">
+                    @php $imgUrl = $result->signature ? asset("/files/images/".$result->signature) :'' @endphp
+                    <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+                </div>
+            </div>
+            </td>
+            <td>Date: {{formatDate($result->date)}}</td>
         </tr>
 
        
@@ -80,8 +88,16 @@
         </tr>
         <tr>
             <td></td>
-            <td>Sign </td>
-            <td>Date:</td>
+            <td>
+                <div class="bd solid signature-container">
+                Signature: 
+                <div class="signature-base">
+                    @php $imgUrl = $result->principal_signature ? asset("/files/images/".$result->principal_signature) :'' @endphp
+                    <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+                </div>
+            </div>
+            </td>
+            <td>Date: {{formatDate($result->date)}}</td>
         </tr>
 
     </table>
