@@ -159,7 +159,7 @@ class StudentTermlyResultController extends Controller
                         'sr.school_pid' => getSchoolPid(),
                         'sub.student_pid' => $spid,
                     ])
-                    ->select('sub.*', 'sr.class_param_pid')
+                    ->select('sub.*', 'sr.class_param_pid','sr.grade')
                     ->groupBy('sr.subject_type')
                     ->get();
 
@@ -200,7 +200,7 @@ class StudentTermlyResultController extends Controller
                     })->select(DB::raw('r.student_pid,r.total,
                                 RANK() OVER (ORDER BY r.total DESC) AS position,
                                 reg_number,type, dtl.class_teacher_comment,dtl.principal_comment,
-                                dtl.portal_comment,r.class_param_pid,principal_name,exam_status,teacher_name,date,principal_signature,class_average,students,r.grade'))
+                                dtl.portal_comment,r.class_param_pid,principal_name,exam_status,teacher_name,date,principal_signature,class_average,students'))
                     ->groupBy('r.student_pid')
                     ->orderBy('r.total', 'DESC')
                     ->groupBy('r.total')
@@ -213,7 +213,7 @@ class StudentTermlyResultController extends Controller
                     rn.total,position,
                     rn.student_pid,reg_number,type,rn.class_teacher_comment, 
                     rn.principal_comment,rn.portal_comment,
-                    rn.class_param_pid,principal_name,exam_status,teacher_name,date,principal_signature,class_average,students,rn.grade'
+                    rn.class_param_pid,principal_name,exam_status,teacher_name,date,principal_signature,class_average,students'
                 ))->groupBy('sr.student_pid')->orderBy('position')
                     ->where(['sr.class_param_pid' => $param, 'seated' => 1]);//->get()->dd();
                 $result = DB::table('student_class_results as r')
