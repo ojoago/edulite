@@ -207,7 +207,13 @@
 <body>
     <!-- <link href="{{asset('printThis/css/normalize.css')}}" rel="stylesheet">
 <link href="{{asset('printThis/css/skeleton.css')}}" rel="stylesheet"> -->
-
+@php
+        $settings = null;
+        
+        if($result_config){
+            $settings = json_decode($result_config->settings) ;
+        }
+    @endphp
     <div class="container-fluid">
         <div id="document">
             @include('school.student.result.headers.top')
@@ -441,7 +447,7 @@
         <div class="flex-row">
             <div class="section">
                 <div class="card-header">Principal/Head Teacher</div>
-                Name: {{$result->principal}}<br>
+                Name: {{$result->principal_name}}<br>
                 Comment: {{$result->principal_comment}}<br>
                 <div class="signature-base">
                     @php $imgUrl = $result->signature ? asset("/files/images/".$result->signature) :'' @endphp
@@ -450,7 +456,7 @@
             </div>
             <div class="section">
                 <div class="card-header">Class/Form Teacher</div>
-                Name: {{$result->class_teacher}}<br>
+                Name: {{$result->teacher_name}}<br>
                 Comment: {{$result->class_teacher_comment}}<br>
                 <div class="signature-base">
                     @php $imgUrl = $result->signature ? asset("/files/images/".$result->signature) :'' @endphp
