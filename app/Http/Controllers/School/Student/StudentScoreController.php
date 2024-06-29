@@ -66,6 +66,9 @@ class StudentScoreController extends Controller
         ]);
 
         
+        if(!GradeKeyController::classGradeKeys($request->class)){
+            return redirect()->back()->with('warning', 'Contact School Admin to grade key for '. getClassNameByPid($request->class));
+        }
        $head = ClassController::getCategoryHeadPid($request->arm);
      
        if($head->head_pid == null){
@@ -78,6 +81,7 @@ class StudentScoreController extends Controller
        }
         
         // retrieve form data 
+
        $data = [
             'category' => $request->category,
             'class' => $request->class,
@@ -86,7 +90,7 @@ class StudentScoreController extends Controller
             'subject' => $request->subject,
             'arm' => $request->arm,
         ];
-
+        session($data);
 
         setActionablePid(); //set assessment pid to null
         // self::useClassArmSubjectToGetSubjectScroe();
@@ -175,11 +179,12 @@ class StudentScoreController extends Controller
             'term_pid' => $term,
             'arm_pid' => $arm,
         ];
+        
         $class_param_pid = ClassController::createClassParam($data);// create class param key and return the pid
 
         ScoreSettingsController::createClassSoreSetting(param_pid: $class_param_pid,class_pid:$class); //copy score setting from base score setting
        
-        GradeKeyController::createClassGradeKey(param_pid: $class_param_pid,class_pid:$class); //copy grade setting from base score setting
+        // GradeKeyController::createClassGradeKey(param_pid: $class_param_pid,class_pid:$class); //copy grade setting from base score setting
 
         $scoreParams = ScoreSettingsController::loadClassScoreSettings($class_param_pid);// load class score seetting 
         
@@ -238,6 +243,7 @@ class StudentScoreController extends Controller
         try {
             StudentScoreSheet::updateOrCreate($dupParams, $data);
             $ca = self::sumStudentSubjectScore($data['score_param_pid'], $data['student_pid'], session('subject'));
+            
             $data = [
                 'school_pid' => getSchoolPid(),
                 'student_pid' => $data['student_pid'],
@@ -289,6 +295,7 @@ class StudentScoreController extends Controller
         }
     }
 
+
     private function updateCombineSubject($data){
         try {
             $dupParams = $data;
@@ -296,13 +303,20 @@ class StudentScoreController extends Controller
             $total = $this->sumStudentCombinedScore($data); // take average of combined score as total and insert into subject type
             $data['total'] = $total ?? 0;
             $data['seated'] = $total ?  1 : 0; // if total is null it means there is only one subject so combine subject should be turned off
+            $grade = getScoreGrade($total, $data['class_param_pid']); 
+            if($grade){
+                $data['grade'] = $grade->grade;
+                $data['title'] = $grade->title;
+                $data['color'] = $grade->color;
+                $data['remark'] = $grade->remark;
+            }
             StudentSubjectResult::updateOrCreate($dupParams, $data); //combine subject details
-
             $total = $this->sumStudentTotalScore($data['class_param_pid'], $data['student_pid']); //sum student total score
+            //sum student total score
             $data = [
                 'class_param_pid' => $data['class_param_pid'],
                 'student_pid' => $data['student_pid'],
-                'total' => $total,
+                'total' => $total ,
                 'school_pid' => getSchoolPid()
             ];
             return $this->recordStudentTotal($data);
@@ -389,6 +403,7 @@ class StudentScoreController extends Controller
         $term =     session('term');
         $arm =      session('arm');
         $subject =  session('subject');
+       
         $teacher = StaffController::getSubjectTeacherPid(session:  $session,term: $term,subject: $subject);
         // dd($teacher, $session, $term, $subject);
         if(!$teacher){

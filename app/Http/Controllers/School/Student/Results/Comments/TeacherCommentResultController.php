@@ -57,7 +57,7 @@ class TeacherCommentResultController extends Controller
             'school_pid' => getSchoolPid(),
             'student_pid' => $request->std,
             'class_param_pid' => $request->param,
-        ])->update(['class_teacher_comment' => $request->comment]);
+        ])->update(['class_teacher_comment' => $request->comment, 'teacher_comment_on'=> fullDate()]);
         if ($result) {
             return 'Comment Updated';
         }

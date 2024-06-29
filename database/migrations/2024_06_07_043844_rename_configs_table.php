@@ -19,14 +19,14 @@ return new class extends Migration
             $table->foreign('school_pid')->references('pid')->on('schools')->onDelete('cascade');
             $table->string('category_pid');
             $table->foreign('category_pid')->references('pid')->on('categories')->onDelete('cascade');
-            $table->string('class_teacher')->default('Class/Form Teacher');
-            $table->string('head_teacher')->default('Principal/Head Teacher');
-            $table->string('chart')->default('line');
-            $table->string('title')->default('Continuous Assessment');
-            $table->string('template')->default('default');
-            $table->tinyInteger('grading')->default(1)->comment('1:position, 2:average, 3:cgpa, 4:none');
-            $table->tinyInteger('subject_position')->default(0);
-            $table->tinyInteger('subject_teacher')->default(0);
+            $table->string('class_teacher')->default('Class Teacher')->nullable();
+            $table->string('head_teacher')->default('Principal/Head Teacher')->nullable();
+            $table->string('chart')->default('column')->nullable();
+            $table->string('title')->default('Continuous Assessment Report')->nullable();
+            $table->string('template')->default('default')->nullable();
+            $table->tinyInteger('grading')->default(1)->comment('1:position, 2:average, 3:cgpa, 4:none')->nullable();
+            $table->tinyInteger('subject_position')->default(0)->nullable();
+            $table->tinyInteger('subject_teacher')->default(0)->nullable();
         });
     }
 

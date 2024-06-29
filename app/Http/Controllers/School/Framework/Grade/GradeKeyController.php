@@ -28,6 +28,7 @@ class GradeKeyController extends Controller
             ->make(true);
       
     }
+
     public function loadGradeKeyByClass()
     {
        
@@ -46,6 +47,7 @@ class GradeKeyController extends Controller
             ->make(true);
       
     }
+
     public function createGradeKey(Request $request)
     {
        $validator = Validator::make($request->all(),[
@@ -109,6 +111,15 @@ class GradeKeyController extends Controller
             }
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+    }
+
+    public static function classGradeKeys($class){
+        try {
+            return GradeKeyBase::where(['class_pid' => $class, 'school_pid' => getSchoolPid() ])->exists();
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 
     private function updateOrCreateGradeBase($data){

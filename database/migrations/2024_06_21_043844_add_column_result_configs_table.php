@@ -14,9 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::table('result_configs', function (Blueprint $table) {
-            $table->string('base_dir')->default('school.student.result')->nullable();
-            $table->string('sub_dir')->default('termly-result')->nullable();
+            $table->string('base_dir')->default('school.student.result.')->nullable();
+            $table->string('sub_dir')->default('termly-result.')->nullable();
             $table->string('file_name')->default('student-report-card')->nullable();
+            $table->tinyInteger('show_chart')->default(1)->nullable();
+            $table->json('settings')->nullable();
+            $table->string('student_name')->nullable();
         });
     }
 

@@ -4,6 +4,7 @@ use App\Models\Users\UserDetail;
 use Illuminate\Support\Facades\DB;
 use App\Models\School\Framework\Term\Term;
 use App\Models\School\Framework\Class\ClassArm;
+use App\Models\School\Framework\Class\Classes;
 use App\Models\School\Framework\Session\Session;
 use App\Models\School\Framework\Term\ActiveTerm;
 use App\Models\School\Framework\Session\ActiveSession;
@@ -41,6 +42,7 @@ use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
        
         return $score;
     }
+
     function getTitleAVGScore($student, $pid, $param,$sub){
         // dd($student, $pid, $param, $sub);
         
@@ -59,6 +61,59 @@ use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
                         ->pluck('score')->first();//->toArray();
         return $ca;
     }
+
+    function getSubjectTotalScore($student, $param, $sub){
+        // dd($student, $pid, $param, $sub);
+        try {
+            $ca = DB::table('student_subject_results')
+                ->select("total")
+                ->where([
+                    'student_pid' => $student,
+                    'subject_type' => $sub,
+                    'school_pid' => getSchoolPid(),
+                    'class_param_pid' => $param
+                ])->pluck('total')->first();
+                return $ca;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return null;
+        }
+    }
+
+    function getSubjectAVGScore($student, $session,$sub){
+        // dd($student, $pid, $param, $sub);
+        try {
+        $ca = DB::table('student_subject_results as r')
+            ->join('student_class_result_params as p', 'r.class_param_pid', 'p.pid')
+            ->select(DB::raw("AVG(total) AS score"))
+            ->where([
+                'r.seated' => 1,
+                'r.student_pid' => $student,
+                'r.subject_type' => $sub,
+                'p.school_pid' => getSchoolPid(),
+                'p.session_pid' => $session
+            ])->pluck('score')->first();;
+            return $ca;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return null;
+        }
+    }
+    function getScoreGrade($total, $param){
+        
+        try {
+       
+            return DB::table('grade_key_bases as b')->join('class_arms as a','a.class_pid','b.class_pid')
+                                                    ->join('student_class_result_params as p', 'p.arm_pid','a.pid')->where(['p.pid' => $param])
+                ->whereRaw('? between min_score and max_score', [$total])
+                ->select([ 'grade','color' ,'remark', 'title'])->first();    
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return null;
+        }
+    }
+
+
     function termName($pid){
         $term = Term::where(['school_pid'=>getSchoolPid(),'pid'=>$pid])->pluck('term')->first();
         return $term;
@@ -90,6 +145,15 @@ function activeTermName()
         $arm = ClassArm::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->pluck('arm')->first();
         return $arm;
     }
+
+    function getClassNameByPid($pid){
+        try {
+            return Classes::where(['school_pid' => getSchoolPid(), 'pid' => $pid])->pluck('class')->first();
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            false;
+        }
+    }
     // psychomoter 
 
     function getPsychoKeyScore($student,$param,$key){
@@ -119,10 +183,7 @@ function activeTermName()
         return $score;
     }
 
-    function getScoreGrade($arm,$score){
-
-        return 'A';
-    }
+   
 
     function loadMyNotificationDetails(){
         switch (getUserActiveRole()) {
@@ -258,6 +319,8 @@ function activeTermName()
             return false;
         }
     }
+
+
     function countRecentNotification()
     {
         switch (getUserActiveRole()) {

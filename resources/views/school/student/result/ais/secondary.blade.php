@@ -119,11 +119,12 @@
                             @foreach($scoreSettings as $row)
                             <th class="rotate-up">{{$row->title}} ({{$row->score}}%)</th>
                             @endforeach
-                            <th class="rotate-up">3rd Term (100%)</th>
-                            <th class="rotate-up">2nd Term (100%)</th>
-                            <th class="rotate-up">1st Term (100%)</th>
+                            @foreach($terms as $term)
+                            <th class="rotate-up">{{$term->term}} (100%)</th>
+                            @endforeach
                             <th class="rotate-up">Cumulative Average</th>
                             <th class="rotate-up">GRADE</th>
+                            <th class="rotate-up">Subject Average</th>
                             <th class="rotate-up">SUBJECT POSITION</th>
                             <th class="flat-row">TEACHER</th>
                             <th class="flat-row">Remarks</th>
@@ -142,16 +143,23 @@
                                 {{ number_format(getTitleAVGScore(student:$std->pid,pid:$hrow->assessment_title_pid,param:$param,sub:$row->type),1)}}
                             </td>
                             @endforeach
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            {{-- <td>{{getTitleAVGScore(student:$std->pid,pid:$hrow->assessment_title_pid,param:$param,sub:$row->type)}}</td> --}}
+                            @foreach($terms as $term)
+                            <td >
+                                {{ number_format(getSubjectTotalScore(student:$std->pid,param:$term->pid,sub:$row->type),1)}}
+
+                            </td>
+                            @endforeach
+                            <td>
+                                {{ number_format(getSubjectAVGScore(student:$std->pid,session:$term->session_pid,sub:$row->type),1)}}
+                            </td>
                             {{-- <td>{{number_format($row->total,1)}}</td> --}}
                             {{-- <td>{{number_format($row->min,1)}}</td>
                             <td>{{number_format($row->avg,1)}}</td>
                             <td>{{number_format($row->max,1)}}</td> --}}
                             @php array_push($columnChart,[$row->subject,$row->total,$row->min,$row->avg,$row->max]) @endphp
                             <td>{{rtnGrade($row->total,$grades)}}</td>
+                            <td>{{$row->avg}}</td>
                             <td>{{ordinalFormat($row->position)}}</td>
                             <td>{{$row->subject_teacher_name}}</td>
                             <td> </td>

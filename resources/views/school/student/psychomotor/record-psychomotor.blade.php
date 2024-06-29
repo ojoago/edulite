@@ -64,7 +64,7 @@
 </div>
 
 <!-- create psycho Base modal  -->
-<div class="modal fade" id="filterModal" tabindex="-1">
+<div class="modal fade" id="filterModal" tabindex="-1"  data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

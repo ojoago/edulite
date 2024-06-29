@@ -10,6 +10,6 @@ class StudentSubjectResult extends Model
     use HasFactory;
     protected $fillable = [
         'school_pid','student_pid', 'class_param_pid','pid','subject_type',
-        'total','seated','teacher_comment'
+        'total','seated','teacher_comment', 'grade',  'title', 'color', 'remark'
     ];
 }

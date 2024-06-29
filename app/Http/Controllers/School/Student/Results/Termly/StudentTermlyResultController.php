@@ -95,6 +95,7 @@ class StudentTermlyResultController extends Controller
             // StudentScoreParam::join('student_score_sheets','score_param_pid','subject_score_params.pid')->where('class_param_pid',$param)->get()->dd();
             if (!$classParam) {
             } else {
+                $terms = DB::table('student_class_result_params as p')->join('student_class_results as r', 'r.class_param_pid','p.pid')->where(['session_pid' => $classParam->session_pid, 'r.student_pid' => $spid])->orderByDesc('p.id')->get(['p.pid', 'term', 'session_pid']);
                 $scoreSettings = ScoreSettingsController::loadClassScoreSettings($param);
                 $std = StudentController::studentName($spid);
                 // query subject result 
@@ -278,7 +279,7 @@ class StudentTermlyResultController extends Controller
                 $psycho = PsychomotorBase::from('psychomotor_bases as b')->join('classes as c', 'c.category_pid', 'b.category_pid')
                                                             ->join('class_arms as a','a.class_pid','c.pid')
                                                             ->join('student_class_result_params as p','p.arm_pid','a.pid')
-                                                            ->where('p.pid',$param)->select('b.psychomotor','b.pid', 'obtainable_score as max', 'grade')->get();//->dd();
+                                                            ->where(['p.pid' => $param, 'b.school_pid' => getSchoolPid()])->select('b.psychomotor','b.pid', 'obtainable_score as max', 'grade')->get();//->dd();
                                                             
 
                 // $psycho = PsychomotorBase::where(['school_pid' => getSchoolPid()])
@@ -288,10 +289,19 @@ class StudentTermlyResultController extends Controller
                     ->first(['school_email', 'school_website', 'school_logo', 'school_moto', 'school_address', 'school_contact']);
                 $grades = DB::table('grade_keys AS g')->where('class_param_pid', $param)->get(['grade', 'title', 'min_score', 'max_score']);
             }
+
             $basePath = 'school.student.result.';
             $path = 'termly-result.student-report-card';
-            $path = 'ais.secondary';
-            return view($basePath.$path, compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'result', 'grades', 'school'));
+            // load template path 
+            $result_config = DB::table('result_configs as r')->join('classes as c', 'c.category_pid', 'r.category_pid')
+                                            ->join('class_arms as a','a.class_pid','c.pid')
+                                            ->join('student_class_result_params as p','p.arm_pid','a.pid')->where('p.pid',$param)->select('r.*')->first();
+            if($result_config){
+                $basePath = $result_config->base_dir;
+                $path = $result_config->sub_dir. $result_config->file_name;
+            }  
+            
+            return view($basePath.$path, compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'result', 'grades', 'school', 'terms', 'result_config'));
 
      } catch (\Throwable $e) {
         logError($e->getMessage());

@@ -8,18 +8,23 @@
 
 
 <hr>
-
+@php
+        $settings = null;
+        if($result_config->settings){
+            $settings = $result_config->settings ;
+        }
+    @endphp
 {{-- student infor  --}}
-
+@dump($result_config)
 <table id="studentDetailTable">
     <tr>
         <td colspan="2"> <b>PUPIL NAME</b> {{$std->fullname}}</td>
-        <td colspan="2"> <b>TERM</b> {{$results->term}}</td>
+        <td colspan="2"> <b>TERM</b> {{$result->term}}</td>
     </tr>
     <tr>
         <td > <b> GENDER</b> </td>
         <td>{{$std->gender}}</td>
-        <td><b>SESSION</b> {{$results->session}}</td>
+        <td><b>SESSION</b> {{$result->session}}</td>
         <td> <b>NEXT TERM BEGINS</b> </td>
     </tr>
     <tr>
@@ -50,7 +55,7 @@
                     <tr>
                         <td> {{$loop->iteration}} </td>
                         <td> {{$rw->title}} </td>
-                        <td>{{getPsychoKeyScore(student:$results->student_pid,param:$param,key:$rw->pid)}} </td>
+                        <td>{{getPsychoKeyScore(student:$result->student_pid,param:$param,key:$rw->pid)}} </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -60,10 +65,10 @@
 
     <table id="teacherTable">
         <tr>
-            <td colspan="3"><b>Name of Teacher:</b> {{$results->teacher_name}}</td>
+            <td colspan="3"><b>Name of Teacher:</b> {{$result->teacher_name}}</td>
         </tr>
         <tr>
-            <td colspan="3"><b>Teacher's Comment:</b> {{$results->class_teacher_comment}}</td>
+            <td colspan="3"><b>Teacher's Comment:</b> {{$result->class_teacher_comment}}</td>
         </tr>
         <tr>
             <td></td>
@@ -73,7 +78,7 @@
 
        
         <tr>
-            <td colspan="3"><b>Principal's Comment:</b> {{$results->principal_comment}} </td>
+            <td colspan="3"><b>Principal's Comment:</b> {{$result->principal_comment}} </td>
         </tr>
         <tr>
             <td></td>

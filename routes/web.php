@@ -368,6 +368,8 @@ Route::middleware('schoolAuth')->group(function(){
     // result config 
     Route::view('assessment-config', 'school.framework.result.assessment-config')->name('school.assessment.config');
     Route::get('result-config', [ResultConfigController::class,'index'])->name('school.result.config');
+    Route::post('save-template', [ResultConfigController::class,'saveTemplate'])->name('save.template');
+    Route::post('save-config', [ResultConfigController::class,'saveConfig'])->name('save.config');
 
     Route::view('register-staff', 'school.registration.staff.register-staff')->name('create.staff.form');
     Route::view('staff-list', 'school.staff.staff-list')->name('school.staff.list');

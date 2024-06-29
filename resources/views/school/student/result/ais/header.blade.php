@@ -91,11 +91,17 @@
         }
 
 
-           #studentDetailTable{
+        .result-title{
+            text-align: center;
+        }
+        .result-title h3{
+            font-weight: bold;
+        }
+     #studentDetailTable{
         border: solid 1px #000;
     }
     #studentDetailTable tr td{
-        border: solid 1px #f1ff;
+        border: solid 2px rgb(75, 70, 217);
     }
 
     .psychoTable{
@@ -184,6 +190,16 @@
 
   
 
+        @media print{
+            body{
+                margin: 50px 30px;
+            }
+            
+        }
+        @page {
+        size: auto;
+        margin: 0mm; /* This will remove the default headers and footers */
+        }
 
 
  </style>
@@ -206,3 +222,14 @@
         {{-- <p>{{$school->school_email}}</p> --}}
     </div>
 </div>
+
+<div class="result-title">
+    @php
+        $settings = null;
+        if($result_config->settings){
+            $settings = $result_config->settings ;
+        }
+    @endphp
+    <h3>{{$result_config->title ?? 'Continuous Assessment' }}</h3>
+</div>
+
