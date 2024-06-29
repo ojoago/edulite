@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\School\Framework\Result;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Class\Category;
@@ -22,7 +23,10 @@ class ResultConfigController extends Controller
                 'path' => '/files/result-template/'. $pathInfo['filename'].'.'. $pathInfo['extension'],
             ];
         }
-        $categories = Category::where('school_pid',getSchoolPid())->orderBy('id')->get(["pid","category"]);
+
+        $categories = DB::table('categories as c')->leftJoin('result_configs as r','r.category_pid','c.pid')->where('c.school_pid',getSchoolPid())->orderBy('id')->get(["pid","category","r.*"]);
+        
+        // $categories = Category::where('school_pid',getSchoolPid())->orderBy('id')->get(["pid","category"]);
         return view('school.framework.result.result-config',compact('categories','files'));
     }
 
@@ -61,7 +65,7 @@ class ResultConfigController extends Controller
     }
 
     public function saveConfig(Request $request){
-        logError($request->all());
+        // logError($request->all());
         $validator = Validator::make($request->all(), [
             'title' => 'nullable|max:50' ,
             'student_name' => 'nullable|max:50' ,
@@ -74,12 +78,13 @@ class ResultConfigController extends Controller
                 
                 $config = [
                     'show_chart' => $request->show_chart ? 1 : 0 ,
-                    'serial_number'  => $request->show_chart ? 1 : 0 ,
-                    'class_position'  => $request->show_chart ? 1 : 0 ,
-                    'subject_position'  => $request->show_chart ? 1 : 0 ,
-                    'subject_grade'  => $request->show_chart ? 1 : 0 ,
-                    'remark'  => $request->show_chart ? 1 : 0 ,
-                    'subject_teacher'  => $request->show_chart ? 1 : 0 ,
+                    'serial_number'  => $request->serial_number ? 1 : 0 ,
+                    'class_position'  => $request->class_position ? 1 : 0 ,
+                    'subject_position'  => $request->subject_position ? 1 : 0 ,
+                    'subject_grade'  => $request->subject_grade ? 1 : 0 ,
+                    'remark'  => $request->remark ? 1 : 0 ,
+                    'subject_teacher'  => $request->subject_teacher ? 1 : 0 ,
+                    'subject_average'  => $request->subject_average ? 1 : 0 ,
                     'chart'  => $request->chart
                 ];
                 $data = [

@@ -6,6 +6,11 @@
         height: 200px;
         width: auto;
     }
+    .chart-img{
+        max-height: 90%;
+        width:auto;
+        max-width: 90%;
+    }
     .template-img:hover{
         height: auto;
         width: auto;
@@ -53,8 +58,8 @@
                                                     @php
                                                         echo ++$n
                                                     @endphp
-                                                        <input type="radio" name="template" value="{{$file['name']}}">
-                                                        <input type="hidden" name="{{$file['name']}}" value="{{$item->pid}}">
+                                                        <input type="radio" name="template" {{$file['name'] == $item->file_name ? 'checked': '' }} value="{{$file['name']}}">
+                                                        <input type="hidden" name="{{$file['name']}}"  value="{{$item->pid}}">
                                                         <img src="{{asset($file['path'])}}" alt="" class="img img-responsive template-img" id="student-img">
                                                         <hr>
                                                     @endforeach
@@ -93,65 +98,73 @@
                                                     @csrf 
                                                     <input type="hidden" name="category" value="{{$item->pid}}">
                                                     
-                                                    <fieldset>
-                                                        <legend> Key Wards</legend>
-
+                                                    <fieldset class="border rounded-3 p-3">
+                                                        <legend class="float-none w-auto px-3"> Key Wards</legend>
                                                         <div class="form-group">
                                                             <label for="">Result Title</label>
-                                                            <input type="text" name="title" class="form-control form-control-sm" placeholder="e.g Continuous Assessment Report" >
+                                                            <input type="text" name="title" value="{{$item->title}}" class="form-control form-control-sm" placeholder="e.g Continuous Assessment Report" >
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label for="">Student Name</label>
-                                                            <input type="text" name="student_name" class="form-control form-control-sm" placeholder="e.g Name of Student" >
+                                                            <input type="text" name="student_name" value="{{$item->student_name}}" class="form-control form-control-sm" placeholder="e.g Name of Student" >
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label for="">Name of Principal/Head</label>
-                                                            <input type="text" name="head_teacher" class="form-control form-control-sm" placeholder="e.g Principal/Head Teacher" >
+                                                            <input type="text" name="head_teacher" value="{{$item->head_teacher}}" class="form-control form-control-sm" placeholder="e.g Principal/Head Teacher" >
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="">Name of Class Teacher</label>
-                                                            <input type="text" name="class_teacher" class="form-control form-control-sm" placeholder="e.g Class/Form Teacher" >
+                                                            <input type="text" name="class_teacher" value="{{$item->class_teacher}}" class="form-control form-control-sm" placeholder="e.g Class/Form Teacher" >
                                                         </div>
                                                     </fieldset>
 
-
-                                                    <fieldset>
-                                                        <legend></legend>
+                                                        @php
+                                                           $setting = json_decode($item->settings) ;
+                                                        @endphp
+                                                    <fieldset class="border rounded-3 p-3">
+                                                        <legend class="float-none w-auto px-3">Show/Hide Column</legend>
                                                         <div class="form-group">
                                                             <label for="">Serial Number</label>
-                                                            <input type="checkbox" name="serial_number" value="1" id="">
+                                                            <input type="checkbox" name="serial_number" {{@$setting->serial_number == 1 ? 'checked' : ''}} value="1" id="">
                                                         </div>                           
 
                                                         <div class="form-group">
                                                             <label for="">Class Position</label>
-                                                            <input type="checkbox" name="class_position" value="1">
+                                                            <input type="checkbox" name="class_position" {{@$setting->class_position == 1 ? 'checked' : ''}} value="1">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="">Subject Position</label>
-                                                            <input type="checkbox" name="subject_position" value="1">
+                                                            <input type="checkbox" name="subject_position" {{@$setting->subject_position == 1 ? 'checked' : ''}} value="1">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="">Subject Average</label>
+                                                            <input type="checkbox" name="subject_average" {{@$setting->subject_average == 1 ? 'checked' : ''}} value="1">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="">Subject Grade</label>
-                                                            <input type="checkbox" name="subject_grade" value="1">
+                                                            <input type="checkbox" name="subject_grade" {{@$setting->subject_grade == 1 ? 'checked' : ''}} value="1">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for=""> Remarks </label>
-                                                            <input type="checkbox" name="remark" value="1">
+                                                            <input type="checkbox" name="remark" value="1" {{@$setting->remark == 1 ? 'checked' : ''}}>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="">Subject Teacher Name</label>
-                                                            <input type="checkbox" name="subject_teacher" value="1">
+                                                            <input type="checkbox" name="subject_teacher" value="1" {{@$setting->subject_teacher == 1 ? 'checked' : ''}}>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="">Chart</label>
-                                                            <input type="checkbox" name="show_chart" value="1">
+                                                            <label for="">Display Chart</label>
+                                                            <input type="checkbox" name="show_chart" value="1" {{@$setting->show_chart == 1 ? 'checked' : ''}}>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label for="">Chart Type</label>
-                                                            <input type="radio" name="chart" value="line"> Line Chart
-                                                            <input type="radio" name="chart" value="column"> Column Chart
+                                                            <label for="">Chart Type</label> <br>
+                                                            <input type="radio" name="chart" value="line" {{@$setting->chart == 'line'? 'checked' : ''}}> Line Chart <br>
+                                                            <img src="{{asset('/files/thumbnail/line-chart.png')}}" alt="" class="chart-img"> <br>
+                                                            
+                                                            <input type="radio" name="chart" value="column" {{@$setting->chart == 'column'? 'checked' : ''}}> Column Chart <br>
+                                                            <img src="{{asset('/files/thumbnail/column-chart.png')}}" alt="" class="chart-img">
 
                                                         </div>
                                                         

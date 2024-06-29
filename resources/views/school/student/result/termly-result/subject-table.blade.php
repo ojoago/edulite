@@ -1,0 +1,79 @@
+
+    <div class="subject-result">
+         <table class="table table-hover table-striped table-bordered examTable" id="examTable" cellpadding="pixels">
+                    <thead>
+                        <tr>
+                            @if (@$setting->serial_number == 1)
+                             <th>S/N</th>
+                            @endif
+                            <th class="flat-row p-2 subject" align="left" >SUBJECTS</th>
+                            @foreach($scoreSettings as $row)
+                            <th class="rotate-up">{{$row->title}} ({{$row->score}}%)</th>
+                            @endforeach
+                            @foreach($terms as $term)
+                            <th class="rotate-up">{{$term->term}} (100%)</th>
+                            @endforeach
+                            <th class="rotate-up">Cumulative Average</th>
+                            @if (@$setting->subject_grade == 1)
+                                <th class="rotate-up">GRADE</th>
+                            @endif
+                            @if (@$setting->subject_average == 1)
+                                <th class="rotate-up">Subject Average</th>
+                            @endif
+                            @if (@$setting->subject_position == 1)
+                                <th class="rotate-up">SUBJECT POSITION</th>
+                            @endif
+                            @if (@$setting->subject_teacher == 1)
+                                <th class="flat-row">TEACHER</th>
+                            @endif
+                            @if (@$setting->remark == 1)
+                                <th class="flat-row">Remarks</th>
+                            @endif
+
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                        @foreach($subResult as $row)
+                        <tr>
+                            @if (@$setting->serial_number == 1)
+                             <td>{{$loop->iteration}}</td>
+                            @endif
+                            <td align="left" class="subject">{{$row->subject}}</td>
+                            @foreach($scoreSettings as $hrow)
+                            <td>
+                                {{ number_format(getTitleAVGScore(student:$std->pid,pid:$hrow->assessment_title_pid,param:$param,sub:$row->type),1)}}
+                            </td>
+                            @endforeach
+                            @foreach($terms as $term)
+                            <td >
+                                {{ number_format(getSubjectTotalScore(student:$std->pid,param:$term->pid,sub:$row->type),1)}}
+
+                            </td>
+                            @endforeach
+                            <td>
+                                {{ number_format(getSubjectAVGScore(student:$std->pid,session:$term->session_pid,sub:$row->type),1)}}
+                            </td>
+                           
+                             @if (@$setting->subject_grade == 1)
+                                <td>{{rtnGrade($row->total,$grades)}}</td>
+                            @endif
+                            @if (@$setting->subject_average == 1)
+                                <td>{{$row->avg}}</td>
+                            @endif
+                            @if (@$setting->subject_position == 1)
+                                <td>{{ordinalFormat($row->position)}}</td>
+                            @endif
+                            @if (@$setting->subject_teacher == 1)
+                               <td>{{$row->subject_teacher_name}}</td>
+                            @endif
+                            @if (@$setting->remark == 1)
+                               <td> </td>
+                            @endif
+                            
+                        </tr>
+                        @endforeach
+                    </tbody>
+                  
+                </table>
+    </div>

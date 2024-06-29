@@ -52,41 +52,40 @@
         border-bottom: 1px solid #000;
     }
 </style>
-<hr>
 
 
 {{-- reust header  --}}
-
+@php
+    $config = $result_config;
+    $setting = json_decode($config->settings); 
+@endphp
 <div class="result-header">
-    
-<h3>
-    NURSERY PUPIL PERFORMANCE REPORT 
-</h3>
+
 
 
     <div class="f-row">
         <div class="lf dotted">
-            Name of Pupil: 
+            Name of Pupil: {{$std->fullname}}
         </div>
-        <div class="rt dotted">Gender: </div>
+        <div class="rt dotted">Gender: {{$std->gender}} </div>
     </div>
 
     <div class="f-row">
 
         <div class="f1 dotted">
-            Class: 
+            Class: {{$result->arm}}
         </div>
-        <div class="f2 dotted">Age: </div>
-        <div class="f3 dotted">Next Term Begins: </div>
+        <div class="f2 dotted">Age: {{dateToAge($std->dob)}}  </div>
+        <div class="f3 dotted">Next Term Begins:  {{formatDate($result->next_term)}}</div>
         
     </div>
     <div class="f-row">
 
         <div class="f1 dotted">
-            Class Average: 
+            Class Average: {{number_format($result->class_average,1)}}
         </div>
-        <div class="f2 dotted">Personal Total: </div>
-        <div class="f3 dotted">Personal Average: </div>
+        <div class="f2 dotted">Personal Total: {{number_format($result->total,1)}}</div>
+        <div class="f3 dotted">Personal Average: {{number_format($result->average,1)}} </div>
 
     </div>
 
@@ -96,66 +95,8 @@
 
     {{-- subject result  --}}
 
-    <div class="subject-result">
-         <table class="table table-hover table-striped table-bordered examTable" cellpadding="pixels">
-                    <thead>
-                        <tr>
-                            <th colspan="2"></th>
+       @include('school.student.result.termly-result.subject-table')
 
-                            @foreach($scoreSettings as $row)
-                            <th class="rotate-up">{{$row->title}}</th>
-                            @endforeach
-                            <th class="rotate-up">TOTAL</th>
-                            <th class="rotate-up">CLASS MIN</th>
-                            <th class="rotate-up">CLASS AVG</th>
-                            <th class="rotate-up">CLASS MAX</th>
-                            <th class="rotate-up">GRADE</th>
-                            <th class="rotate-up">SUBJECT POSITION</th>
-                        </tr>
-                        <tr>
-                            <th width="5%">S/N</th>
-                            <th class="flat-row p-2">SUBJECTS</th>
-                            @foreach($scoreSettings as $row)
-                            <th class="flat-row">{{$row->score}}</th>
-                            @endforeach
-                            <th class="flat-row">100</th>
-                            <th class="flat-row"></th>
-                            <th class="flat-row"></th>
-                            <th class="flat-row"></th>
-                            <th class="flat-row"></th>
-                            <th class="flat-row"></th>
-                            <th class="flat-row">TEACHER</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php $columnChart = [['Subject','Student Score','Class Min','Class AVG','Class Max']] @endphp
-                        @foreach($subResult as $row)
-                        <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td>{{$row->subject}}</td>
-                            @foreach($scoreSettings as $hrow)
-                            <td>
-                                {{ number_format(getTitleAVGScore(student:$std->pid,pid:$hrow->assessment_title_pid,param:$param,sub:$row->type),1)}}
-                            </td>
-                            @endforeach
-                            <td>{{number_format($row->total,1)}}</td>
-                            <td>{{number_format($row->min,1)}}</td>
-                            <td>{{number_format($row->avg,1)}}</td>
-                            <td>{{number_format($row->max,1)}}</td>
-                            @php array_push($columnChart,[$row->subject,$row->total,$row->min,$row->avg,$row->max]) @endphp
-                            <td>{{rtnGrade($row->total,$grades)}}</td>
-                            <td>{{ordinalFormat($row->position)}}</td>
-                            <td>{{$row->subject_teacher_name}}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>Total</td>
-                        </tr>
-                    </tfoot>
-                </table>
-    </div>
 
     {{-- subject result  --}}
 
@@ -183,10 +124,14 @@
         </div>
 
         <div class="b-row">
-            <div class="bd solid">
+            <div class="bd solid signature-container">
                 Signature: 
+                <div class="signature-base">
+                    @php $imgUrl = $result->signature ? asset("/files/images/".$result->signature) :'' @endphp
+                    <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+                </div>
             </div>
-            <div class="bc solid">Date: </div>
+            <div class="bc solid">Date: {{formatDate($result->date)}}</div>
         </div>
 
         <div class="b-row">
@@ -196,88 +141,19 @@
         </div>
 
         <div class="b-row">
-            <div class="bd solid">
+             <div class="bd solid signature-container">
                 Signature: 
+                <div class="signature-base">
+                    @php $imgUrl = $result->principal_signature ? asset("/files/images/".$result->principal_signature) :'' @endphp
+                    <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+                </div>
             </div>
-            <div class="bc solid">Date: </div>
+            <div class="bc solid">Date: {{formatDate($result->date)}} </div>
         </div>
      </div>
 
+     {{-- chart  --}}
+@if($setting->show_chart== 1)
+    @include('school.student.result.termly-result.chart')
+@endif 
      
-     <div class="col-md-12">
-            <div id="column_Chart" class="chartZoomable" style="width:98%;height:auto;"></div>
-        </div>
-
-
-     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    {{-- <script type="text/javascript">
-        google.charts.load('current', {
-            'packages': ['corechart']
-        });
-        google.charts.load('current', {
-            'packages': ['line']
-        });
-
-        google.charts.setOnLoadCallback(drawColumnChart);
-        let dataset = <?php echo json_encode($columnChart, JSON_NUMERIC_CHECK) ?>
-        // console.log(dataset);
-        function drawColumnChart() {
-
-            var data = google.visualization.arrayToDataTable(dataset);
-
-            var view = new google.visualization.DataView(data);
-            // view.setColumns([0, 4,
-            //     {
-            //         calc: "stringify",
-            //         sourceColumn: 1,
-            //         type: "string",
-            //         role: "annotation"
-            //     },
-            //     3
-            // ]);
-
-            var options = {
-                title: "Student Score Against total, MIN, MAX & AVG",
-                // subtitle: "based on meter type and installation status",
-                bar: {
-                    groupWidth: "20%"
-                },
-                legend: {
-                    position: "top"
-                },
-            };
-            var chart = new google.visualization.LineChart(document.getElementById("column_Chart"));
-            chart.draw(view, options);
-        }
-    </script> --}}
-     <script type="text/javascript">
-        google.charts.load('current', {
-            'packages': ['corechart']
-        });
-        google.charts.load('current', {
-            'packages': ['bar']
-        });
-
-        google.charts.setOnLoadCallback(drawColumnChart);
-        let dataset = <?php echo json_encode($columnChart, JSON_NUMERIC_CHECK) ?>
-        // console.log(dataset);
-        function drawColumnChart() {
-
-            var data = google.visualization.arrayToDataTable(dataset);
-
-            var view = new google.visualization.DataView(data);
-
-            var options = {
-                title: "Student Score Against total, MIN, MAX & AVG",
-                // subtitle: "based on meter type and installation status",
-                bar: {
-                    groupWidth: "20%"
-                },
-                legend: {
-                    position: "top"
-                },
-            };
-            var chart = new google.visualization.ColumnChart(document.getElementById("column_Chart"));
-            chart.draw(view, options);
-        }
-    </script>

@@ -197,8 +197,9 @@
             
         }
         @page {
-        size: auto;
-        margin: 0mm; /* This will remove the default headers and footers */
+            size: auto;
+        /* margin: 0mm; This will remove the default headers and footers */
+            margin-top: 25px;
         }
 
 
@@ -230,6 +231,6 @@
             $settings = $result_config->settings ;
         }
     @endphp
-    <h3>{{$result_config->title ?? 'Continuous Assessment' }}</h3>
+    <h3 class="text-uppercase">{{$result_config->title ?? 'Continuous Assessment Report' }}</h3>
 </div>
 
