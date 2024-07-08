@@ -26,12 +26,12 @@ class UploadRiderController extends Controller
         if (!$validator->fails()) {
             $k = 0;
             try {
+                $errors = [];
                 $path = $request->file('file')->getRealPath();
                 // $resource = maatWay(model:new SchoolParent,path:$path);
                 $resource = phpWay($path);
                 $header = $resource['header'];
                 $data = $resource['data'];
-                $errors = [];
                 if ((($header === $this->header))) {
                     foreach ($data as $row) {
                         if (!empty($row[0]) && !empty($row[1]) && !empty($row[3])) {

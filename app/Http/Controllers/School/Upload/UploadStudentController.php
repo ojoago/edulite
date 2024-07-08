@@ -41,12 +41,12 @@ class UploadStudentController extends Controller
         );
         if (!$validator->fails()) {
             try {
+                $errors = [];
                 $path = $request->file('file')->getRealPath();
                 // $resource = maatWay(model:new SchoolStaff,path:$path);
                 $resource = phpWay($path);
                 $header = $resource['header'];
                 $data = $resource['data'];
-                $errors = [];
                 $k = 2;$n=0;
                 if ((($header === $this->header))) {
                     foreach ($data as $row) {

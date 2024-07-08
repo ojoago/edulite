@@ -22,12 +22,12 @@ class UploadStaffController extends Controller
         if(!$validator->fails()){
             try {
                 $k = 0;
+                $errors = [];
                 $path = $request->file('file')->getRealPath();
                 // $resource = maatWay(model:new SchoolStaff,path:$path);
                 $resource = phpWay($path);
                 $header = $resource['header'];
                 $data = $resource['data'];
-                $errors = [];
                 $k = 2;
                 if ((($header === $this->header))) {
                     $n = 0;
@@ -98,7 +98,6 @@ class UploadStaffController extends Controller
             
             } catch (\Throwable $e) {
                 $error = ['error' => $e->getMessage(), 'file' => __FILE__];
-
                 logError($error);
                 return response()->json(['status' => 'error', 'message' => 'upload stop on row ' . $k,'errors'=>$errors]);
             }
