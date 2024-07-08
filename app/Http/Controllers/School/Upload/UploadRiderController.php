@@ -10,7 +10,6 @@ use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Rider\RiderController;
-use App\Http\Controllers\School\Rider\SchoolRiderController;
 
 class UploadRiderController extends Controller
 {
@@ -18,12 +17,14 @@ class UploadRiderController extends Controller
     private $header = ['firstname', 'surname', 'othername', 'gsm', 'username', 'email', 'address', 'religion', 'gender'];
     public function importRider(Request $request)
     {
+
         $validator = Validator::make(
             $request->all(),
             ['file' => 'required|file|mimes:xlsx,xls,csv|max:20|min:9'],
             ['file.max' => 'Please do not upload more than 100 recored at a time']
         );
         if (!$validator->fails()) {
+            $k = 0;
             try {
                 $path = $request->file('file')->getRealPath();
                 // $resource = maatWay(model:new SchoolParent,path:$path);
@@ -31,7 +32,6 @@ class UploadRiderController extends Controller
                 $header = $resource['header'];
                 $data = $resource['data'];
                 $errors = [];
-                $k = 0;
                 if ((($header === $this->header))) {
                     foreach ($data as $row) {
                         if (!empty($row[0]) && !empty($row[1]) && !empty($row[3])) {

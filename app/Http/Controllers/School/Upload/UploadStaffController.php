@@ -20,7 +20,8 @@ class UploadStaffController extends Controller
         $validator = Validator::make($request->all(),
                                 ['file'=>'required|file|mimes:xlsx,xls,csv|max:30|min:9'],['filemax'=>'Please do not upload more than 100 recored at a time']);
         if(!$validator->fails()){
-            // try {
+            try {
+                $k = 0;
                 $path = $request->file('file')->getRealPath();
                 // $resource = maatWay(model:new SchoolStaff,path:$path);
                 $resource = phpWay($path);
@@ -95,12 +96,12 @@ class UploadStaffController extends Controller
                 }
                 return response()->json(['status'=>'error','message'=>'use the template without change it please.']);
             
-            // } catch (\Throwable $e) {
-            //     $error = ['error' => $e->getMessage(), 'file' => __FILE__];
+            } catch (\Throwable $e) {
+                $error = ['error' => $e->getMessage(), 'file' => __FILE__];
 
-            //     logError($error);
-            //     return response()->json(['status' => 'error', 'message' => 'upload stop on row ' . $k,'errors'=>$errors]);
-            // }
+                logError($error);
+                return response()->json(['status' => 'error', 'message' => 'upload stop on row ' . $k,'errors'=>$errors]);
+            }
         }
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }

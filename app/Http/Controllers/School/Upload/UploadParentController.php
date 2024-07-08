@@ -21,6 +21,7 @@ class UploadParentController extends Controller
         );
         if (!$validator->fails()) {
             try {
+                $k = 0;
                 $path = $request->file('file')->getRealPath();
                 // $resource = maatWay(model:new SchoolParent,path:$path);
                 $resource = phpWay($path);

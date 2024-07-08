@@ -18,6 +18,7 @@ class UploadStudentController extends Controller
     public function importStudent(Request $request)
     {
         // logError($request->all());
+        $k = 0;
         $validator = Validator::make(
             $request->all(),
             ['file' => 'required|file|mimes:xlsx,xls,csv|max:30|min:9',
