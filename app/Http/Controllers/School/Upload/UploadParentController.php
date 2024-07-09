@@ -20,12 +20,14 @@ class UploadParentController extends Controller
             ['file' => 'required|file|mimes:xlsx,xls,csv|max:30|min:9'],
             ['file.max' => 'Please do not upload more than 100 recored at a time']
         );
+        logError($request->all());
+        $errors = [];
         if (!$validator->fails()) {
             try {
                 $k = 0;
-                $path = $request->file('file')->getRealPath();
-                $resource = maatWay(model: new SchoolParent,path:$path);
-                // $resource = phpWay($path);
+                $path = $request->file('file');
+                // $resource = maatWay(model: new SchoolParent,path:$path);
+                $resource = phpWay($path);
                 $header = $resource['header'];
                 $data = $resource['data'];
                 $errors = [];
