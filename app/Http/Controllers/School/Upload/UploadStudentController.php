@@ -10,6 +10,7 @@ use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Student\StudentController;
+use App\Models\School\Student\Student;
 
 class UploadStudentController extends Controller
 {
@@ -40,11 +41,11 @@ class UploadStudentController extends Controller
                 ]
         );
         if (!$validator->fails()) {
+            $errors = [];
             try {
-                $errors = [];
-                $path = $request->file('file')->getRealPath();
-                // $resource = maatWay(model:new SchoolStaff,path:$path);
-                $resource = phpWay($path);
+                $path = $request->file('file');//->getRealPath();
+                $resource = maatWay(model:new Student,path:$path);
+                // $resource = phpWay($path);
                 $header = $resource['header'];
                 $data = $resource['data'];
                 $k = 2;$n=0;

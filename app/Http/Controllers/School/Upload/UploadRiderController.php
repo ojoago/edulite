@@ -10,6 +10,7 @@ use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Rider\RiderController;
+use App\Models\School\Rider\SchoolRider;
 
 class UploadRiderController extends Controller
 {
@@ -25,10 +26,10 @@ class UploadRiderController extends Controller
         );
         if (!$validator->fails()) {
             $k = 0;
+            $errors = [];
             try {
-                $errors = [];
-                $path = $request->file('file')->getRealPath();
-                // $resource = maatWay(model:new SchoolParent,path:$path);
+                $path = $request->file('file');//->getRealPath();
+                $resource = maatWay(model:new SchoolRider,path:$path);
                 $resource = phpWay($path);
                 $header = $resource['header'];
                 $data = $resource['data'];
@@ -47,7 +48,6 @@ class UploadRiderController extends Controller
                                 DB::beginTransaction(); 
                                 $user = AuthController::createUser($data);
                                 if ($user) {
-                                    // dd($user, $data);
                                     $userDetail = [
                                         'firstname' => $row[0],
                                         'lastname' => $row[1],

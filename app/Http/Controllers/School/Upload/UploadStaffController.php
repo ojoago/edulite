@@ -20,12 +20,12 @@ class UploadStaffController extends Controller
         $validator = Validator::make($request->all(),
                                 ['file'=>'required|file|mimes:xlsx,xls,csv|max:30|min:9'],['filemax'=>'Please do not upload more than 100 recored at a time']);
         if(!$validator->fails()){
+            $errors = [];
             try {
                 $k = 0;
-                $errors = [];
-                $path = $request->file('file')->getRealPath();
-                // $resource = maatWay(model:new SchoolStaff,path:$path);
-                $resource = phpWay($path);
+                $path = $request->file('file');//->getRealPath();
+                $resource = maatWay(model:new SchoolStaff,path:$path);
+                // $resource = phpWay($path);
                 $header = $resource['header'];
                 $data = $resource['data'];
                 $k = 2;
