@@ -14,41 +14,71 @@
 <div class="row">
 
     <div class="col-md-6">
-        <div class="row">
-            <!-- Sales Card -->
-            <div class="col-md-6">
-                <div class="card info-card sales-card">
-                    <a data-bs-toggle="tooltip" title="View Staff Details">
-                        <div class="card-body">
-                            <h5 class="card-title">Subjects </h5>
+        <div class="card info-card sales-card">
+            <a data-bs-toggle="tooltip" title="View Staff Details">
+                <div class="card-body">
+                    <h5 class="card-title">Class 
+                            <i class="bi bi-house-fill"></i>
 
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-book-half"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <h6>{{$data['staff']}}</h6>
+                    </h5>
 
-                                </div>
-                            </div>
+                    <div class="d-flex align-items-center">
+                       
+                        <div class="ps-3">
+                            @foreach ($data['class'] as $item)
+                                <h6>{{$item->arm}}</h6>
+                            @endforeach
+
                         </div>
-                    </a>
+                    </div>
                 </div>
-            </div><!-- End Sales Card -->
+            </a>
+        </div>
+        
+        <div class="card info-card sales-card">
+            <a data-bs-toggle="tooltip" title="View Staff Details">
+                <div class="card-body">
+                    <h5 class="card-title">Subjects <i class="bi bi-book-half"></i></h5>
 
-            <!-- Revenue Card -->
+                    <div class="d-flex align-items-center">
+                        <div class="ps-3">
+                            @foreach ($data['subjects'] as $item)
+                                <h6>{{$item->subject}} - {{$item->arm}}</h6>
+                            @endforeach
+
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+      
+
+    </div>
+    <!-- Customers Card -->
+    <div class="col-md-6">
+        <div class="card info-card">
+           
+            
+            Todo
+            <input name="" class="form-control form-control-sm" >
+            <button class="btn btn-primary btn-sm" >Add</button>
+        </div>
+
+        <div class="row">
+             <!-- Revenue Card -->
             <div class="col-md-6">
                 <div class="card info-card">
                     <a href="{{route('school.student.list')}}" data-bs-toggle="tooltip" title="View Student Details">
                         <div class="card-body">
-                            <h5 class="card-title">Classes</h5>
+                            <h5 class="card-title">Assignments</h5>
 
                             <div class="d-flex align-items-center">
                                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                     <i class="bi bi-house-fill"></i>
                                 </div>
                                 <div class="ps-3">
-                                    <h6>{{$data['students']}}</h6>
+                                    <h6>0</h6>
 
                                 </div>
                             </div>
@@ -76,38 +106,6 @@
                     </a>
                 </div>
             </div><!-- End Sales Card -->
-
-            <!-- Revenue Card -->
-            <div class="col-md-6">
-                <div class="card info-card">
-                    <a href="{{route('school.student.list')}}" data-bs-toggle="tooltip" title="View Student Details">
-                        <div class="card-body">
-                            <h5 class="card-title">Submited</h5>
-
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-house-fill"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <h6>13</h6>
-
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                </div>
-            </div><!-- End Revenue Card -->
-        </div>
-    </div>
-    <!-- Customers Card -->
-    <div class="col-md-6">
-        <div class="card info-card">
-           
-            
-            Todo
-            <input name="" class="form-control form-control-sm" >
-            <button class="btn btn-primary btn-sm" >Add</button>
         </div>
 
     </div>

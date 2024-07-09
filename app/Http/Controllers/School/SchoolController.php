@@ -17,6 +17,8 @@ use App\Models\School\Registration\SchoolParent;
 use App\Http\Controllers\School\Rider\RiderController;
 use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Student\StudentController;
+use App\Models\School\Staff\StaffClass;
+use App\Models\School\Staff\StaffSubject;
 use App\Models\School\Student\Result\StudentClassResult;
 
 class SchoolController extends Controller
@@ -173,12 +175,14 @@ class SchoolController extends Controller
     
     
     public function classTeacherDashboard(){
-        $staff = SchoolStaff::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
-        $students = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
+        $class = DB::table('staff_classes as c')->join('class_arms as a','a.pid','c.arm_pid')->where(['c.school_pid' => getSchoolPid(), 'c.teacher_pid' => getSchoolUserPid(), 'c.term_pid' => activeTerm(), 'c.session_pid' => activeSession()])->select('arm')->get();
+        $subjects = DB::table('staff_subjects as s')->join('class_arm_subjects as c','c.pid', 's.arm_subject_pid')->join('class_arms as a','c.arm_pid','a.pid')->join('subjects as b','b.pid','c.subject_pid')->where(['s.school_pid' => getSchoolPid(), 's.teacher_pid' => getSchoolUserPid(), 's.term_pid' => activeTerm(), 's.session_pid' => activeSession()])->select('arm','subject')->get();
+        // $class = StaffClass::where(['school_pid' => getSchoolPid(), 'teacher_pid' => getSchoolUserPid() , 'term_pid' => activeTerm(), 'session_pid' => activeSession() ])->count();
+        // $subjects = StaffSubject::where(['school_pid' => getSchoolPid(), 'teacher_pid' => getSchoolUserPid(), 'term_pid' => activeTerm() , 'session_pid' => activeSession() ])->count();
         $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count();
         $parents = DB::table('school_parents as p') ->join('students as s', 's.parent_pid', 'p.pid')
             ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->distinct('p.pid')->count('p.id');
-        $data = ['staff' => $staff, 'students' => $students, 'riders' => $riders, 'parents' => $parents];
+        $data = ['class' => $class, 'subjects' => $subjects, 'riders' => $riders, 'parents' => $parents];
 
         // dd($this->growthStatistics());
         return view('school.dashboard.class-teacher-dashboard', compact('data'));
