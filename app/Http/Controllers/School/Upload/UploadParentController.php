@@ -26,8 +26,8 @@ class UploadParentController extends Controller
             try {
                 $k = 0;
                 $path = $request->file('file');
-                // $resource = maatWay(model: new SchoolParent,path:$path);
-                $resource = phpWay($path);
+                $resource = maatWay(model: new SchoolParent,path:$path);
+                // $resource = phpWay($path);
                 $header = $resource['header'];
                 $data = $resource['data'];
                 $errors = [];
