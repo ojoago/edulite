@@ -9,6 +9,6 @@ class Attendance extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'school_pid','record_pid','student_pid','status'
+        'school_pid','record_pid','student_pid','status', 'comment'
     ];
 }

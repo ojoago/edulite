@@ -16,8 +16,8 @@
             </div>
             <!-- Primary Color Bordered Table -->
             @if(isset($data))
-            <div class="row">
-                <div class="col-md-8">
+            {{-- <div class="row"> --}}
+                {{-- <div class="col-md-9"> --}}
                     <form id="studentAttendanceForm">
                         @csrf
                         <table class="table table-bordered border-primary cardTable" id="resultTable">
@@ -29,6 +29,7 @@
                                     <th width="5%"> Present<input type="radio" name="checkAll" class="checkAll" id="allPresent"> </th>
                                     <th width="5%">Absent <input type="radio" name="checkAll" class="checkAll" id="allAbsent"> </th>
                                     <th width="5%"> Excused<input type="radio" name="checkAll" class="checkAll" id="allExcused"> </th>
+                                    <th >Comments </th>
 
                                 </tr>
                             </thead>
@@ -43,23 +44,28 @@
                                     <td> <input type="radio" class="allPresent" value="1" name="check[{{$row->pid}}]"></td>
                                     <td> <input type="radio" class="allAbsent" value="0" name="check[{{$row->pid}}]"></td>
                                     <td> <input type="radio" class="allExcused" value="2" name="check[{{$row->pid}}]"></td>
+                                    <td> <input type="text" class="form-control form-control-sm" placeholder="comment" name="comment[{{$row->pid}}]"></td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                </div>
-                <div class="col-md-4 pt-4">
-                    <label for="">Note</label>
+                {{-- </div> --}}
+                {{-- <div class="col-md-3 pt-4">
+                    <label for="">Note</label> --}}
 
-                    <textarea type="text" name="note" placeholder="attendance note" class="form-control form-control-sm" id="attnote"></textarea>
+                    {{-- <textarea type="text" name="note" placeholder="attendance note" class="form-control form-control-sm" id="attnote"></textarea> --}}
                     <label>Date</label>
                     <input type="hidden" name="arm" value="{{$arm}}" required>
-                    <input type="date" name="date" class="form-control form-control-sm" id="attdate" required>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="date" name="date" class="form-control form-control-sm" id="attdate" required>
+                        </div>
+                    </div>
 
                     <button class="btn btn-primary mt-2" type="button" id="studentAttendanceBtn">Submit</button>
-                </div>
+                {{-- </div> --}}
                 </form>
-            </div>
+            {{-- </div> --}}
             @else
             <h5 class="card-title">Click on Filter Button Above to take Attendance</h5>
 

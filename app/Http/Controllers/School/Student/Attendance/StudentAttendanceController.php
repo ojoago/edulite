@@ -30,6 +30,8 @@ class StudentAttendanceController extends Controller
                         $arm = $request->arm;
         return view('school.student.attendance.take-attendance',compact('data', 'arm'));
     }
+
+    // submitting student attendance 
     public function submitStudentAttendance(Request $request){
         // logError($request->check);
         if($request->check && $request->student){
@@ -38,7 +40,7 @@ class StudentAttendanceController extends Controller
            }
             $pid = $this->recordStudentAttendance($request->all());
             if($pid){
-                $result = $this->takeAttendance($request->check,$request->student,$pid);
+                $result = $this->takeAttendance($request->check,$request->student,$pid,$request->comment);
                 if($result){
                     return response()->json(['status' => 1, 'message' => count($request->student).' Student(s) Attendance taken']);
                 }
@@ -62,12 +64,13 @@ class StudentAttendanceController extends Controller
                                 'arm_pid'=>$data['arm'],
                                 'school_pid'=>getSchoolPid(),
                             ])->pluck('pid')->first();
+                            
         $result = AttendanceRecord::updateOrCreate([
             'pid'=>$pid,
         ],[
                                 'school_pid'=>getSchoolPid(),
                                 'date'=>$data['date'] ?? justDate(),
-                                'note'=>$data['note'],
+                                // 'note'=>$data['note'],
                                 'pid'=> $pid ?? public_id(),
                                 'arm_pid'=>$data['arm'],
                                 'term_pid'=>activeTerm(),
@@ -77,7 +80,7 @@ class StudentAttendanceController extends Controller
         return $result->pid;
     }
 
-    private function takeAttendance(array $checks, $student,  string $pid){
+    private function takeAttendance(array $checks, $student,  string $pid,array $comment){
         $count = count($student);
         $data = [
             'record_pid' => $pid,
@@ -92,6 +95,7 @@ class StudentAttendanceController extends Controller
                 $data['student_pid'] = $student[$i];
                 $dupParam = $data;
                 $data['status'] = $checks[$student[$i]] ??  0;
+                $data['comment'] = $comment[$student[$i]] ??  '';
                 $result = Attendance::updateOrCreate($dupParam, $data);
             }
         }

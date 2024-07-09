@@ -15,9 +15,9 @@
 
     <div class="col-md-6">
         <div class="card info-card sales-card">
-            <a data-bs-toggle="tooltip" title="View Staff Details">
+            <a data-bs-toggle="tooltip" _title="View Staff Details">
                 <div class="card-body">
-                    <h5 class="card-title">Class 
+                    <h5 class="card-title">Classes 
                             <i class="bi bi-house-fill"></i>
 
                     </h5>
@@ -36,7 +36,7 @@
         </div>
         
         <div class="card info-card sales-card">
-            <a data-bs-toggle="tooltip" title="View Staff Details">
+            <a data-bs-toggle="tooltip" _title="View Staff Details">
                 <div class="card-body">
                     <h5 class="card-title">Subjects <i class="bi bi-book-half"></i></h5>
 
