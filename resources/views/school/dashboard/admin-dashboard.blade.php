@@ -63,7 +63,7 @@
         <div class="card info-card">
             <a href="{{route('school.parent.list')}}" data-bs-toggle="tooltip" title="View Parent Details">
                 <div class="card-body">
-                    <h5 class="card-title">Active <span>| Parent</span></h5>
+                    <h5 class="card-title">Total <span>| Parent</span></h5>
                     <div class="d-flex align-items-center">
                         <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                             <i class="bi bi-person-circle"></i>
@@ -84,7 +84,7 @@
         <div class="card info-card">
             <a href="{{route('school.rider.list')}}" data-bs-toggle="tooltip" title="View Details">
                 <div class="card-body">
-                    <h5 class="card-title">Active <span>| Care/Rider</span></h5>
+                    <h5 class="card-title">Total <span>| Care/Rider</span></h5>
                     <div class="d-flex align-items-center">
                         <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                             <i class="bi bi-bicycle"></i>

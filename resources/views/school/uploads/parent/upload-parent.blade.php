@@ -6,8 +6,9 @@
         <form class="row g-3 p-4" id="uploadParentForm">
             @csrf
             <div class="col-12">
+                <h3>Upload Parents</h3>
                 <p>Click on the button below to download template</p>
-                <a href="{{asset('files/excel-template/parent-template.xlsx')}}"> <button type="button" class="btn btn-sm btn-success">download</button> </a>
+                <a href="{{asset('files/excel-template/parent-template.xlsx')}}"> <button type="button" class="btn btn-sm btn-success">Download</button> </a>
             </div>
             <p class="errors text-danger"></p>
             <div class="col-12">
@@ -22,8 +23,6 @@
         </form>
     </div>
 </div>
-
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {

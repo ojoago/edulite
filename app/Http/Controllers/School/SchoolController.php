@@ -152,8 +152,9 @@ class SchoolController extends Controller
         $students = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->count('id');
         // $gender = Student::where(['school_pid' => getSchoolPid(), 'status' => 1])->groupBy('gender')->count('id');
         $riders = SchoolRider::where(['school_pid' => getSchoolPid(), 'status' => 1])->count('id');
-        $parents = DB::table('school_parents as p') ->join('students as s', 's.parent_pid', 'p.pid')
-            ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->distinct('p.pid')->count('p.id');
+        $parents = SchoolParent::where(['school_pid' => getSchoolPid(), 'status' => 1])->count('id');
+        // $parents = DB::table('school_parents as p') ->join('students as s', 's.parent_pid', 'p.pid')
+        //     ->where(['p.school_pid' => getSchoolPid(), 's.status' => 1])->distinct('p.pid')->count('p.id');
         $data = ['staff' => $staff, 'students' => $students, 'riders' => $riders, 'parents' => $parents];
 
         // dd($this->growthStatistics());
