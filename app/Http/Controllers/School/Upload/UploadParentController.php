@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Auths\AuthController;
-use App\Http\Controllers\Users\UserDetailsController;
+use App\Models\School\Registration\SchoolParent;
 use App\Http\Controllers\School\SchoolController;
+use App\Http\Controllers\Users\UserDetailsController;
 
 class UploadParentController extends Controller
 {
@@ -23,8 +24,8 @@ class UploadParentController extends Controller
             try {
                 $k = 0;
                 $path = $request->file('file')->getRealPath();
-                // $resource = maatWay(model:new SchoolParent,path:$path);
-                $resource = phpWay($path);
+                $resource = maatWay(model: new SchoolParent,path:$path);
+                // $resource = phpWay($path);
                 $header = $resource['header'];
                 $data = $resource['data'];
                 $errors = [];
