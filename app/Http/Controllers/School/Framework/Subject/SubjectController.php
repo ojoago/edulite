@@ -4,6 +4,7 @@ namespace App\Http\Controllers\School\Framework\Subject;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Subject\Subject;
@@ -11,11 +12,7 @@ use App\Models\School\Framework\Subject\SubjectType;
 
 class SubjectController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
+ 
     public function index(Request $request)
     {
         try {
@@ -26,15 +23,12 @@ class SubjectController extends Controller
             }
             $data = Subject::join('subject_types', 'subject_types.pid', 'subjects.subject_type_pid')->join('categories as c','c.pid', 'category_pid')
                 ->where($where)
-                ->get(['subjects.pid', 'subject', 'subjects.status', 'subject_type',  'subjects.description', 'c.category']);
+                ->get(['subjects.pid', 'subject', 'subjects.status', 'subject_type', 'c.category', 'category_pid']);
+                $categories = DB::table('categories')->where('school_pid',getSchoolPid())->select('pid', 'category')->get();
             return datatables($data)
-            ->addColumn('action', function ($data) {
-                // <i class="bi bi-tools"></i>
-                return '
-                    <button type="button" class="btn btn-primary btn-sm edit-subject" pid="' . $data->pid . '">
-                        Edit
-                    </button>
-            ';
+            ->addColumn('action', function ($data) use ($categories) {
+                return view('school.framework.subject.subject-action-buttons', ['data' => $data, 'categories' => $categories]);
+
             })
             // ->editColumn('created_at', function ($data) {
             //     return $data->created_at->diffForHumans();
@@ -125,6 +119,47 @@ class SubjectController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
         
     }
+
+    
+
+    public function updateSubject(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'subject' => ['required', 'string', Rule::unique('subjects')->where(function ($param) use ($request) {
+                $param->where([
+                    'school_pid' => getSchoolPid(),
+                    'category_pid' => $request->category_pid,
+                ])->where('pid', '<>', $request->pid);
+            })],
+            'category_pid' => 'required|string'
+        ], [
+            'subject.required' => 'Enter Subject Name',
+            'category_pid.required' => 'Select School Category',
+        ]);
+        if (!$validator->fails()) {
+
+           try {
+                $subject = Subject::where('pid', $request->pid)->first();
+                $subject->subject = $request->subject;
+                $subject->category_pid = $request->category_pid;
+
+                $result = $subject->save();
+
+                if ($result) {
+                    return response()->json(['status' => 1, 'message' => 'Subject Updated Successfully']);
+                }
+                return response()->json(['status' => 'error', 'message' => 'Something Went Wrong...']);
+           } catch (\Throwable $e) {
+                logError($e->getMessage());
+                return response()->json(['status' => 'error', 'message' => 'Something went Wrong... error logged']);
+           }
+           
+        }
+        return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        
+    }
+
+
 
     public function dupSubjectTypeAsSubject(Request $request){
         $validator = Validator::make($request->all(), [

@@ -24,8 +24,8 @@
                         <tr>
                             <th>Title</th>
                             <th>Description</th>
-                            <th>Category</th>
-                            <th>Date</th>
+                            {{-- <th>Category</th> --}}
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -62,8 +62,6 @@
 
 
 </div><!-- End Basic Modal-->
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
-
 <script>
     $(document).ready(function() {
         // load school session
@@ -79,11 +77,12 @@
                 {
                     "data": "description"
                 },
+                // {
+                //     "data": "category"
+                // },
+
                 {
-                    "data": "category"
-                },
-                {
-                    "data": "date"
+                    "data": "action"
                 },
                 // {
                 //     "data": "action"
@@ -93,9 +92,9 @@
         $('#scoreDataTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+            // rowReorder: {
+            //     selector: 'td:nth-child(2)'
+            // },
             responsive: true,
             "ajax": "{{route('load.score.setting')}}",
             "columns": [{
@@ -157,6 +156,29 @@
         // multiSelect2('categorySelect2', 'createClassArmModal', sbjCategoryselect2Url, 'Select Category');
 
 
+        // 
+        
+        $(document).on('click', '.editAssessmentTitle', async function() {
+            let pid = $(this).attr('pid');
+            let s = await submitFormAjax('editAssessmentForm'+pid, 'editAssessmentBtn'+pid, "{{route('update.assessment.title')}}");
+            // if (s.status === 1) {
+            //    loadSubjectTable(null)
+            // }
+        })
+
+         $(document).on('click', '.deleleteTitle', async function() {
+            let pid = $(this).attr('pid');
+            if(confirm('are you sure, you want to delete this title ?')){
+                let param = {
+                    pid:pid,
+                    _token: "{{csrf_token()}}"
+                }
+               let  s = await postDataAjax(param , "{{route('delete.assessment.title')}}");
+            //    if(s.status == 1){
+            //     // loadCategory(0)
+            //    }
+            }
+        });
 
 
     });

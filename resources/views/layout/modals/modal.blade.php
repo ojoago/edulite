@@ -1025,6 +1025,7 @@
     </div>
 </div>
 <!-- end subject type modal  -->
+
 <!-- subject modal  -->
 <div class="modal fade" id="createSubjectModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog modal-dialog-scrollable">

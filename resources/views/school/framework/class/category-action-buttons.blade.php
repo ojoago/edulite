@@ -6,7 +6,7 @@
         <li><a class="dropdown-item pointer editCategory" pid="{{base64Encode($data->pid)}}">Edit</a></li>
         {{-- <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#assignHead{{$data->pid}}">Assign Head</a></li> --}}
         <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#categoryDetail{{$data->pid}}">Details</a></li>
-        <!-- <li><a class="dropdown-item" href="#">Disable</a></li> -->
+        <li><a class="dropdown-item deleteCategory bg-danger pointer" pid = "{{$data->pid}}" >Delete</a></li>
     </ul>
 </div>
 

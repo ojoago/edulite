@@ -4,6 +4,8 @@
     </button>
     <ul class="dropdown-menu">
         <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#editClassArmModal{{$data->pid}}">Edit</a></li>
+        <li><a class="dropdown-item bg-danger deleleteClassArm pointer" pid = "{{$data->pid}}" >Delete</a></li>
+
         <!-- <li><a class="dropdown-item" href="#">Details</a></li> -->
         {{-- <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#createArmTeacherModal">Assign to Teacher</a></li> --}}
         <!-- <li><a class="dropdown-item" href="#">Class Subject</a></li> -->

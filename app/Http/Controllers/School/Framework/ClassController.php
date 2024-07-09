@@ -12,6 +12,7 @@ use App\Models\School\Framework\Class\Category;
 use App\Models\School\Framework\Class\ClassArm;
 use App\Models\School\Framework\Class\ClassArmSubject;
 use App\Models\School\Student\Result\StudentClassResultParam;
+use App\Models\School\Student\Student;
 
 class ClassController extends Controller
 {
@@ -163,6 +164,27 @@ class ClassController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
 
+    public function deleteCategory(Request $request){
+
+
+        try {
+          
+            $class = Classes::where('category_pid',$request->pid)->exists();
+            if($class){
+                return response()->json(['status' => '2', 'message' => 'Category contain some classes and should not be deleted.']);
+            }
+            $result = Category::where('pid',$request->pid)->delete();
+            if($result){
+               return response()->json(['status' => 1, 'message' => 'Category Deleted!!!']);
+            }
+            return response()->json(['status' => 2, 'message' => 'Failed to delete Category']);
+
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => 'Something went Wrong... error logged']);
+        }
+    }
+
     private function insertOrUpdateCategory($data){
         try {
             return Category::updateOrCreate(['school_pid'=>$data['school_pid'],'pid'=>$data['pid']],$data);
@@ -260,6 +282,25 @@ class ClassController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
 
+    public function deleteClass(Request $request)
+    {
+        try {
+
+            $class = ClassArm::where('class_pid', $request->pid)->exists();
+            if ($class) {
+                return response()->json(['status' => '2', 'message' => 'Class contain some class arms and should not be deleted.']);
+            }
+            $result = Classes::where('pid', $request->pid)->delete();
+            if ($result) {
+                return response()->json(['status' => 1, 'message' => 'Class Deleted!!!']);
+            }
+            return response()->json(['status' => 2, 'message' => 'Failed to delete Class']);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => 'Something went Wrong... error logged']);
+        }
+    }
+
     private function prepareClassData($data){
         try {
             $count = count($data['classes']);
@@ -323,14 +364,7 @@ class ClassController extends Controller
     }
 
 
-    public function updateClassArm(Request $request)
-    {
-
-        
-
-// category_pid
-
-// arm_number
+    public function updateClassArm(Request $request) {
         $validator = Validator::make($request->all(),[
             'arm' => 'required',
             'arm_number' => 'required',
@@ -363,6 +397,24 @@ class ClassController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
 
+    public function deleteClassArm(Request $request)
+    {
+        try {
+
+            $class = Student::where('current_class_pid', $request->pid)->exists();
+            if ($class) {
+                return response()->json(['status' => '2', 'message' => 'Class arm contain some Student\'s and should not be deleted.']);
+            }
+            $result = ClassArm::where('pid', $request->pid)->delete();
+            if ($result) {
+                return response()->json(['status' => 1, 'message' => 'Class arm Deleted!!!']);
+            }
+            return response()->json(['status' => 2, 'message' => 'Failed to delete Class arm']);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return response()->json(['status' => 'error', 'message' => 'Something went Wrong... error logged']);
+        }
+    }
     private function updateOrCreaateClassArm($data){
         try {
             $count = count($data['arms']);

@@ -146,14 +146,17 @@ Route::middleware('schoolAuth')->group(function(){
     // tab 4 
     Route::post('load-school-class-arm-subject', [ClassController::class, 'loadClassArmSubject'])->name('load.school.class.arm.subject');
     // create category 
-    Route::post('create-school-category', [ClassController::class, 'createCategory'])->name('create.school.category');
+    Route::post('create-category', [ClassController::class, 'createCategory'])->name('create.school.category');
+    Route::post('delete-category', [ClassController::class, 'deleteCategory'])->name('delete.category');
     Route::post('load-school-category-by-pid', [ClassController::class, 'loadCategoryByPid'])->name('load.school.category.by.pid');
     // create class 
     Route::post('create-class', [ClassController::class, 'createClass'])->name('create.school.class');
     Route::post('update-class', [ClassController::class, 'updateClass'])->name('update.class');
+    Route::post('delete-class', [ClassController::class, 'deleteClass'])->name('delete.class');
     // create class arm 
     Route::post('create-class-arm', [ClassController::class, 'createClassArm'])->name('create.class.arm');
     Route::post('update-class-arm', [ClassController::class, 'updateClassArm'])->name('update.class.arm');
+    Route::post('delete-class-arm', [ClassController::class, 'deleteClassArm'])->name('delete.class.arm');
     // create class arm 
     Route::post('create-class-arm-subject', [ClassController::class, 'createClassArmSubject'])->name('create.school.class.arm.subject');
     // create class arm 
@@ -190,6 +193,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-assessment-title', [AssessmentTitleController::class, 'index'])->name('load.school.assessment.title');
     // submiting form and create assessment title 
     Route::post('assessment-title', [AssessmentTitleController::class, 'createAssessmentTitle']);
+    Route::post('update-assessment-title', [AssessmentTitleController::class, 'updateAssessmentTitle'])->name('update.assessment.title');
+    Route::post('delete-assessment-title', [AssessmentTitleController::class, 'deleteAssessmentTitle'])->name('delete.assessment.title');
     //load score settings 
     Route::get('load-score-setting', [ScoreSettingsController::class, 'index'])->name('load.score.setting');
 
@@ -217,6 +222,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-school-subject', [SubjectController::class, 'index'])->name('load.school.subject');
     // create school category subject 
     Route::post('create-subject-subject', [SubjectController::class, 'createSchoolSubject'])->name('create.subject');
+    Route::post('update-subject-subject', [SubjectController::class, 'updateSubject'])->name('update.subject');
     Route::post('dup-subject-subject', [SubjectController::class, 'dupSubjectTypeAsSubject'])->name('dup.subject.type.subject');
     Route::post('load-subject-by-id', [SubjectController::class, 'loadSubjectById'])->name('load.subject.by.id');
 

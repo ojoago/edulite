@@ -533,11 +533,16 @@ class Select2Controller extends Controller
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }
+        $dup = [];
         foreach ($result as $row) {
-            $data[] = [
-                'id' => $row->pid,
-                'text' => $row->subject . ' - ' . $row->arm,
-            ];
+            $txt = $row->subject . ' - ' . $row->arm;
+            if(!in_array($txt,$dup)){
+                $data[] = [
+                    'id' => $row->pid,
+                    'text' => $txt,
+                ];
+            }
+            $dup[] = $txt;
         }
         return response()->json($data);
     }
@@ -559,11 +564,16 @@ class Select2Controller extends Controller
         if (!$result) {
             return response()->json(['id' => null, 'text' => null]);
         }
+        $dup = [];
         foreach ($result as $row) {
-            $data[] = [
-                'id' => $row->pid,
-                'text' => $row-> subject . ' - ' . $row->arm,
-            ];
+            $txt = $row->subject . ' - ' . $row->arm;
+            if (!in_array($txt, $dup)) {
+                $data[] = [
+                    'id' => $row->pid,
+                    'text' => $txt,
+                ];
+            }
+            $dup[] = $txt;
         }
         return response()->json($data);
     }
@@ -706,11 +716,16 @@ class Select2Controller extends Controller
             return response()->json(['id' => null, 'text' => 'no class assigned to you']);
         }
         // $result = array_unique($result);
+        $dup = [];
         foreach ($result as $row) {
-            $data[] = [
-                'id' => $row->pid,
-                'text' => $row->arm,
-            ];
+            if(!in_array($row->arm,$dup)){
+                $data[] = [
+                    'id' => $row->pid,
+                    'text' => $row->arm,
+                ];
+            }
+            $dup[] = $row->arm;
+            
         }
         return response()->json($data);
     }
@@ -755,11 +770,16 @@ class Select2Controller extends Controller
         //     if (!in_array($value, $result))
         //     $result[$key] = $value;
         // }
-        foreach ($result as $key => $row) {
-            $data[] = [
-                'id' => $row->pid,
-                'text' => $row->subject . ' - ' . $row->arm,
-            ];
+        $dup = [];
+        foreach ($result as $row) {
+            $txt = $row->subject . ' - ' . $row->arm;
+            if(!in_array($txt,$dup)){
+                $data[] = [
+                    'id' => $row->pid,
+                    'text' => $txt,
+                ];
+            }
+            $dup[] = $txt;
         }
         return response()->json($data);
     }

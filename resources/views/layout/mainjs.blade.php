@@ -1365,6 +1365,30 @@
         // });
     }
 
+    function postDataAjax(data,route,method='post'){
+        $.ajax({
+            url: route,
+            type: method,
+            data: data,
+            dataType: "JSON",
+            beforeSend: function() {
+                $('.overlay').show();
+            },
+            success: function(data) {
+                $('.overlay').hide();
+                if (data.status === 1) {
+                    alert_toast(data.message, 'success');
+                } else {
+                    alert_toast(data.message, 'error');
+                }
+            },
+            error: function(data) {
+                $('.overlay').hide();
+                alert_toast('Something Went Wrong', 'error');
+            }
+        });
+    }
+
     function loadDataAjax(route, params, method = 'post') {
         return new Promise((resolve, reject) => {
             $.ajax({

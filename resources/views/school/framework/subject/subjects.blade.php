@@ -28,8 +28,8 @@
                             <th>Category</th>
                             <th>Subject Type</th>
                             <th>Subject</th>
-                            <th>Description</th>
-                            <th>Status</th>
+                            {{-- <th>Description</th> --}}
+                            {{-- <th>Status</th> --}}
                             {{-- <th>Date</th> --}}
                             <th align="center"><i class="bi bi-tools"></i></th>
                         </tr>
@@ -84,12 +84,14 @@
                     {
                         "data": "subject"
                     },
-                    {
-                        "data": "description"
-                    },
-                    {
-                        "data": "status"
-                    },
+                    // {
+                    //     "data": "description"
+                    // },
+
+                    // {
+                    //     "data": "status"
+                    // },
+
                     // {
                     //     "data": "created_at"
                     // },
@@ -110,49 +112,15 @@
         // load dropdown on 
         
 
-        $(document).on('click', '.edit-subject', function() {
-            var pid = $(this).attr('pid');
-            var token = "{{csrf_token()}}"
-            $('.modal-title').text('Edit Subject').addClass('text-info');
-            $('#createSubjectBtn').text('Edit').addClass('btn-warning');
+        $(document).on('click', '.editSubjectBtn', async function() {
+            let pid = $(this).attr('pid');
+            let s = await submitFormAjax('editSubjectForm'+pid, 'editSubjectBtn'+pid, "{{route('update.subject')}}");
+            if (s.status === 1) {
+               loadSubjectTable(null)
+            }
+        })
 
-            $.ajax({
-                url: "{{route('load.subject.by.id')}}",
-                type: "POST",
-                data: {
-                    pid: pid,
-                    _token: token
-                },
-                dataType: "JSON",
-                beforeSend: function() {
-                    $('.overlay').show();
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('.overlay').hide();
-                    if (data.status === 1) {
-                        $('#subject').val(data.data.subject)
-                        $('#description').val(data.data.description)
-                        $('#pid').val(data.data.pid)
-                        multiSelect2('#createSubjectSubjectTypeSelect2', 'createSubjectModal', 'subject-type', 'Select Subject Type', data.data.subject_type_pid);
-                        multiSelect2('#createSubjectCategorySelect2', 'createSubjectModal', 'category', 'Select Category', data.data.category_pid);
-                        $('#createSubjectModal').modal('show')
-                    } else {
-                        alert_toast('failed not load subject', 'warning');
-                        $('.modal-title').text('Create Lite S').removeClass('text-info');
-                        $('#createSubjectBtn').text('Submit').removeClass('btn-warning');
-                    }
-                },
-                error: function(data) {
-                    console.log(data);
-                    $('.overlay').hide();
-                    $('.modal-title').text('Create Subject type').removeClass('text-info');
-                    $('#createSubjectBtn').text('Submit').removeClass('btn-warning');
-                    alert_toast('Something Went Wrong', 'error');
-                }
-            });
-
-        });
+       
         
 
     });

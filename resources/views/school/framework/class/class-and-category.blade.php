@@ -138,11 +138,13 @@
 
         // load page content  
         // load school category
-        $('#classCategoryTable').DataTable({
+        loadCategory()
+        function loadCategory(p = null){
+            $('#classCategoryTable').DataTable({
             "processing": true,
             "serverSide": true,
-
             responsive: true,
+            destroy:true,
             type: "GET",
             "ajax": "{{route('load.school.category')}}",
             "columns": [{
@@ -163,6 +165,7 @@
                 },
             ],
         });
+        }
         // load school classes
         $('#classTable').DataTable({
             "processing": true,
@@ -380,6 +383,50 @@
             let pid = $(this).attr('pid');
             submitFormAjax('editClassArmFrom' + pid, 'id' + pid, "{{route('update.class.arm')}}");
         });
+
+        $(document).on('click', '.deleteCategory', async function() {
+            let pid = $(this).attr('pid');
+            if(confirm('are you sure, you want to delete this category ?')){
+                let param = {
+                    pid:pid,
+                    _token: "{{csrf_token()}}"
+                }
+               let  s = await postDataAjax(param , "{{route('delete.category')}}");
+               if(s.status == 1){
+                loadCategory(0)
+               }
+            }
+        });
+
+        $(document).on('click', '.deleleteClass', async function() {
+            let pid = $(this).attr('pid');
+            if(confirm('are you sure, you want to delete this class ?')){
+                let param = {
+                    pid:pid,
+                    _token: "{{csrf_token()}}"
+                }
+               let  s = await postDataAjax(param , "{{route('delete.class')}}");
+               if(s.status == 1){
+                loadCategory(0)
+               }
+            }
+        });
+        
+        $(document).on('click', '.deleleteClassArm', async function() {
+            let pid = $(this).attr('pid');
+            if(confirm('are you sure, you want to delete this class arm ?')){
+                let param = {
+                    pid:pid,
+                    _token: "{{csrf_token()}}"
+                }
+               let  s = await postDataAjax(param , "{{route('delete.class.arm')}}");
+               if(s.status == 1){
+                loadCategory(0)
+               }
+            }
+        });
+
+
 
 
         // create school class arm
