@@ -88,23 +88,25 @@
                 </div>
             </div><!-- End Revenue Card -->
             <div class="col-md-6">
-                <div class="card info-card sales-card">
+
+                {{-- <div class="card info-card sales-card">
                     <a data-bs-toggle="tooltip" title="View Staff Details">
                         <div class="card-body">
-                            <h5 class="card-title">Assignments </h5>
+                            <h5 class="card-title">Sum </h5>
 
                             <div class="d-flex align-items-center">
                                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                     <i class="bi bi-book-half"></i>
                                 </div>
                                 <div class="ps-3">
-                                    <h6>3</h6>
+                                    <h6>0</h6>
 
                                 </div>
                             </div>
                         </div>
                     </a>
-                </div>
+                </div> --}}
+
             </div><!-- End Sales Card -->
         </div>
 
