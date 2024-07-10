@@ -64,7 +64,7 @@ class StudentAttendanceController extends Controller
                                 'arm_pid'=>$data['arm'],
                                 'school_pid'=>getSchoolPid(),
                             ])->pluck('pid')->first();
-                            
+
         $result = AttendanceRecord::updateOrCreate([
             'pid'=>$pid,
         ],[
@@ -130,7 +130,7 @@ class StudentAttendanceController extends Controller
         $data = DB::table('attendances as a')
         ->join('attendance_records as r', 'r.pid', 'a.record_pid')
         ->join('students as s', 's.pid', 'a.student_pid')
-        ->select('fullname', 'reg_number', 'r.date', 'a.status')
+        ->select('fullname', 'reg_number', 'r.date', 'a.status','a.comment')
         ->where($where)
             ->orderBy('date')
             ->orderBy('a.updated_at','DESC')

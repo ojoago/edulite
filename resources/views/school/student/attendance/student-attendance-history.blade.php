@@ -50,6 +50,7 @@
                         <th scope="col">Names</th>
                         <th> Date </th>
                         <th> Status </th>
+                        <th> Comment </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +62,6 @@
 </div>
 
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 <script>
     $(document).ready(function() {
         // toggle checkbox 
@@ -145,6 +145,9 @@
                 },
                 {
                     "data": "title"
+                },
+                {
+                    "data": "comment"
                 },
             ],
         });
