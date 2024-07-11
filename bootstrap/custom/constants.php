@@ -77,3 +77,9 @@ define('MONTH_CODE',[
     '11' =>'NO' , 
     '12' =>'DC' , 
 ]);
+
+define('EXTRA_CURRICULAR_GRADE_STYLE',[1 => 'Number', 2 => 'Alphabet', 3 => 'Checked', 4 => 'Sentence']);
+define('AWARD_TYPE',[1 => 'One per Class', 2 => 'One per School', 3 => 'General', '' =>'']);
+
+
+

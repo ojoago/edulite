@@ -15,7 +15,7 @@
                         <tr>
                             <th width="5%">S/N</th>
                             <th>Award</th>
-                            <th>Date</th>
+                            <th>Type</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,8 +71,11 @@
         // add more title 
 
         // create school class arm
-        $('#createAwardBtn').click(function() {
-            submitFormAjax('awardForm', 'createAwardBtn', "{{route('create.student.award')}}");
+        $('#createAwardBtn').click(async function() {
+           let sts = await submitFormAjax('awardForm', 'createAwardBtn', "{{route('create.student.award')}}");
+           if(sts.status == 1){
+                loadAwardKeys()
+            }
         });
        
         // load page content  
@@ -97,19 +100,8 @@
                         "data": "award"
                     },
                     {
-                        "data": "date"
+                        "data": "type"
                     },
-
-                    // {
-                    //     "data": "course"
-                    // },
-                    // {
-                    //     "data": "years"
-                    // },
-
-                    // {
-                    //     "data": "subjects"
-                    // },
 
                 ],
             });

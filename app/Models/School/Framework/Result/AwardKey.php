@@ -9,7 +9,7 @@ class AwardKey extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'award','pid','school_pid','status'
+        'award','pid','school_pid','status', 'type'
     ];
 
     public function setAwardAttribute($value){

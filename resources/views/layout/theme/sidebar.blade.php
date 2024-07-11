@@ -499,7 +499,7 @@
         </a>
         <ul id="psychomotor-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="{{route('load.psychomotor.keys')}}">
+            <a href="{{route('record.extra.curricular')}}">
               <i class="bi bi-circle"></i><span>Extra Curricular Assessment</span>
             </a>
           </li>

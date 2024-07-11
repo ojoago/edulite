@@ -874,7 +874,7 @@ class Select2Controller extends Controller
         $data = null;
         if ($request->has('q'))
             $result = PsychomotorBase::where(['school_pid' => getSchoolPid(), 'status' => 1,'category_pid'=>$request->pid])
-                                        ->where('psychomotor', 'like', '%' . $request->q . '%')
+                                        ->where('psychomotor', 'like', '%' . $request->q . '%')->where('status',1)
                 ->orderBy('psychomotor')->limit($request->page_limit)->get(['pid', 'psychomotor']); //
         else
             $result = PsychomotorBase::where(['school_pid' => getSchoolPid(),'status'=>1, 'category_pid' => $request->pid])
@@ -895,7 +895,7 @@ class Select2Controller extends Controller
         $data = null;
         if ($request->has('q'))
             $result = PsychomotorBase::where(['school_pid' => getSchoolPid(), 'status' => 1])
-                                        ->where('psychomotor', 'like', '%' . $request->q . '%')
+                                        ->where('psychomotor', 'like', '%' . $request->q . '%')->where('status', 1)
                 ->orderBy('psychomotor')->limit($request->page_limit)->get(['pid', 'psychomotor']); //
         else
             $result = PsychomotorBase::where(['school_pid' => getSchoolPid(),'status'=>1])

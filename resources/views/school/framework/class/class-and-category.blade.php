@@ -139,13 +139,14 @@
         // load page content  
         // load school category
         loadCategory()
+
         function loadCategory(p = null){
             $('#classCategoryTable').DataTable({
-            "processing": true,
-            "serverSide": true,
-            responsive: true,
-            destroy:true,
-            type: "GET",
+                "processing": true,
+                "serverSide": true,
+                responsive: true,
+                destroy:true,
+                type: "GET",
             "ajax": "{{route('load.school.category')}}",
             "columns": [{
                     "data": "category"
@@ -253,6 +254,7 @@
                 });
             }
         });
+        
         loadSubject(cls = null)
         // load school class arm
         function loadSubject(cls = null) { //cls class

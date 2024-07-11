@@ -32,10 +32,8 @@
                             <th>Extra Curricular Names</th>
                             <th>Obtainable Score</th>
                             <th>Grade Style</th>
-                            {{-- <th>Description</th> --}}
-                            {{-- <th>Status</th> --}}
-                            {{-- <th>Date</th> --}}
-                           
+                            <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -52,7 +50,12 @@
                         <select name="category_pid" id="psychomotorBaseSelect2" class="form-control form-control-sm">
                         </select>
                     </div>
+                    <div class="col-md-4">
+                        <select name="category" id="categoryBaseSelect2" class="form-control form-control-sm">
+                        </select>
+                    </div>
                 </div>
+
                 <table class="table table-hover table-striped table-bordered cardTable" id="psychomotorKeyDataTable" width="100%">
                     <thead>
                         <tr>
@@ -299,6 +302,7 @@
 
 <script>
     $(document).ready(function() {
+
         $('#addMoreExtra').click(function(){
             $('#moreExtra').append(`
                  <div class="row">
@@ -347,6 +351,7 @@
             multiSelect2Post('#psychomotorkeySelect2', 'createPsychomotorKeyModal', 'psychomotors', id, 'Select Psychomotor');
         });
 
+        FormMultiSelect2('#categoryBaseSelect2',  'category', 'Select Category');
 
         multiSelect2('#cloneToCategorySelect2', 'clonePsychomotorBaseModal', 'category', 'Select Category');
         multiSelect2('#cloneFromCategorySelect2', 'clonePsychomotorBaseModal', 'category', 'Select Category');
@@ -355,53 +360,10 @@
             var id = $(this).val();
             multiSelect2Post('#clonePsychomotorSelect2', 'clonePsychomotorBaseModal', 'psychomotors', id, 'Select Psychomotor');
         });
+
         // psychomotor-dataTable
         loadBase()
-        function loadBase(){
-            $('#psychomotorBaseDataTable').DataTable({
-            "processing": true,
-            "serverSide": true,
-           
-            // ->rawColumns(['data', 'action'])
-            responsive: true,
-            "ajax": "{{route('load.psychomotor.base')}}",
-            "columns": [
-                
-            
-                {
-                    "data": "category"
-                },
-               
-                {
-                    "data": "psychomotor"
-                },
-               
-                // {
-                //     "data": "status"
-                // },
-                {
-                    "data": "obtainable_score"
-                },
-                {
-                    "data": "grade"
-                },
-                //  {
-                //     "data": "description"
-                // },
-                // {
-                //     "data": "created_at"
-                // },
 
-                // {
-                //     "data": "username"
-                // },
-                // {
-                //     "data": "action"
-                // },
-            ],
-        });
-        }
-        // psychomotor-dataTable
 
         $('#psychomotoKey-tab').click(function() {
             loadPsychomotorKeys()
@@ -409,16 +371,22 @@
 
         $('#psychomotorBaseSelect2').change(function() {
             let id = $(this).val();
-            loadPsychomotorKeys(id)
+            let cat = $('#categoryBaseSelect2').val()
+            loadPsychomotorKeys(id , cat)
+        })
+        $('#categoryBaseSelect2').change(function() {
+            let cat = $(this).val();
+            let id = $('#psychomotorBaseSelect2').val();
+            loadPsychomotorKeys(id,cat)
         })
 
         // psychomotor-dataTable
         $('#psychoGradeDataTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+            // rowReorder: {
+            //     selector: 'td:nth-child(2)'
+            // },
             // ->rawColumns(['data', 'action'])
             responsive: true,
             "ajax": "{{route('load.psycho-grade')}}",
@@ -447,15 +415,39 @@
         // create psychomotor  
         $('#createPsychomotorBaseBtn').click(async function() {
             let sts = await  submitFormAjax('createPsychomotorBaseForm', 'createPsychomotorBaseBtn', "{{route('create.psychomotor.base')}}")
-            if(sts.status ===1){
-                loadBase(id)
+            if(sts.status == 1){
+                loadBase(1)
             }
         });
+        // create psychomotor  
+        $(document).on('click','.editBaseBtn', async function(){
+            let pid = $(this).attr('pid');
+            let sts = await  submitFormAjax('editBaseForm'+pid, 'editBaseBtn'+pid, "{{route('update.psychomotor.base')}}")
+            if(sts.status == 1){
+                loadBase(1)
+            }
+        });
+
+
+        $(document).on('click', '.deleteExtraCurricular', async function() {
+            let pid = $(this).attr('pid');
+            if(confirm('are you sure, you want to delete this ?')){
+                let param = {
+                    pid:pid,
+                    _token: "{{csrf_token()}}"
+                }
+               let  s = await postDataAjax(param , "{{route('delete.psychomotor.base')}}");
+               if(s.status == 1){
+                loadBase('sts')
+               }
+            }
+        });
+       
         
         // clone psychomotor  
         $('#clonePsychomotorBaseBtn').click(async function() {
             let sts = await  submitFormAjax('clonePsychomotorBaseForm', 'clonePsychomotorBaseBtn', "{{route('clone.psychomotor.base')}}")
-            if(sts.status ===1){
+            if(sts.status == 1){
                 loadBase(id)
             }
         });
@@ -504,14 +496,57 @@
 
     });
 
-    function loadPsychomotorKeys(pid = null) {
+
+    
+        function loadBase(type = null){
+            $('#psychomotorBaseDataTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            responsive: true,
+            destroy: true,
+
+            "ajax": {
+                url: "{{route('load.psychomotor.base')}}",
+                type: "post",
+                data: {
+                    _token: "{{csrf_token()}}",
+                    type: type
+                }
+            },
+            "columns": [
+                
+            
+                {
+                    "data": "category"
+                },
+               
+                {
+                    "data": "psychomotor"
+                },
+               
+                {
+                    "data": "obtainable_score"
+                },
+                {
+                    "data": "type"
+                },
+                {
+                    "data": "status_"
+                },
+                {
+                    "data": "action"
+                },
+               
+            ],
+        });
+        }
+        // psychomotor-dataTable
+
+    function loadPsychomotorKeys(pid = null, category=null) {
         $('#psychomotorKeyDataTable').DataTable({
             "processing": true,
             "serverSide": true,
-            // rowReorder: {
-            //     selector: 'td:nth-child(2)'
-            // },
-            // ->rawColumns(['data', 'action'])
+            
             responsive: true,
             destroy: true,
             "ajax": {
@@ -519,7 +554,8 @@
                 type: "post",
                 data: {
                     _token: "{{csrf_token()}}",
-                    pid: pid
+                    pid: pid ,
+                    category: category
                 }
             },
             "columns": [

@@ -12,10 +12,10 @@ class AwardKeyController extends Controller
 {
 
     public function index(){
-        $data = AwardKey::where(['school_pid'=>getSchoolPid()])->get(['award','status', 'created_at']);
+        $data = AwardKey::where(['school_pid'=>getSchoolPid()])->get(['award','status', 'type']);
         return datatables($data)
-        ->editColumn('date', function ($data) {
-            return date('d F Y', strtotime($data->created_at));
+        ->editColumn('type', function ($data) {
+            return AWARD_TYPE[$data->type];
         })
         // ->addColumn('action', function ($data) {
         //     return view('school.framework.terms.term-action-button', ['data' => $data]);
@@ -39,17 +39,22 @@ class AwardKeyController extends Controller
         ],['required' => 'Enter Award Name', 'max' => '50 is maximum characters', 'regex' => 'Specail Character not allowed']);
 
         if (!$validator->fails()) {
-            $data = [
-                'award' => $request->award,
-                // 'type' => $request->type,
-                'pid' => $request->pid ?? public_id(),
-                'school_pid' => getSchoolPid()
-            ];
-            $result = $this->updateOrCreateAward($data);
-            if ($result) {
-                return response(['status' => 1, 'message' => 'Submitted Successful']);
+            try {
+                $data = [
+                    'award' => $request->award,
+                    'type' => $request->type,
+                    'pid' => $request->pid ?? public_id(),
+                    'school_pid' => getSchoolPid()
+                ];
+                $result = $this->updateOrCreateAward($data);
+                if ($result) {
+                    return response(['status' => 1, 'message' => 'Submitted Successful']);
+                }
+                return response(['status' => 'error', 'message' => 'Something Went Wrong']);
+            } catch (\Throwable $e) {
+                logError($e->getMessage());
+                return response()->json(['status' => 'error', 'message' => ER_500]);
             }
-            return response(['status' => 'error', 'message' => 'Something Went Wrong']);
         }
         return response(['status' => 0, 'message' => 'Fill the form Correctly', 'error' => $validator->errors()->toArray()]);
 

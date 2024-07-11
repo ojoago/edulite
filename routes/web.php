@@ -351,13 +351,15 @@ Route::middleware('schoolAuth')->group(function(){
     });
     
     // load school base pschomotor 
-    Route::get('load-psychomotor-base', [PsychomotorBaseController::class, 'index'])->name('load.psychomotor.base');
+    Route::post('load-psychomotor-base', [PsychomotorBaseController::class, 'index'])->name('load.psychomotor.base');
     
     // load school pschomotor key
     Route::post('load-psychomotor-key', [PsychomotorBaseController::class, 'psychomotorKeys'])->name('load.psychomotor.key');
     // Route::post('creat-psychomotor', [PsychomotorController::class, 'index'])->name('load.psychomotor');
     
     Route::post('create-psychomotor-base', [PsychomotorBaseController::class, 'createPsychomotorBase'])->name('create.psychomotor.base');
+    Route::post('update-psychomotor-base', [PsychomotorBaseController::class, 'updatePsychomotorBase'])->name('update.psychomotor.base');
+    Route::post('delete-psychomotor-base', [PsychomotorBaseController::class, 'deletePsychomotorBase'])->name('delete.psychomotor.base');
     Route::post('clone-psychomotor-base', [PsychomotorBaseController::class, 'clonePsychomotorBase'])->name('clone.psychomotor.base');
     // create psychomotor
     Route::post('create-psychomotor-key', [PsychomotorBaseController::class, 'createPsychomotorkey'])->name('create.psychomotor.key');
@@ -581,8 +583,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('view-student-score', [StudentScoreController::class, 'loadStudentScore'])->name('view.student.score');
 
     // psychomotor 
-    Route::view('record-psychomotor', 'school.student.psychomotor.record-psychomotor')->name('load.psychomotor.keys');
-    Route::post('record-psychomotor', [RecordPsychomotorController::class, 'loadPsychomotoKeys']);
+    Route::view('record-extra-curricular', 'school.student.psychomotor.record-psychomotor')->name('record.extra.curricular');
+    Route::post('record-extra-curricular', [RecordPsychomotorController::class, 'loadPsychomotoKeys']);
     Route::post('record-psychomotor-score', [RecordPsychomotorController::class, 'recordPsychomotorScore'])->name('record.psycomotor.score');
 
     Route::view('view-psychomotor-form', 'school.student.psychomotor.view-psychomotor-form')->name('view.psychomotor.form');
