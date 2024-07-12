@@ -1,5 +1,5 @@
 
-@include('school.student.result.ais.header')
+@include('school.student.result.ais.header',['result_config'=>$result_config,'school'=>$school,'std'=>$std, ])
 
 {{-- extra-curricular --}}
 <style>
@@ -95,7 +95,7 @@
 
     {{-- subject result  --}}
 
-       @include('school.student.result.termly-result.subject-table')
+       @include('school.student.result.termly-result.subject-table',['subResult'=>$subResult,'setting' =>$setting , 'terms' =>$terms])
 
 
     {{-- subject result  --}}
@@ -154,6 +154,7 @@
 
      {{-- chart  --}}
 @if($setting->show_chart== 1)
-    @include('school.student.result.termly-result.chart')
+    @include('school.student.result.termly-result.chart',['subResult'=>$subResult])
 @endif 
      
+<a href="{{route('student.report.card.pdf',['param'=>$param , 'pid' => $std->pid])}}"> <button class="btn btn-primary btn-sm">Print</button> </a>

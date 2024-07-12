@@ -85,3 +85,5 @@
         </tr>
 
     </table>
+
+<a href="{{route('student.report.card.pdf',['param'=>$param , 'pid' => $std->pid])}}"> <button class="btn btn-primary btn-sm">Print</button> </a>

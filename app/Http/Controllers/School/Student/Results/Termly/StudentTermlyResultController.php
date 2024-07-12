@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\School\Student\Results\Termly;
 
+// use PDF;
+use Barryvdh\DomPDF\Facade\PDF;
+// use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
+use App\Models\School\School;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\School\Framework\ClassController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Models\School\Framework\Psychomotor\PsychomotorBase;
-use App\Models\School\School;
 use App\Models\School\Student\Result\StudentClassResultParam;
+use App\Http\Controllers\School\Framework\Assessment\ScoreSettingsController;
 
 class StudentTermlyResultController extends Controller
 {
@@ -299,15 +303,35 @@ class StudentTermlyResultController extends Controller
                 $basePath = $result_config->base_dir;
                 $path = $result_config->sub_dir. $result_config->file_name;
             }
-            
+            $cache = [
+                'path' => $basePath . $path,  'subResult' => $subResult, 'std' =>$std , 'scoreSettings' => $scoreSettings , 'param' => $param , 
+                'psycho' => $psycho, 'result' => $result , 'grades' => $grades , 'school' => $school , 'terms' => $terms, 'result_config' => $result_config
+            ];
+            Cache::add($param. $spid,$cache);
             return view($basePath.$path, compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'result', 'grades', 'school', 'terms', 'result_config'));
 
      } catch (\Throwable $e) {
         logError($e->getMessage());
-        dd($e);
+        // dd($e);
      }
     }
 
+    public function loadStudentResultPdf($prm,$spid){
+        // set_time_limit(360);
+        ['path' => $path,  'subResult' => $subResult, 'std' => $std, 'scoreSettings' => $scoreSettings, 'param' => $param,
+            'psycho' => $psycho, 'result' => $result, 'grades' => $grades, 'school' => $school, 'terms' => $terms, 'result_config' => $result_config
+        ]  =$d =  Cache::get($prm . $spid);
+        // dd($d);
+        // $pdf = new ();
+        // $pdf = PDF::loadView('welcome')->setOptions([ 'defaultFont' => 'sans-serif']);
+        // dd($path);
+        // return $pdf->download($std->fullname . 'Report Card'.'.pdf');
+        $pdf = PDF::loadView($path, ['subResult' => $subResult , 'std' =>$std, 'scoreSettings' => $scoreSettings, 'param' =>$param, 'psycho' =>$psycho, 'result' =>$result, 'grades'=> $grades, 'school'=>$school, 'terms' =>$terms, 'result_config' => $result_config])->setOptions([ 'defaultFont' => 'sans-serif']);
+        // dd($path);
+        return $pdf->download($std->fullname . 'Report Card'.'.pdf');
+        return view($path, );
+
+    }
 
     // load a particular student result for student or parents 
     public function viewStudentResult(Request $request)
@@ -366,6 +390,7 @@ class StudentTermlyResultController extends Controller
             logError($e->getMessage());
         }
     }
+
     //load class teacher default comment based on average
     private function getClassTeacherComment($param,$average){
         try {
@@ -378,6 +403,8 @@ class StudentTermlyResultController extends Controller
             logError($e->getMessage());
         }
     }
+
+
 }
 
 

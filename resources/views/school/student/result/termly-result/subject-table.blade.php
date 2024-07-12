@@ -1,3 +1,33 @@
+<style>
+    
+
+        .rotate-up {
+            vertical-align: bottom;
+            text-align: center;
+            /* font-weight: normal; */
+        }
+
+        .rotate-up {
+            -ms-writing-mode: tb-rl;
+            -webkit-writing-mode: vertical-rl;
+            writing-mode: vertical-rl;
+            /* translate(25px, 51px) // 45 is really 360-45 */
+            /* rotate(315deg); */
+            /* transform: rotate(315deg) translate(25px, 51px); */
+            white-space: nowrap;
+            /* overflow: hidden; */
+            /* width: 25px; */
+            transform: rotate(180deg);
+            /* height: 150px; */
+            width: 30px;
+            /* transform-origin: left bottom; */
+            /* box-sizing: border-box; */
+        }
+        .subject-column{
+            text-align: left !important;
+        }
+
+</style>
 
     <div class="subject-result">
          <table class="table table-hover table-striped table-bordered examTable" id="examTable" cellpadding="pixels">

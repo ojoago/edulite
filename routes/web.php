@@ -602,6 +602,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('student-termly-result', [StudentTermlyResultController::class, 'classResult'])->name('view.student.result');
     // particular student money
     Route::get('student-report-card/{param}/{pid}', [StudentTermlyResultController::class, 'studentReportCard'])->name('student.report.card');
+    Route::get('student-report-card-pdf/{param}/{pid}', [StudentTermlyResultController::class, 'loadStudentResultPdf'])->name('student.report.card.pdf');
     // view student cumualtive result 
     //view-student-cumualtive-result
     Route::view('load-student-cumulative-result', 'school.student.result.cumulative.cumulative-result-form')->name('view.student.cumualtive.result');
