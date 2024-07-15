@@ -480,7 +480,7 @@
           </li>
 
           <li>
-            <a href="{{route('view.student.subject.score.form')}}">
+            <a href="{{route('view.subject.score')}}">
               <i class="bi bi-circle"></i><span> View Subject Result</span>
             </a>
           </li>

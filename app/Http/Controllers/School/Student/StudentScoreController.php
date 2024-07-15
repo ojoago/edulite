@@ -451,8 +451,9 @@ class StudentScoreController extends Controller
         return true;
     }
    
-    // view subject result goes here  
-    public function viewStudentScore(Request $request)
+
+    
+    public function loadStudentScore(Request $request)
     {
         if (!self::mySubjects($request->subject)) {
             $cl = ClassController::GetClassSubjectAndName($request->subject);
@@ -465,12 +466,7 @@ class StudentScoreController extends Controller
             'arm' => $request->arm,
         ]);
         setActionablePid(); //set assessment pid to null
-        return redirect()->route('view.student.score');
-    }
-
-    
-    public function loadStudentScore()
-    {
+        // return redirect()->route('view.student.score');
         $params = $this->loadStudentAndScoreSetting();
         $data = $params['data']; //list of student in selected class
         $scoreParams = $params['scoreParams']; //score header
@@ -479,7 +475,7 @@ class StudentScoreController extends Controller
             return redirect()->route('student.assessment.form')->with('error', 'Subject not Assigned to any teacher '.termName(session('term')). ' ' . sessionName(session('session')));
         }
 
-        return view('school.student.assessment.view-student-score', compact('data', 'scoreParams', 'class'));
+        return view('school.student.assessment.view-subject-score', compact('data', 'scoreParams', 'class'));
     }
 
 

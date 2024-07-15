@@ -86,6 +86,7 @@
                         </form>
                     </table>
                     <button type="button" class="btn btn-primary" id="confirmBtn">Confirm</button>
+                    {{-- <button type="button" class="btn btn-primary" id="confirmBtn">Publish Subject</button> --}}
                     @else
                     <h3 class="card-title bg-warning text-center">No Student Assign to {{$class->arm}} in {{sessionName(session('session'))}} , Please contact the School Admin...</h3>
                     @endif
