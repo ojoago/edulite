@@ -94,13 +94,21 @@ class StudentScoreController extends Controller
         setActionablePid(); //set assessment pid to null
         // self::useClassArmSubjectToGetSubjectScroe();
         $params = $this->loadStudentAndScoreSetting();
+        // dd($params);
         ['data'=>$data , 'class' => $class , 'scoreParams' => $scoreParams] = $params;
-        if (!$this->createScoreSheetParams() || $this->createScoreSheetParams() === 'no class') {
-            if ($this->createScoreSheetParams() === 'no class') {
-                return redirect()->back()->with('error', ClassController::getClassArmNameByPid(session('arm')) . '  not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')));
-            }
-            return redirect()->back()->with('error', 'Subject not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')) . ' & make sure proper term/session is set');
+        $classConfig = $this->createScoreSheetParams();
+        if (!$classConfig) {
+            return redirect()->back()->with('warning', 'Subject not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')) . ' & make sure proper term/session is set');
         }
+
+        if ($classConfig === 'no class') {
+            return redirect()->back()->with('warning', ClassController::getClassArmNameByPid(session('arm')) . '  not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')));
+        }
+
+        if ($classConfig === 'locked') {
+            return redirect()->back()->with('warning', ClassController::getClassArmNameByPid(session('arm')) . ' Result has been locked, no more editing');
+        }
+        
         $param = getActionablePid();
         return view('school.student.assessment.enter-student-score', compact('data', 'scoreParams', 'class','param'));
     // return redirect()->route('enter.student.score');
@@ -249,9 +257,9 @@ class StudentScoreController extends Controller
                 return redirect()->back()->with('warning', 'No subject result recorded for  ' . getClassArmNameByPid($request->arm) . ' Yet.');
             }
 
-            // if($class->teacher_pid != getSchoolUserPid()){
-            //     return redirect()->back()->with('error', $class->arm.' is not assigned to you, for '.$class->term.' '.$class->session);
-            // }
+            if($class->teacher_pid != getSchoolUserPid()){
+                return redirect()->back()->with('error', $class->arm.' is not assigned to you, for '.$class->term.' '.$class->session);
+            }
 
 
             $subjects = SubjectScoreParam::where(['class_param_pid' => $class->pid])->select('subject_teacher_name', 'status', 'subject_name','pid')->get();
@@ -266,7 +274,7 @@ class StudentScoreController extends Controller
     // lock class result  
     public function lockClassResult(Request $request){
         try {
-            $result = StudentClassResultParam::where(['pid' => $request->param])->update(['status' => 1]);
+            $result = StudentClassResultParam::where(['pid' => $request->param , ' school_pid' => getSchoolPid()])->update(['status' => 0]);
             if ($result) {
                 return response()->json(['status' => 1, 'message' => 'class result published and locked']);
             }
@@ -464,6 +472,10 @@ class StudentScoreController extends Controller
         if(!$class_pid){
             return 'no class';// if class is not assigned to teacher
         }
+        if(StudentClassResultParam::where(['pid' => $class_pid , 'status' => 0])->exists()){ // if record exist with status 1, it means result is locked by class teacher
+            return 'locked';    
+        }
+
         $type_data = ClassController::GetClassArmSubjectType($subject);
         $pid = SubjectScoreParam::where([
                                     'subject_pid'=>$subject,
@@ -517,7 +529,7 @@ class StudentScoreController extends Controller
         // $scoreParams = $params['scoreParams']; //score header
         // $class = $params['class'];//selected class and subject
         if (!$this->createScoreSheetParams()) {
-            return redirect()->route('student.assessment.form')->with('error', 'Subject not Assigned to any teacher '.termName(session('term')). ' ' . sessionName(session('session')));
+            return redirect()->back()->with('error', 'Subject not Assigned to any teacher '.termName(session('term')). ' ' . sessionName(session('session')));
         }
 
         return view('school.student.assessment.view-subject-score', compact('data', 'scoreParams', 'class'));

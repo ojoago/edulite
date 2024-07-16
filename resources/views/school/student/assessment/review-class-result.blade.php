@@ -61,7 +61,7 @@
                         </tbody>
                        
                     </table>
-                    @if(!$class->status)
+                    @if($class->status)
                         <button type="button" class="btn btn-success" id="publishResult" param = "{{$class->pid}}">Publish Subject</button>
                     @endif 
             @else 

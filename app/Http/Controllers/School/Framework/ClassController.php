@@ -569,8 +569,11 @@ class ClassController extends Controller
         }
         return false;
     }
+
     public static function getClassTeacherPid($arm,$session,$term){
+
         try {
+            
            $data = DB::table('staff_classes as c')->join('school_staff as s', 's.pid', 'c.teacher_pid')
                                                 ->join('user_details as d', 'd.user_pid', 's.user_pid')
                                         ->where([

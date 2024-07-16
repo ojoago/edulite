@@ -40,7 +40,7 @@ use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
                                     'p.pid'=> $param ?? getActionablePid()
                                     ])->pluck('score')->first();
        
-        return $score;
+    
     }
 
     function getTitleAVGScore($student, $pid, $param,$sub){
