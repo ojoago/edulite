@@ -13,12 +13,54 @@ use App\Http\Controllers\Users\UserDetailsController;
 class AuthController extends Controller
 {
     public $password = 1234567;
-    // public function signUpForm($id=null){
-    //     if($id){
-    //         session(['linkId'=>base64Decode($id)]);
-    //     }
-    //     return view('auths.sign-up');
-    // }
+
+    // login into the app 
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+        // login with username/gsm/email 
+        $user = User::where('users.email', $request->email) // login with email
+            ->orwhere('users.username', $request->email)
+            ->orwhere('users.gsm', $request->email) // login with gsm
+            ->first(['username', 'account_status']); //
+        if (!$user) { // lgin with student reg
+            $user = User::join('students', 'students.user_pid', 'users.pid')
+            ->where('students.reg_number', $request->email) // logon with staff id
+                ->first(['username', 'account_status']);
+        }
+        if (!$user) { //login with staff id
+            $user = User::join('school_staff', 'school_staff.user_pid', 'users.pid')
+            ->where('school_staff.staff_id', $request->email) // logon with staff id
+                ->first(['username', 'account_status']);
+        }
+
+
+        if ($user && isset($user->account_status)) {
+            if ($user->account_status == 1) {
+                if (auth()->attempt(['username' => $user->username, 'password' => $request->password,/*$request->only('email', 'password')*/])) {
+                    $name = authUsername();
+                    self::clearAuthSession();
+                    setAuthFullName($name);
+                    dd('123456');
+                    return redirect()->route('users.dashboard');
+                }
+
+                return back()->with('message', "error|Invalid login details");
+            } elseif ($user->account_status == 2) {
+                return back()->with('message', "info|this account has been banned because of suspicius activities care@edulite.ng, 09079311551.");
+            } elseif ($user->account_status == 0) {
+                return back()->with('message', "info|Your acccount is not yet verified, please login to your mail and click on the verification link to activate your account or contact info@edulite.ng, 09079311551.");
+            }
+            return back()->with('message', "info|Contact care@edulite.ng, 09079311551.");
+        }
+
+        return back()->with('message', "error|Invalid login details");
+    }
+
+    // create and account 
     public function signUp(Request $request){
         $request->validate([
             'email'=>'required|email|unique:users,email|regex:/^[a-zA-Z0-9.@\s]+$/',// added regex
@@ -236,50 +278,6 @@ class AuthController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
     }
 
-    // login into the app 
-    public function login(Request $request){
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
-        // login with username/gsm/email 
-        $user = User::where('users.email',$request->email)// login with email
-                        ->orwhere('users.username', $request->email)
-                        ->orwhere('users.gsm', $request->email)// login with gsm
-                        ->first(['username','account_status']);//
-        if(!$user){// lgin with student reg
-            $user = User::join('students', 'students.user_pid', 'users.pid')
-                ->where('students.reg_number', $request->email) // logon with staff id
-                ->first(['username', 'account_status']);
-             }
-        if(!$user){//login with staff id
-            $user = User::join('school_staff', 'school_staff.user_pid', 'users.pid')
-                ->where('school_staff.staff_id', $request->email) // logon with staff id
-                ->first(['username', 'account_status']);
-             }
-            
-
-        if($user && isset($user->account_status)){
-            if ($user->account_status == 1) {
-                if (auth()->attempt(['username' => $user->username, 'password' => $request->password,/*$request->only('email', 'password')*/])) {
-                    $name = authUsername();
-                    self::clearAuthSession();
-                    setAuthFullName($name);
-                    dd('123456');
-                    return redirect()->route('users.dashboard');
-                }
-                
-                return back()->with('message', "error|Invalid login details");
-            } elseif($user->account_status == 2) {
-                return back()->with('message', "info|this account has been banned because of suspicius activities care@edulite.ng, 09079311551.");
-            }elseif($user->account_status == 0){
-                return back()->with('message', "info|Your acccount is not yet verified, please login to your mail and click on the verification link to activate your account or contact info@edulite.ng, 09079311551.");
-            }
-            return back()->with('message', "info|Contact care@edulite.ng, 09079311551.");
-        }
-        
-        return back()->with('message', "error|Invalid login details");
-    }
 
     public function logout(Request $request){
         self::logUserout();
