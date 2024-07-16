@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('student_pid');
             $table->integer('status')->default(1)->comment('1 present');
             // $table->string('date',20)->nullable();
-            $table->string('comment')->nullable();
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }

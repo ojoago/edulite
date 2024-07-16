@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('session_pid');
             $table->string('begin',20)->nullable();
             $table->string('end',20)->nullable();
-            $table->string('note')->nullable();
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

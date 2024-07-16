@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('pid');
             $table->string('grade');
             $table->float('score')->default(0);
-            $table->string('status')->default(1)->comment('1 enable,0 disabled');
+            $table->tinyInteger('status')->default(1)->comment('1 enable,0 disabled');
             $table->string('staff_pid')->comment('creator');
             $table->timestamps();
         });

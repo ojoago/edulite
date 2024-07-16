@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->string('state')->nullable();
             $table->string('lga')->nullable();
-            $table->string('about')->nullable();
+            $table->text('about')->nullable();
             $table->timestamps();
         });
     }

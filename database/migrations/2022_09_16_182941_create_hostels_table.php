@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('pid')->unique();
             $table->integer('capacity');
-            $table->string('location');
+            $table->text('location');
             $table->string('staff_pid')->comment('creator');
             $table->timestamps();
         });

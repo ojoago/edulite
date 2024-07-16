@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('arm_pid');
             $table->string('student_pid');
             $table->string('school_pid');
-            $table->string('principal_comment')->nullable();
-            $table->string('teacher_comment')->nullable();
-            $table->string('portal_comment')->nullable();
+            $table->text('principal_comment')->nullable();
+            $table->text('teacher_comment')->nullable();
+            $table->text('portal_comment')->nullable();
             $table->timestamps();
         });
     }

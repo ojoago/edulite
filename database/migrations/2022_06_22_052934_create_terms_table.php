@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('school_pid');
             $table->string('pid')->unique();
             $table->string('term');
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

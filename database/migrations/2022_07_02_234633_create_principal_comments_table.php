@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('school_pid');
             $table->float('min');
             $table->float('max');
-            $table->string('comment');
+            $table->text('comment');
             $table->string('staff_pid')->comment('principal pid');
             $table->timestamps();
         });

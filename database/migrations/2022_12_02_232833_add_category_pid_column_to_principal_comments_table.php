@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::table('principal_comments', function (Blueprint $table) {
             $table->string('category_pid');
-            $table->string('comment')->change();
+            $table->text('comment')->change();
             $table->renameColumn('staff_pid', 'principal_pid')->comment('principal pid');
         });
     }

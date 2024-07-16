@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('seasonal_messages', function (Blueprint $table) {
             $table->id();
-            $table->string('message');
+            $table->longText('message');
             $table->string('message_time')->comment('month and day');
             $table->integer('message_type')->nullable()->comment('1 big sallah, 2 small sallah, 3 xmas, 4 new year , 5 new term,6 new session');
             $table->timestamps();

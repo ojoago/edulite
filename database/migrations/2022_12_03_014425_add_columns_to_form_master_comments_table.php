@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('form_master_comments', function (Blueprint $table) {
-            $table->string('comment')->change();
+            $table->text('comment')->change();
             $table->renameColumn('staff_pid','teacher_pid')->comment('form master pid');
             $table->string('category_pid')->comment('category');
         });

@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('student_pid');
             $table->float('total')->nullable();
             $table->float('status')->default(0)->comment('1 paid, 0 not paid');
-            $table->string('class_teacher_comment')->nullable();
-            $table->string('principal_comment')->nullable();
-            $table->string('portal_comment')->nullable();
+            $table->text('class_teacher_comment')->nullable();
+            $table->text('principal_comment')->nullable();
+            $table->text('portal_comment')->nullable();
             $table->timestamps();
         });
     }

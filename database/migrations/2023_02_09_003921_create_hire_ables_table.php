@@ -22,8 +22,8 @@ return new class extends Migration
             $table->integer('status')->default(1);
             $table->integer('state')->nullable();
             $table->string('lga')->nullable();
-            $table->string('area')->nullable();
-            $table->text('subjects')->nullable();
+            $table->longText('area')->nullable();
+            $table->longText('subjects')->nullable();
             $table->timestamps();
         });
     }
