@@ -71,7 +71,7 @@
                 <h5 class="modal-title h6">Create Extra Curricular Name</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form class="g-3" action="{{route('load.psychomotor.keys')}}" method="post">
+            <form class="g-3" method="post">
             <div class="modal-body">
                 @csrf
            

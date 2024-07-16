@@ -22,9 +22,9 @@
                 <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#createPsychomotorBaseModal">
                     Create Extra Curricular
                 </button>
-                <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#clonePsychomotorBaseModal">
+                {{-- <button type="button" class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#clonePsychomotorBaseModal">
                     Clone Extra Curricular
-                </button>
+                </button> --}}
                 <table class="table table-hover table-striped cardTable" id="psychomotorBaseDataTable" width="100%">
                     <thead>
                         <tr>
