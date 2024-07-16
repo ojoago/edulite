@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -12,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-
-        // student_class_result_params
-        Schema::dropIfExists('student_class_result_params');
+        Schema::table('subject_score_params', function (Blueprint $table) {
+            $table->tinyInteger('status')->default(0); // 1 published, 0 not published
+        });
     }
 
     /**
@@ -24,5 +25,6 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('subject_score_params');
     }
 };

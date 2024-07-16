@@ -86,7 +86,7 @@
                         </form>
                     </table>
                     <button type="button" class="btn btn-primary" id="confirmBtn">Confirm</button>
-                    {{-- <button type="button" class="btn btn-primary" id="confirmBtn">Publish Subject</button> --}}
+                    <button type="button" class="btn btn-success" style="display: none" id="publishResult" param = "{{$param}}">Publish Subject</button>
                     @else
                     <h3 class="card-title bg-warning text-center">No Student Assign to {{$class->arm}} in {{sessionName(session('session'))}} , Please contact the School Admin...</h3>
                     @endif
@@ -213,8 +213,11 @@
         });
 
         $('#confirmBtn').click(function() {
-            alert_toast('Weldone', 'success')
+            // alert_toast('Weldone', 'success')
+            $('#publishResult').show(300);
         });
+
+       
 
         $('.examStatus').click(function() {
             if ($(this).is(':checked')) {
@@ -237,6 +240,28 @@
                 },
                 error: function(data) {
                     showTipMessage('Failed to update Exam Status', 3);
+                }
+            });
+        });
+
+         $('#publishResult').click(function() {
+            let param = $(this).attr('param')
+             $.ajax({
+                url: "{{route('publish.subject.result')}}",
+                type: "POST",
+                data: {
+                    param: param,
+                    _token: "{{csrf_token()}}",
+                },
+                success: function(data) {
+                    if(data.status == 1){
+                        alert_toast(data.message, 'success')
+                    }else{
+                        alert_toast(data.message, 'error')
+                    }
+                },
+                error: function(data) {
+                    alert_toast('Weldone', 'error')
                 }
             });
         });

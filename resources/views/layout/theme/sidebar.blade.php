@@ -478,12 +478,19 @@
               <i class="bi bi-circle"></i><span>Record CA's</span>
             </a>
           </li>
-
+          
           <li>
             <a href="{{route('view.subject.score')}}">
               <i class="bi bi-circle"></i><span> View Subject Result</span>
             </a>
           </li>
+           @if(classTeacher())
+          <li>
+            <a href="{{route('review.class.result')}}">
+              <i class="bi bi-circle"></i><span> Review Class Result</span>
+            </a>
+          </li>
+          @endif
 
         </ul>
       </li>

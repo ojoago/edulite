@@ -82,30 +82,27 @@ class StudentScoreController extends Controller
         
         // retrieve form data 
 
-       $data = [
+        session([
             'category' => $request->category,
             'class' => $request->class,
             'session' => $request->session,
             'term' => $request->term,
             'subject' => $request->subject,
             'arm' => $request->arm,
-        ];
-        session($data);
+        ]);
 
         setActionablePid(); //set assessment pid to null
         // self::useClassArmSubjectToGetSubjectScroe();
         $params = $this->loadStudentAndScoreSetting();
-        $data = $params['data']; //list of student in selected class
-        $scoreParams = $params['scoreParams']; //score header
-        $class = $params['class']; //selected class and subject
+        ['data'=>$data , 'class' => $class , 'scoreParams' => $scoreParams] = $params;
         if (!$this->createScoreSheetParams() || $this->createScoreSheetParams() === 'no class') {
             if ($this->createScoreSheetParams() === 'no class') {
                 return redirect()->back()->with('error', ClassController::getClassArmNameByPid(session('arm')) . '  not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')));
             }
             return redirect()->back()->with('error', 'Subject not Assigned to any teacher for ' . termName(session('term')) . ' ' . sessionName(session('session')) . ' & make sure proper term/session is set');
         }
-
-        return view('school.student.assessment.enter-student-score', compact('data', 'scoreParams', 'class'));
+        $param = getActionablePid();
+        return view('school.student.assessment.enter-student-score', compact('data', 'scoreParams', 'class','param'));
     // return redirect()->route('enter.student.score');
     }
 
@@ -230,6 +227,55 @@ class StudentScoreController extends Controller
             return false;
         }
     }
+    // submit student CA on change from jquery 
+    public function publishSubjectResult(Request $request){
+        try {
+            $result = SubjectScoreParam::where(['pid' => $request->param])->update(['status' => 1]);
+            if ($result) {
+                return response()->json(['status' => 1, 'message' => 'Subject published, Weldone']);
+            }
+            return response()->json(['status' => 0, 'message' => 'Subject not published']);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return response()->json(['status' => 0, 'message' => ER_500]);
+        }
+    }
+    // load class result for review 
+    public function reviewClassResult(Request $request){
+        try {
+            $class = StudentClassResultParam::where(['session_pid' => activeSession(), 'term_pid' => activeTerm(), 'arm_pid' => $request->arm])->first(['pid', 'teacher_pid', 'arm', 'term', 'session','status']);
+
+            if (!$class) {
+                return redirect()->back()->with('warning', 'No subject result recorded for  ' . getClassArmNameByPid($request->arm) . ' Yet.');
+            }
+
+            // if($class->teacher_pid != getSchoolUserPid()){
+            //     return redirect()->back()->with('error', $class->arm.' is not assigned to you, for '.$class->term.' '.$class->session);
+            // }
+
+
+            $subjects = SubjectScoreParam::where(['class_param_pid' => $class->pid])->select('subject_teacher_name', 'status', 'subject_name','pid')->get();
+
+            return view('school.student.assessment.review-class-result', compact('subjects', 'class'));
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return redirect()->back()->with('error' , ER_500);
+        }
+
+    }
+    // lock class result  
+    public function lockClassResult(Request $request){
+        try {
+            $result = StudentClassResultParam::where(['pid' => $request->param])->update(['status' => 1]);
+            if ($result) {
+                return response()->json(['status' => 1, 'message' => 'class result published and locked']);
+            }
+            return response()->json(['status' => 0, 'message' => 'class result not published']);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return response()->json(['status' => 0, 'message' => ER_500]);
+        }
+    }
 
     // this only applies to students that do not write subject exams. especial creche that onle do extra curicula
     public static function computeClassResultForNonExaminableClass(array $data){
@@ -284,10 +330,8 @@ class StudentScoreController extends Controller
             $dupParams = $data;
             unset($dupParams['total']);
             SubjectTotal::updateOrCreate($dupParams, $data); // sum all ca as to individual score
-            unset($data['subject_pid']);
-            unset($data['subject_param_pid']);
-            unset($dupParams['subject_pid']);
-            unset($dupParams['subject_param_pid']);
+            unset($data['subject_pid'], $data['subject_param_pid'], $dupParams['subject_pid'], $dupParams['subject_param_pid']);
+           
             return $this->updateCombineSubject($data);
         } catch (\Throwable $e) {
            logError($e->getMessage());
@@ -444,7 +488,7 @@ class StudentScoreController extends Controller
             'subject_name' => $type_data->subject,
             'subject_type_name' => $type_data->subject_type,
             'staff_pid' => getSchoolUserPid(),
-            'school_pid' =>getSchoolPid()
+            'school_pid' => getSchoolPid()
         ];
         $result = SubjectScoreParam::create($param);
         setActionablePid($result->pid);
@@ -468,14 +512,48 @@ class StudentScoreController extends Controller
         setActionablePid(); //set assessment pid to null
         // return redirect()->route('view.student.score');
         $params = $this->loadStudentAndScoreSetting();
-        $data = $params['data']; //list of student in selected class
-        $scoreParams = $params['scoreParams']; //score header
-        $class = $params['class'];//selected class and subject
+        ['data' => $data , 'scoreParams' => $scoreParams , 'class' => $class] = $params;
+        // $data = $params['data']; //list of student in selected class
+        // $scoreParams = $params['scoreParams']; //score header
+        // $class = $params['class'];//selected class and subject
         if (!$this->createScoreSheetParams()) {
             return redirect()->route('student.assessment.form')->with('error', 'Subject not Assigned to any teacher '.termName(session('term')). ' ' . sessionName(session('session')));
         }
 
         return view('school.student.assessment.view-subject-score', compact('data', 'scoreParams', 'class'));
+    }
+
+    public function reviewSubjectResult(Request $request){
+
+        // $sbj = SubjectScoreParam::where()->first();
+
+        $param = DB::table('subject_score_params as s')->join('student_class_result_params as p','p.pid', 's.class_param_pid')
+                                                    ->where(['s.pid' => $request->param, 's.school_pid' => getSchoolPid()])
+                                                    ->select('p.session_pid' , 'p.term_pid' , 'p.arm_pid','p.arm', 's.subject_pid', 's.class_param_pid', 's.subject_name as subject')->first();
+
+        $scoreParams = ScoreSettingsController::loadClassScoreSettings($param->class_param_pid); // load class score seetting 
+
+        $data = DB::table('students as s')->where([
+            'current_class_pid' => $param->arm_pid,
+            'school_pid' => getSchoolPid(),
+            'current_session_pid' => $param->session_pid,
+            // 'status' => 1
+        ])->select(
+            'status',
+            'fullname',
+            'reg_number',
+            'pid',
+            DB::raw("(select seated from subject_totals t where t.student_pid = s.pid and t.class_param_pid = '" . $param->class_param_pid . "' and t.subject_pid = '" . $param->subject_pid . "' limit 1) as seated"),
+        )->get(); //->dd();
+
+        return view('school.student.assessment.review-subject-score', compact('data', 'scoreParams', 'param'));
+
+        // $class = ClassController::GetClassSubjectAndName($sbj->subject_pid);
+        return [
+            'scoreParams' => $scoreParams,
+            'data' => $data,
+            // 'class' => $class,
+        ];
     }
 
 
