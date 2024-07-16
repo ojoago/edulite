@@ -100,9 +100,15 @@
                                                     
                                                     <fieldset class="border rounded-3 p-3">
                                                         <legend class="float-none w-auto px-3"> Key Wards</legend>
+                                                        
                                                         <div class="form-group">
                                                             <label for="">Result Title</label>
                                                             <input type="text" name="title" value="{{$item->title}}" class="form-control form-control-sm" placeholder="e.g Continuous Assessment Report" >
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="">Pass Mark</label>
+                                                            <input type="number" step="0.5" name="pass_mark" value="{{$item->pass_mark}}" class="form-control form-control-sm" placeholder="e.g Pass Mark" >
                                                         </div>
 
                                                         <div class="form-group">
