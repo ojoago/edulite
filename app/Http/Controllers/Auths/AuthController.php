@@ -265,6 +265,7 @@ class AuthController extends Controller
                     $name = authUsername();
                     self::clearAuthSession();
                     setAuthFullName($name);
+                    dd('123456');
                     return redirect()->route('users.dashboard');
                 }
                 
