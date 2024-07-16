@@ -60,7 +60,7 @@
     </div>
     @else
     <h3>Welcome to {{env('APP_NAME', APP_NAME)}},</h3>
-    <!-- <p class="text-danger"> Please click on the green button above to create your school </p> -->
+    {{-- <!-- <p class="text-danger"> Please click on the green button above to create your school </p> --> --}}
     @endif
 </div>
 
@@ -89,6 +89,5 @@
         </div>
     </div>
 </div>
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 @endsection
