@@ -7,7 +7,9 @@
 </style>
 <body onload="printPage()">
    
-    @include($path)
+    @include($path,[ 'subResult' => $subResult, 'std' => $std, 'scoreSettings' => $scoreSettings, 'param' => $param,
+            'psycho' => $psycho, 'result' => $result, 'grades' => $grades, 'school' => $school, 'terms' => $terms, 'result_config' => $result_config
+        ])
    
    
 </body>
