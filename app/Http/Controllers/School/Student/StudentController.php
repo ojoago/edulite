@@ -217,16 +217,19 @@ class StudentController extends Controller
         }
     }
     public static function studentName($pid){
-        $std = Student::where(['students.pid'=>$pid, 'students.school_pid'=>getSchoolPid()])
-                        ->first([
-                            'reg_number', 
-                            'fullname', 
-                            'passport',
-                            'gender',
-                            'pid','height','weight'
-                            ]);
 
-        return $std;
+       return DB::table('students as s')->join('user_details as d','s.user_pid','d.user_pid')->where(['s.pid'=>$pid, 's.school_pid'=>getSchoolPid()])->select('s.reg_number', 's.fullname','s.passport','s.gender', 's.pid','s.height','s.weight','d.dob')->first();
+        
+       // $std = Student::where(['students.pid'=>$pid, 'students.school_pid'=>getSchoolPid()])
+        //                 ->first([
+        //                     'reg_number', 
+        //                     'fullname', 
+        //                     'passport',
+        //                     'gender',
+        //                     'pid','height','weight', 'date'
+        //                     ]);
+
+        // return $std;
     }
     
     public function linkStudentToParent(Request $request){

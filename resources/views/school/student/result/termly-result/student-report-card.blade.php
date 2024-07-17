@@ -530,6 +530,12 @@
 
     <script src="{{asset('printThis/printThis.js')}}"></script>
     <script>
+
+         // window.print();
+        function printPage() {
+            // Trigger the print dialog
+            window.print();
+        }
           function generatePDF() {
             // Select the content you want to print
             const element = document.getElementById('document');

@@ -320,11 +320,14 @@ class StudentTermlyResultController extends Controller
         // set_time_limit(360);
         ['path' => $path,  'subResult' => $subResult, 'std' => $std, 'scoreSettings' => $scoreSettings, 'param' => $param,
             'psycho' => $psycho, 'result' => $result, 'grades' => $grades, 'school' => $school, 'terms' => $terms, 'result_config' => $result_config
-        ]  =$d =  Cache::get($prm . $spid);
+        ] =  Cache::get($prm . $spid);
         // dd($d);
         // $pdf = new ();
         // $pdf = PDF::loadView('welcome')->setOptions([ 'defaultFont' => 'sans-serif']);
         // dd($path);
+       
+        return view('school.student.result.termly-result.print-student-report-card', compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'result', 'grades', 'school', 'terms', 'result_config','path'));
+
         // return $pdf->download($std->fullname . 'Report Card'.'.pdf');
         $pdf = PDF::loadView($path, ['subResult' => $subResult , 'std' =>$std, 'scoreSettings' => $scoreSettings, 'param' =>$param, 'psycho' =>$psycho, 'result' =>$result, 'grades'=> $grades, 'school'=>$school, 'terms' =>$terms, 'result_config' => $result_config])->setOptions([ 'defaultFont' => 'sans-serif', 'isHtml5ParserEnabled' => true]);
         // dd($path);

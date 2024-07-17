@@ -61,8 +61,6 @@
 @endphp
 <div class="result-header">
 
-
-
     <div class="f-row">
         <div class="lf dotted">
             Name of Pupil: {{$std->fullname}}

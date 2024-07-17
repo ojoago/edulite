@@ -40,7 +40,7 @@
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
         }
         body {
-            /* margin: 20px 160px; */
+            margin: 20px 160px;
         }
 
         body::before {
@@ -131,9 +131,9 @@
 .rating{
     margin-bottom: 10px;
 }
-#examTable{
 
-}
+
+
 #examTable{
         border: solid 1px #000;
         margin-bottom: 15px;
@@ -148,33 +148,6 @@
         border: solid 1px #000;
         text-align: center;
     }
-
-
-        .rotate-up {
-            vertical-align: bottom;
-            text-align: center;
-            /* font-weight: normal; */
-        }
-
-        .rotate-up {
-            -ms-writing-mode: tb-rl;
-            -webkit-writing-mode: vertical-rl;
-            writing-mode: vertical-rl;
-            /* translate(25px, 51px) // 45 is really 360-45 */
-            /* rotate(315deg); */
-            /* transform: rotate(315deg) translate(25px, 51px); */
-            white-space: nowrap;
-            /* overflow: hidden; */
-            /* width: 25px; */
-            transform: rotate(180deg);
-            /* height: 150px; */
-            width: 30px;
-            /* transform-origin: left bottom; */
-            /* box-sizing: border-box; */
-        }
-        .subject-column{
-            text-align: left !important;
-        }
 
         .signature-container{
            display: flex;
