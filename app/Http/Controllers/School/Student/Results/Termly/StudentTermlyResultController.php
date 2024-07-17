@@ -307,7 +307,7 @@ class StudentTermlyResultController extends Controller
                 'path' => $basePath . $path,  'subResult' => $subResult, 'std' =>$std , 'scoreSettings' => $scoreSettings , 'param' => $param , 
                 'psycho' => $psycho, 'result' => $result , 'grades' => $grades , 'school' => $school , 'terms' => $terms, 'result_config' => $result_config
             ];
-            Cache::add($param. $spid,$cache);
+            Cache::add($param . $spid,$cache);
             return view($basePath.$path, compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'result', 'grades', 'school', 'terms', 'result_config'));
 
      } catch (\Throwable $e) {
@@ -326,7 +326,7 @@ class StudentTermlyResultController extends Controller
         // $pdf = PDF::loadView('welcome')->setOptions([ 'defaultFont' => 'sans-serif']);
         // dd($path);
         // return $pdf->download($std->fullname . 'Report Card'.'.pdf');
-        $pdf = PDF::loadView($path, ['subResult' => $subResult , 'std' =>$std, 'scoreSettings' => $scoreSettings, 'param' =>$param, 'psycho' =>$psycho, 'result' =>$result, 'grades'=> $grades, 'school'=>$school, 'terms' =>$terms, 'result_config' => $result_config])->setOptions([ 'defaultFont' => 'sans-serif']);
+        $pdf = PDF::loadView($path, ['subResult' => $subResult , 'std' =>$std, 'scoreSettings' => $scoreSettings, 'param' =>$param, 'psycho' =>$psycho, 'result' =>$result, 'grades'=> $grades, 'school'=>$school, 'terms' =>$terms, 'result_config' => $result_config])->setOptions([ 'defaultFont' => 'sans-serif', 'isHtml5ParserEnabled' => true]);
         // dd($path);
         return $pdf->download($std->fullname . 'Report Card'.'.pdf');
         return view($path, );

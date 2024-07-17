@@ -1,25 +1,26 @@
-<style>
+<link href="{{ public_path('css/pdf.css') }}" rel="stylesheet" type="text/css" />
+<style  type="text/css" media="all">
     
 
         .rotate-up {
-            vertical-align: bottom;
-            text-align: center;
+            vertical-align: bottom !important;
+            text-align: center !important;
             /* font-weight: normal; */
         }
 
         .rotate-up {
-            -ms-writing-mode: tb-rl;
-            -webkit-writing-mode: vertical-rl;
-            writing-mode: vertical-rl;
+            -ms-writing-mode: tb-rl !important;
+            -webkit-writing-mode: vertical-rl !important;
+            writing-mode: vertical-rl !important;
             /* translate(25px, 51px) // 45 is really 360-45 */
             /* rotate(315deg); */
             /* transform: rotate(315deg) translate(25px, 51px); */
-            white-space: nowrap;
+            white-space: nowrap !important;
             /* overflow: hidden; */
             /* width: 25px; */
-            transform: rotate(180deg);
+            transform: rotate(180deg) !important;
             /* height: 150px; */
-            width: 30px;
+            width: 30px !important;
             /* transform-origin: left bottom; */
             /* box-sizing: border-box; */
         }

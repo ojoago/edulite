@@ -86,7 +86,7 @@ class ResultConfigController extends Controller
                     'subject_teacher'  => $request->subject_teacher ? 1 : 0 ,
                     'subject_average'  => $request->subject_average ? 1 : 0 ,
                     'chart'  => $request->chart ,
-                    'pass_mark'  => $request->pass_mark ,
+                    'pass_mark'  => $request->pass_mark ?? 40 ,
                 ];
                 $data = [
                     'school_pid' => getSchoolPid() ,

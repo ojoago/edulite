@@ -103,26 +103,26 @@
                                                         
                                                         <div class="form-group">
                                                             <label for="">Result Title</label>
-                                                            <input type="text" name="title" value="{{$item->title}}" class="form-control form-control-sm" placeholder="e.g Continuous Assessment Report" >
+                                                            <input type="text" name="title" value="{{@$item->title ?? ''}}" class="form-control form-control-sm" placeholder="e.g Continuous Assessment Report" >
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label for="">Pass Mark</label>
-                                                            <input type="number" step="0.5" name="pass_mark" value="{{$item->pass_mark}}" class="form-control form-control-sm" placeholder="e.g Pass Mark" >
+                                                            <input type="number" step="0.5" name="pass_mark" value="{{@$item->pass_mark ?? 40}}" class="form-control form-control-sm" placeholder="e.g Pass Mark" >
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label for="">Student Name</label>
-                                                            <input type="text" name="student_name" value="{{$item->student_name}}" class="form-control form-control-sm" placeholder="e.g Name of Student" >
+                                                            <input type="text" name="student_name" value="{{@$item->student_name  ?? ''}}" class="form-control form-control-sm" placeholder="e.g Name of Student" >
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label for="">Name of Principal/Head</label>
-                                                            <input type="text" name="head_teacher" value="{{$item->head_teacher}}" class="form-control form-control-sm" placeholder="e.g Principal/Head Teacher" >
+                                                            <input type="text" name="head_teacher" value="{{@$item->head_teacher  ?? ''}}" class="form-control form-control-sm" placeholder="e.g Principal/Head Teacher" >
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="">Name of Class Teacher</label>
-                                                            <input type="text" name="class_teacher" value="{{$item->class_teacher}}" class="form-control form-control-sm" placeholder="e.g Class/Form Teacher" >
+                                                            <input type="text" name="class_teacher" value="{{@$item->class_teacher  ?? ''}}" class="form-control form-control-sm" placeholder="e.g Class/Form Teacher" >
                                                         </div>
                                                     </fieldset>
 

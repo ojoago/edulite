@@ -2,7 +2,8 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
+     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    {{-- <meta charset="utf-8"> --}}
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <title>{{env('APP_NAME',APP_NAME)}} - {{$std->fullname}} Report Card</title>
@@ -34,12 +35,12 @@
     <link href="{{asset('themes/css/custom/style.css')}}" rel="stylesheet">
 </head>
 
-    <style>
+    <style type="text/css" media="all">
         *{
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
         }
         body {
-            margin: 20px 160px;
+            /* margin: 20px 160px; */
         }
 
         body::before {
