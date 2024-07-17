@@ -407,7 +407,7 @@ use App\Http\Controllers\Auths\AuthController;
     function dateToAge($date){
        $age = Carbon::parse($date)->age;
        if($age < 1){
-            $age = date('n') - date('n', strtotime($date)). ' Month(s)';
+           return $age = date('n') - date('n', strtotime($date)). ' Month(s)';
        }
        return $age.' Year(s)';
     // $date = new DateTime($date);

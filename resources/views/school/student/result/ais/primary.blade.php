@@ -103,14 +103,19 @@
             Pupil's Average: {{number_format($result->average,1)}}
         </div>
         <div class="f2 solid">Class Average: {{number_format($result->class_average,1)}} </div>
-        <div class="f3 solid">Promoted/Not Promoted </div>
-
+        <div class="f3 solid">
+             @if($result->average >= $setting->pass_mark)
+                Promoted 
+            @else
+                Not Promoted 
+            @endif 
+        </div>
     </div>
 
 </div>
     {{-- subject result  --}}
 
-        @include('school.student.result.termly-result.subject-table')
+        @include('school.student.result.termly-result.subject-table',['subResult'=>$subResult,'setting' =>$setting , 'terms' => $terms, 'grades' => $grades])
 
     {{-- subject result  --}}
 

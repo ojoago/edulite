@@ -102,7 +102,7 @@
         </div>
         <div class="f2 solid">Class Average: {{number_format($result->class_average,1)}} </div>
         <div class="f3 solid">
-            @if($result->average >= 1)
+            @if($result->average >= $setting->pass_mark)
                 Promoted 
             @else
                 Not Promoted 
@@ -113,7 +113,7 @@
 </div>
     {{-- subject result  --}}
 
-    @include('school.student.result.termly-result.subject-table')
+    @include('school.student.result.termly-result.subject-table',['subResult'=>$subResult,'setting' =>$setting , 'terms' => $terms, 'grades' => $grades])
 
 
     {{-- subject result  --}}

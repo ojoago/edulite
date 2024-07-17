@@ -56,7 +56,7 @@
 
     {{-- subject result  --}}
 
-    @include('school.student.result.termly-result.subject-table')
+    @include('school.student.result.termly-result.subject-table',['subResult'=>$subResult,'setting' =>$setting , 'terms' => $terms, 'grades' => $grades])
 
     {{-- subject result  --}}
 
