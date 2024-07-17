@@ -187,3 +187,5 @@
 @if($setting->show_chart== 1)
     @include('school.student.result.termly-result.chart')
 @endif 
+
+<a href="{{route('student.report.card.pdf',['param'=>$param , 'pid' => $std->pid])}}"> <button class="btn btn-primary m-2">Print</button> </a>

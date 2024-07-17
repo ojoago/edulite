@@ -163,7 +163,7 @@ class StudentTermlyResultController extends Controller
                         'sr.school_pid' => getSchoolPid(),
                         'sub.student_pid' => $spid,
                     ])
-                    ->select('sub.*', 'sr.class_param_pid','sr.grade')
+                    ->select('sub.*', 'sr.class_param_pid','sr.grade', 'sr.title')
                     ->groupBy('sr.subject_type')
                     ->get();
 

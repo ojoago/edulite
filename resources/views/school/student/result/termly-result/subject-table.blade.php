@@ -95,7 +95,7 @@
                                <td>{{$row->subject_teacher_name}}</td>
                             @endif
                             @if (@$setting->remark == 1)
-                               <td> </td>
+                               <td> {{ mb_strtoupper($row->title) }}</td>
                             @endif
                             
                         </tr>

@@ -72,7 +72,7 @@
 
     <div class="f-row">
         <div class="lf solid">
-            {{ $result_config->student_name != null ? $result_config->student_name: 'Name of Pupil'}}: {{$std->fullname}}
+            {{ $result_config->student_name != null ? 'NAME OF '.mb_strtoupper($result_config->student_name) : ' Name of Pupil'}}: {{$std->fullname}}
         </div>
         {{-- <div class="rt solid">Gender: </div> --}}
     </div>
@@ -92,7 +92,7 @@
         <div class="f1 solid">Next Term Begins: {{formatDate($result->next_term)}} </div>
         <div class="f2 solid">Gender: {{$std->gender}} </div>
         <div class="f3 solid">Session: {{$result->session}} </div>
-        <div class="f4 solid">Pupil's Total: {{number_format($result->total,1)}} </div>
+        <div class="f4 solid">{{ $result_config->student_name != null ? mb_strtoupper($result_config->student_name) : 'Pupil'}}:'s Total: {{number_format($result->total,1)}} </div>
 
     </div>
     
@@ -101,8 +101,13 @@
             Pupil's Average: {{number_format($result->average,1)}}
         </div>
         <div class="f2 solid">Class Average: {{number_format($result->class_average,1)}} </div>
-        <div class="f3 solid">Promoted/Not Promoted </div>
-
+        <div class="f3 solid">
+            @if($result->average >= 1)
+                Promoted 
+            @else
+                Not Promoted 
+            @endif 
+        </div>
     </div>
 
 </div>
@@ -192,3 +197,5 @@
 @if($setting->show_chart== 1)
     @include('school.student.result.termly-result.chart')
 @endif 
+
+<a href="{{route('student.report.card.pdf',['param'=>$param , 'pid' => $std->pid])}}"> <button class="btn btn-primary m-2">Print</button> </a>
