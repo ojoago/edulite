@@ -5,8 +5,8 @@
 
 
  <div class="col-md-12 mt-4">
-            <div id="column_Chart" class="chartZoomable" style="width:98%;height:auto;"></div>
-        </div>
+    <div id="column_Chart" class="chartZoomable" style="width:98%;height:auto;"></div>
+</div>
 
      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
      <script type="text/javascript">
@@ -35,7 +35,7 @@
             var view = new google.visualization.DataView(data);
 
             var options = {
-                title: "Student Score Against total, MIN, MAX & AVG",
+                title: "Student Score Against TOTAL, MIN, MAX & AVG",
                 // subtitle: "based on meter type and installation status",
                 bar: {
                     groupWidth: "20%"

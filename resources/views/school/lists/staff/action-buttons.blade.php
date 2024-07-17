@@ -59,12 +59,14 @@
                                 Clerk
                             </label>
                         </div>
-                        <div class="form-check">
+                        
+                        {{-- <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="access[]" id="" value="1">
                             <label class="form-check-label" for="flexCheckDefault">
                                 Manage Results
                             </label>
-                        </div>
+                        </div> --}}
+
                         <!-- <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="access[]" id="" value="610">
                             <label class="form-check-label" for="flexCheckDefault">
