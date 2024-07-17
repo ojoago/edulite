@@ -409,7 +409,7 @@ use App\Http\Controllers\Auths\AuthController;
        if($age < 1){
             $age = date('n') - date('n', strtotime($date)). ' Month(s)';
        }
-       return $age;
+       return $age.' Year(s)';
     // $date = new DateTime($date);
     // return $date->diff(Carbon::now())
     // ->format('%y years, %m months and %d days');
@@ -507,9 +507,9 @@ function diffForHumans($date)
 
         foreach($grd as $val){
                 if($num >=$val->min_score && $num <= $val->max_score)
-                 return $val->grade;
+                 return ['grade'=>$val->grade,'title' => $val->title];
         }
-        return 'ND';
+        return ['grade' => 'ND', 'title' => 'NOT DEFINED'];
     }
    
 function date_diff_weekdays($from, $to)

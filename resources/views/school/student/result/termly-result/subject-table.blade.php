@@ -81,9 +81,11 @@
                             <td>
                                 {{ number_format(getSubjectAVGScore(student:$std->pid,session:$term->session_pid,sub:$row->type),1)}}
                             </td>
-                           
+                                @php
+                                    $remark = rtnGrade($row->total,$grades);
+                                @endphp
                              @if (@$setting->subject_grade == 1)
-                                <td>  {{ $row->grade ?? rtnGrade($row->total,$grades)}}</td>
+                                <td>  {{ $row->grade ?? $remark['grade']}}</td>
                             @endif
                             @if (@$setting->subject_average == 1)
                                 <td>{{number_format($row->avg,1)}}</td>
@@ -95,7 +97,7 @@
                                <td>{{$row->subject_teacher_name}}</td>
                             @endif
                             @if (@$setting->remark == 1)
-                               <td> {{ mb_strtoupper($row->title) }}</td>
+                               <td> {{ mb_strtoupper($row->title) ?? $remark['title'] }}</td>
                             @endif
                             
                         </tr>

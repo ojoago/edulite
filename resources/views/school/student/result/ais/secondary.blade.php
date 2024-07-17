@@ -92,7 +92,7 @@
         <div class="f1 solid">Next Term Begins: {{formatDate($result->next_term)}} </div>
         <div class="f2 solid">Gender: {{$std->gender}} </div>
         <div class="f3 solid">Session: {{$result->session}} </div>
-        <div class="f4 solid">{{ $result_config->student_name != null ? mb_strtoupper($result_config->student_name) : 'Pupil'}}:'s Total: {{number_format($result->total,1)}} </div>
+        <div class="f4 solid">{{ $result_config->student_name != null ? mb_strtoupper($result_config->student_name) : 'Pupil'}}'s Total: {{number_format($result->total,1)}} </div>
 
     </div>
     
