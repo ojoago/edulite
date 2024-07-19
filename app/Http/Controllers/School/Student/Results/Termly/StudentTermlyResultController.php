@@ -21,24 +21,23 @@ class StudentTermlyResultController extends Controller
 
     public function loadStudentResult(Request $request)
     {
-        session(['viewResultParam' => [
+        $data = [
             'school_pid' => getSchoolPid(),
             'session_pid' => $request->session,
             'term_pid' => $request->term,
             'arm_pid' => $request->arm,
-        ]]);
+        ];
+        $result = self::studentResultParams($data);
+        ['data' => $data , 'class' => $class , 'subjects' => $subjects ] = $result;
+      
+        $term = termName($request->term); 
+        $session = sessionName($request->session);
+
+        return view('school.student.result.termly-result.view-termly-result', compact('data', 'class', 'subjects', 'session','term'));
         return redirect()->route('view.student.result');
     }
 
-    public function classResult()
-    {
-        $data = session('viewResultParam');
-        $result = self::studentResultParams($data);
-        $data = $result['data'];
-        $class = $result['class'];
-        $subjects = $result['subjects'];
-        return view('school.student.result.termly-result.view-termly-result', compact('data', 'class', 'subjects'));
-    }
+   
 
     public static function studentResultParams(array $data)
     {

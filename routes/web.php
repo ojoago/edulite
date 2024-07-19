@@ -601,10 +601,10 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('record-affective-score', [AffectiveDomainController::class, 'recordAffectiveDomainScore'])->name('record.affective.score');
 
     // view student result 
-    Route::view('view-termly-result-form', 'school.student.result.termly-result.view-termly-result-form')->name('view.student.termly.result');
-    Route::post('view-termly-result-form', [StudentTermlyResultController::class, 'loadStudentResult']);
-    // redirect to this route 
-    Route::get('student-termly-result', [StudentTermlyResultController::class, 'classResult'])->name('view.student.result');
+    Route::view('view-termly-result', 'school.student.result.termly-result.view-termly-result')->name('view.student.termly.result');
+    Route::post('view-termly-result', [StudentTermlyResultController::class, 'loadStudentResult']);
+
+    
     // particular student money
     Route::get('student-report-card/{param}/{pid}', [StudentTermlyResultController::class, 'studentReportCard'])->name('student.report.card');
     Route::get('print-student-report-card/{param}/{pid}', [StudentTermlyResultController::class, 'loadStudentResultPdf'])->name('student.report.card.pdf');
