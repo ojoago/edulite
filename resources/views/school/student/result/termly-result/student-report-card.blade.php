@@ -382,7 +382,7 @@
                             <td>{{number_format($row->avg,1)}}</td>
                             <td>{{number_format($row->max,1)}}</td>
                             @php array_push($columnChart,[$row->subject,$row->total,$row->min,$row->avg,$row->max]) @endphp
-                            <td>{{rtnGrade($row->total,$grades)}}</td>
+                            <td>{{rtnGrade($row->total,$grades)['grade']}}</td>
                             <td>{{ordinalFormat($row->position)}}</td>
                             <td>{{$row->subject_teacher_name}}</td>
                         </tr>
@@ -480,7 +480,8 @@
             <div id="column_Chart" class="chartZoomable" style="width:98%;height:auto;"></div>
         </div>
         </div>
-        <button class="btn btn-success" id="printResult"> <i class="bi bi-printer"></i> </button>
+       <a href="{{route('student.report.card.pdf',['param'=>$param , 'pid' => $std->pid])}}"> <button class="btn btn-primary m-2">Print</button> </a>
+
 
     </div>
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script> --}}

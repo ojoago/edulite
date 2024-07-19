@@ -308,7 +308,18 @@ class StudentTermlyResultController extends Controller
             ];
             Cache::pull($param . $spid);
             Cache::add($param . $spid,$cache);
-            return view($basePath.$path, compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'result', 'grades', 'school', 'terms', 'result_config'));
+            if(view()->exists($basePath . $path)){
+                return view($basePath.$path, compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'result', 'grades', 'school', 'terms', 'result_config'));
+            }else{
+                $path = 'termly-result.student-report-card';
+                $cache = [
+                    'path' => $basePath . $path,  'subResult' => $subResult, 'std' => $std, 'scoreSettings' => $scoreSettings, 'param' => $param,
+                    'psycho' => $psycho, 'result' => $result, 'grades' => $grades, 'school' => $school, 'terms' => $terms, 'result_config' => $result_config
+                ];
+                Cache::pull($param . $spid);
+                Cache::add($param . $spid, $cache);
+                return view($basePath. $path, compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'result', 'grades', 'school', 'terms', 'result_config'));
+            }
 
      } catch (\Throwable $e) {
         logError($e->getMessage());
