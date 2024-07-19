@@ -147,6 +147,7 @@
     #examTable tr td{
         border: solid 1px #000;
         text-align: center;
+        padding: 2px;
     }
 
         .signature-container{
@@ -165,11 +166,30 @@
             margin-left: 15px;
         }
 
-  
+        @media screen and (max-width:560px) {
+    
+
+            .flex-container {
+                flex-direction: column !important;
+            }
+
+            .examTable,#examTable {
+                width: 100% !important;
+            }
+
+            body {
+                margin: 1px;
+            }
+        }
 
         @media print{
             body{
                 margin: 50px 30px;
+            }
+            @media (max-width:560px) {
+                 body{
+                margin: 5px 3px;
+            }
             }
             
         }
