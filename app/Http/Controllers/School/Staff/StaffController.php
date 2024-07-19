@@ -22,11 +22,7 @@ use Illuminate\Validation\Rule;
 
 class StaffController extends Controller
 {
-    // private $pwd = 123456;
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
+
     /**
      * Display a listing of the resource.
      *
@@ -40,7 +36,7 @@ class StaffController extends Controller
                     ->where(['school_staff.school_pid' => getSchoolPid(), 'school_staff.status'=>1])
                     ->get([
                         'gsm','username','email','staff_id','fullname','school_staff.status',
-                        'role','school_staff.pid', 'school_staff.created_at'
+                        'role','school_staff.pid', 'school_staff.created_at', 'school_staff.user_pid'
                     ]);
         return $this->useDataTable($data);
     }
@@ -54,7 +50,7 @@ class StaffController extends Controller
                     ->where('school_staff.status','<>',1)
                     ->get([
                         'gsm','username','email','staff_id','fullname',
-                        'role','school_staff.pid', 'school_staff.created_at'
+                        'role','school_staff.pid', 'school_staff.created_at', 'school_staff.user_pid'
                     ]);
         return $this->useDataTable($data);
     }

@@ -62,6 +62,7 @@
                         @if(getSchoolType()!=1)
                         <th scope="col">Portal's Comment</th>
                         @endif
+                        <th>Action</th>
                     </tr>
                     @endif
                     
@@ -83,6 +84,7 @@
                         @if(getSchoolType()!=1)
                         <td>{{--$row->portal_comment--}}</td>
                         @endif
+                        <td> <a href="{{ route('student.report.card',['param'=>$row->class_param_pid,'pid'=>$row->student_pid])}}" target="_blank" rel="noopener noreferrer"> <button class="btn btn-sm btn-primary">View Detail</button> </a></td>
                     </tr>
                     @else
                         <tr class="studentId">
@@ -94,6 +96,7 @@
                         @if(getSchoolType()!=1)
                         <td>{{--$row->portal_comment--}}</td>
                         @endif
+                        <td> <a href="{{ route('student.report.card',['param'=>$row->class_param_pid,'pid'=>$row->student_pid])}}" target="_blank" rel="noopener noreferrer"> <button class="btn btn-sm btn-primary">View Detail</button> </a></td>
                     </tr>
                     @endif
                     @endforeach

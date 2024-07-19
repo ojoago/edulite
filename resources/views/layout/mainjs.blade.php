@@ -359,7 +359,7 @@
         });
         // register parent 
         $('#createParentBtn').click(function() {
-            var route = "{{route('school.register.parent')}}";
+            var route = "{{route('register.parent')}}";
             submitFormAjax('createParentForm', 'createParentBtn', route);
         });
 

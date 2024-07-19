@@ -33,7 +33,7 @@
         @endforeach
     </div>
     @else
-    <h3 class="bg-info p-2 text-white"> No Student is linked you Currently, please contact the school to link your ward(s)/child(ren)... </h3>
+    <h3 class="bg-info p-2 text-white"> No Student is linked to you Currently, please contact the school to link your ward(s)/child(ren)... </h3>
     @endif
 </div>
 

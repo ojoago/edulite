@@ -44,7 +44,8 @@
                 <div class="row">
                     @foreach($data as $row)
                     <div class="col-md-3">
-                        <a href="{{route('login.school',[base64Encode($row->pid)])}}">
+                        <a href="{{route('login.school',[base64Encode($row->pid),'role'=>$row->role])}}">
+                            <div class="card-header text-center ellipsis-text small"> {{STAFF_ROLE[$row->role]}}</div>
                             <div class="card info-card ">
                                 <div class="card-header text-center ellipsis-text"> {{$row->school_name}}</div>
                                 <div class="card-body shadow school-card">

@@ -29,7 +29,6 @@
 
     </div>
 </div>
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {
@@ -51,7 +50,7 @@
         $('#createStudentBtn').click(function() {
             $('.overlay').show();
             $.ajax({
-                url: "{{route('school.register.parent')}}",
+                url: "{{route('register.parent')}}",
                 type: "POST",
                 data: new FormData($('#createStudentForm')[0]),
                 dataType: "JSON",

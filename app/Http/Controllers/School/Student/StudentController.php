@@ -20,18 +20,13 @@ class StudentController extends Controller
 {
     // private  $pwd = 123456;
 
-    public function __construct()
-    {
-        // $this->middleware('auth');
-    }
-
     public function index(){
        try {
             $data = DB::table('students as s')->join('class_arms as a', 'a.pid', 's.current_class_pid')
                 ->leftJoin('school_parents as p', 'p.pid', 's.parent_pid')
                 ->leftjoin('user_details as d', 'd.user_pid', 'p.user_pid')
                 ->where(['s.school_pid' => getSchoolPid(),'s.status'=>1])//active student
-                ->select('arm', 's.fullname', 'reg_number', 's.created_at', 'd.fullname as parent', 's.pid', 's.status')->orderByDesc('s.id')->get();
+                ->select('arm', 's.fullname', 'reg_number', 'd.dob', 'd.fullname as parent', 's.pid', 's.status')->orderByDesc('s.id')->get();
             return $this->addDataTable($data);
        } catch (\Throwable $e) {
             logError($e->getMessage());
@@ -46,7 +41,7 @@ class StudentController extends Controller
                             ->leftJoin('school_parents as p','p.pid','s.parent_pid')
                             ->join('user_details as d','d.user_pid','p.user_pid')
                             ->where(['s.school_pid'=>getSchoolPid()])->whereIn('s.status',[0,4])//suspended/disabled
-                            ->select('arm', 's.fullname', 'reg_number', 's.created_at', 'd.fullname as parent', 's.pid', 's.status')->get();
+                            ->select('arm', 's.fullname', 'reg_number', 'd.dob', 'd.fullname as parent', 's.pid', 's.status')->get();
          
             return $this->addDataTable($data);
             
@@ -63,7 +58,7 @@ class StudentController extends Controller
                 ->leftJoin('school_parents as p', 'p.pid', 's.parent_pid')
                 ->join('user_details as d', 'd.user_pid', 'p.user_pid')
                 ->where(['s.school_pid' => getSchoolPid()])->whereIn('s.status', [2, 3])//graduated/left school
-                ->select('arm', 's.fullname', 'reg_number', 's.created_at', 'd.fullname as parent', 's.pid', 's.status')->get();
+                ->select('arm', 's.fullname', 'reg_number', 'd.dob', 'd.fullname as parent', 's.pid', 's.status')->get();
             return $this->addDataTable($data);
         } catch (\Throwable $e) {
             $error = $e->getMessage();
@@ -71,16 +66,7 @@ class StudentController extends Controller
         }
     }
 
-    private function addDataTable($data){
-        return datatables($data)
-            ->editColumn('created_at', function ($data) {
-                return date('d F Y', strtotime($data->created_at));
-            })->addIndexColumn()
-            ->addColumn('action', function ($data) {
-                return view('school.lists.student.student-action-buttons', ['data' => $data]);
-            })
-            ->make(true);
-    }
+  
 
 
     public function staffActiveStudent(Request $request){
@@ -89,9 +75,21 @@ class StudentController extends Controller
                 ->leftJoin('school_parents as p', 'p.pid', 's.parent_pid')
                 ->leftjoin('user_details as d', 'd.user_pid', 'p.user_pid')
         ->where(['s.school_pid' => getSchoolPid(), 's.status' => 1,'c.teacher_pid'=>getSchoolUserPid()]) //active student
-        ->select('arm', 's.fullname', 'reg_number', 's.created_at', 'd.fullname as parent', 's.pid', 's.status')->orderByDesc('s.id')->get();
+        ->select('arm', 's.fullname', 'reg_number', 'd.dob', 'd.fullname as parent', 's.pid', 's.status')->orderByDesc('s.id')->get();
         
         return $this->addDataTable($data);
+    }
+
+    private function addDataTable($data)
+    {
+        return datatables($data)
+            ->editColumn('dob', function ($data) {
+                return $data->dob != null ? date('d F Y', strtotime($data->dob)): '';
+            })->addIndexColumn()
+            ->addColumn('action', function ($data) {
+                return view('school.lists.student.student-action-buttons', ['data' => $data]);
+            })
+            ->make(true);
     }
 
     private function loadStudentQuery($condition){

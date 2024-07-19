@@ -178,7 +178,7 @@
         </a>
         <ul id="account-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="{{ route('create.staff.form') }}">
+            <a href="{{ route('register.staff') }}">
               <i class="bi bi-circle"></i><span>Staff</span>
             </a>
           </li>
@@ -188,7 +188,7 @@
             </a>
           </li>
           <li>
-            <a href="{{route('school.parent.registration.form')}}">
+            <a href="{{route('register.parent')}}">
               <i class="bi bi-circle"></i><span>Parents</span>
             </a>
           </li>
@@ -231,7 +231,7 @@
       <!-- end of uploads -->
       <!-- add/link users   -->
 
-      <!-- <li class="nav-item">
+      <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#add-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-file-spreadsheet-fill"></i><span>Add</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -258,7 +258,7 @@
             </a>
           </li>
         </ul>
-      </li> -->
+      </li>
 
       <!-- End add/link users -->
       <!-- user list  -->

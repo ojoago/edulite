@@ -379,7 +379,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('save-template', [ResultConfigController::class,'saveTemplate'])->name('save.template');
     Route::post('save-config', [ResultConfigController::class,'saveConfig'])->name('save.config');
 
-    Route::view('register-staff', 'school.registration.staff.register-staff')->name('create.staff.form');
+    Route::view('register-staff', 'school.registration.staff.register-staff')->name('register.staff');
     Route::view('staff-list', 'school.staff.staff-list')->name('school.staff.list');
     Route::post('create-staff', [StaffController::class, 'createStaff'])->name('create.staff');
     Route::get('edit-staff/{id}', [StaffController::class, 'find'])->name('edit.staff');
@@ -413,9 +413,9 @@ Route::middleware('schoolAuth')->group(function(){
     // find student by reg returrn pid 
     Route::post('find-student-by-reg', [StudentController::class, 'findStudentByReg'])->name('find.student.by.reg');
 
-    Route::view('register-parent', 'school.registration.parent.register-parent')->name('school.parent.registration.form');
+    Route::view('register-parent', 'school.registration.parent.register-parent')->name('register.parent');
 
-    Route::post('parent-registration', [ParentController::class, 'registerParent'])->name('school.register.parent');
+    Route::post('register-parent', [ParentController::class, 'registerParent']);//->name('school.register.parent');
 
     Route::post('change-parent-status', [ParentController::class, 'toggleParentStatus'])->name('toggle.parent.status');
     Route::post('parent-profile/{id}', [ParentController::class, 'myProfile'])->name('parent.profile');

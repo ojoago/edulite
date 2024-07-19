@@ -13,6 +13,11 @@
                 <?php endif ?>
             </a>
         </li>
+        <li>
+            <a class="dropdown-item pointer"  pid="{{$data->user_pid}}" id="linkUserToSchoolParent">
+                Add As Parent
+            </a>
+        </li>
         <li><a class="dropdown-item" href="{{route('edit.staff',['id'=>base64Encode($data->pid)])}}">Edit Info</a></li>
         <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#role{{$data->pid}}">Edit Role</a></li>
         <li><a class="dropdown-item pointer" data-bs-toggle="modal" data-bs-target="#access{{$data->pid}}" href="#">Edit Access</a></li>

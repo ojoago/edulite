@@ -47,8 +47,9 @@ class SchoolController extends Controller
         return view('school.dashboard.setup');
 
     }
-    public function schoolLogin($id)
+    public function schoolLogin($id,Request $request)
     {
+        $role = $request->role;
         $id=base64Decode($id);
         // $schoolUser = DB::table('school_users as u')->join('schools as s','s.pid','u.school_pid')
         //                                         ->join('school_staff as ss', 'ss.pid','u.pid')
@@ -56,9 +57,15 @@ class SchoolController extends Controller
         //                 ->where(['u.school_pid' => $id, 'u.user_pid' => getUserPid()])
         //                 ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'ss.status','a.access','s.status as sts','s.stage']);
         // dd($schoolUser);
+
+        if($role){
+            $where = ['u.school_pid' => $id, 'u.user_pid' => getUserPid(), 'role' => $role];
+        }else{
+            $where = ['u.school_pid' => $id, 'u.user_pid' => getUserPid()];
+        }
         $schoolUser = DB::table('school_users as u')->join('schools as s', 's.pid', 'u.school_pid')
         ->leftJoin('staff_accesses as a', 'a.staff_pid', 'u.pid')
-        ->where(['u.school_pid' => $id, 'u.user_pid' => getUserPid()])
+        ->where($where)
             ->first(['u.pid', 's.school_name', 's.school_logo', 's.type', 'u.role', 'u.status', 'access', 's.status as sts', 's.stage']);
         // dd($schoolUser);
         if(!$schoolUser){

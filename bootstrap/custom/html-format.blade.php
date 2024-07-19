@@ -125,7 +125,7 @@ function formatParent($row)
                 </div>
             </div>       
         </div>
-        <button type="button" class="btn btn-success" pid="' . $row->pid . '" id="linkUserToSchoolParent"  data-bs-toggle="tooltip" title="CLick here to link staff to school" >Link</button></span>
+        <button type="button" class="btn btn-success" pid="' . $row->pid . '" id="linkUserToSchoolParent"  data-bs-toggle="tooltip" title="Click here to link User to school" >Link</button></span>
         ';
     } else {
         return '<h2 class="text-danger p-3">Empty Result Set</h2>';
