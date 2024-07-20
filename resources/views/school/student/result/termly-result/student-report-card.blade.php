@@ -478,7 +478,7 @@
                 Name: {{$result->principal_name}}<br>
                 Comment: {{$result->principal_comment}}<br>
                 <div class="signature-base">
-                    @php $imgUrl = $result->signature ? asset("/files/images/".$result->signature) :'' @endphp
+                    @php $imgUrl = @$result->signature ? asset("/files/images/". @$result->signature) :'' @endphp
                     <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
                 </div>
             </div>
@@ -487,7 +487,7 @@
                 Name: {{$result->teacher_name}}<br>
                 Comment: {{$result->class_teacher_comment}}<br>
                 <div class="signature-base">
-                    @php $imgUrl = $result->signature ? asset("/files/images/".$result->signature) :'' @endphp
+                    @php $imgUrl = @$result->signature ? asset("/files/images/".@$result->signature) :'' @endphp
                     <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
                 </div>
             </div>
@@ -497,7 +497,7 @@
                 Name: {{$result->teacher}}<br>
                 Comment: {{$result->portal_comment}}<br>
                 <div class="signature-base">
-                    @php $imgUrl = $result->signature ? asset("/files/images/".$result->signature) :'' @endphp
+                    @php $imgUrl = @$result->signature ? asset("/files/images/".@$result->signature) :'' @endphp
                     <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
                 </div>
 
