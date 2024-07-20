@@ -336,16 +336,16 @@
                             Number of Times Open
                         </td>
                         <td>
-                            {{date_diff_weekdays(@$result->begin,$result->end)}}
+                            {{date_diff_weekdays(@$result->begin,@$result->end)}}
                         </td>
                     </tr>
                     <tr>
-                        @if($result->present>0 || $result->absent>0)
+                        @if(@$result->present>0 || @$result->absent>0)
                         <td>
-                            Present: {{$result->present}}
+                            Present: {{@$result->present}}
                         </td>
                         <td>
-                            Absent: {{$result->absent}}
+                            Absent: {{@$result->absent}}
                         </td>
                         @else
                         <td colspan="2" align="center">
