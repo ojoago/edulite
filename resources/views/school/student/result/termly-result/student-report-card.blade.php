@@ -491,7 +491,7 @@
                     <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
                 </div>
             </div>
-            @if($result->type==2)
+            @if(@$result->type==2)
             <div class="section">
                 <div class="card-header">Class/Form Teacher</div>
                 Name: {{$result->teacher}}<br>
