@@ -98,15 +98,15 @@ class RecordPsychomotorController extends Controller
 
     public function loadPsychomotoScore(Request $request){
         $data = [
-            'session_pid' => $request->session,
-            'term_pid' => $request->term,
+            'session_pid' => activeSession(),
+            'term_pid' => activeTerm(),
             'arm_pid' => $request->arm,
             'school_pid' => getSchoolPid()
         ];
-        $class_pid = ClassController::createClassParam($data);
+        $param = ClassController::createClassParam($data);
         $arm = ClassController::getClassArmNameByPid($request->arm);
         $title = PsychomotorBase::where(['school_pid' => getSchoolPid(), 'status' => 1, 'pid' => $request->psychomotor_pid])->pluck('psychomotor')->first();
-        $params = ['param' => $class_pid, 'arm' => $arm, 'term' => $request->term, 'session' => $request->session];
+
         $psycho = PsychomotorKey::where(['school_pid' => getSchoolPid(), 'status' => 1, 'psychomotor_pid' => $request->psychomotor_pid])
             ->get(['title', 'pid', 'max_score']);
         $data = Student::where([
@@ -116,7 +116,7 @@ class RecordPsychomotorController extends Controller
         ])->get([
             'fullname', 'reg_number', 'pid',
         ]);
-        return view('school.student.psychomotor.view-psychomotor-score', compact('data', 'psycho', 'params', 'title'));
+        return view('school.student.psychomotor.view-extra-curricular-score', compact('data', 'psycho', 'param', 'title','arm'));
     }
 
     public function recordPsychomotorScore(Request $request){

@@ -255,6 +255,13 @@
             $('#lpStudentpid').val(pid);
             $('#linkMyParentModal').modal('show');
         })
+        // student award 
+        multiSelect2('#studentAwardSelect2', 'awardStudentModal', 'award', 'Select Award');
+        $(document).on('click', '.awardStudentModal', function() {
+            let pid = $(this).attr('pid')
+            $('#awardstudentPid').val(pid);
+            $('#awardStudentModal').modal('show');
+        })
 
         $('#linkParentDynamicBtn').click(function() {
             var route = "{{route('link.student.parent')}}";

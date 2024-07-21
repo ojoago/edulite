@@ -5,15 +5,20 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-body">
-                    <h5 class="card-title">Comment {{$class}} <small>Result</small></h5>
-                    <p> <i class="bi bi-calendar-event-fill"></i> {{--termName(session('term'))}} {{sessionName(session('session'))--}}</p>
-                
-            <!-- Primary Color Bordered Table -->
-            <table class="table table-bordered border-primary  cardTable" id="resultTable">
+                <h5 class="card-title">
+                @if(isset($class))
+                   Comment {{$class}} <small>Result</small>
+                @endif
+                <div class="float-end">
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-target="#filterModal" data-bs-toggle="modal" >Filter</button>
+                </div>
+            </h5>
+            @if(isset($data))
+                <table class="table table-bordered border-primary  cardTable" id="resultTable">
                 <thead>
                     @if ($subjects)
                         <tr>
-                        <th scope="col">S/N</th>
+                        <th scope="col" width="5%">S/N</th>
                         <th scope="col">Position</th>
                         <th scope="col">Reg-Number</th>
                         <th scope="col">Names</th>
@@ -27,7 +32,7 @@
                     </tr>
                     @else
                     <tr>
-                        <th scope="col">S/N</th>
+                        <th scope="col" width="5%">S/N</th>
                         <th scope="col">Reg-Number</th>
                         <th scope="col">Names</th>
                         <th scope="col">Class Teacher's Comment</th>
@@ -70,16 +75,74 @@
 
                 </form>
             </table>
-            <!-- End Primary Color Bordered Table -->
+            <!-- End Primary Color Bordered Table --> 
+            @else
+                <h3 class="card-title text-center">Click On filter to select class </h3>
+            @endif
+           
 
         </div>
     </div>
 </div>
 
+<!-- filter subject form modal  -->
+<div class="modal fade" id="filterModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                {{-- <h5 class="modal-title h6">Create Extra Curricular Name</h5> --}}
+                 <p class="text-center small">load Student Result </p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post">
+            <div class="modal-body">
+                @csrf
+                 <label for="session" class="form-label">Session</label>
+                <select type="text" name="session" class="form-control" id="formSessionSelect2">
+                </select>
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
+                <label for="term" class="form-label">Term</label>
+                <select type="text" name="term" class="form-control" id="formTermSelect2">
+                </select>
+                
+                <label for="category" class="form-label">Category</label>
+                <select type="text" name="category" class="form-control" id="assessmentCategorySelect2" required>
+                </select>
+            
+                <label for="class" class="form-label">Class</label> 
+                <select type="text" name="class" class="form-control" id="assessmentClassSelect2" required>
+                </select>
+          
+                <label for="arm" class="form-label">Class Arm</label>
+                <select type="text" name="arm" class="form-control" id="assessmentArmSelect2" required>
+                </select>
+               
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-sm" >Submit</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </form>
+    </div>
+</div><!-- filter form-->
+
+
 <script>
     $(document).ready(function() {
+
+        multiSelect2('#assessmentCategorySelect2', 'filterModal', 'category', 'Select Category');
+        multiSelect2('#formTermSelect2', 'filterModal', 'term', 'Select Term');
+        multiSelect2('#formSessionSelect2', 'filterModal', 'session', 'Select Session');
+        $('#assessmentCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#assessmentClassSelect2','filterModal', 'class', id, 'Select Class');
+        });
+        $('#assessmentClassSelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#assessmentArmSelect2','filterModal', 'class-teacher-arm', id, 'Select Class Arm');
+        });
+
         $('#resultTable').DataTable({
             fixedHeader: true,
             paging: false,

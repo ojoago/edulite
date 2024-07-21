@@ -135,9 +135,9 @@
 </style>
 
 <section class="mt-4">
-    <div class="row shadow">
+    <div class="row ">
         <div class="col-md-6">
-            <div class="hero_left shadow mt-4">
+            <div class="hero_left mt-4">
                 <h3 >
                     <span class="lite-color h2">Learning Today</span>, <br>
                     <span class="ed-color h2">Leading Tomorrow</span>
@@ -145,7 +145,7 @@
                 <p>
                     Dear parent, guardian, teacher elders, it is our collective duty to give our children (the next generation) the best education they deserve in-order to make this world a better and safe place.
                 </p>
-                <h5 class="shadow m-3 p-2">
+                <h5 class="m-3 p-2">
                     <p><span class="ed-color">Edu</span><span class="lite-color">Lite</span> Making life easier for teacher.</p>
 
                     <!-- <b class="ed-color">Education</b> <i class="bg-text">is</i> <b class="lite-color">Light</b> Hence <span class="ed-color">Edu</span><span class="lite-color">Lite</span> -->

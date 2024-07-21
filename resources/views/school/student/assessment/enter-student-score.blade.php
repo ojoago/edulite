@@ -146,7 +146,7 @@
 <script>
     $(document).ready(function() {
 
-          multiSelect2('#assessmentCategorySelect2', 'filterModal', 'category', 'Select Category');
+        multiSelect2('#assessmentCategorySelect2', 'filterModal', 'category', 'Select Category');
         $('#assessmentCategorySelect2').on('change', function(e) {
             var id = $(this).val();
             multiSelect2Post('#assessmentClassSelect2','filterModal', 'class', id, 'Select Class');

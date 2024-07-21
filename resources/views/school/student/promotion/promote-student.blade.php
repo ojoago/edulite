@@ -5,9 +5,16 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Promote Student</h5>
-            <p> <i class="bi bi-calendar-event-fill"> </i> {{getClassArmNameByPid(@$student[0]->current_class_pid)}} {{activeSessionName() }} {{activeTermName()}}</p>
-            <table class="table table-bordered border-primary cardTable" id="scoreTable">
+             <h5 class="card-title">
+                @if(isset($className))
+                    Promote Student, Class: {{$className}} <i class="bi bi-calendar-event-fill"> </i> {{activeSessionName() }} {{activeTermName()}}
+                @endif
+                <div class="float-end">
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-target="#filterModal" data-bs-toggle="modal" >Filter</button>
+                </div>
+            </h5>
+            @if (isset($students))
+                <table class="table table-bordered border-primary cardTable" id="scoreTable">
                 <thead>
                     <tr>
                         <th scope="col">S/N</th>
@@ -18,12 +25,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($student as $row)
+                    @foreach($students as $row)
                     <tr class="studentId" id="">
                         <td>{{$loop->iteration}}</td>
                         <td>{{$row->reg_number}}</td>
                         <td>{{ $row->fullname }}</td>
-                        <form method="post" action="{{route('promote.student')}}">
+                        <form method="post" action="{{route('migrate.student')}}">
                             @csrf
                             <td scope="col">
                                 <select name="" id="" class="form-control form-control-sm" required>
@@ -58,15 +65,60 @@
                 </tbody>
                 </form>
             </table>
+            @else
+                 <h3 class="card-title text-center">Click On filter to select class </h3>
+            @endif
             <!-- End Primary Color Bordered Table -->
 
         </div>
     </div>
 </div>
 
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
+<!-- filter subject form modal  -->
+<div class="modal fade" id="filterModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                {{-- <h5 class="modal-title h6">Create Extra Curricular Name</h5> --}}
+                 <p class="text-center small">Promote Student To next class</p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post">
+            <div class="modal-body">
+                @csrf
+                <label for="category" class="form-label">Category</label>
+                <select type="text" name="category" class="form-control" id="assessmentCategorySelect2" required>
+                </select>
+            
+                <label for="class" class="form-label">Class</label> 
+                <select type="text" name="class" class="form-control" id="assessmentClassSelect2" required>
+                </select>
+          
+                <label for="arm" class="form-label">Class Arm</label>
+                <select type="text" name="arm" class="form-control" id="assessmentArmSelect2" required>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-sm" >Submit</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </form>
+    </div>
+</div><!-- filter form-->
+
 <script>
     $(document).ready(function() {
+        multiSelect2('#assessmentCategorySelect2', 'filterModal', 'category', 'Select Category');
+        $('#assessmentCategorySelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#assessmentClassSelect2','filterModal', 'class', id, 'Select Class');
+        });
+        $('#assessmentClassSelect2').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#assessmentArmSelect2','filterModal', 'class-teacher-arm', id, 'Select Class Arm');
+        });
+       
 
     });
 </script>

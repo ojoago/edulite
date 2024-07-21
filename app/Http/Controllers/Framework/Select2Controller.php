@@ -24,6 +24,7 @@ use App\Models\School\Framework\Class\ClassArmSubject;
 use App\Models\School\Framework\Assessment\AssessmentTitle;
 use App\Models\School\Framework\Fees\FeeAccount;
 use App\Models\School\Framework\Psychomotor\PsychomotorBase;
+use App\Models\School\Framework\Result\AwardKey;
 
 class Select2Controller extends Controller
 {
@@ -1044,6 +1045,21 @@ class Select2Controller extends Controller
             $data[] = [
                 'id' => $row->pid,
                 'text' => $row->title,
+            ];
+        }
+        return response()->json($data);
+    }
+
+
+    public function loadAward(Request $request)
+    {
+        $data = [];
+        $result = AwardKey::where(['school_pid' => getSchoolPid(), 'status' => 1])
+            ->orderBy('award')->get(['pid', 'award', 'type']); //
+        foreach ($result as $row) {
+            $data[] = [
+                'id' => $row->pid,
+                'text' => $row->award .' - '. $row->type ,
             ];
         }
         return response()->json($data);

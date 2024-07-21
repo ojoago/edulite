@@ -61,9 +61,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create Term Timetable for <span class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</span></h5>
-                <div class="pull-right">
-                    <button id="addMoreSubject" type="button" class="btn btn-danger btn-sm btn-small mb-1 ml-3">Add More Subject</button><br>
-                </div>
+                
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -109,6 +107,11 @@
                     </div>
                     <div id="moreSubjectRow"></div>
                 </form>
+                <center>
+                    <div class="pull-right">
+                        <button id="addMoreSubject" type="button" class="btn btn-info btn-sm btn-small mb-1 ml-3">Add More Subject</button><br>
+                    </div>
+                </center>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="createTimetableBtn">Submit</button>

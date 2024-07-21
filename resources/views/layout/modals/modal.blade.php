@@ -148,6 +148,33 @@
         </div>
     </div>
 </div>
+
+<!-- link students to parent modal  -->
+<div class="modal fade" id="awardStudentModal" tabindex="-1" data-bs-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Award Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="awardStudentForm">
+                    @csrf
+                    <input name="student_pid" id="awardstudentPid" type="hidden">
+                    <label for="">Award </label>
+                    <select name="award" id="studentAwardSelect2" multiple="multiple" style="width: 100%;" class="studentToParentstudentSelect2 form-control form-control-sm">
+                    </select>
+                    <p class="text-danger award_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="awardStudentBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- link students to parent modal  -->
 <div class="modal fade" id="linkMyWardsModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
@@ -173,6 +200,7 @@
         </div>
     </div>
 </div>
+
 <!-- link students to parent modal  -->
 <div class="modal fade" id="linkMyParentModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">

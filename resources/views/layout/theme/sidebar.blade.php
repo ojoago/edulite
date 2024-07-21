@@ -450,12 +450,12 @@
             </a>
             <ul id="student-promotion-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
               <li>
-                <a href="{{route('promote.student.form')}}">
-                  <i class="bi bi-circle"></i><span>Promote class</span>
+                <a href="{{route('promote.student')}}">
+                  <i class="bi bi-circle"></i><span>Promote Students</span>
                 </a>
               </li>
               <li>
-                <a href="{{route('swap.student.form')}}">
+                <a href="{{route('swap.student')}}">
                   <i class="bi bi-circle"></i><span>Swap student</span>
                 </a>
               </li>
@@ -512,7 +512,7 @@
           </li>
 
           <li>
-            <a href="{{route('view.psychomotor.form')}}">
+            <a href="{{route('view.psychomotor')}}">
               <i class="bi bi-circle"></i><span> View Extra Curricular Score</span>
             </a>
           </li>

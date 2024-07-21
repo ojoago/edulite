@@ -592,8 +592,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('record-extra-curricular', [RecordPsychomotorController::class, 'loadPsychomotoKeys']);
     Route::post('record-extra-curricular-score', [RecordPsychomotorController::class, 'recordPsychomotorScore'])->name('record.psycomotor.score');
 
-    Route::view('view-psychomotor-form', 'school.student.psychomotor.view-psychomotor-form')->name('view.psychomotor.form');
-    Route::post('view-psychomotor-form', [RecordPsychomotorController::class, 'loadPsychomotoScore']);
+    Route::view('view-extra-curricular-score', 'school.student.psychomotor.view-extra-curricular-score')->name('view.psychomotor');
+    Route::post('view-extra-curricular-score', [RecordPsychomotorController::class, 'loadPsychomotoScore']);
     // affective domain 
     // I dont think this route is still working 
     Route::view('student-ad-form', 'school.student.affective.affective-form')->name('affective.assessment.form');
@@ -632,9 +632,9 @@ Route::middleware('schoolAuth')->group(function(){
     // the view // princal-comment.blade.php
     Route::post('principal-automated-comment', [PrincipalCommentResultController::class, 'principalAutomatedComment'])->name('principal.add.comment');
     // class teacher comment
-    Route::view('teacher-comment-form', 'school.student.result.comments.teacher.teacher-comment-form')->name('teacher.comment.termly.result');
+    Route::view('teacher-comment', 'school.student.result.comments.teacher.teacher-comment')->name('teacher.comment.termly.result');
     // load student result
-    Route::post('teacher-comment-form', [TeacherCommentResultController::class, 'loadStudentResult']);
+    Route::post('teacher-comment', [TeacherCommentResultController::class, 'loadStudentResult']);
     // commenting student result
     Route::post('teacher-commenting-termly-result', [TeacherCommentResultController::class, 'teacherCommentStudentTermlyResult'])->name('comment.teacher.student.termly.result');
     
@@ -660,13 +660,13 @@ Route::middleware('schoolAuth')->group(function(){
     // class subject teacher comment
     Route::view('subject-comment-termly-result', 'school.student.result.comments.principal-comment-form')->name('subject.comment.termly.result');
     // student promotion 
-    Route::view('promote-student-form', 'school.student.promotion.promote-student-form')->name('promote.student.form');
-    Route::post('promote-student-form', [PromoteStudentController::class, 'loadStudent']);
-    Route::post('promote-student', [PromoteStudentController::class, 'promoteStudent'])->name('promote.student');
+    Route::view('promote-student', 'school.student.promotion.promote-student')->name('promote.student');
+    Route::post('promote-student', [PromoteStudentController::class, 'loadStudent']);
+    Route::post('migrate-student', [PromoteStudentController::class, 'promoteStudent'])->name('migrate.student');
     // swap student 
-    Route::view('swap-student-form', 'school.student.promotion.swap-student-form')->name('swap.student.form');
-    Route::post('swap-student-form', [PromoteStudentController::class, 'loadStudentByArm']);
-    Route::post('swap-student', [PromoteStudentController::class, 'swapStudent'])->name('swap.student');
+    Route::view('swap-student', 'school.student.promotion.swap-student')->name('swap.student');
+    Route::post('swap-student', [PromoteStudentController::class, 'loadStudentByArm']);
+    Route::post('swaping-student', [PromoteStudentController::class, 'swapStudent'])->name('swaping.student');
 
     // parent activities 
     Route::post('ward-login/{pid}', [ParentController::class, 'wardLogin'])->name('ward.login');
@@ -763,6 +763,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-available-fee-account', [Select2Controller::class, 'loadAvailableFeeAccount']); 
 
     Route::post('load-available-assessment-types', [AssessmentController::class, 'loadAssessmentTypes']);
+    Route::post('load-available-award', [Select2Controller::class, 'loadAward']);
     
 });
 
