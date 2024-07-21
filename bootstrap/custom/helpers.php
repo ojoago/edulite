@@ -407,13 +407,21 @@ use App\Http\Controllers\Auths\AuthController;
     function dateToAge($date){
        $age = Carbon::parse($date)->age;
        if($age < 1){
-           return $age = date('n') - date('n', strtotime($date)). ' Month(s)';
+        $date1 = new DateTime($date);
+        $date2 = new DateTime(date('Y-m-d'));
+        $interval = $date1->diff($date2);
+        return $interval->m . ' Month(s)';
        }
        return $age.' Year(s)';
-    // $date = new DateTime($date);
-    // return $date->diff(Carbon::now())
-    // ->format('%y years, %m months and %d days');
+   
     }
+
+
+function isDate($date, $format = 'Y-m-d')
+{
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) === $date;
+}
 function getMonths($startDate, $endDate = null)
 {
     $start = new DateTime($startDate);

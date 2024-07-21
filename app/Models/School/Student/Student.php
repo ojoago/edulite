@@ -2,6 +2,7 @@
 
 namespace App\Models\School\Student;
 
+use App\Models\Users\UserDetail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,6 +31,10 @@ class Student extends Model
         return new Attribute(
             set: fn ($value) => ucwords($value) 
         );
+    }
+
+    public function parent(){
+        return $this->belongsTo(UserDetail::class,'parrent_pid','user_pid');
     }
 
 }

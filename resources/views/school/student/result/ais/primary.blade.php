@@ -104,7 +104,7 @@
         </div>
         <div class="f2 solid">Class Average: {{number_format($result->class_average,1)}} </div>
         <div class="f3 solid">
-             @if($result->average >= $setting->pass_mark)
+             @if($result->average >= @$setting->pass_mark)
                 Promoted 
             @else
                 Not Promoted 
