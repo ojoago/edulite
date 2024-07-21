@@ -74,8 +74,8 @@ class StudentController extends Controller
                 ->join('staff_classes as c','c.arm_pid', 's.current_class_pid')
                 ->leftJoin('school_parents as p', 'p.pid', 's.parent_pid')
                 ->leftjoin('user_details as d', 'd.user_pid', 'p.user_pid')
-        ->where(['s.school_pid' => getSchoolPid(), 's.status' => 1,'c.teacher_pid'=>getSchoolUserPid()]) //active student
-        ->select('arm', 's.fullname', 'reg_number', 'd.dob', 'd.fullname as parent', 's.pid','s.status', DB::raw('(select dob from user_details as t WHERE s.user_pid = t.user_pid LIMIT 1) as dob'))->orderByDesc('s.id')->get();
+        ->where(['s.school_pid' => getSchoolPid(), 's.status' => 1,'c.teacher_pid'=>getSchoolUserPid(), 'c.term_pid' => activeTerm() , 'c.session_pid' => activeSession()]) //active student
+        ->select('arm', 's.fullname', 'reg_number', 'd.fullname as parent', 's.pid','s.status', DB::raw('(select dob from user_details as t WHERE s.user_pid = t.user_pid LIMIT 1) as dob'))->orderByDesc('s.id')->get();
         
         return $this->addDataTable($data);
     }

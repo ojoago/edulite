@@ -26,7 +26,7 @@
                             <th>Names</th>
                             <th>Reg No.</th>
                             <th>Current Class</th>
-                            <th>Date</th>
+                            <th>Date of Birth</th>
                             <th>Parent/Guardian</th>
                             <th width="5%">Action</th>
                         </tr>
@@ -42,7 +42,7 @@
                             <th>Names</th>
                             <th>Reg No.</th>
                             <th>Current Class</th>
-                            <th>Date</th>
+                            <th>Date of Birth</th>
                             <th>Parent/Guardian</th>
                             <th width="5%">Action</th>
                         </tr>
@@ -58,7 +58,7 @@
                             <th>Names</th>
                             <th>Reg No.</th>
                             <th>Current Class</th>
-                            <th>Date</th>
+                            <th>Date of Birth</th>
                             <th>Parent/Guardian</th>
                             <th width="5%">Action</th>
                         </tr>
@@ -98,7 +98,7 @@
                 },
 
                 {
-                    "data": "created_at"
+                    "data": "dob"
                 },
                 {
                     "data": "parent"
