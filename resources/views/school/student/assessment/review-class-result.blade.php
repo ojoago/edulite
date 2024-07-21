@@ -51,8 +51,8 @@
                                 @foreach($subjects as $subject)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
-                                    <td>{{$subject->status}}</td>
                                     <td>{{$subject->subject_name}}</td>
+                                    {{-- <td>{{$subject->status}}</td> --}}
                                     <td>{{$subject->status == 1 ? 'Published' : 'Not Published' }}</td>
                                     <td>{{$subject->subject_teacher_name}}</td>
                                     <td> <a href="{{route('review.subject.result' , ['param' => $subject->pid] )}}" target="_blank" rel="noopener noreferrer" > <button class="btn btn-sm btn-primary">Review</button>  </a> </td>

@@ -246,7 +246,8 @@
 
          $('#publishResult').click(function() {
             let param = $(this).attr('param')
-             $.ajax({
+            if(confirm('Are you sure, you have finished recording the scripts ?'){
+                $.ajax({
                 url: "{{route('publish.subject.result')}}",
                 type: "POST",
                 data: {
@@ -264,6 +265,7 @@
                     alert_toast('Weldone', 'error')
                 }
             });
+            })
         });
 
         var arm = "{{session('arm')}}";
