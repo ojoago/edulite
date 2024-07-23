@@ -33,8 +33,8 @@
                     @else
                     <tr>
                         <th scope="col" width="5%">S/N</th>
-                        <th scope="col">Reg-Number</th>
-                        <th scope="col">Names</th>
+                        <th scope="col" width="10%" >Reg-Number</th>
+                        <th scope="col" width="25%" >Names</th>
                         <th scope="col">Class Teacher's Comment</th>
                         @if(getSchoolType()!=1)
                         <th scope="col">Portal's Comment</th>

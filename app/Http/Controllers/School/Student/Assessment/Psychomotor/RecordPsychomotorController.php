@@ -112,7 +112,8 @@ class RecordPsychomotorController extends Controller
         $data = Student::where([
             'current_class_pid' => $request->arm,
             'school_pid' => getSchoolPid(),
-            'current_session_pid' => $request->session
+            'current_session_pid' => activeSession(),
+           'status' => 1
         ])->get([
             'fullname', 'reg_number', 'pid',
         ]);
