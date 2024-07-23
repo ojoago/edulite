@@ -574,11 +574,17 @@ Route::middleware('schoolAuth')->group(function(){
     // Route::get('enter-student-score', [StudentScoreController::class, 'enterStudentScore'])->name('enter.student.score');
     Route::post('submit-student-ca', [StudentScoreController::class, 'submitCaScore'])->name('submit.student.ca');
     Route::post('change-student-ca-student', [StudentScoreController::class, 'changeSubjectResultStatus'])->name('change.student.ca.student');
+
     Route::post('publish-subject-result', [StudentScoreController::class, 'publishSubjectResult'])->name('publish.subject.result');
     Route::view('review-class-result', 'school.student.assessment.review-class-result')->name('review.class.result');
     Route::post('review-class-result', [StudentScoreController::class, 'reviewClassResult']);
     Route::post('lock-class-result', [StudentScoreController::class, 'lockClassResult'])->name('lock.class.result');
     Route::get('review-subject-result', [StudentScoreController::class, 'reviewSubjectResult'])->name('review.subject.result');
+
+    Route::view('publish-result','school.student.assessment.publish-class-result')->name('publish.result');
+    Route::get('load-school-result', [StudentScoreController::class, 'loadSchoolResult'])->name('load.school.result');
+    Route::post('publish-result', [StudentScoreController::class, 'publishSchoolResult'])->name('publish.school.result');
+
     // export student list 
     Route::get('export-student-list', [StudentScoreController::class, 'exportStudentList'])->name('export.student.list');
     Route::post('import-student-score', [StudentScoreController::class, 'importStudentScore'])->name('import.student.score');
@@ -596,9 +602,9 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('view-extra-curricular-score', [RecordPsychomotorController::class, 'loadPsychomotoScore']);
     // affective domain 
     // I dont think this route is still working 
-    Route::view('student-ad-form', 'school.student.affective.affective-form')->name('affective.assessment.form');
-    Route::post('student-ad-form', [AffectiveDomainController::class, 'loadAffecitveKeys']);
-    Route::post('record-affective-score', [AffectiveDomainController::class, 'recordAffectiveDomainScore'])->name('record.affective.score');
+    // Route::view('student-ad-form', 'school.student.affective.affective-form')->name('affective.assessment.form');
+    // Route::post('student-ad-form', [AffectiveDomainController::class, 'loadAffecitveKeys']);
+    // Route::post('record-affective-score', [AffectiveDomainController::class, 'recordAffectiveDomainScore'])->name('record.affective.score');
 
     // view student result 
     Route::view('view-termly-result', 'school.student.result.termly-result.view-termly-result')->name('view.student.termly.result');

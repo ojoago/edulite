@@ -21,12 +21,12 @@
                         <th scope="col"> Status </th>
                         <th scope="col"> Reg-Number </th>
                         <th scope="col">Names</th>
-                        <th scope="col"> Seated ? </th>
+                        <th scope="col"> Seated? </th>
                         @foreach($scoreParams as $row)
-                        <th scope="col">{{$row->title}}/[{{$row->score}}]</th>
+                        <th scope="col">{{$row->title}} {{$row->score}}%</th>
                         @endforeach
                         <th scope="col">Total
-                            /[100]
+                            100
                         </th>
                     </tr>
                 </thead>
@@ -37,11 +37,11 @@
                         <td>{{STUDENT_STATUS[$student->status]}}</td>
                         <td>{{$student->reg_number}}</td>
                         <td>  {{ $student->fullname }}</td>
-                        <td>  {{ $student->seated == 1 ? 'True' : 'False' }}</td>
+                        <td>  {{ $student->seated == 1 ? 'Yes' : 'No' }}</td>
                         @php $total = 0;@endphp
                         @foreach($scoreParams as $row)
                             @php
-                            $score = getTitleScore($student->pid,$row->assessment_title_pid);
+                            $score = getTitleScore(student:$student->pid,pid:$row->assessment_title_pid,param:$param->pid,subject:$param->subject_pid);
                             $total += $score;
                             @endphp
                         <td scope="col">

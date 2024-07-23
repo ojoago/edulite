@@ -16,50 +16,71 @@ use App\Models\School\Student\Assessment\AffectiveDomain\AffectiveDomainRecord;
 
     function activeSession()
     {
-        $session = ActiveSession::where('school_pid',getSchoolPid())->orderBy('id', 'DESC')->pluck('session_pid')->first();
-        return $session;
+        try {
+            return ActiveSession::where('school_pid', getSchoolPid())->orderBy('id', 'DESC')->pluck('session_pid')->first();
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 
     function activeTerm(){
-        $term = ActiveTerm::where('school_pid', getSchoolPid())->orderBy('id','DESC')->pluck('term_pid')->first();
-        return $term;
+        try {
+            return ActiveTerm::where('school_pid', getSchoolPid())->orderBy('id', 'DESC')->pluck('term_pid')->first();
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 
     function authUsername(){
-        return UserDetail::where('user_pid',getUserPid())->pluck('fullname')->first();
+        try {
+            return UserDetail::where('user_pid', getUserPid())->pluck('fullname')->first();
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 
     function getTitleScore($student,$pid,$param=null,$subject=null){
-              return  $score = DB::table('subject_score_params as p')
-                                ->join('student_score_sheets as s','p.pid', 's.score_param_pid')
-                                ->where([
-                                    's.student_pid'=>$student,
-                                    's.ca_type_pid'=>$pid,
-                                    'p.subject_pid'=> $subject ?? session('subject'),
-                                    'p.school_pid'=>getSchoolPid(),
-                                    'p.pid'=> $param ?? getActionablePid()
-                                    ])->pluck('score')->first();
-       
-    
+        try {
+            return DB::table('subject_score_params as p')
+                ->join('student_score_sheets as s', 'p.pid', 's.score_param_pid')
+                ->where([
+                    's.student_pid' => $student,
+                    's.ca_type_pid' => $pid,
+                    'p.subject_pid' => $subject ?? session('subject'),
+                    'p.school_pid' => getSchoolPid(),
+                    'p.pid' => $param ?? getActionablePid()
+                ])->pluck('score')->first();
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 
     function getTitleAVGScore($student, $pid, $param,$sub){
         // dd($student, $pid, $param, $sub);
         
-        $ca = DB::table('student_score_sheets as s')
-                        ->join('subject_score_params as p','s.score_param_pid','p.pid')
-                        ->select(DB::raw("AVG(score) AS score"))
-                        ->where([
-                            's.student_pid' => $student,
-                            's.ca_type_pid' => $pid,
-                            'p.subject_type' => $sub,
-                            'p.school_pid' => getSchoolPid(),
-                            'p.class_param_pid' => $param
-                        ])
-                        // ->groupBy('type_pid')
-                        ->groupBy('p.subject_type')
-                        ->pluck('score')->first();//->toArray();
-        return $ca;
+        try {
+            $ca = DB::table('student_score_sheets as s')
+            ->join('subject_score_params as p', 's.score_param_pid', 'p.pid')
+            ->select(DB::raw("AVG(score) AS score"))
+            ->where([
+                's.student_pid' => $student,
+                's.ca_type_pid' => $pid,
+                'p.subject_type' => $sub,
+                'p.school_pid' => getSchoolPid(),
+                'p.class_param_pid' => $param
+            ])
+                // ->groupBy('type_pid')
+                ->groupBy('p.subject_type')
+                ->pluck('score')->first(); //->toArray();
+            return $ca;
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 
     function getSubjectTotalScore($student, $param, $sub){

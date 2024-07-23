@@ -262,7 +262,7 @@ class StudentScoreController extends Controller
             }
 
 
-            $subjects = SubjectScoreParam::where(['class_param_pid' => $class->pid])->select('subject_teacher_name', 'status', 'subject_name','pid')->get();
+            $subjects = SubjectScoreParam::where(['class_param_pid' => $class->pid])->select('subject_teacher_name', 'status', 'subject_name','pid', 'class_param_pid', 'subject_pid')->get();//->dd();
 
             return view('school.student.assessment.review-class-result', compact('subjects', 'class'));
         } catch (\Throwable $e) {
@@ -541,7 +541,7 @@ class StudentScoreController extends Controller
 
         $param = DB::table('subject_score_params as s')->join('student_class_result_params as p','p.pid', 's.class_param_pid')
                                                     ->where(['s.pid' => $request->param, 's.school_pid' => getSchoolPid()])
-                                                    ->select('p.session_pid' , 'p.term_pid' , 'p.arm_pid','p.arm', 's.subject_pid', 's.class_param_pid', 's.subject_name as subject')->first();
+                                                    ->select('p.session_pid' , 'p.term_pid' , 'p.arm_pid','p.arm', 's.subject_pid','s.pid', 's.class_param_pid', 's.subject_name as subject')->first();
 
         $scoreParams = ScoreSettingsController::loadClassScoreSettings($param->class_param_pid); // load class score seetting 
 
@@ -566,6 +566,34 @@ class StudentScoreController extends Controller
             'data' => $data,
             // 'class' => $class,
         ];
+    }
+
+
+    public function loadSchoolResult(){
+
+       try {
+            $results = DB::table('student_class_result_params as p')->join('class_arms as a', 'a.pid', 'p.arm_pid')
+                ->join('classes as e', 'a.class_pid', 'e.pid')
+                ->join('categories as c', 'c.pid', 'e.category_pid')
+                ->join('student_class_results as r', 'r.class_param_pid', 'p.pid')
+                ->where(['p.school_pid' => getSchoolPid(), 'p.term_pid' => activeTerm(), 'p.session_pid' => activeSession(), 'p.status' => 1])
+                ->select('category', 'arm_pid', 'class', 'p.arm', DB::raw('count(r.id) as students'))->groupBy('category', 'arm_pid', 'class', 'p.arm')->get();
+            return datatables($results)
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    return view('school.student.assessment.publish-action-button', ['data' => $data]);
+                })
+                ->make(true);
+            return view('school.student.assessment.publish-class-result', compact('data', 'scoreParams', 'param'));
+       } catch (\Throwable $e) {
+            $results = [];
+            logError($e->getMessage());
+            return view('school.student.assessment.publish-class-result', compact('results'))->with('error' , ER_500);
+       }
+    }
+
+    public function publishSchoolResult(){
+        
     }
 
 

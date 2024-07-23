@@ -527,6 +527,13 @@
           <i class="bi bi-bar-chart"></i><span>Student Result</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="result-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          
+          {{-- <li>
+            <a href="{{route('publish.result')}}">
+              <i class="bi bi-circle"></i><span>Publish Result</span>
+            </a>
+          </li>
+           --}}
           <li>
             <a href="{{route('view.student.termly.result')}}">
               <i class="bi bi-circle"></i><span>View Student Result</span>
@@ -539,11 +546,12 @@
             </a>
           </li>
            --}}
-          <li>
-            <a href="{{--route('view.broadsheet')--}}">
-              <!-- <i class="bi bi-circle"></i><span>V SBS</span> -->
+           
+          {{-- <li>
+            <a href="{{route('view.broadsheet')}}">
+              <i class="bi bi-circle"></i><span>V SBS</span> 
             </a>
-          </li>
+          </li> --}}
 
         </ul>
       </li><!-- End Charts Nav -->

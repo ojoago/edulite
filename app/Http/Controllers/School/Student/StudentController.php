@@ -246,7 +246,7 @@ class StudentController extends Controller
             }
             if($result){
 
-                return response()->json(['status'=>1,'message'=>count($request->student_pid)." student's linked to Parent/Quardian!!!"]);
+                return response()->json(['status'=>1,'message'=>count($request->student_pid)." student's linked to Parent/Guardian!!!"]);
             }
             return response()->json(['status'=>'error','message'=>"Something Went Wrong!!!"]);
         }

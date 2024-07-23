@@ -36,7 +36,7 @@
 
                             <th width="5%">S/N</th>
                             <th>Class</th>
-                            <th>Position</th>
+                            {{-- <th>Position</th> --}}
                             <th>Total</th>
                             <th>Term</th>
                             <th>Session</th>
@@ -142,9 +142,9 @@
                     {
                         "data": "arm"
                     },
-                    {
-                        "data": "position"
-                    },
+                    // {
+                    //     "data": "position"
+                    // },
                     {
                         "data": "total"
                     },

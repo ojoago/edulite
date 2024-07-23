@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','eror 401')
+@section('title','error 401')
 @section('content')
 <style>
     .section {
