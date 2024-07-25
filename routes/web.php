@@ -706,11 +706,7 @@ Route::middleware('schoolAuth')->group(function(){
     // load school on dropdon using select2  
     Route::post('load-available-', [Select2Controller::class, 'loadSchoolSession'])->name('load.available.dropdown');
 
-    //load states
-    Route::post('load-available-state', [Select2Controller::class, 'loadStates'])->name('load.available.state');
-    //load school states
-    Route::post('load-available-state-lga', [Select2Controller::class, 'loadStatesLga'])->name('load.available.state.lga');
-    // load all the subject of every school in a state 
+   
     Route::post('load-available-all-state-subjects', [Select2Controller::class, 'loadAllStateSchoolSubject'])->name('load.available.all.state.subject');
 
     Route::post('load-available-session', [Select2Controller::class, 'loadSchoolSession'])->name('load.available.session');
@@ -772,7 +768,11 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('load-available-award', [Select2Controller::class, 'loadAward']);
     
 });
-
+//load states
+Route::post('load-available-state', [Select2Controller::class, 'loadStates'])->name('load.available.state');
+//load school states
+Route::post('load-available-state-lga', [Select2Controller::class, 'loadStatesLga'])->name('load.available.state.lga');
+    // load all the subject of every school in a state 
 
 // admission 
 Route::get('admission/{id?}',[AdmissionController::class,'index'])->name('admission');
