@@ -1,10 +1,34 @@
 <script>
     $(document).ready(function() {
 
+        var idleTime = 0;
+        var maxIdleTime = 60 * 60; // 30 minutes in seconds
+        // Increment the idle time counter every second.
+        var idleInterval = setInterval(timerIncrement, 1000);
+        // Reset the idle timer on mouse movement, keypress, or click.
+        $(this).mousemove(resetTimer);
+        $(this).keypress(resetTimer);
+        $(this).click(resetTimer);
+
+        function timerIncrement() {
+        idleTime++;
+        if (idleTime >= maxIdleTime) {
+                window.location.href = "{{route('logout')}}"; // Redirect to logout page
+            }
+        }
+
+        function resetTimer() {
+            idleTime = 0; // Reset idle time to zero
+        }
+       
+
         // prevent typing on input type date
         $("input[type=date]").on('keydown', function() {
             return false;
         })
+
+
+
 
         $('.attachSelect2').addClass('select2')
         // switch from table to card 

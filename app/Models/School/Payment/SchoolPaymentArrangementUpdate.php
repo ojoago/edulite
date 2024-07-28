@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\School;
+namespace App\Models\School\Payment;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

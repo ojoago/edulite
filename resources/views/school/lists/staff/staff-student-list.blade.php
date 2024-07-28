@@ -133,6 +133,8 @@
                 });
             }
         });
+
+
         $('#inActiveStudent-tab').click(function() {
             $('#inActiveStudentDataTable').DataTable({
                 "processing": true,
@@ -194,6 +196,8 @@
                 }
             });
         });
+
+        
         $('#graduatedStudent-tab').click(function() {
             $('#exStudentDataTable').DataTable({
                 "processing": true,

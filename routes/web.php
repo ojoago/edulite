@@ -44,7 +44,6 @@ use App\Http\Controllers\School\Student\Attendance\StudentAttendanceController;
 use App\Http\Controllers\School\Framework\Psychomotor\PsychomotorBaseController;
 use App\Http\Controllers\School\Framework\Result\ResultConfigController;
 use App\Http\Controllers\School\Student\Results\Termly\StudentTermlyResultController;
-use App\Http\Controllers\School\Student\Result\Comments\PortalCommentResultController;
 use App\Http\Controllers\School\Student\Results\Comments\TeacherCommentResultController;
 use App\Http\Controllers\School\Student\Results\Comments\PrincipalCommentResultController;
 use App\Http\Controllers\School\Student\Results\Cumulative\ViewCumulativeResultController;
@@ -76,15 +75,7 @@ Route::get('reset/{id}', [AuthController::class, 'resetPasswordForm'])->name('re
 Route::post('reset', [AuthController::class, 'resetPassword'])->name('reset.password')->middleware('guest');
 Route::post('forget-password', [AuthController::class, 'forgetPassword'])->name('forget')->middleware('guest');
 // update password 
-Route::post('update-password', [AuthController::class, 'updatePassword'])->name('update.password')->middleware('auth');
-// Logout
-// Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');// app logout 
-Route::get('logout-school', [AuthController::class, 'logoutSchool'])->middleware('auth')->name('logout.school'); // school log out
 
-// user dashboard 
-Route::get('users-dashboard', [UserController::class, 'index'])->name('users.dashboard');
-Route::get('users-home', [UserController::class, 'dashboard'])->name('users.home');
 
 // user create organization 
 Route::get('create-base', [OrganisationController::class, 'index'])->name('create.organisation');
@@ -99,20 +90,33 @@ Route::post('base-users',[OrganisationUserController::class,'create']);
 Route::post('base-user-access',[OrgUserAccessController::class,'store'])->name('organisation.user.access');
 // sign up with organisation link direct 
 // Route::post('organisation-sign-up/{id}',[OrgUserAccessController::class,'store'])->name('organisation.sign.up');
-Route::view('create-school', 'school.create-school')->name('create.school');
 Route::view('help', 'helps.help')->name('helps');
-Route::post('create-school', [SchoolController::class, 'createSchool']);
-Route::get('school-sign-in/{id}', [SchoolController::class, 'schoolLogin'])->name('login.school');
-Route::get('school-setup', [SchoolController::class, 'schoolSetup'])->name('setup.school');
-Route::post('update-setup-stage', [SchoolController::class, 'updateSetupStage'])->name('update.setup.stage');
-Route::post('previous-setup-stage', [SchoolController::class, 'previousSetupStage'])->name('previous.setup.stage');
 
 
-Route::get('load-user-detail', [UserController::class, 'loadUserDetail'])->name('load.user.detail');
-Route::post('update-user-detail', [UserController::class, 'updateUserDetail'])->name('update.user.detail');
+
+Route::middleware('auth')->group(function(){
+    Route::post('update-password', [AuthController::class, 'updatePassword'])->name('update.password');//->middleware('auth');
+
+    Route::get('load-user-detail', [UserController::class, 'loadUserDetail'])->name('load.user.detail');
+    Route::post('update-user-detail', [UserController::class, 'updateUserDetail'])->name('update.user.detail');
+
+    Route::post('create-school', [SchoolController::class, 'createSchool']);
+    Route::get('school-sign-in/{id}', [SchoolController::class, 'schoolLogin'])->name('login.school');
+    Route::get('school-setup', [SchoolController::class, 'schoolSetup'])->name('setup.school');
+    Route::post('update-setup-stage', [SchoolController::class, 'updateSetupStage'])->name('update.setup.stage');
+    Route::post('previous-setup-stage', [SchoolController::class, 'previousSetupStage'])->name('previous.setup.stage');
+
+    // Logout
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout'); // app logout 
+    // user dashboard 
+    Route::get('users-dashboard', [UserController::class, 'index'])->name('users.dashboard');
+    Route::get('users-home', [UserController::class, 'dashboard'])->name('users.home');
+    Route::view('create-school', 'school.create-school')->name('create.school');
     
+});
 
 Route::middleware('schoolAuth')->group(function(){
+    Route::get('logout-school', [AuthController::class, 'logoutSchool'])->name('logout.school'); // school log out
     Route::post('reset-user-password', [AuthController::class, 'resetUserPassword'])->name('reset.user.password');
 
     Route::get('school-dashboard', [SchoolController::class, 'mySchoolDashboard'])->name('my.school.dashboard');

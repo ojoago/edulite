@@ -1059,7 +1059,7 @@ class Select2Controller extends Controller
         foreach ($result as $row) {
             $data[] = [
                 'id' => $row->pid,
-                'text' => $row->award .' - '. $row->type ,
+                'text' => $row->award .' - '. AWARD_TYPE[$row->type] ,
             ];
         }
         return response()->json($data);

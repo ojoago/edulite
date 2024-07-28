@@ -69,11 +69,7 @@
             </a>
           </li>
 
-          <li>
-            <a href="{{route('school.result.config')}}">
-              <i class="bi bi-circle"></i><span>Results</span>
-            </a>
-          </li>
+        
           <li>
             <a href="{{route('class.category')}}">
               <i class="bi bi-circle"></i><span>Class</span>
@@ -85,6 +81,11 @@
                 Extra Curricular
                 <!-- cycomfrence -->
               </span>
+            </a>
+          </li>
+            <li>
+            <a href="{{route('school.result.config')}}">
+              <i class="bi bi-circle"></i><span>Results</span>
             </a>
           </li>
           <li>

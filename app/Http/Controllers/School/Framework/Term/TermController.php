@@ -5,11 +5,14 @@ namespace App\Http\Controllers\School\Framework\Term;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\School\Staff\StaffController;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Term\Term;
+use App\Models\School\Payment\ResultRecord;
 use App\Models\School\Framework\Term\ActiveTerm;
+use App\Http\Controllers\School\Staff\StaffController;
 use App\Models\School\Framework\Term\ActiveTermDetail;
+use App\Models\School\Student\Result\StudentClassResultParam;
+use App\Http\Controllers\School\Student\StudentScoreController;
 
 class TermController extends Controller
 {
@@ -60,16 +63,7 @@ class TermController extends Controller
 
     }
 
-    private function createOrUpdateTerm($data)
-    {
-        try {
-            return  Term::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
-        } catch (\Throwable $e) {
-            logError($e->getMessage());
-            return false;
-        }
-    }
-
+   
     
     public function setActiveTerm(Request $request)
     {
@@ -85,23 +79,53 @@ class TermController extends Controller
         ]);
         if(!$validator->fails()){
             $data = [
-                'school_pid'=>getSchoolPid(),
-                'session_pid'=>$request->active_session,
-                'term_pid'=>$request->active_term,
-                'begin'=>$request->term_begin,
-                'end'=>$request->term_end,
-                'next_term'=>$request->next_term,
-                'note'=>$request->note,
+                'school_pid'=>getSchoolPid() ,
+                'session_pid'=>$request->active_session ,
+                'term_pid'=>$request->active_term ,
+                'begin'=>$request->term_begin ,
+                'end'=>$request->term_end ,
+                'next_term'=>$request->next_term ,
+                'note'=>$request->note ,
             ];
             $term = [
                 'school_pid' => getSchoolPid(),
                 'term_pid' => $request->active_term,
             ];
             $rdata=[
-                'term_pid'=>activeTerm(),
-                'session_pid'=>activeSession(),
-                'school_pid' => getSchoolPid(),
+                'term_pid'=>activeTerm() ,
+                'session_pid'=>activeSession() ,
+                'school_pid' => getSchoolPid() ,
             ];
+
+            $exams = StudentScoreController::termlyResult();
+            
+            if($exams){
+                $total = 0;
+                $fee = 500;
+                $discount = 0;
+
+                foreach($exams as $exam){
+                    $total += $exam->students;
+                }
+                $resultArray = [
+                    'total_students' => $total ,
+                    'fee' => $fee ,
+                    'discount' => $discount , 
+                    'amount' => $total * $fee ,
+                    'term' => activeTermName() ,
+                    'session' => activeSessionName() ,
+                    'term_pid' => activeTerm() , 
+                    'session_pid' => activeSession() ,
+                    "classes" => json_encode($exams) ,
+                    'school_pid' => getSchoolPid() , 
+                ];
+
+                $res = $this->updateOrAddResultRecord($resultArray);
+                if($res){
+                    // student_class_result_params
+                    StudentClassResultParam::where(['school_pid' => getSchoolPid(), 'term_pid' => activeTerm(), 'session_pid' => activeSession(), 'status' => 1])->update(['status'=>1]);
+                }
+            }
             $result = $this->updateOrCreateActiveTerm($term);
            
             if($result){
@@ -119,6 +143,39 @@ class TermController extends Controller
 
         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
     }
+
+    public function loaSchoolActiveTerm()
+    {
+
+        $data = Term::join('active_terms', 'terms.pid', 'active_terms.term_pid')
+        ->where(['terms.school_pid' => getSchoolPid()])
+            ->select(['term', 'active_terms.updated_at'])->get();
+        return datatables($data)->editColumn('date', function ($data) {
+            return formatDate($data->updated_at);
+        })->make(true);
+    }
+
+    
+    public function loaSchoolActiveTermDetails()
+    {
+
+        $data = Term::join('active_term_details', 'terms.pid', 'active_term_details.term_pid')
+        ->join('sessions', 'sessions.pid', 'active_term_details.session_pid')
+        ->where(['terms.school_pid' => getSchoolPid()])
+            ->select(['term', 'begin', 'end', 'note', 'session', 'next_term'])->orderByDesc('active_term_details.id')->get();
+        return datatables($data)->make(true);
+    }
+
+    private function createOrUpdateTerm($data)
+    {
+        try {
+            return  Term::updateOrCreate(['pid' => $data['pid'], 'school_pid' => $data['school_pid']], $data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
+    }
+
 
     private function updateOrCreateActiveTerm(array $data){
         try {
@@ -143,24 +200,15 @@ class TermController extends Controller
         }
     }
 
-    public function loaSchoolActiveTerm()
-    {
-
-        $data = Term::join('active_terms', 'terms.pid', 'active_terms.term_pid')
-        ->where(['terms.school_pid' => getSchoolPid()])
-            ->select(['term', 'active_terms.updated_at'])->get();
-        return datatables($data)->editColumn('date',function($data){
-            return formatDate($data->updated_at);
-        })->make(true);
+    private function updateOrAddResultRecord($data){
+        try {
+            return ResultRecord::updateOrCreate(['term_pid' => $data['term_pid'] , 'session_pid' => $data['session_pid'] , 'school_pid' => getSchoolPid() ],$data);
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
-    public function loaSchoolActiveTermDetails(){
 
-        $data = Term::join('active_term_details', 'terms.pid', 'active_term_details.term_pid')
-                        ->join('sessions','sessions.pid', 'active_term_details.session_pid')
-        ->where(['terms.school_pid' => getSchoolPid()])
-            ->select(['term', 'begin','end','note','session', 'next_term'])->orderByDesc('active_term_details.id')->get();
-        return datatables($data)->make(true);
-
-    }
+    
      
 }
