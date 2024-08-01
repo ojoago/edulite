@@ -568,44 +568,7 @@ class StudentScoreController extends Controller
         ];
     }
 
-
-    public function loadSchoolResult(){
-
-       try {
-            $results = self::termlyResult();
-            return datatables($results)
-                ->addIndexColumn()
-                ->addColumn('action', function ($data) {
-                    return view('school.student.assessment.publish-action-button', ['data' => $data]);
-                })
-                ->make(true);
-            return view('school.student.assessment.publish-class-result', compact('data', 'scoreParams', 'param'));
-       } catch (\Throwable $e) {
-            $results = [];
-            logError($e->getMessage());
-            return view('school.student.assessment.publish-class-result', compact('results'))->with('error' , ER_500);
-       }
-    }
-
-    public function publishSchoolResult(){
-
-    }
-
-    public static function termlyResult(){
-        try {
-            $results = DB::table('student_class_result_params as p')->join('class_arms as a', 'a.pid', 'p.arm_pid')
-                ->join('classes as e', 'a.class_pid', 'e.pid')
-                ->join('categories as c', 'c.pid', 'e.category_pid')
-                ->join('student_class_results as r', 'r.class_param_pid', 'p.pid')
-                ->where(['p.school_pid' => getSchoolPid(), 'p.term_pid' => activeTerm(), 'p.session_pid' => activeSession(), 'p.status' => 1])
-                ->select('category', 'arm_pid', 'class', 'p.arm', DB::raw('count(r.id) as students'))->groupBy('category', 'arm_pid', 'class', 'p.arm')->get();
-            return $results;
-        } catch (\Throwable $e) {
-            logError($e->getMessage());
-            return false;
-        }
-    }
-
+  
     private function StudentCumulative($data){
        $pid = CumulativeResult::where([
             'session_pid' => $data['session_pid'],

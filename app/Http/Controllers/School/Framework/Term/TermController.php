@@ -5,6 +5,7 @@ namespace App\Http\Controllers\School\Framework\Term;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\School\Payment\ResultRecordController;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Term\Term;
 use App\Models\School\Payment\ResultRecord;
@@ -97,35 +98,8 @@ class TermController extends Controller
                 'school_pid' => getSchoolPid() ,
             ];
 
-            $exams = StudentScoreController::termlyResult();
+            ResultRecordController::computeTermlyResults();
             
-            if($exams){
-                $total = 0;
-                $fee = 500;
-                $discount = 0;
-
-                foreach($exams as $exam){
-                    $total += $exam->students;
-                }
-                $resultArray = [
-                    'total_students' => $total ,
-                    'fee' => $fee ,
-                    'discount' => $discount , 
-                    'amount' => $total * $fee ,
-                    'term' => activeTermName() ,
-                    'session' => activeSessionName() ,
-                    'term_pid' => activeTerm() , 
-                    'session_pid' => activeSession() ,
-                    "classes" => json_encode($exams) ,
-                    'school_pid' => getSchoolPid() , 
-                ];
-
-                $res = $this->updateOrAddResultRecord($resultArray);
-                if($res){
-                    // student_class_result_params
-                    StudentClassResultParam::where(['school_pid' => getSchoolPid(), 'term_pid' => activeTerm(), 'session_pid' => activeSession(), 'status' => 1])->update(['status'=>1]);
-                }
-            }
             $result = $this->updateOrCreateActiveTerm($term);
            
             if($result){
@@ -143,6 +117,7 @@ class TermController extends Controller
 
         return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
     }
+
 
     public function loaSchoolActiveTerm()
     {
@@ -200,14 +175,7 @@ class TermController extends Controller
         }
     }
 
-    private function updateOrAddResultRecord($data){
-        try {
-            return ResultRecord::updateOrCreate(['term_pid' => $data['term_pid'] , 'session_pid' => $data['session_pid'] , 'school_pid' => getSchoolPid() ],$data);
-        } catch (\Throwable $e) {
-            logError($e->getMessage());
-            return false;
-        }
-    }
+  
 
     
      

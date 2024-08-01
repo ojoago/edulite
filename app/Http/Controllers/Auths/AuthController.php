@@ -12,7 +12,7 @@ use App\Http\Controllers\Users\UserDetailsController;
 
 class AuthController extends Controller
 {
-    public $password = 1234567;
+    public $password = 123456;
 
     // login into the app 
     public function login(Request $request)
@@ -216,7 +216,7 @@ class AuthController extends Controller
                     $id = base64Decode($request->id);
                     $msg = getAuthFullname(). ' Has reset your password <br>';
                     $msg .= '<p>Your new password is: <b>'.$pwd.'</b> </p>';
-                    $msg .= 'if your are not aware of this contact the school management for a prompt action.';
+                    $msg .= ' if your are not aware of this contact the school management for a prompt action.';
                     SchoolNotificationController::notifyIndividualParent($msg,$id);
                     return response()->json(['status' => 1, 'message' => 'Password reset successful']);
                 }

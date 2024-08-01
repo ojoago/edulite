@@ -17,7 +17,10 @@ class AdmissionConfigController extends Controller
     public function index(){
         $data = $this->loadAdmission();
         return datatables($data)
-        ->editColumn('date', function ($data) {
+        ->editColumn('from', function ($data) {
+            return date('d F Y',  strtotime($data->created_at));
+        })
+        ->editColumn('to', function ($data) {
             return date('d F Y',  strtotime($data->created_at));
         })
         ->addIndexColumn()
@@ -35,9 +38,12 @@ class AdmissionConfigController extends Controller
     public function setup(){
         $data = $this->loadAdmission();
         return datatables($data)
-        ->editColumn('date', function ($data) {
-            return date('d F Y',  strtotime($data->created_at));
-        })
+            ->editColumn('from', function ($data) {
+                return date('d F Y',  strtotime($data->created_at));
+            })
+            ->editColumn('to', function ($data) {
+                return date('d F Y',  strtotime($data->created_at));
+            })
         ->editColumn('amount', function ($data) {
             return number_format($data->amount,2);
         })

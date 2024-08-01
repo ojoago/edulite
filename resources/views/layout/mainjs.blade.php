@@ -2,7 +2,7 @@
     $(document).ready(function() {
 
         var idleTime = 0;
-        var maxIdleTime = 60 * 60; // 30 minutes in seconds
+        var maxIdleTime = 30 * 60; // 30 minutes in seconds
         // Increment the idle time counter every second.
         var idleInterval = setInterval(timerIncrement, 1000);
         // Reset the idle timer on mouse movement, keypress, or click.
@@ -11,9 +11,9 @@
         $(this).click(resetTimer);
 
         function timerIncrement() {
-        idleTime++;
-        if (idleTime >= maxIdleTime) {
-                window.location.href = "{{route('logout')}}"; // Redirect to logout page
+            idleTime++;
+            if (idleTime >= maxIdleTime) {
+                    window.location.href = "{{route('logout')}}"; // Redirect to logout page
             }
         }
 

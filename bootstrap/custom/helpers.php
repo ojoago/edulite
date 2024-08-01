@@ -17,7 +17,7 @@ use App\Http\Controllers\Auths\AuthController;
         return strtoupper(str_shuffle(date('YMDHism').time()));
     }
    
-    function randomNumber($len = 7){
+    function randomNumber($len = 6){
         return substr(random_int(1, 99999999999999999), 1, $len);
     }
    

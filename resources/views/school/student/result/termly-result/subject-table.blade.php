@@ -26,7 +26,8 @@
     ';
 @endphp
 
-    <div class="subject-result">
+    @if ($subResult->isNotEmpty)
+        <div class="subject-result">
          <table class="table table-hover table-striped table-bordered examTable" id="examTable" cellpadding="pixels">
                     <thead>
                         <tr style="{{$table_head}}">
@@ -106,3 +107,5 @@
                   
                 </table>
     </div>
+    @endif
+    

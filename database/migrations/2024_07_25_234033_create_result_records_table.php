@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('term_pid');
             $table->json('classes')->nullable();
             $table->string('school_pid');
-            $table->tinyInteger('status')->default(0)->comment('0:not paid, 1:paid, 2 out standing bal, 3 credit, 4 free');
+            $table->tinyInteger('status')->default(0)->comment('0:not paid, 1:paid, 2 out standing bal, 3 credit, 4 free, 5:Annual Sub');
             $table->timestamps();
         });
     }

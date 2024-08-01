@@ -43,6 +43,7 @@ use App\Http\Controllers\School\Framework\Assessment\AssessmentTitleController;
 use App\Http\Controllers\School\Student\Attendance\StudentAttendanceController;
 use App\Http\Controllers\School\Framework\Psychomotor\PsychomotorBaseController;
 use App\Http\Controllers\School\Framework\Result\ResultConfigController;
+use App\Http\Controllers\School\Payment\ResultRecordController;
 use App\Http\Controllers\School\Student\Results\Termly\StudentTermlyResultController;
 use App\Http\Controllers\School\Student\Results\Comments\TeacherCommentResultController;
 use App\Http\Controllers\School\Student\Results\Comments\PrincipalCommentResultController;
@@ -205,10 +206,6 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('school-score-settings', [ScoreSettingsController::class, 'createScoreSettings'])->name('create.school.score.settings');
 
 
-
-
-
-
     // fee items 
     Route::post('load-available-fee-items', [Select2Controller::class, 'loadAvailableFeeItem']);
 
@@ -337,6 +334,13 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('rider-dashboard', [SchoolController::class, 'riderLogin'])->name('rider.dashboard');
 
     // Psychomotor, effective domain and grade key 
+    // hostels  
+    //   
+    Route::middleware('schoolAdmin')->group(function(){
+        Route::view('result-records', 'school.result-record.result-records')->name('result.records');
+        Route::get('load-result-records', [ResultRecordController::class,'resultRecords'])->name('load.result.records');
+        Route::get('result-details', [ResultRecordController::class,'resultDetails'])->name('result.detail');
+    });
     // hostels  
     //   
     Route::middleware('boardingSchool')->group(function(){
@@ -586,8 +590,8 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('review-subject-result', [StudentScoreController::class, 'reviewSubjectResult'])->name('review.subject.result');
 
     Route::view('publish-result','school.student.assessment.publish-class-result')->name('publish.result');
-    Route::get('load-school-result', [StudentScoreController::class, 'loadSchoolResult'])->name('load.school.result');
-    Route::post('publish-result', [StudentScoreController::class, 'publishSchoolResult'])->name('publish.school.result');
+    Route::get('load-school-result', [ResultRecordController::class, 'loadSchoolResult'])->name('load.school.result');
+    Route::post('publish-result', [ResultRecordController::class, 'publishSchoolResult'])->name('publish.school.result');
 
     // export student list 
     Route::get('export-student-list', [StudentScoreController::class, 'exportStudentList'])->name('export.student.list');

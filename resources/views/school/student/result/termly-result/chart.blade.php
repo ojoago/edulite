@@ -3,10 +3,11 @@
     @php array_push($columnChart,[$row->subject,$row->total,$row->min,$row->avg,$row->max]) @endphp
 @endforeach
 
-
- <div class="col-md-12 mt-4">
-    <div id="column_Chart" class="chartZoomable" style="width:98%;height:auto;"></div>
-</div>
+@if ($subResult->isNotEmpty)
+     <div class="col-md-12 mt-4">
+        <div id="column_Chart" class="chartZoomable" style="width:98%;height:auto;"></div>
+    </div>
+@endif
 
      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
      <script type="text/javascript">

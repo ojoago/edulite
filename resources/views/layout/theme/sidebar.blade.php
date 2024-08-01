@@ -139,6 +139,7 @@
               </span>
             </a>
           </li>
+
           <li>
             <a href="{{route('payment.account')}}">
               <i class="bi bi-circle"></i><span>
@@ -146,6 +147,15 @@
               </span>
             </a>
           </li>
+
+          <li>
+            <a href="{{route('result.records')}}">
+              <i class="bi bi-circle"></i><span>
+                Invoices
+              </span>
+            </a>
+          </li>
+
         </ul>
       </li>
       <li class="nav-item">

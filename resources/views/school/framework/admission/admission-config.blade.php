@@ -26,11 +26,11 @@
                     <thead>
                         <tr>
                             <th width="5%">S/N</th>
-                            <th>Class</th>
                             <th>Session</th>
+                            <th>Class</th>
                             <th>Commence</th>
                             <th>End</th>
-                            <th>Date</th>
+                            {{-- <th>Date</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -109,9 +109,10 @@
                         </div>
                     </div>
                     <label for="">Admission Session</label>
-                    <select name="session_pid" class="form-control form-control-sm" id="sessionSelect2">
+                    <select name="session_pid" class="form-control form-control-sm" id="admissionSessionSelect2">
                     </select>
                     <p class="text-danger session_pid_error"></p>
+
                     <label for="">Available class for admission</label>
                     <select name="class_pid[]" multiple class="form-control form-control-sm" id="classSelect2">
                     </select>
@@ -132,31 +133,36 @@
 </div>
 
 <!-- create school category modal  -->
-<script src="{{asset('js/jquery.3.6.0.min.js')}}"></script>
 
 <script>
     $(document).ready(function() {
 
+
+        loadAdmissionList()
+
+        function loadAdmissionList(){
+            
         $('#admissionNameTable').DataTable({
             "processing": true,
             "serverSide": true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+            // rowReorder: {
+            //     selector: 'td:nth-child(2)'
+            // },
             responsive: true,
-            // destroy: true,
+            destroy: true,
             type: "GET",
             "ajax": "{{route('load.admission.details')}}",
             "columns": [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
                 },
+                 {
+                    "data": "session"
+                },
                 {
                     "data": "class"
                 },
-                {
-                    "data": "session"
-                },
+               
                 {
                     "data": "from"
                 },
@@ -166,15 +172,43 @@
                 // {
                 //     "data": "status"
                 // },
-                {
-                    "data": "date",
-                },
+                // {
+                //     "data": "date",
+                // },
                 // {
                 //     "data": "action",
                 // },
 
             ],
+             "columnDefs": [{
+                    "visible": false,
+                    "targets": 1
+                }],
+              drawCallback: function(settings) {
+                    var api = this.api();
+                    var rows = api.rows({
+                        page: 'current'
+                    }).nodes();
+                    var last = null;
+
+                    api.column(1, {
+                        page: 'current'
+                    }).data().each(function(group, i) {
+
+                        if (last !== group) {
+
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="8">' + '' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
         });
+        }
+
+
         $('#setup-tab').click(function() {
             loadConfiguration()
         })
@@ -183,9 +217,9 @@
             $('#admissionFeeTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
+                // rowReorder: {
+                //     selector: 'td:nth-child(2)'
+                // },
                 responsive: true,
                 destroy: true,
                 type: "GET",
@@ -195,11 +229,12 @@
                         name: 'DT_RowIndex',
                     },
                     {
-                        "data": "class"
-                    },
-                    {
                         "data": "session"
                     },
+                    {
+                        "data": "class"
+                    },
+                    
                     {
                         "data": "from"
                     },
@@ -212,6 +247,31 @@
                     },
 
                 ],
+                 "columnDefs": [{
+                    "visible": false,
+                    "targets": 1
+                }],
+              drawCallback: function(settings) {
+                    var api = this.api();
+                    var rows = api.rows({
+                        page: 'current'
+                    }).nodes();
+                    var last = null;
+
+                    api.column(1, {
+                        page: 'current'
+                    }).data().each(function(group, i) {
+
+                        if (last !== group) {
+
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="8">' + '' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
             });
         }
         // add more title 
@@ -221,15 +281,18 @@
         // load dropdown on 
 
         // filter class subject 
-        multiSelect2('#sessionSelect2', 'createAdmissionModal', 'session', 'Select Session');
+        multiSelect2('#admissionSessionSelect2', 'createAdmissionModal', 'session', 'Select Session');
         multiSelect2('#classSelect2', 'createAdmissionModal', 'all-class', 'Select Class');
         multiSelect2('#admissionFeeSelect2', 'createAdmissionModal', 'on-demand-fee', 'Select Fee Amount');
         FormMultiSelect2('#categoryClassSubjectSelect2', 'category', 'Select Category');
         // multiSelect2('#admissionItem', 'admissionConfigModal', 'admission-items', 'Select Admission');
 
         // create Admission
-        $('#createAdmissionBtn').click(function() {
-            submitFormAjax('createAdmissionForm', 'createAdmissionBtn', "{{route('configure.admission')}}");
+        $('#createAdmissionBtn').click(async function() {
+          let sts = await submitFormAjax('createAdmissionForm', 'createAdmissionBtn', "{{route('configure.admission')}}");
+            if(sts.status == 1){
+                loadAdmissionList()
+            }
         });
         $(document).on('click', '.createAdmissionBtn', function() {
             let pid = $(this).attr('pid');

@@ -81,6 +81,7 @@ define('MONTH_CODE',[
 
 define('EXTRA_CURRICULAR_GRADE_STYLE',[1 => 'Number', 2 => 'Alphabet', 3 => 'Checked', 4 => 'Sentence']);
 define('AWARD_TYPE',[1 => 'One per Class', 2 => 'One per School', 3 => 'General', '' =>'']);
+define('RESULT_FEE_STATUS',['Not Paid Yet' , 'Paid' , 'Part Payment' , 'Credit' , 'Free' , 'Annual Payment']);
 
 
 
