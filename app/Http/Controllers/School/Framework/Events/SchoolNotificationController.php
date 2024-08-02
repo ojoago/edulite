@@ -7,12 +7,12 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\School\SchoolController;
+use App\Http\Controllers\School\Rider\RiderController;
 use App\Http\Controllers\School\Staff\StaffController;
 use App\Http\Controllers\School\Parent\ParentController;
 use App\Models\School\Framework\Timetable\TimetableParam;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Models\School\Framework\Events\SchoolNotification;
-use App\Http\Controllers\School\Rider\SchoolRiderController;
 
 class SchoolNotificationController extends Controller
 {
@@ -39,8 +39,18 @@ class SchoolNotificationController extends Controller
     {
         $data = DB::table('school_notifications')->where([
             'school_pid' => getSchoolPid()
-        ])->whereIn('type',[1,4])->select(DB::raw('begin as start,end, message as title,pid as id'))->get();
-        return response()->json($data->toArray());
+        ])->whereIn('type',[1,4])->select(DB::raw('begin as start,end, message as title,pid as id'))->get()->toArray();
+        $bds = DB::table('user_details as d')->join('school_users as u','d.user_pid','u.user_pid')->where('u.school_pid',getSchoolPid())
+        ->whereRaw("DATE_ADD(d.dob, INTERVAL YEAR(CURDATE())-YEAR(d.dob) + IF(DAYOFYEAR(CURDATE()) > DAYOFYEAR(d.dob), 1, 0) YEAR) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)")->select('fullname','u.role','d.dob','u.pid as id')->get();
+        foreach ($bds as $bd) {
+            $data[] = [
+                'start' => $bd->dob ,
+                'end' => $bd->dob ,
+                'title' => $bd->fullname .' Birthday' ,
+            ];
+        }
+        logError($data);
+        return response()->json($data);
     }
 
     public function countMyNotificationTip(){
@@ -211,7 +221,7 @@ class SchoolNotificationController extends Controller
         $data = [
             'message'=>$message,
             'notifyee'=> $pid,
-            'user'=>SchoolRiderController::getRiderDetailBypId(pid:$pid),
+            'user'=> RiderController::getRiderDetailBypId(pid:$pid),
         ];
         return  (new self)->individualNotification($data);
     }
