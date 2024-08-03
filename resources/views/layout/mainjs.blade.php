@@ -1388,6 +1388,8 @@
                 error: function(data) {
                     $('#' + btnId).prop('disabled', false);
                     $('.overlay').hide();
+                    console.log(data);
+                    location.reload()
                     alert_toast('Something Went Wrong', 'error');
                     reject(true);
                 }
@@ -1415,6 +1417,7 @@
             },
             error: function(data) {
                 $('.overlay').hide();
+                location.reload()
                 alert_toast('Something Went Wrong', 'error');
             }
         });
@@ -1436,6 +1439,7 @@
                 error: function() {
                     $('.overlay').hide();
                     alert_toast('Something Went Wrong', 'error');
+                    location.reload()
                     reject(true);
                 }
             });

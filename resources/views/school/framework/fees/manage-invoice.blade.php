@@ -1,5 +1,5 @@
 @extends('layout.mainlayout')
-@section('title','Fee Config')
+@section('title','Manage Invoice')
 @section('content')
 <div class="card">
     <div class="card-body">
@@ -282,6 +282,18 @@
         // load dropdown on 
         FormMultiSelect2('#termFeeSelect2', 'term', 'Select Term');
         FormMultiSelect2('#sessionFeeSelect2', 'session', 'Select Session');
+
+        $('#sessionFeeSelect2').change(function(){
+            let session = $(this).val()
+            let term = $('#termFeeSelect2').val()
+            loadInvoice(term , session)
+        })
+        
+        $('#termFeeSelect2').change(function(){
+            let term = $(this).val()
+            let session = $('#sessionFeeSelect2').val()
+            loadInvoice(term , session)
+        })
 
     });
 </script>

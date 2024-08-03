@@ -931,7 +931,7 @@ class Select2Controller extends Controller
         foreach ($result as $row) {
             $data[] = [
                 'id' => $row->pid,
-                'text' => $row->account_name.' | ' . $row->account_name ,
+                'text' => $row->account_name.' | ' . $row->bank_name ,
             ];
         }
         return response()->json($data);

@@ -1,7 +1,7 @@
 <div class="dropdown">
     <button type="button" class="btn btn-primary btn-sm pointer" data-bs-toggle="modal" data-bs-target="#modal{{$data->pid}}">
         <!-- <i class="bi bi-tools"></i> -->
-        edit
+        Edit
     </button>
 </div>
 <!-- create edit fee  -->
@@ -15,11 +15,25 @@
             <div class="modal-body">
                 <form action="" method="post" class="" id="feeAmountForm{{$data->pid}}">
                     @csrf
-                    <input type="text" disabled value="{{$data->fee_name}}" class="form-control form-control-sm" placeholder="example school fee"><br>
-                    <input type="text" disabled value="{{$data->arm}}" class="form-control form-control-sm"><br>
+                    <label for="">Fee Name</label>
+                    <select name="fee_item_pid" class="form-control form-control-sm" >
+                        <option disabled selected>Select Account</option>
+                        @foreach ($fees as $fee)
+                            <option value="{{$fee->pid}}" {{$fee->fee_name == $data->fee_name ? 'selected' :''}} >{{$fee->fee_name}}</option>
+                        @endforeach
+                    </select>
+                    {{-- <input type="text" disabled value="{{$data->fee_name}}" class="form-control form-control-sm" placeholder="example school fee"><br> --}}
+                    <label for="">Class Arm</label>
+                    <select name="arm" class="form-control form-control-sm" >
+                        <option disabled selected>Select Class</option>
+                        @foreach ($arms as $arm)
+                            <option value="{{$arm->pid}}" {{$arm->arm == $data->arm ? 'selected' :''}} >{{$arm->arm}}</option>
+                        @endforeach
+                    </select>
+                    {{-- <input type="text" disabled value="{{$data->arm}}" class="form-control form-control-sm"><br> --}}
                     <input type="hidden" name="pid" value="{{$data->pid}}">
                     <label for="">Amount</label>
-                    <input type="text" name="amount" value="{{$data->amount}}" class="form-control form-control-sm" placeholder="example school fee" required>
+                    <input type="text" name="amount" value="{{$data->amount}}" class="form-control form-control-sm" placeholder="e.g 5,000" required>
                     <p class="text-danger amount_error"></p>
                 </form>
             </div>

@@ -248,6 +248,7 @@ Route::middleware('schoolAuth')->group(function(){
 
     Route::view('view-timetable', 'school.framework.timetable.view-timetable')->name('view.timetable');
 
+    Route::view('notifications', 'school.framework.event.notifications')->name('event.notifications');
     Route::view('event-config', 'school.framework.event.event-config')->name('event.config');
     // notification 
     Route::post('create-school-notification', [SchoolNotificationController::class, 'createSchoolNotification'])->name('create.school.notification');
@@ -266,7 +267,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::get('load-all-my-notification', [SchoolNotificationController::class, 'allNotifications'])->name('load.all.my.notification');
 
     // fee setup 
-    Route::view('payment-account', 'school.framework.fees.payment-account')->name('payment.account');
+    Route::view('manage-invoice', 'school.framework.fees.manage-invoice')->name('manage.invoice');
     Route::view('fees-config', 'school.framework.fees.fees-config')->name('fee.config');
     Route::get('load-fee-items', [FeeItemController::class,'loadFeeItems'])->name('load.fee.items');
     Route::post('load-fee-account', [FeeItemController::class, 'loadFeeAccount'])->name('load.fee.account');

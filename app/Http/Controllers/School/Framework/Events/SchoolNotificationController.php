@@ -40,16 +40,27 @@ class SchoolNotificationController extends Controller
         $data = DB::table('school_notifications')->where([
             'school_pid' => getSchoolPid()
         ])->whereIn('type',[1,4])->select(DB::raw('begin as start,end, message as title,pid as id'))->get()->toArray();
+        $today = date('Y-m-d');
         $bds = DB::table('user_details as d')->join('school_users as u','d.user_pid','u.user_pid')->where('u.school_pid',getSchoolPid())
-        ->whereRaw("DATE_ADD(d.dob, INTERVAL YEAR(CURDATE())-YEAR(d.dob) + IF(DAYOFYEAR(CURDATE()) > DAYOFYEAR(d.dob), 1, 0) YEAR) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)")->select('fullname','u.role','d.dob','u.pid as id')->get();
+        ->whereRaw("DATE_FORMAT(d.dob, CONCAT(YEAR(CURDATE()), '-%m-%d')) >= '$today' ")
+        ->select('fullname','u.role','d.dob','u.pid as id',DB::raw("DATE_FORMAT(d.dob, CONCAT(YEAR(CURDATE()), '-%m-%d')) AS dob "))->limit(100)->get();
+        $grps = [];
         foreach ($bds as $bd) {
-            $data[] = [
-                'start' => $bd->dob ,
-                'end' => $bd->dob ,
-                'title' => $bd->fullname .' Birthday' ,
-            ];
+            $grps[$bd->dob][] = [
+                    'title' => $bd->fullname , //"<i class = 'bi bi-person-plus-fill'></i>",
+                    'role' => strtolower($this->roles($bd->role)) ,
+                ];
         }
-        logError($data);
+        foreach ($grps as $key => $grp) {
+                $data[] = [
+                    'start' => $key ,
+                    'end' => $key ,
+                    'title' => ' Birthday', //"<i class = 'bi bi-person-plus-fill'></i>",
+                    'date' => formatDate($key), //"<i class = 'bi bi-person-plus-fill'></i>",
+                    'data' => $grp
+                ];
+        }
+       
         return response()->json($data);
     }
 
@@ -363,5 +374,31 @@ class SchoolNotificationController extends Controller
             logError($e->getMessage());
             return false;
         }
+    }
+
+    private function roles($role)
+    {
+        $role =  match ($role) {
+            // '200' => 'School Super Admin',
+            // '205' => 'School Admin',
+            // '300' => 'Teacher',
+            // '301' => 'Form/Class Teacher',
+            // '303' => 'Clerk',
+            // '305' => 'Secretary',
+            // '307' => 'Portals',
+            // '400' => 'Office Assisstnace',
+            // '405' => 'Security',
+            // '500' => 'Principal/Head Teacher',
+            // '1' => 'Manage result',
+            '600' => 'Student',
+            '601' => 'Applicant',
+            '605' => 'Parent/Guardian',
+            '610' => 'Rider',
+            // '700' => 'Agent/Referer',
+            // '710' => 'Partners',
+            // '10' => 'App Admin',
+            default => 'Staff'
+        };
+        return $role;
     }
 }

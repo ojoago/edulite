@@ -9,12 +9,13 @@ use App\Http\Controllers\Controller;
 use App\Models\School\Student\Student;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Fees\FeeItem;
+use App\Models\School\Framework\Class\ClassArm;
+use App\Models\School\Framework\Fees\FeeAccount;
 use App\Models\School\Framework\Fees\FeeItemAmount;
 use App\Models\School\Framework\Fees\StudentInvoice;
 use App\Models\School\Framework\Fees\FeeConfiguration;
 use App\Models\School\Framework\Fees\ClassInvoiceParam;
 use App\Http\Controllers\School\Framework\ClassController;
-use App\Models\School\Framework\Fees\FeeAccount;
 
 class FeeItemController extends Controller
 {
@@ -51,6 +52,8 @@ class FeeItemController extends Controller
 
     public function loadFeeAmount(){
 
+        $arms = ClassArm::where(['school_pid' => getSchoolPid(), 'status' => 1])->orderBy('arm')->get(['pid', 'arm']); //
+        $fees = FeeItem::where(['school_pid' => getSchoolPid()])->orderBy('fee_name')->get(['pid', 'fee_name']); //
         $data = DB::table('fee_configurations as c')
                     ->join('fee_items as f','f.pid','c.fee_item_pid')
                     ->join('fee_item_amounts as i','i.config_pid','c.pid')
@@ -76,8 +79,8 @@ class FeeItemController extends Controller
         // ->editColumn('date', function ($data) {
         //     return $data->created_at->diffForHumans();
         // })
-        ->addColumn('action', function ($data) {
-            return view('school.framework.fees.fee-amount-action-button', ['data' => $data]);
+        ->addColumn('action', function ($data) use($arms,$fees) {
+            return view('school.framework.fees.fee-amount-action-button', ['data' => $data,'fees' => $fees , 'arms' => $arms]);
         })
         ->addIndexColumn()
         ->make(true);

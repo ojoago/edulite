@@ -141,7 +141,7 @@
           </li>
 
           <li>
-            <a href="{{route('payment.account')}}">
+            <a href="{{route('manage.invoice')}}">
               <i class="bi bi-circle"></i><span>
                 Payments
               </span>
@@ -151,7 +151,7 @@
           <li>
             <a href="{{route('result.records')}}">
               <i class="bi bi-circle"></i><span>
-                Invoices
+                Result Record
               </span>
             </a>
           </li>
@@ -163,6 +163,14 @@
           <i class="bi bi-alarm"></i><span>Events</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="event" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+         
+          <li>
+            <a href="{{route('event.notifications')}}">
+              <i class="bi bi-circle"></i><span>
+                Notifications
+              </span>
+            </a>
+          </li>
           <li>
             <a href="{{route('event.config')}}">
               <i class="bi bi-circle"></i><span>
@@ -170,6 +178,7 @@
               </span>
             </a>
           </li>
+
           <li>
             <a class="nav-link collapsed" href="{{route('hire.config')}}">
               <i class="bi bi-layers-fill"></i><span>Advert</span><i class="bi bi-chevron-right ms-auto"></i>

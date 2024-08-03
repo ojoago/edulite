@@ -132,10 +132,10 @@
                 <form action="" method="post" class="" id="createAccountForm">
                     @csrf
                     <label for="account_number">Account Number</label>
-                    <input type="text" name="account_number" maxlength="10" class="form-control form-control-sm" placeholder="example school fee" required>
+                    <input type="text" name="account_number" maxlength="10" class="form-control form-control-sm" placeholder="e.g 0101010101" required>
                     <p class="text-danger account_number_error"></p>
                     <label for="account_name">Account Name</label>
-                    <input type="text" name="account_name" class="form-control form-control-sm" placeholder="example school fee" required>
+                    <input type="text" name="account_name" class="form-control form-control-sm" placeholder="example elevate model school" required>
                     <p class="text-danger account_name_error"></p>
                     <label for="bank_name">Bank</label>
                     <select name="bank_name" class="form-control form-control-sm" >
@@ -191,9 +191,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">Fee Configuration </h5>
 
-                <div class="float-end">
-                    <button id="addMoreArm" type="button" class="btn btn-danger btn-sm btn-sm mb-1 text-center">Add More Row</button><br>
-                </div>
+                
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -309,6 +307,9 @@
                         </div>
                     </div>
                     <div id="addMoreRow"></div>
+                    <div class="text-center">
+                    <button id="addMoreArm" type="button" class="btn btn-danger btn-sm btn-sm mb-1 text-center">Add More Row</button><br>
+                </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -324,36 +325,42 @@
     $(document).ready(function() {
 
         // generate all invoice 
-        $('#feeNameTable').DataTable({
-            "processing": true,
-            "serverSide": true,
-            responsive: true,
-            // destroy: true,
-            type: "GET",
-            "ajax": "{{route('load.fee.items')}}",
-            "columns": [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                },
-                {
-                    "data": "account_name"
-                },
-                {
-                    "data": "fee_name"
-                },
-                {
-                    "data": "fee_description"
-                },
-                {
-                    "data": "status"
-                },
-              
-                {
-                    "data": "action",
-                },
+        function loadFeeName() {
+            $('#feeNameTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                responsive: true,
+                destroy: true,
+                type: "GET",
+                "ajax": "{{route('load.fee.items')}}",
+                "columns": [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                    },
+                    {
+                        "data": "account_name"
+                    },
+                    {
+                        "data": "fee_name"
+                    },
+                    {
+                        "data": "fee_description"
+                    },
+                    {
+                        "data": "status"
+                    },
+                
+                    {
+                        "data": "action",
+                    },
 
-            ],
-        });
+                ],
+            });
+        }
+
+        $('#home-tab').click(function(){
+            loadFeeName()
+        })
 
         $('#termFeeSelect2').change(function() {
             let term = $(this).val();
@@ -419,9 +426,9 @@
             $('#feeAmountTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                rowReorder: {
-                    selector: 'td:nth-child(2)'
-                },
+                // rowReorder: {
+                //     selector: 'td:nth-child(2)'
+                // },
                 responsive: true,
                 destroy: true,
                 // type: "GET",
@@ -536,8 +543,11 @@
             }
         })
         // create fee name 
-        $('#createFeeBtn').click(function() {
-            submitFormAjax('createFeeForm', 'createFeeBtn', "{{route('create.fee.name')}}");
+        $('#createFeeBtn').click(async  function() {
+            let s = await submitFormAjax('createFeeForm', 'createFeeBtn', "{{route('create.fee.name')}}");
+             if(s.status == 1){
+                loadFeeName()
+            }
         });
         // update fee item 
         $(document).on('click', '.createFeeBtn', function() {
@@ -620,7 +630,9 @@
         // configure fee
         $('#feeConfigBtn').click(async function() {
             let s = await submitFormAjax('feeConfigForm', 'feeConfigBtn', "{{route('configure.fee')}}");
-           
+            if(s.status == 1){
+                loadFeeAmount()
+            }
         });
 
     });
