@@ -32,9 +32,11 @@
                     <li class="nav-item flex-fill" role="presentation">
                         <button class="nav-link w-100" data-bs-toggle="tab" data-bs-target="#subject" type="button" role="tab">Subjects</button>
                     </li>
-                    <li class="nav-item flex-fill" role="presentation">
+
+                    {{-- <li class="nav-item flex-fill" role="presentation">
                         <button class="nav-link w-100" data-bs-toggle="tab" data-bs-target="#role" type="button">Roles</button>
-                    </li>
+                    </li> --}}
+
                 </ul>
                 <div class="tab-content pt-2" id="myTabjustifiedContent">
                     <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile">
