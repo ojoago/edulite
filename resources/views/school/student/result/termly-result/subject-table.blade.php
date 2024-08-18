@@ -26,7 +26,7 @@
     ';
 @endphp
 
-    @if ($subResult->isNotEmpty)
+    @if ($subResult->isNotEmpty())
         <div class="subject-result">
          <table class="table table-hover table-striped table-bordered examTable" id="examTable" cellpadding="pixels">
                     <thead>

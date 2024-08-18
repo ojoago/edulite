@@ -3,7 +3,7 @@
     @php array_push($columnChart,[$row->subject,$row->total,$row->min,$row->avg,$row->max]) @endphp
 @endforeach
 
-@if ($subResult->isNotEmpty)
+@if ($subResult->isNotEmpty())
      <div class="col-md-12 mt-4">
         <div id="column_Chart" class="chartZoomable" style="width:98%;height:auto;"></div>
     </div>

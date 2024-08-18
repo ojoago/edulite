@@ -411,7 +411,7 @@ class StudentController extends Controller
                 'school_pid' => getSchoolPid(),
             ];
             if (!$request->pid) {
-                $student['reg_number'] =  StudentController::studentUniqueId();
+                $student['reg_number'] =  self::studentUniqueId();
                 $student['session_pid'] =  activeSession();
                 $student['term_pid'] =  activeTerm();
                 $student['admitted_class'] =  $request->arm_pid;

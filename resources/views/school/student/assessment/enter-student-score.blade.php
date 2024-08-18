@@ -108,7 +108,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 {{-- <h5 class="modal-title h6">Create Extra Curricular Name</h5> --}}
-                 <p class="text-center small">load Student Assessment for <span class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</span></p>
+                 <p class="text-center small"> Student Assessment for <span class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</span></p>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post">
@@ -244,38 +244,45 @@
             });
         });
 
-         $('#publishResult').click(function() {
+        $('#publishResult').click(function(){
             let param = $(this).attr('param')
-            if(confirm('Are you sure, you have finished recording the scripts ?'){
+            if(confirm('Are you sure, you have finished recording all the CA\'s?')){
                 $.ajax({
-                url: "{{route('publish.subject.result')}}",
-                type: "POST",
-                data: {
-                    param: param,
-                    _token: "{{csrf_token()}}",
-                },
-                success: function(data) {
-                    if(data.status == 1){
-                        alert_toast(data.message, 'success')
-                    }else{
-                        alert_toast(data.message, 'error')
+                    url: "{{route('publish.subject.result')}}",
+                    type: "POST",
+                    data: {
+                        param: param,
+                        _token: "{{csrf_token()}}",
+                    },
+                    success: function(data) {
+                        if(data.status == 1){
+                            alert_toast(data.message, 'success')
+                        }else{
+                            alert_toast(data.message, 'error')
+                        }
+                    },
+                    error: function(data) {
+                        alert_toast('Weldone', 'error')
                     }
-                },
-                error: function(data) {
-                    alert_toast('Weldone', 'error')
-                }
-            });
-            })
-        });
+                })
+            }
+        })
 
-        var arm = "{{session('arm')}}";
-        if (arm != null) {
-            getArmSubject(arm)
-        }
-        var class_pid = "{{session('class')}}";
-        if (class_pid != null) {
-            getClassArms(class_pid)
-        }
+        //  $('#publishResult').click(function() {
+            
+        //     if(confirm('Are you sure, you have finished recording the scripts ?')){
+                
+           
+        // });
+
+        // var arm = "{{session('arm')}}";
+        // if (arm != null) {
+        //     getArmSubject(arm)
+        // }
+        // var class_pid = "{{session('class')}}";
+        // if (class_pid != null) {
+        //     getClassArms(class_pid)
+        // }
 
         // export student list 
         $('exportStudentList').click(function() {
