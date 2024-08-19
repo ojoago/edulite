@@ -62,7 +62,7 @@ class StudentTermlyResultController extends Controller
             ->groupBy(['r.total','reg_number','fullname',
                                 'dtl.class_teacher_comment','dtl.principal_comment',
                                 'dtl.portal_comment','r.class_param_pid'])
-            ->where(['r.class_param_pid' => $class]);//->get()->dd();
+            ->where(['r.class_param_pid' => $class])->get()->dd();
         $result = DB::table('student_subject_results as sr')->joinSub($rank,'rn',function($rank){
             $rank->on('sr.student_pid','=','rn.student_pid');
         })->select(DB::raw(
@@ -73,7 +73,7 @@ class StudentTermlyResultController extends Controller
             fullname,rn.class_teacher_comment,
             rn.principal_comment,rn.portal_comment,
             rn.class_param_pid
-            '))->groupBy('sr.student_pid')->orderBy('position')
+            '))->groupBy(['sr.student_pid',])->orderBy('position')
             ->where(['sr.class_param_pid' => $class, 'seated' => 1])->get();//->dd();
 
         $subjects = true;
