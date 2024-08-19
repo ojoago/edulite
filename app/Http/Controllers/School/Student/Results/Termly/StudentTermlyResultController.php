@@ -59,7 +59,9 @@ class StudentTermlyResultController extends Controller
                                 dtl.portal_comment,r.class_param_pid'))
         ->groupBy('r.student_pid')
             ->orderBy('r.total', 'DESC')
-            ->groupBy('r.total')
+            ->groupBy(['r.total','reg_number','fullname',
+                                'dtl.class_teacher_comment','dtl.principal_comment',
+                                'dtl.portal_comment','r.class_param_pid'])
             ->where(['r.class_param_pid' => $class]);//->get()->dd();
         $result = DB::table('student_subject_results as sr')->joinSub($rank,'rn',function($rank){
             $rank->on('sr.student_pid','=','rn.student_pid');
@@ -71,8 +73,8 @@ class StudentTermlyResultController extends Controller
             fullname,rn.class_teacher_comment,
             rn.principal_comment,rn.portal_comment,
             rn.class_param_pid
-            '))->groupBy('sr.student_pid', 'fullname', 'rn.class_teacher_comment', 'rn.principal_comment', 'rn.portal_comment', 'rn.class_param_pid', 'reg_number')->orderBy('position')
-            ->where(['sr.class_param_pid' => $class, 'seated' => 1])->get()->dd();
+            '))->groupBy('sr.student_pid')->orderBy('position')
+            ->where(['sr.class_param_pid' => $class, 'seated' => 1])->get();//->dd();
 
         $subjects = true;
         if($result->empty()){
