@@ -72,7 +72,7 @@ class StudentTermlyResultController extends Controller
             rn.principal_comment,rn.portal_comment,
             rn.class_param_pid
             '))->groupBy('sr.student_pid')->orderBy('position')
-            ->where(['sr.class_param_pid' => $class, 'seated' => 1])->get();//->dd();
+            ->where(['sr.class_param_pid' => $class, 'seated' => 1])->get()->dd();
 
         $subjects = true;
         if($result->empty()){
