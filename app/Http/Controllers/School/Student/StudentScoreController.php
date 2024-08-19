@@ -67,7 +67,7 @@ class StudentScoreController extends Controller
 
         
         if(!GradeKeyController::classGradeKeys($request->class)){
-            return redirect()->back()->with('warning', 'Contact School Admin to grade key for '. getClassNameByPid($request->class));
+            return redirect()->back()->with('warning', 'Contact School Admin to set grade key for '. getClassNameByPid($request->class));
         }
        $head = ClassController::getCategoryHeadPid($request->arm);
      
