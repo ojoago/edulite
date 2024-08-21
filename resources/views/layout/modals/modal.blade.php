@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Assign Class Arm Subject to Teacher for<small class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</small></h5>
+                <h5 class="modal-title">Assign Class Arm Subject to Teacher</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -109,7 +109,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Assign Class Arm To Teacher for<small class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</small></h5>
+                <h5 class="modal-title">Assign Class Arm To Teacher</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
