@@ -169,7 +169,11 @@
 
         <div class="b-row">
             <div class="bd solid">
-                Signature: {{$result->signature}}
+                Signature: 
+                <div class="signature-base">
+                    @php $imgUrl = $result->signature ? asset("/files/images/".$result->signature) :'' @endphp
+                    <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+                </div>
             </div>
             <div class="bc solid">Date: {{formatDate($result->date)}}</div>
         </div>
@@ -182,7 +186,11 @@
 
         <div class="b-row">
             <div class="bd solid">
-                Signature: {{$result->principal_signature}}
+                Signature: 
+                <div class="signature-base">
+                    @php $imgUrl = $result->principal_signature ? asset("/files/images/".$result->principal_signature) :'' @endphp
+                    <img src="{{$imgUrl}}" alt="" class="img img-responsive signature">
+                </div>
             </div>
             <div class="bc solid">Date: {{formatDate($result->date)}} </div>
         </div>

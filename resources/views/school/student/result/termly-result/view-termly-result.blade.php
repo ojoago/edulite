@@ -61,10 +61,10 @@
                         <td>{{@$row->count}}</td>
                         <td>{{number_format($row->total,2)}}</td>
                         <td>{{number_format(@$row->average,1)}}</td>
-                        <td>{{--$row->class_teacher_comment--}}</td>
-                        <td>{{--$row->principal_comment--}}</td>
+                        <td>{{$row->class_teacher_comment}}</td>
+                        <td>{{$row->principal_comment}}</td>
                         @if(getSchoolType()!=1)
-                        <td>{{--$row->portal_comment--}}</td>
+                        <td>{{$row->portal_comment}}</td>
                         @endif
                         <td> <a href="{{ route('student.report.card',['param'=>$row->class_param_pid,'pid'=>$row->student_pid])}}" target="_blank" rel="noopener noreferrer"> <button class="btn btn-sm btn-primary">View Detail</button> </a></td>
                     </tr>
@@ -73,10 +73,10 @@
                         <td>{{$loop->iteration}}</td>
                         <td> <a href="{{ route('student.report.card',['param'=>$row->class_param_pid,'pid'=>$row->student_pid])}}" target="_blank" rel="noopener noreferrer">{{$row->reg_number}}</a></td>
                         <td>{{$row->fullname}}</td>
-                        <td>{{--$row->class_teacher_comment--}}</td>
-                        <td>{{--$row->principal_comment--}}</td>
+                        <td>{{$row->class_teacher_comment}}</td>
+                        <td>{{$row->principal_comment}}</td>
                         @if(getSchoolType()!=1)
-                        <td>{{--$row->portal_comment--}}</td>
+                        <td>{{$row->portal_comment}}</td>
                         @endif
                         <td> <a href="{{ route('student.report.card',['param'=>$row->class_param_pid,'pid'=>$row->student_pid])}}" target="_blank" rel="noopener noreferrer"> <button class="btn btn-sm btn-primary">View Detail</button> </a></td>
                     </tr>
