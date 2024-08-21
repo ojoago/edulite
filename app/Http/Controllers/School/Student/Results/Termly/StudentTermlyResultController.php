@@ -270,7 +270,7 @@ class StudentTermlyResultController extends Controller
                     rn.total,position,
                     rn.student_pid,
                     rn.class_param_pid'
-                ))->groupBy('sr.student_pid')->orderBy('position')
+                ))->groupBy('sr.student_pid','rn.total','position','rn.student_pid','rn.class_param_pid')->orderBy('position')
                 ->where(['sr.class_param_pid' => $param, 'seated' => 1]); //->get()->dd();
 
                 $atc = DB::table('student_class_result_params as p')
