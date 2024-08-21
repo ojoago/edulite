@@ -293,7 +293,7 @@ class StudentTermlyResultController extends Controller
                         // 's.student_pid' => $spid,
                         'r.student_pid' => $spid
                     ])
-                    ->groupBy('r.student_pid', 'term', 'session', 'arm', 'atm.begin', 'atm.end', 'atm.next_term'); //->get()->dd();
+                    ->groupBy('r.student_pid', 'term', 'session', 'arm', 'atm.begin', 'atm.end', 'atm.next_term', 'st.signature'); //->get()->dd();
 
 
                 $result = DB::table('student_class_results as r')
