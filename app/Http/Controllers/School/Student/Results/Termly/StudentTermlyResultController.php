@@ -236,7 +236,7 @@ class StudentTermlyResultController extends Controller
                     ])
                     ->select('sub.*', 'sr.class_param_pid','sr.grade', 'sr.title')
                     // ->groupBy('sr.subject_type')
-                    ->get()->dd();
+                    ->get();//->dd();
 
 
                 // query class result 
