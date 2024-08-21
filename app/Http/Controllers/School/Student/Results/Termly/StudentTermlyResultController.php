@@ -54,7 +54,7 @@ class StudentTermlyResultController extends Controller
             $rank->on('sr.student_pid', 'rn.student_pid')->on('sr.class_param_pid', 'rn.class_param_pid');
         })->select(DB::raw(
             'COUNT(subject_type) as count,rn.total/COUNT(subject_type) as average, rn.total,position,sr.class_param_pid,sr.student_pid'
-        ))->groupBy('sr.student_pid')->orderBy('position')
+        ))->groupBy('sr.student_pid', 'class_param_pid')->orderBy('position')
         ->where(['sr.seated' => 1 , 'sr.class_param_pid' => $class]); //->get()->dd();
 
         $result = DB::table('student_class_results as r')
