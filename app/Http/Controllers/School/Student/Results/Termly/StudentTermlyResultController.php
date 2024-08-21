@@ -42,6 +42,17 @@ class StudentTermlyResultController extends Controller
     public static function studentResultParams(array $data)
     {
         $class = DB::table('student_class_result_params')->where($data)->pluck('pid')->first();
+        // $rank = DB::table('student_class_results as r')
+        // ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
+        // // ->join('student_class_result_params as p','p.pid', 'r.class_param_pid')
+        // ->select(DB::raw('r.student_pid,r.total,
+        //                         COUNT(sr.subject_type) as count,r.total/COUNT(sr.subject_type) as average,
+        //                         RANK() OVER (ORDER BY r.total DESC) AS position, r.class_param_pid'))
+        // ->groupBy('r.class_param_pid')
+        // ->groupBy('r.student_pid')
+        // ->orderBy('r.total', 'DESC')
+        // ->groupBy('r.total')->where(['r.class_param_pid' => $class, 'sr.class_param_pid' => $class])->get()->dd();
+
         $rank = DB::table('student_class_results as r')
                             // ->join('student_class_result_params as p','p.pid', 'r.class_param_pid')
                             ->select(DB::raw('r.student_pid,r.total,
@@ -53,9 +64,9 @@ class StudentTermlyResultController extends Controller
         $summary = DB::table('student_subject_results as sr')->joinSub($rank, 'rn', function ($rank) {
             $rank->on('sr.student_pid', 'rn.student_pid')->on('sr.class_param_pid', 'rn.class_param_pid');
         })->select(DB::raw(
-            'COUNT(subject_type) as count,rn.total/COUNT(subject_type) as average, rn.total,position,sr.class_param_pid,sr.student_pid'
-        ))->groupBy('sr.student_pid', 'sr.class_param_pid')->orderBy('position')
-        ->where(['sr.seated' => 1 , 'sr.class_param_pid' => $class]); //->get()->dd();
+            'COUNT(subject_type) as count,rn.total/COUNT(subject_type) as average, rn.total,position,sr.student_pid'
+        ))->groupBy('sr.student_pid', 'rn.total', 'position')->orderBy('position')
+        ->where(['sr.seated' => 1 , 'sr.class_param_pid' => $class]);//->get()->dd();
 
         $result = DB::table('student_class_results as r')
         ->join('students as s', 's.pid', 'r.student_pid')
@@ -63,7 +74,7 @@ class StudentTermlyResultController extends Controller
             $sm->on('sm.student_pid', 'r.student_pid');//->on('sm.class_param_pid', 'r.class_param_pid');
         })
         // ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
-        ->select('sm.*','reg_number','fullname','class_teacher_comment','principal_comment','portal_comment')
+        ->select('sm.*','reg_number','fullname','class_teacher_comment','principal_comment','portal_comment', 'r.class_param_pid')
         ->where('r.class_param_pid', $class)->get(); //->dd();
 
         // $class = DB::table('student_class_result_params as p')->where($data)->pluck('pid')->first();
