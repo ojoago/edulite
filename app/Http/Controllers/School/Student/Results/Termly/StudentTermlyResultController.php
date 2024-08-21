@@ -311,7 +311,7 @@ class StudentTermlyResultController extends Controller
                     // ->leftjoin('user_details as d', 'd.user_pid', 'stf.user_pid')
                     ->join('student_subject_results as sr', 'sr.class_param_pid', 'r.class_param_pid')
                     ->join('students as s', 's.pid', 'r.student_pid')
-                    ->select(DB::raw('distinct(r.student_pid),reg_number,type,class_average,students,
+                    ->select(DB::raw('r.student_pid,reg_number,type,class_average,students,
                                         class_teacher_comment,principal_comment,
                                         portal_comment,r.class_param_pid,r.total,principal_name,teacher_name,
                                         p.status as exam_status,r.updated_at as date,stf.signature as principal_signature,q.*,a.*'))
