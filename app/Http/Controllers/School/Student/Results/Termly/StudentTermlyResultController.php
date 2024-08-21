@@ -205,7 +205,7 @@ class StudentTermlyResultController extends Controller
                     ->groupBy('d.subject')                    ->groupBy('d.min')
                     ->groupBy('d.max')                    ->groupBy('d.avg')
                     ->groupBy('d.subTotal')                    ->groupBy('d.subject_teacher_name')
-                    ->groupBy('total')->get()->dd();
+                    ->groupBy('total');//->get()->dd();
                 // $select = DB::table('student_subject_results as sr');
                 // $ca = DB::table('subject_score_params as ssp')
                 //             ->join('student_score_sheets as sss','score_param_pid','ssp.pid')
@@ -235,8 +235,8 @@ class StudentTermlyResultController extends Controller
                         'sub.student_pid' => $spid,
                     ])
                     ->select('sub.*', 'sr.class_param_pid','sr.grade', 'sr.title')
-                    ->groupBy('sr.subject_type')
-                    ->get();//->dd();
+                    // ->groupBy('sr.subject_type')
+                    ->get()->dd();
 
 
                 // query class result 
