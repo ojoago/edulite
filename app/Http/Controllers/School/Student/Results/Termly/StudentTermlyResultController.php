@@ -45,7 +45,8 @@ class StudentTermlyResultController extends Controller
         $rank = DB::table('student_class_results as r')
                             // ->join('student_class_result_params as p','p.pid', 'r.class_param_pid')
                             ->select(DB::raw('r.student_pid,r.total,
-                                RANK() OVER (ORDER BY r.total DESC) AS position'))
+                                RANK() OVER (ORDER BY r.total DESC) AS position, r.class_param_pid'))
+            ->groupBy('r.class_param_pid')
             ->groupBy('r.student_pid')
             ->orderBy('r.total', 'DESC')
             ->groupBy('r.total')->where(['class_param_pid' => $class]);//->get(); //->dd();
