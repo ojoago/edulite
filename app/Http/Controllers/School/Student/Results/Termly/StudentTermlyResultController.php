@@ -273,7 +273,7 @@ class StudentTermlyResultController extends Controller
                 ))->groupBy('sr.student_pid','rn.total','position','rn.student_pid','rn.class_param_pid')->orderBy('position')
                 ->where(['sr.class_param_pid' => $param, 'seated' => 1]); //->get()->dd();
 
-                $atc = DB::table('student_class_result_params as p')
+                $params = DB::table('student_class_result_params as p')
                 ->join('student_class_results  as r', 'p.pid', 'r.class_param_pid')
                 
                 ->join('active_term_details as atm', function ($join) { // term begin / term end details
@@ -282,9 +282,25 @@ class StudentTermlyResultController extends Controller
                
                     ->leftjoin('attendance_records as ar', function ($join) {
                         $join->on('p.term_pid', 'ar.term_pid')->on('p.session_pid', 'ar.session_pid');
-                    })->leftjoin('attendances as an', 'an.record_pid', 'ar.pid')
+                    })
+                    // ->leftjoin('attendances as an', 'an.record_pid', 'ar.pid')
                 ->leftjoin('school_staff as st', 'st.pid', 'p.teacher_pid')
-                    ->select(DB::raw("term,session,arm,atm.begin,atm.end,atm.next_term,r.student_pid,st.signature,
+                    ->select('term', 'session', 'arm', 'atm.begin', 'atm.end', 'atm.next_term', 'r.student_pid', 'st.signature')
+                    ->where([
+                        'p.pid' => $param,
+                        // 's.student_pid' => $spid,
+                        'r.student_pid' => $spid
+                    ])
+                    ->groupBy('r.student_pid', 'term', 'session', 'arm', 'atm.begin', 'atm.end', 'atm.next_term', 'st.signature');//->get()->dd();
+
+                $atc = DB::table('student_class_result_params as p')
+                ->join('student_class_results  as r', 'p.pid', 'r.class_param_pid')
+                    ->leftjoin('attendance_records as ar', function ($join) {
+                        $join->on('p.term_pid', 'ar.term_pid')->on('p.session_pid', 'ar.session_pid');
+                    })->leftjoin('attendances as an', function ($j){
+                        $j->on('an.student_pid', 'r.student_pid')->on('an.record_pid', 'ar.pid');
+                    })
+                    ->select(DB::raw("r.student_pid,
                                 COUNT(CASE WHEN an.status = 1 THEN 'Present' END) as 'present',
                                 COUNT(CASE WHEN an.status = 2 THEN 'Excused' END) as 'excused',
                                 COUNT(CASE WHEN an.status = 0 THEN 'Absent' END) as 'absent' "))
@@ -293,7 +309,7 @@ class StudentTermlyResultController extends Controller
                         // 's.student_pid' => $spid,
                         'r.student_pid' => $spid
                     ])
-                    ->groupBy('r.student_pid', 'term', 'session', 'arm', 'atm.begin', 'atm.end', 'atm.next_term', 'st.signature'); //->get()->dd();
+                    ->groupBy('r.student_pid');//->get()->dd();
 
 
                 $result = DB::table('student_class_results as r')
@@ -306,6 +322,9 @@ class StudentTermlyResultController extends Controller
                     ->joinSub($atc,'a',function($a){
                         $a->on('r.student_pid', 'a.student_pid');
                     })
+                    ->joinSub($params,'pr',function($sub){
+                        $sub->on('r.student_pid', 'pr.student_pid');
+                    })
                     ->join('student_class_result_params as p', 'p.pid', 'r.class_param_pid')
                     ->leftjoin('school_staff as stf', 'stf.pid', 'p.principal_pid')
                     // ->leftjoin('user_details as d', 'd.user_pid', 'stf.user_pid')
@@ -314,7 +333,7 @@ class StudentTermlyResultController extends Controller
                     ->select(DB::raw('r.student_pid,reg_number,type,class_average,students,
                                         class_teacher_comment,principal_comment,
                                         portal_comment,r.class_param_pid,r.total,principal_name,teacher_name,
-                                        p.status as exam_status,r.updated_at as date,stf.signature as principal_signature,q.*,a.*'))
+                                        p.status as exam_status,r.updated_at as date,stf.signature as principal_signature,q.*,a.*,pr.*'))
                     ->where(['r.class_param_pid' => $param])->first();
 
                     // dd($result);
