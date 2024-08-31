@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Notification;
 
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Advert\FacebookApiController;
 // use Illuminate\Http\Request;
 
 class SeasonalGreetingController extends Controller
@@ -168,6 +169,8 @@ We wish you all happy resumption. We wish everyone an exciting and productive sc
                 'blade' => 'greeting',
                 'subject' => 'Happy New Month',
             ];
+            // post to edulite facebook page 
+            FacebookApiController::postFeed($data['message']);
             
             // $data['email'] ='dhasmom01@gmail.com';
             // $data['name'] = 'OJOago';

@@ -404,7 +404,7 @@
             <!-- End Charts Nav -->
             <li class="nav-item">
               <a class="nav-link collapsed" data-bs-target="#assignment" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-bar-chart"></i><span>Assignment</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-bar-chart"></i><span>Assessment</span><i class="bi bi-chevron-down ms-auto"></i>
               </a>
               <ul id="assignment" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
@@ -525,7 +525,7 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-layout-text-window-reverse"></i><span>Assessment</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-layout-text-window-reverse"></i><span>Termly Assessment</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>

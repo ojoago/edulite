@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\School\Student\Assessment;
 
+use App\Http\Controllers\Advert\FacebookApiController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -40,6 +41,7 @@ class LessonPlanController extends Controller
     //
     public function addLessonPlan(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'category_pid' => 'required|string',
             'subject_pid' => 'required|string',

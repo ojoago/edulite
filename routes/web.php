@@ -55,6 +55,7 @@ use App\Http\Controllers\School\Student\Assessment\Psychomotor\RecordPsychomotor
 // school achievment display
 // port 8400
 Route::view('/','welcome')->middleware('guest');
+Route::view('privacy-policy','privacy')->middleware('guest');
 // Route::view('/401','welcome')->name('401')->middleware('guest');
 // authentication 
 // sign up 
