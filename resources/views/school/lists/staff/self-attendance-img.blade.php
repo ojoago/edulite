@@ -1,0 +1,1 @@
+<img src="{{ $data->path }}" class="img img-responsive" style="width: 30px">

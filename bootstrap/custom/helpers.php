@@ -2,6 +2,7 @@
 use Carbon\Carbon;
 use App\Mail\AuthMail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\Facades\Image;
@@ -280,6 +281,7 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $role; 
     }
+    
     function matchGender($gn){
         $role =  match((string)$gn){
                 '2'=> 'Female',
@@ -289,6 +291,7 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $role; 
     }
+
     function matchGenderTitle($lg){
         $role =  match((string)$lg){
                 '2'=> 'Mss',
@@ -298,6 +301,7 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $role; 
     }
+
     function matchReligion($lg){
         $role =  match((string)$lg){
                 '2'=> 'Christian',
@@ -307,6 +311,7 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $role; 
     }
+
     function matchPaymentModel($mdl){
         $model =  match((string)$mdl){
                 '2'=> 'Per Session',
@@ -316,6 +321,7 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $model; 
     }
+
     function matchPaymentCategory($ctg){
         $model =  match((string)$ctg){
             '1'=>'Class base',
@@ -326,6 +332,7 @@ use App\Http\Controllers\Auths\AuthController;
         };
        return $model; 
     }
+
     function matchPaymentType($type){
         $model =  match((string)$type){
                 '2'=> 'On demand',
@@ -334,6 +341,7 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $model; 
     }
+
     function matchStudentStatus($sts){
         $role =  match((string)$sts){
                 '0'=> 'Disabled',
@@ -345,6 +353,7 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $role; 
     }
+
     function matchAccountStatus($sts){
         $role =  match((string)$sts){
                 '0'=> 'Disabled',
@@ -355,6 +364,7 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $role; 
     }
+
     function matchStudentRiderStatus($sts){
         $role =  match((string)$sts){
                 '0'=> 'Disabled',
@@ -365,6 +375,7 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $role; 
     }
+
     function matchSchoolPaymentModule($sts){
         $role =  match((string)$sts){
                 '1'=> 'Per term/student',
@@ -385,6 +396,7 @@ use App\Http\Controllers\Auths\AuthController;
                 };
        return $role; 
     }
+
     function matchSchoolAdmissionStatus($sts){
         $role =  match((string)$sts){
                 '0'=> 'Pending Payment',
@@ -399,6 +411,7 @@ use App\Http\Controllers\Auths\AuthController;
     function removeThis($str,$chr = ','){
        return rtrim($str, $chr);
     }
+
     function getInitials($string = null)
     {
         $string = preg_split("/[\s,_-]+/",$string);
@@ -407,6 +420,7 @@ use App\Http\Controllers\Auths\AuthController;
                 $ret .= $word[0];
             return $ret;
     }
+
     function dateToAge($date){
        $age = Carbon::parse($date)->age;
        if($age < 1){
@@ -425,6 +439,7 @@ function isDate($date, $format = 'Y-m-d')
     $d = DateTime::createFromFormat($format, $date);
     return $d && $d->format($format) === $date;
 }
+
 function getMonths($startDate, $endDate = null)
 {
     $start = new DateTime($startDate);
@@ -439,6 +454,7 @@ function getMonths($startDate, $endDate = null)
 
     return $totalMonths;
 }
+
 function dateDiff($date, $e)
 {
     $b = new DateTime($date);
@@ -587,6 +603,19 @@ function date_diff_weekdays($from, $to)
         return date('Y-m-d H:i:s');
     }
 
+    function timeNow()
+    {
+        return date('H:i');
+    }
+
+    function formatDateTime($date)
+    {
+        if (empty($date)) {
+            return;
+        }
+        return date('d M, Y h:i A', strtotime($date));
+    }
+
     function formatDate($date)
     {
         if (empty($date)) {
@@ -603,9 +632,10 @@ function date_diff_weekdays($from, $to)
         return false;
        }
     }
+
 function saveImg($image,$path='images',$name=null){
     // $image = $request->file('image');
-$name = str_replace('/', '-', $name . ' edlt' .'.png' /*$image->extension()*/);
+    $name = str_replace('/', '-', $name . ' edlt' .'.png' /*$image->extension()*/);
 
     // $input['imagename'] = time() . '.' . $image->extension();
 
@@ -629,7 +659,7 @@ $name = str_replace('/', '-', $name . ' edlt' .'.png' /*$image->extension()*/);
     if(!$name){
         $name = getSchoolPid() . '-' . public_id();
     }
-    $name = str_replace('/','-',$name.' edlt.'. $image->extension());
+    $name = str_replace('/','-',$name.' EDL.'. $image->extension());
     $height = Image::make($image)->height();//get image width
     $width = Image::make($image)->width();
     $new_width = $width * $percent;
@@ -640,6 +670,25 @@ $name = str_replace('/', '-', $name . ' edlt' .'.png' /*$image->extension()*/);
     })->save($destinationPath . $name);
     return $name;
 }
+
+function saveBase64File($file, $name = 'EDL', $path = 'staff-ttendance/')
+{
+    try {
+        $ext = explode('/', mime_content_type($file))[1];
+        $path = "files/{$path}";
+        File::exists($path) ?: File::makeDirectory($path, 0777);
+        $filename = $path . $name . '-' . public_id() . '.' . $ext;
+        list(, $file_data) = explode(';', $file);
+        list(, $file_data) = explode(',', $file_data);
+        file_put_contents($filename, base64_decode($file_data));
+        return $filename;
+    } catch (\Throwable $e) {
+        logError($e->getMessage());
+        return false;
+    }
+}
+
+
 function _saveImg($image,$path='images',$name=null)
 {
     $percent=0.26;

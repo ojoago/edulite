@@ -13,6 +13,7 @@
                 Notify
             </button>
         </div>
+        
         <div class="row mb-3">
             <div class="col-md-3">
                 <select name="category_pid" id="timetableCategorySelect2" class="form-control form-control-sm">
@@ -60,7 +61,7 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create Term Timetable for <span class="text-danger"> {{activeTermName()}} {{activeSessionName()}}</span></h5>
+                <h5 class="modal-title">Create Exam Timetable</h5>
                 
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

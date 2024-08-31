@@ -23,6 +23,15 @@
 
       </li><!-- End Dashboard Nav -->
 
+       {{-- self attendance  --}}
+          <li class="nav-item">
+
+            <a class="nav-link " href="{{route('self.attendance')}}">
+              <i class="bi bi-grid"></i>
+              <span>Self Attendance</span>
+            </a>
+
+          </li><!-- End Dashboard Nav -->
 
       <!-- school admin section  -->
       @if(getUserActiveRole() =="200" || getUserActiveRole()=="205")
@@ -88,6 +97,7 @@
               <i class="bi bi-circle"></i><span>Results</span>
             </a>
           </li>
+
           <li>
             <a href="{{route('timetable.config')}}">
               <i class="bi bi-circle"></i><span>
@@ -158,9 +168,10 @@
 
         </ul>
       </li>
+      
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#event" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-alarm"></i><span>Events</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-alarm"></i><span>Activities</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="event" class="nav-content collapse " data-bs-parent="#sidebar-nav">
          
@@ -184,8 +195,16 @@
               <i class="bi bi-layers-fill"></i><span>Advert</span><i class="bi bi-chevron-right ms-auto"></i>
             </a>
           </li>
+          <li>
+            <a href="{{route('staff.attendance')}}">
+              <i class="bi bi-circle"></i><span>
+                Attendance
+              </span>
+            </a>
+          </li>
         </ul>
       </li>
+
       <!-- End Framework -->
       <!-- End Recruitment -->
     
@@ -378,110 +397,126 @@
 
       @endif
 
-      @if(classTeacher() || subjectTeacher())
-
-          
-        <!-- End Charts Nav -->
-        <li class="nav-item">
-          <a class="nav-link collapsed" data-bs-target="#assignment" data-bs-toggle="collapse" href="#">
-            <i class="bi bi-bar-chart"></i><span>Assignment</span><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul id="assignment" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-            <li>
-              <a href="{{route('manual.assignment')}}">
-                <i class="bi bi-circle"></i><span>Manual</span>
+      @if(schoolTeacher())
+      
+      
+            
+            <!-- End Charts Nav -->
+            <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#assignment" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-bar-chart"></i><span>Assignment</span><i class="bi bi-chevron-down ms-auto"></i>
               </a>
-            </li>
-            <li>
-              <a href="{{route('automated.assignment')}}">
-                <i class="bi bi-circle"></i><span>Automated</span>
-              </a>
-            </li>
-            <li>
-              <a href="{{route('class.assignment.form')}}">
-                <i class="bi bi-circle"></i><span>Records</span>
-              </a>
-            </li>
-
-          
-          </ul>
-        </li>
-        <!-- End Charts Nav -->
-        @if(classTeacher())
-              <!-- End Charts Nav -->
-          <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#my-student-nav" data-bs-toggle="collapse" href="#">
-              <i class="bi bi-bar-chart"></i><span>My Student</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="my-student-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-              <li>
-                <a href="{{route('staff.student.list')}}">
-                  <i class="bi bi-circle"></i><span>Student Class</span>
-                </a>
-              </li>
-              <li>
-                <a href="{{route('staff.student.list')}}">
-                  <i class="bi bi-circle"></i><span>Student Award</span>
-                </a>
-              </li>
-              <li>
-                <a href="{{route('timetable.config')}}">
-                  <i class="bi bi-circle"></i><span>Student Timetable</span>
-                </a>
-              </li>
-              <li>
-                <a href="{{route('student.invoice')}}">
-                  <i class="bi bi-circle"></i><span>Student Invoice</span>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <!-- End Charts Nav -->
+              <ul id="assignment" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                  <a href="{{route('lesson.plans')}}">
+                    <i class="bi bi-circle"></i><span>Lession Plans</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{{route('lesson.notes')}}">
+                    <i class="bi bi-circle"></i><span>Lession Note</span>
+                  </a>
+                </li>
+                @if (classTeacher() || subjectTeacher())
+                    <li>
+                      <a href="{{route('manual.assignment')}}">
+                        <i class="bi bi-circle"></i><span>Manual</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{{route('automated.assignment')}}">
+                        <i class="bi bi-circle"></i><span>Automated</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{{route('class.assignment.form')}}">
+                        <i class="bi bi-circle"></i><span>Records</span>
+                      </a>
+                    </li>
+                @endif
               
 
-          <!-- End Charts Nav -->
-          <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#attendance-nav" data-bs-toggle="collapse" href="#">
-              <i class="bi bi-bar-chart"></i><span>Attendance</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="attendance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+              
+              </ul>
+            </li>
+            <!-- End Charts Nav -->
+            @if(classTeacher())
+                  <!-- End Charts Nav -->
+              <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#my-student-nav" data-bs-toggle="collapse" href="#">
+                  <i class="bi bi-bar-chart"></i><span>My Student</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="my-student-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                  <li>
+                    <a href="{{route('staff.student.list')}}">
+                      <i class="bi bi-circle"></i><span>Student Class</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{route('staff.student.list')}}">
+                      <i class="bi bi-circle"></i><span>Student Award</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{route('timetable.config')}}">
+                      <i class="bi bi-circle"></i><span>Student Timetable</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{route('student.invoice')}}">
+                      <i class="bi bi-circle"></i><span>Student Invoice</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <!-- End Charts Nav -->
+                  
 
-              <li>
-                <a href="{{route('student.attendance.form')}}">
-                  <i class="bi bi-circle"></i><span>Take Attendance</span>
+              <!-- End Charts Nav -->
+              <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#attendance-nav" data-bs-toggle="collapse" href="#">
+                  <i class="bi bi-bar-chart"></i><span>Attendance</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
+                <ul id="attendance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+
+                  <li>
+                    <a href="{{route('student.attendance.form')}}">
+                      <i class="bi bi-circle"></i><span>Take Attendance</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{route('student.attendance.count')}}">
+                      <i class="bi bi-circle"></i><span>Attendance Count</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{route('student.attendance.history')}}">
+                      <i class="bi bi-circle"></i><span>Attendance History</span>
+                    </a>
+                  </li>
+                </ul>
               </li>
-              <li>
-                <a href="{{route('student.attendance.count')}}">
-                  <i class="bi bi-circle"></i><span>Attendance Count</span>
+              <!-- End Charts Nav -->
+              <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#student-promotion-nav" data-bs-toggle="collapse" href="#">
+                  <i class="bi bi-bar-chart"></i><span>Promotion</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
-              </li>
-              <li>
-                <a href="{{route('student.attendance.history')}}">
-                  <i class="bi bi-circle"></i><span>Attendance History</span>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <!-- End Charts Nav -->
-          <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#student-promotion-nav" data-bs-toggle="collapse" href="#">
-              <i class="bi bi-bar-chart"></i><span>Promotion</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="student-promotion-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-              <li>
-                <a href="{{route('promote.student')}}">
-                  <i class="bi bi-circle"></i><span>Promote Students</span>
-                </a>
-              </li>
-              <li>
-                <a href="{{route('swap.student')}}">
-                  <i class="bi bi-circle"></i><span>Swap student</span>
-                </a>
-              </li>
-            </ul>
-          </li><!-- End Charts Nav -->
-        @endif()
+                <ul id="student-promotion-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                  <li>
+                    <a href="{{route('promote.student')}}">
+                      <i class="bi bi-circle"></i><span>Promote Students</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{route('swap.student')}}">
+                      <i class="bi bi-circle"></i><span>Swap student</span>
+                    </a>
+                  </li>
+                </ul>
+              </li><!-- End Charts Nav -->
+          
+          @endif
+
       
       @endif
 

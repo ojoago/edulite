@@ -44,6 +44,9 @@ use App\Http\Controllers\School\Student\Attendance\StudentAttendanceController;
 use App\Http\Controllers\School\Framework\Psychomotor\PsychomotorBaseController;
 use App\Http\Controllers\School\Framework\Result\ResultConfigController;
 use App\Http\Controllers\School\Payment\ResultRecordController;
+use App\Http\Controllers\School\Staff\StaffAttendanceController;
+use App\Http\Controllers\School\Student\Assessment\LessonNoteController;
+use App\Http\Controllers\School\Student\Assessment\LessonPlanController;
 use App\Http\Controllers\School\Student\Results\Termly\StudentTermlyResultController;
 use App\Http\Controllers\School\Student\Results\Comments\TeacherCommentResultController;
 use App\Http\Controllers\School\Student\Results\Comments\PrincipalCommentResultController;
@@ -119,7 +122,10 @@ Route::middleware('auth')->group(function(){
 Route::middleware('schoolAuth')->group(function(){
     Route::get('logout-school', [AuthController::class, 'logoutSchool'])->name('logout.school'); // school log out
     Route::post('reset-user-password', [AuthController::class, 'resetUserPassword'])->name('reset.user.password');
-
+    Route::view('self-attendance', 'school.lists.staff.self-attendance')->name('self.attendance');
+    Route::get('load-my-attendance', [StaffAttendanceController::class, 'loadMyAttendance'])->name('load.my.attendance');
+    Route::get('load-staff-attendance', [StaffAttendanceController::class, 'staffAttendance'])->name('load.staff.attendance');
+    Route::post('capture-attendance', [StaffAttendanceController::class, 'captureAttendance'])->name('capture.attendance');
     Route::get('school-dashboard', [SchoolController::class, 'mySchoolDashboard'])->name('my.school.dashboard');
     Route::get('admin-dashboard', [SchoolController::class, 'adminDashboard'])->name('admin.dashboard');
     Route::get('head-teacher-dashboard', [SchoolController::class, 'principalDashboard'])->name('head.teacher.dashboard');
@@ -341,6 +347,9 @@ Route::middleware('schoolAuth')->group(function(){
         Route::view('result-records', 'school.result-record.result-records')->name('result.records');
         Route::get('load-result-records', [ResultRecordController::class,'resultRecords'])->name('load.result.records');
         Route::get('result-details', [ResultRecordController::class,'resultDetails'])->name('result.detail');
+        Route::view('staff-attendance', 'school.lists.staff.staff-attendance')->name('staff.attendance');
+        Route::post('config-staff-attendance', [StaffAttendanceController::class, 'configStaffAttendance'])->name('config.staff.attendance');
+        Route::get('load-config-staff-attendance', [StaffAttendanceController::class, 'loadStaffAttendanceConfig'])->name('load.config.staff.attendance');
     });
     // hostels  
     //   
@@ -546,6 +555,14 @@ Route::middleware('schoolAuth')->group(function(){
     Route::view('class-assessment', 'school.assessments.class-assessment')->name('class.assignment.form');
     Route::view('manual-assessment', 'school.assessments.manual-assessment')->name('manual.assignment');
     Route::view('automated-assessment', 'school.assessments.automated-assessment')->name('automated.assignment');
+    
+    // lesson note/plan
+    Route::view('lesson-plans', 'school.assessments.lesson-plans')->name('lesson.plans');
+    Route::post('add-lesson-plan', [LessonPlanController::class, 'addLessonPlan'])->name('add.lesson.plan');
+    Route::post('load-lesson-plan', [LessonPlanController::class, 'loadLessonPlan'])->name('load.lesson.plan');
+    Route::view('lesson-notes', 'school.assessments.lesson-notes')->name('lesson.notes');
+    Route::post('add-lesson-note', [LessonNoteController::class, 'addLessonNote'])->name('add.lesson.note');
+    Route::post('load-lesson-notes', [LessonNoteController::class, 'loadLessonNotes'])->name('load.lesson.notes');
 
     Route::post('class-assessment', [AssessmentController::class, 'createManualAssessment'])->name('submit.manual.assignment');
     Route::post('submit-automated-assessment', [AssessmentController::class, 'createAutomatedAssessment'])->name('submit.automated.assignment');

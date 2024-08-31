@@ -93,9 +93,7 @@ class StudentController extends Controller
             ->make(true);
     }
 
-    private function loadStudentQuery($condition){
-
-    }
+  
     public function studentLogin($pid){
         setStudentPid(base64Decode($pid));
         return redirect()->route('student.profile');
@@ -121,9 +119,7 @@ class StudentController extends Controller
             ->join('class_arms as a', 's.current_class_pid', 'a.pid')
             ->where(['s.school_pid' => getSchoolPid(), 's.pid' => $request->pid])
             ->select('gsm', 'email', 'username', 's.fullname','reg_number', 's.address', 'dob', 'd.gender', 's.religion', 's.passport','s.status','a.arm')->first();
-            
-            
-         return response()->json(formatStudentProfile($data));
+        return response()->json(formatStudentProfile($data));
     }
 
 

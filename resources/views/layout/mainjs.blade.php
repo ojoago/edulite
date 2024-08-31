@@ -1389,8 +1389,8 @@
                     $('#' + btnId).prop('disabled', false);
                     $('.overlay').hide();
                     console.log(data);
-                    location.reload()
                     alert_toast('Something Went Wrong', 'error');
+                    location.reload()
                     reject(true);
                 }
             });
