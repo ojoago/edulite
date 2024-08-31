@@ -181,7 +181,7 @@
        
         $('#lessonNoteBtn').click(async function() {
 
-           let s = submitFormAjax('lessonNoteForm', 'lessoNnoteBtn', "{{route('add.lesson.note')}}");
+           let s = await submitFormAjax('lessonNoteForm', 'lessoNnoteBtn', "{{route('add.lesson.note')}}");
            if(s.status == 1){
                $('.summer-note').val('')
                 loadTimetable();

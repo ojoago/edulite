@@ -180,7 +180,7 @@
        
         $('#lessonPlanBtn').click(async function() {
 
-           let s = submitFormAjax('lessonPlanForm', 'lessonPlanBtn', "{{route('add.lesson.plan')}}");
+           let s = await submitFormAjax('lessonPlanForm', 'lessonPlanBtn', "{{route('add.lesson.plan')}}");
            if(s.status == 1){
                $('.summer-note').val('')
             loadTimetable();

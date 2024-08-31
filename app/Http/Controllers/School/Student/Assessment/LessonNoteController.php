@@ -45,7 +45,7 @@ class LessonNoteController extends Controller
             'period' => 'required|numeric',
             'date' => 'date|nullable',
             'type' => 'required',
-            'plan' => 'required_if:type,2|nullable',
+            'note' => 'required_if:type,2|nullable',
             'file' => 'required_if:type,1|nullable|mimes:pdf,docs,doc|max:2024',
         ], [
             'category_pid.required' => 'Category is required',
@@ -55,7 +55,7 @@ class LessonNoteController extends Controller
             'week.required' => 'Week is required',
             'period.required' => 'Period is required',
             'type.required' => 'Type is required',
-            'plan.required_if' => 'This is required',
+            'note.required_if' => 'This is required',
             'file.required_if' => 'This is required',
         ]);
 
@@ -75,14 +75,14 @@ class LessonNoteController extends Controller
                     'period' => $request->period,
                     'date' => $request->date ?? justDate(),
                     'type' => $request->type,
-                    'plan' => $request->plan,
+                    'note' => $request->note,
                 ];
 
                 if ($request->type == 1) {
                     $fileName = invoiceNumber() . '- week ' . $request->week . '.' . $request->file->extension();
                     $request->file->move(public_path('files/assessments/lesson-notes'), $fileName);
                     $data['path'] = 'files/assessments/lesson-notes/' . $fileName;
-                    $data['plan'] = null;
+                    $data['note'] = null;
                 }
                 $result = $this->updateOrCreatePlan($data);
                 if ($result) {
