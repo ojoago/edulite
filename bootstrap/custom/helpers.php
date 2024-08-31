@@ -671,7 +671,7 @@ function saveImg($image,$path='images',$name=null){
     return $name;
 }
 
-function saveBase64File($file, $name = 'EDL', $path = 'staff-ttendance/')
+function saveBase64File($file, $name = 'EDL', $path = 'staff/')
 {
     try {
         $ext = explode('/', mime_content_type($file))[1];

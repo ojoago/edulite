@@ -132,7 +132,7 @@ class StaffAttendanceController extends Controller
 
 
                 if (isset($request->image)) {
-                    $data['path'] = saveBase64File(file: $request->image);
+                    $data['path'] = saveBase64File(file: $request->image,path: 'staff/ttendance/');
                 }
 
                 $result = StaffAttendance::create($data);
