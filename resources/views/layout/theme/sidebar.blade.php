@@ -448,6 +448,11 @@
                 </a>
                 <ul id="my-student-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                   <li>
+                    <a href="{{route('register.student')}}">
+                      <i class="bi bi-circle"></i><span>Students</span>
+                    </a>
+                  </li>
+                  <li>
                     <a href="{{route('staff.student.list')}}">
                       <i class="bi bi-circle"></i><span>Student Class</span>
                     </a>
