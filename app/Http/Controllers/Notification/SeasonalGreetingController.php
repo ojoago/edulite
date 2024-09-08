@@ -36,19 +36,37 @@ Happy Democracy Day Nigerians💚! ',
     {
         $users = (new self)->loadUsers();
         $data = [
-            'message' => " <b>Greetings To Schools, Teachers , Students And Parents </b> <br>
-
-It is no more news that our children resumed to school, to every pupils and students, welcome back from the holidays, it is time to dust the books, open to new chapters and begin another path on your journey to greatness. <br>
-We thank every Teachers, for their contributions to building a better society. <br>
-We use this opportunity to extend our prayers and support to parents and guardians for the sacrifices and commitment for our wards and kids. 
-We pray that our labours, investments and sacrifices on our children will yield good results. <br>
-
-We wish you all happy resumption. We wish everyone an exciting and productive school 2024 Third Term.",
+            'message' => "<b>Dear School, Staff, Students and Parents</b><br>
+                            As we embark on a new academic year, we are excited to continue our journey together, 
+                            leveraging the power of our school management solution to enhance our educational experience. 
+                            This new session brings fresh opportunities for learning, growth, and success.
+                            <b>To Our Dedicated Staff:</b> <br>
+                            Your commitment and passion are the driving forces behind our school's success. 
+                            With the support of our solution (EduLite), we aim to streamline your tasks, 
+                            allowing you to focus more on what you do best—teaching and inspiring our students. Let's make this year a remarkable one!
+                            <br>
+                            <b>To Our Wonderful Parents:</b><br>
+                            Thank you for your continued trust and support. 
+                            We use this opportunity to extend our prayers and support to parents and guardians for the sacrifices and commitment for our wards and kids. 
+                            We pray that our labours, investments and sacrifices on our children will yield good results. <br>
+                            <b>To Our Amazing Students:</b> <br>
+                            Welcome back! We are thrilled to see your enthusiasm and eagerness to learn. 
+                            Our Solution (EduLite) will help you stay organized and connected, making your educational journey smoother and more enjoyable. 
+                            Embrace this year with curiosity and determination, and remember that every challenge is an opportunity to grow.
+                            <br>
+                            As we move forward, let's all strive to foster a culture of respect, inclusivity, and excellence. Together, we can achieve great things and make this academic year one to remember.
+                            <br>
+                            Here's to a fantastic year ahead!<br>
+                            Warm regards from all of us at @EduLite",
             'blade' => 'greeting',
-            'subject' => 'Welcome to Third term 2024',
+            'subject' => 'Welcome to the New Academic Session!',
             // 'name' => 'Hassan',
             // 'email' => 'ojoago247@gmail.com'
         ];
+        $msg = str_replace('<br>', '\n', $data['message']);
+        // post to edulite facebook page 
+        FacebookApiController::postFeed(str_replace(['</b>','<b>'], '',$msg));
+            
 //         sendMail($data);
 // return ;
         foreach($users as $user){
@@ -84,6 +102,8 @@ We wish you all happy resumption. We wish everyone an exciting and productive sc
             logError($e->getMessage());
         }
     }
+
+
     public static function tgif()
     {
         $messages = [
@@ -140,6 +160,7 @@ We wish you all happy resumption. We wish everyone an exciting and productive sc
             logError($e->getMessage());
         }
     }
+
     public static function happyNewMonth()
     {
         $messages = [
@@ -170,7 +191,7 @@ We wish you all happy resumption. We wish everyone an exciting and productive sc
                 'subject' => 'Happy New Month',
             ];
             // post to edulite facebook page 
-            FacebookApiController::postFeed($data['message']);
+            FacebookApiController::postFeed($data['message'].' Happy New Month From all of us At '. env('APP_NAME',APP_NAME)  );
             
             // $data['email'] ='dhasmom01@gmail.com';
             // $data['name'] = 'OJOago';
@@ -263,6 +284,31 @@ We wish you all happy resumption. We wish everyone an exciting and productive sc
     }
 }
 
+
+// As we embark on this exciting new academic journey, we extend a heartfelt welcome to each and every one. 
+//                             This new session brings with it a fresh start, new opportunities, and the promise of growth and learning.
+//                             To our students, we are thrilled to see your eager faces ready to explore, discover, and achieve. 
+//                             Remember, every challenge is a chance to grow, and every success is a step towards your dreams. 
+//                             Embrace this year with curiosity and determination.
+//                             To our parents, thank you for your unwavering support and trust. 
+//                             Your partnership is invaluable in nurturing the minds and hearts of our students. Together, we will create a nurturing and inspiring environment for them to thrive.
+//                             To our dedicated educators, your passion and commitment are the pillars of our community. 
+//                             Your guidance and encouragement will light the path for our students, helping them reach their fullest potential. 
+//                             Let's make this year a memorable and impactful one.
+//                             As we move forward, let us all strive to foster a culture of respect, inclusivity, and excellence. 
+//                             Let's support one another, celebrate our achievements, and learn from our experiences.
+//                             Here's to a fantastic academic year filled with learning, growth, and success!
+
+
+// <b>Greetings To Schools, Teachers , Students And Parents </b> <br>
+
+//             It is no more news that our children resumed to school, to every pupils and students, welcome back from the holidays, 
+//             it is time to dust the books, open to new chapters and begin another path on your journey to greatness. <br>
+//             We thank every Teachers, for their contributions to building a better society. <br>
+//             We use this opportunity to extend our prayers and support to parents and guardians for the sacrifices and commitment for our wards and kids. 
+//             We pray that our labours, investments and sacrifices on our children will yield good results. <br>
+
+//             We wish you all happy resumption. We wish everyone an exciting and productive school 2024 First Term.
 
 // Here is a possible TGIF message for a teacher:
 

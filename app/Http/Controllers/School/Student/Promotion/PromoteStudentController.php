@@ -76,6 +76,10 @@ class PromoteStudentController extends Controller
    public function promoteStudent(Request $request){
         try{
             $count = count($request->pid);
+            $session = Student::where(['school_pid' => getSchoolPid(), 'pid' => $request['pid'][0]])->pluck('current_session_pid')->first();
+            if ($session == activeSession()) {
+                return redirect()->back()->with('warning', 'Contact Admin to change Session from '. activeSessionName() .' to the current year');
+            }
             for ($i = 0; $i < $count; $i++) {
                 if (!isset($request['next_class'][$i])) {
                     continue;
@@ -137,17 +141,20 @@ class PromoteStudentController extends Controller
                     'created_by' => getSchoolUserPid()
                 ];
                 $student->current_class_pid = $data['arm'];
+                $student->current_session_pid = activeSession();
                 $result = $student->save();
                 if ($result) {
                     return $this->saveHistory($history);
                 }
                 return false;
             }
+            return false;
         }catch(\Throwable $e){
             logError($e->getMessage());
             return false;
         }
    }
+
    private function saveHistory(array $data){
         try{
             return SwapClassHistory::create($data);
@@ -156,4 +163,5 @@ class PromoteStudentController extends Controller
             return false;
         }
    }
+
 }

@@ -24,7 +24,7 @@
 
                     <div class="d-flex align-items-center">
                        
-                        <div class="ps-3">
+                        <div class="ps-3"  style="height: 150px; overflow-y:scroll;width:100%">
                             @foreach ($data['class'] as $item)
                                 <h6>{{$item->arm}}</h6>
                             @endforeach
@@ -41,7 +41,7 @@
                     <h5 class="card-title">Subjects <i class="bi bi-book-half"></i></h5>
 
                     <div class="d-flex align-items-center">
-                        <div class="ps-3">
+                        <div class="ps-3"  style="height: 150px; overflow-y:scroll; width:100%">
                             @foreach ($data['subjects'] as $item)
                                 <h6>{{$item->subject}} - {{$item->arm}}</h6>
                             @endforeach
