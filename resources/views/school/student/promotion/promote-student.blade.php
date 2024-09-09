@@ -10,8 +10,7 @@
                     Promote Student, Class: {{$className}} <i class="bi bi-calendar-event-fill"> </i> {{activeSessionName() }} {{activeTermName()}}
                 @endif
                 <div class="float-end">
-                <select type="text" name="category" class="form-control" id="genCategorySelect2" required>
-                </select>
+                
                     <button class="btn btn-primary btn-sm" type="button" data-bs-target="#filterModal" data-bs-toggle="modal" >Filter</button>
                 </div>
             </h5>
@@ -111,7 +110,6 @@
 
 <script>
     $(document).ready(function() {
-        FormMultiSelect2('#genCategorySelect2', 'category', 'Select Category')
         
         multiSelect2('#assessmentCategorySelect2', 'filterModal', 'category', 'Select Category');
         $('#assessmentCategorySelect2').on('change', function(e) {
