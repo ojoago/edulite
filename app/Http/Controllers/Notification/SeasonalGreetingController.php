@@ -71,9 +71,9 @@ Happy Democracy Day Nigerians💚! ',
             // 'email' => 'ojoago247@gmail.com'
         ];
         $msg = str_replace('<br>', '\n', $data['message']);
-        logError($msg);
+       
         // post to edulite facebook page 
-        logError(FacebookApiController::postFeed(str_replace(['</b>','<b>'], '',$msg)));
+        FacebookApiController::postFeed(str_replace(['</b>','<b>'], '',$msg));
             
 //         sendMail($data);
 // return ;
