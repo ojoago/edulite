@@ -13,6 +13,10 @@
 </div>
 <div class="row">
 
+    <a class="nav-link " href="{{route('self.attendance')}}">
+              <i class="bi bi-grid"></i>
+              <span>Take Attendance</span>
+            </a>
     <div class="col-md-6">
         <div class="card info-card sales-card">
             <a data-bs-toggle="tooltip" _title="View Staff Details">
@@ -58,7 +62,6 @@
     <!-- Customers Card -->
     <div class="col-md-6">
         <div class="card info-card">
-           
             
             Todo
             <input name="" class="form-control form-control-sm" >

@@ -24,14 +24,14 @@
       </li><!-- End Dashboard Nav -->
 
        {{-- self attendance  --}}
-          <li class="nav-item">
+          {{-- <li class="nav-item">
 
             <a class="nav-link " href="{{route('self.attendance')}}">
               <i class="bi bi-grid"></i>
               <span>Self Attendance</span>
             </a>
 
-          </li><!-- End Dashboard Nav -->
+          </li><!-- End Dashboard Nav --> --}}
 
       <!-- school admin section  -->
       @if(getUserActiveRole() =="200" || getUserActiveRole()=="205")
@@ -404,7 +404,7 @@
             <!-- End Charts Nav -->
             <li class="nav-item">
               <a class="nav-link collapsed" data-bs-target="#assignment" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-bar-chart"></i><span>Learning Hub</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-bar-chart"></i><span>Learn Hub</span><i class="bi bi-chevron-down ms-auto"></i>
               </a>
               <ul id="assignment" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>

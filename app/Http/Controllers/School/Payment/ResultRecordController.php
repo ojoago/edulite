@@ -36,7 +36,7 @@ class ResultRecordController extends Controller
                 'school_pid' => getSchoolPid(),
             ];
 
-            $res = self::updateOrAddResultRecord($resultArray);
+            $res = (new self)->updateOrAddResultRecord($resultArray);
             if ($res) {
                 // student_class_result_params
                 StudentClassResultParam::where(['school_pid' => getSchoolPid(), 'term_pid' => activeTerm(), 'session_pid' => activeSession(), 'status' => 1])->update(['status' => 1]);

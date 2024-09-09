@@ -49,11 +49,11 @@ class AuthController extends Controller
 
                 return back()->with('message', "error|Invalid login details");
             } elseif ($user->account_status == 2) {
-                return back()->with('message', "info|this account has been banned because of suspicius activities care@edulite.ng, 09079311551.");
+                return back()->with('message', "info|this account has been banned because of suspicius activities care@edulite.ng, 09079585000 or 09079311551.");
             } elseif ($user->account_status == 0) {
-                return back()->with('message', "info|Your acccount is not yet verified, please login to your mail and click on the verification link to activate your account or contact info@edulite.ng, 09079311551.");
+                return back()->with('message', "info|Your acccount is not yet verified, please login to your mail and click on the verification link to activate your account or contact info@edulite.ng, 09079585000 or 09079311551.");
             }
-            return back()->with('message', "info|Contact care@edulite.ng, 09079311551.");
+            return back()->with('message', "info|Contact care@edulite.ng, 09079585000 or 09079311551.");
         }
 
         return back()->with('message', "error|Invalid login details");

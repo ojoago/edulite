@@ -37,32 +37,39 @@ class PromoteStudentController extends Controller
                 'status' => 1
             ])->get(['pid', 'class', 'class_number']);
             //$carm = $request->class;
+            // get category highest class 
+
             $armNumber = ClassArm::where(['school_pid' => getSchoolPid(), 'pid' => $request->arm])->pluck('arm_number')->first();
+            $categoryNumber = Category::where(['school_pid' => getSchoolPid(), 'pid' => $request->category])->pluck('number')->first();
+            $lastClass = Classes::where(['school_pid' => getSchoolPid(), 'category_pid' => $request->category])->orderBy('class_number', 'desc')->pluck('class_number')->first();
             $currentClassNumber = Classes::where(['school_pid' => getSchoolPid(), 'pid' => $request->class])->pluck('class_number')->first();
             $nextArm = DB::table('classes as c')->join('class_arms as a', 'class_pid', 'c.pid')
+                    ->select('a.arm', 'a.pid', 'a.arm_number')
+                    ->where([
+                        'c.school_pid' => getSchoolPid(),
+                        'c.category_pid' => $request->category,
+                        'c.class_number' => $currentClassNumber + 1,
+                        'a.status' => 1
+                    ])->get();
+            if($lastClass === $currentClassNumber){
+                $currentClassNumber = 0;
+                $category = Category::where(['school_pid' => getSchoolPid(), 'number' => $categoryNumber + 1])->pluck('pid')->first();
+                $nextClass = Classes::where([
+                    'school_pid' => getSchoolPid(),
+                    'category_pid' => $category,
+                    'status' => 1
+                ])->get(['pid', 'class', 'class_number']);
+
+                $nextArm = DB::table('classes as c')->join('class_arms as a', 'class_pid', 'c.pid')
                 ->select('a.arm', 'a.pid', 'a.arm_number')
                 ->where([
                     'c.school_pid' => getSchoolPid(),
-                    'c.category_pid' => $request->category,
-                    'c.class_number' => $currentClassNumber + 1,
+                    'c.category_pid' => $category,
+                    'c.class_number' => 1,
                     'a.status' => 1
-                ])
-                // ->where('c.class_number',function($query) use($carm){
-                //     $query->where('c.pid');
-                // })
-                ->get();
-            // Classes::join('class_arms','class_pid','classes.pid')->where(['classes.school_pid'=>getSchoolPid(), 'classes.category_pid' => $request->category, 'classes.class_number'=>$cll+1])->get()->dd();
-            // dd($cll);
-            // ClassArm::where('',function($query){})->get();
-            // Model::where(function ($query) {
-            //     $query->where('a', '=', 1)
-            //     ->orWhere('b', '=', 1);
-            // })->where(function ($query) {
-            //     $query->where('c', '=', 1)
-            //     ->orWhere('d', '=', 1);
-            // });
-            // $arms = ClassArm::where(['school_pid'=>getSchoolPid(),'class_pid'=>$request->class, 'status' => 1])->get(['arm_number', 'pid', 'arm'])->dd();
-            // ClassArm::join('classes','classes.pid','class_pid')->where(['classes.school_pid'=>getSchoolPid(), 'class_arms.pid'=>$request->arm])->get()->dd();
+                ])->get();//->dd();
+            }
+        
             $className = getClassArmNameByPid($request->arm);
             $students = Student::where(['current_class_pid' => $request->arm])->get(['pid', 'reg_number', 'fullname', 'passport', 'current_class_pid']);
             return view('school.student.promotion.promote-student', compact('students', 'nextClass', 'armNumber', 'currentClassNumber', 'nextArm', 'className'));

@@ -61,6 +61,7 @@
     </div>
     @else
     <h3>Welcome to {{env('APP_NAME', APP_NAME)}},</h3>
+    <p>The most simple, smart and easy to use school management software as service in Nigeria</p>
     {{-- <!-- <p class="text-danger"> Please click on the green button above to create your school </p> --> --}}
     @endif
 </div>
