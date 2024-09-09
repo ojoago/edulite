@@ -25,7 +25,7 @@ class ClassController extends Controller
     public function loadCategory()
     {
         $data = Category::from('categories as c')->leftJoin('school_staff as s','s.pid', 'c.head_pid')->leftJoin('user_details as d','d.user_pid','s.user_pid')->where(['c.school_pid' => getSchoolPid()])
-            ->select('c.pid', 'category', 'd.fullname', 'description')->get();
+            ->select('c.pid', 'category', 'd.fullname', 'description', 'number')->get();
         return datatables($data)
             
             ->addColumn('action', function ($data) {
@@ -129,10 +129,14 @@ class ClassController extends Controller
             'category' => ['required',Rule::unique('categories')->where(function($param)use ($request){
                 $param->where('school_pid','=',getSchoolPid())->where('pid','<>',$request->pid);
             })],
+            'number' => ['required',Rule::unique('categories')->where(function($param)use ($request){
+                $param->where('school_pid','=',getSchoolPid())->where('pid','<>',$request->pid);
+            })],
             // 'head_pid'=>'required'
         ],[
             'head_pid.required'=>'Select Category Head or Principal',
             'category.unique'=>$request->category. ' Category Already exists',
+            'number.unique'=> 'Category with Serial number '.$request->number. '  Already exists',
         ]);
         if(!$validator->fails()){
             try {
@@ -141,6 +145,7 @@ class ClassController extends Controller
                     'staff_pid' => getSchoolUserPid(),
                     'pid' => $request->pid ?? public_id(),
                     'category' => $request->category,
+                    'number' => $request->number,
                     'head_pid' => $request->head_pid ?? 'null',
                     'description' => $request->description
                 ];

@@ -897,6 +897,14 @@
                     <select name="head_pid" id="staffSelect2" style="width: 100%;">
                     </select>
                     <p class="text-danger head_pid_error"></p>
+                        <select name="number" id="classNumberSelect" class="form-control form-control-sm">
+                            <option disabled selected>Select Serial Number</option>
+                            @foreach(CLASS_NUMBER as $key=> $nm)
+                            <option value="{{$key}}"> {{$nm}}</option>
+                            @endforeach
+                        </select>
+                        
+                    <p class="text-danger number_error"></p>
                     <textarea type="text" name="description" id="categoryDescription" class="form-control form-control-sm" placeholder="description" required></textarea>
                     <p class="text-danger description_error"></p>
                 </form>
@@ -915,7 +923,7 @@
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create School Class
+                <h5 class="modal-title">Create Class
 
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

@@ -29,9 +29,9 @@
                     <thead>
                         <tr>
                             <th>Category</th>
+                            <th>Serial Number</th>
                             <th>Head</th>
                             <th>Description</th>
-                            <!-- <th>Date</th> -->
                             <!-- <th>Created By</th> -->
                             <th>Action</th>
                         </tr>
@@ -148,8 +148,12 @@
                 destroy:true,
                 type: "GET",
             "ajax": "{{route('load.school.category')}}",
-            "columns": [{
+            "columns": [
+                {
                     "data": "category"
+                },
+                {
+                    "data": "number"
                 },
                 {
                     "data": "fullname"

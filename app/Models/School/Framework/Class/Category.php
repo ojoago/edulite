@@ -9,7 +9,7 @@ class Category extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'pid', 'school_pid', 'category', 'staff_pid','description','head_pid'
+        'pid', 'school_pid', 'category', 'staff_pid','description','head_pid','number'
     ];
 
     public function setCategoryAttribute($value){
