@@ -389,6 +389,11 @@
             let pid = $(this).attr('pid');
             submitFormAjax('editClassArmFrom' + pid, 'id' + pid, "{{route('update.class.arm')}}");
         });
+        // update category goes here 
+        $(document).on('click', '.updateCategoryBtn', function() {
+            let pid = $(this).attr('pid');
+            submitFormAjax('updateCategoryForm' + pid, 'updateCategoryBtn' + pid, "{{route('create.school.category')}}");
+        });
 
         $(document).on('click', '.deleteCategory', async function() {
             let pid = $(this).attr('pid');

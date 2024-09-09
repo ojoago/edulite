@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\School\Student\Student;
+use App\Models\School\Staff\SchoolStaff;
 use Illuminate\Support\Facades\Validator;
 use App\Models\School\Framework\Class\Classes;
 use App\Models\School\Framework\Class\Category;
 use App\Models\School\Framework\Class\ClassArm;
 use App\Models\School\Framework\Class\ClassArmSubject;
 use App\Models\School\Student\Result\StudentClassResultParam;
-use App\Models\School\Student\Student;
 
 class ClassController extends Controller
 {
@@ -24,12 +25,16 @@ class ClassController extends Controller
    
     public function loadCategory()
     {
+        $heads = SchoolStaff::join('user_details', 'user_details.user_pid', 'school_staff.user_pid')
+        ->where(['school_staff.school_pid' => getSchoolPid(), 'school_staff.status' => 1])
+        ->WhereIn('role', [500, 505])
+            ->orderBy('fullname')->get(['school_staff.pid', 'user_details.fullname']); //
         $data = Category::from('categories as c')->leftJoin('school_staff as s','s.pid', 'c.head_pid')->leftJoin('user_details as d','d.user_pid','s.user_pid')->where(['c.school_pid' => getSchoolPid()])
             ->select('c.pid', 'category', 'd.fullname', 'description', 'number')->get();
         return datatables($data)
             
-            ->addColumn('action', function ($data) {
-                return view('school.framework.class.category-action-buttons', ['data' => $data]);
+            ->addColumn('action', function ($data) use($heads){
+                return view('school.framework.class.category-action-buttons', ['data' => $data,'heads' =>$heads]);
             })
             ->make(true);
         
