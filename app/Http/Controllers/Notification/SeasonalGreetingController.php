@@ -64,16 +64,17 @@ Happy Democracy Day Nigerians💚! ',
                             As we move forward, let's all strive to foster a culture of respect, inclusivity, and excellence. Together, we can achieve great things and make this academic year one to remember.
                             <br>
                             Here's to a fantastic year ahead!<br>
-                            Warm regards from all of us at @EduLite",
+                            Warm regards from all of us at EduLite",
             'blade' => 'greeting',
             'subject' => 'Welcome to the New Academic Session!',
             // 'name' => 'Hassan',
             // 'email' => 'ojoago247@gmail.com'
         ];
         $msg = str_replace('<br>', '\n', $data['message']);
+        $msg = nl2br(str_replace(['</b>', '<b>'], '', $data['message']));
        
         // post to edulite facebook page 
-        FacebookApiController::postFeed(str_replace(['</b>','<b>'], '',$msg));
+        FacebookApiController::postFeed($msg);
             
 //         sendMail($data);
 // return ;

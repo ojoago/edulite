@@ -128,9 +128,9 @@ class FacebookApiController extends Controller
         $result = curl_exec($ch);
         if (curl_errno($ch)) {
             $result = 'Error:' . curl_error($ch);
-            logError(curl_error($ch));
         }
         curl_close($ch);
+        logError(['from facbook',$result]);
         return $result;
     }
 
