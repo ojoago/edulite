@@ -26,10 +26,17 @@ Happy Democracy Day Nigerians💚! ',
             // 'email' => 'ojoago247@gmail.com'
         ];
         // sendMail($data);
-        foreach($users as $user){
-            $data['email']= $user->email;
-            $data['name']= $user->username;
-            sendMail($data);
+        // foreach($users as $user){
+        //     $data['email']= $user->email;
+        //     $data['name']= $user->username;
+        //     sendMail($data);
+        // }
+        foreach ($users as $user) {
+            if (isset($user->email)) {
+                $data['email'] = $user->email;
+                $data['name'] = $user->username;
+                sendMail($data);
+            }
         }
     }
     public static function customGreeting()
@@ -64,16 +71,21 @@ Happy Democracy Day Nigerians💚! ',
             // 'email' => 'ojoago247@gmail.com'
         ];
         $msg = str_replace('<br>', '\n', $data['message']);
+        logError($msg);
         // post to edulite facebook page 
-        FacebookApiController::postFeed(str_replace(['</b>','<b>'], '',$msg));
+        logError(FacebookApiController::postFeed(str_replace(['</b>','<b>'], '',$msg)));
             
 //         sendMail($data);
 // return ;
-        foreach($users as $user){
-            $data['email']= $user->email;
-            $data['name']= $user->username;
-            sendMail($data);
-        }
+
+        // foreach($users as $user){
+        //     if(isset($user->email)){
+        //         $data['email'] = $user->email;
+        //         $data['name'] = $user->username;
+        //         sendMail($data);
+        //     }
+        // }
+
     }
 
     public static function birthdays()
@@ -93,10 +105,17 @@ Happy Democracy Day Nigerians💚! ',
                 'subject' => 'HAPPY BIRTHDAY',
             ];
 
+            // foreach ($users as $user) {
+            //     $data['email'] = $user->email;
+            //     $data['name'] = $user->username;
+            //     sendMail($data);
+            // }
             foreach ($users as $user) {
-                $data['email'] = $user->email;
-                $data['name'] = $user->username;
-                sendMail($data);
+                if (isset($user->email)) {
+                    $data['email'] = $user->email;
+                    $data['name'] = $user->username;
+                    sendMail($data);
+                }
             }
         } catch (\Throwable $e) {
             logError($e->getMessage());
@@ -151,10 +170,19 @@ Happy Democracy Day Nigerians💚! ',
             // $data['name'] = 'OJOago';
             // sendMail($data);
             // return;
+
+            // foreach ($users as $user) {
+            //     $data['email'] = $user->email;
+            //     $data['name'] = $user->username;
+            //     sendMail($data);
+            // }
+
             foreach ($users as $user) {
-                $data['email'] = $user->email;
-                $data['name'] = $user->username;
-                sendMail($data);
+                if (isset($user->email)) {
+                    $data['email'] = $user->email;
+                    $data['name'] = $user->username;
+                    sendMail($data);
+                }
             }
         } catch (\Throwable $e) {
             logError($e->getMessage());
@@ -198,10 +226,18 @@ Happy Democracy Day Nigerians💚! ',
             // sendMail($data);
             // return;
             $users = (new self)->loadUsers();
+
+            // foreach ($users as $user) {
+            //     $data['email'] = $user->email;
+            //     $data['name'] = $user->username;
+            //     sendMail($data);
+            // }
             foreach ($users as $user) {
-                $data['email'] = $user->email;
-                $data['name'] = $user->username;
-                sendMail($data);
+                if (isset($user->email)) {
+                    $data['email'] = $user->email;
+                    $data['name'] = $user->username;
+                    sendMail($data);
+                }
             }
         } catch (\Throwable $e) {
             logError($e->getMessage());
@@ -224,10 +260,18 @@ Happy Democracy Day Nigerians💚! ',
             // $data['name'] = 'OJOago';
             // sendMail($data);
             // return;
+            // foreach ($users as $user) {
+            //     $data['email'] = $user->email;
+            //     $data['name'] = $user->username;
+            //     sendMail($data);
+            // }
+
             foreach ($users as $user) {
-                $data['email'] = $user->email;
-                $data['name'] = $user->username;
-                sendMail($data);
+                if (isset($user->email)) {
+                    $data['email'] = $user->email;
+                    $data['name'] = $user->username;
+                    sendMail($data);
+                }
             }
         } catch (\Throwable $e) {
             logError($e->getMessage());
@@ -251,10 +295,13 @@ Happy Democracy Day Nigerians💚! ',
         ];
         $users = (new self)->loadSchoolAdmin();
         foreach ($users as $row) {
-            $data['email'] = $row->email;
-            $data['name'] = $row->fullname ?? $row->username;
-            $data['subject'] = $row->school_name.', Setup Seminder';
-            sendMail($data);
+            if(isset($row->email)){
+                $data['email'] = $row->email;
+                $data['name'] = $row->fullname ?? $row->username;
+                $data['subject'] = $row->school_name . ', Setup Seminder';
+                sendMail($data);
+            }
+            
         }
     }
 

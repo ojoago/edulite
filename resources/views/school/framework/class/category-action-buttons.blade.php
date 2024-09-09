@@ -105,7 +105,7 @@
                         <select name="number" id="classNumberSelect" class="form-control form-control-sm">
                             <option disabled selected>Select Serial Number</option>
                             @foreach(CLASS_NUMBER as $key=> $nm)
-                            <option value="{{$key}}" {{ $data->number == $key ? 'selected' : '' }}> {{$nm}}</option>
+                                <option value="{{$key}}" {{ $data->number == $key ? 'selected' : '' }}> {{$nm}}</option>
                             @endforeach
                         </select>
                     <p class="text-danger number_error"></p>
