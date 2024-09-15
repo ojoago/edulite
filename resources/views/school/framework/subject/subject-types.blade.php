@@ -218,6 +218,8 @@
         // load dropdown on 
         
 
+        // edit subject type 
+
         $(document).on('click', '.edit-subject', function() {
             var pid = $(this).attr('pid');
             var token = "{{csrf_token()}}"
@@ -261,6 +263,15 @@
             });
 
         });
+
+        // edit subject 
+          $(document).on('click', '.editSubjectBtn', async function() {
+            let pid = $(this).attr('pid');
+            let s = await submitFormAjax('editSubjectForm'+pid, 'editSubjectBtn'+pid, "{{route('update.subject')}}");
+            if (s.status === 1) {
+               loadSubjectTable(null)
+            }
+        })
 
 
          // create subject 
