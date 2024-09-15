@@ -225,7 +225,8 @@ Route::middleware('schoolAuth')->group(function(){
     // load subject type 
     Route::get('load-subject-type', [SubjectTypeController::class, 'index'])->name('load.school.subject.type');
     // create subject type 
-    Route::post('subjects', [SubjectTypeController::class, 'createSubjectType'])->name('create.school.subject.type');
+    Route::post('subjects', [SubjectTypeController::class, 'createSubjectType'])->name('create.subject.type');
+    Route::post('create-group-subjects', [SubjectTypeController::class, 'createGroupSubject'])->name('create.group.subject');
     // load subjects 
     Route::post('load-school-subject', [SubjectController::class, 'index'])->name('load.school.subject');
     // create school category subject 

@@ -25,9 +25,10 @@ class SubjectController extends Controller
                 ->where($where)
                 ->get(['subjects.pid', 'subject', 'subjects.status', 'subject_type', 'c.category', 'category_pid']);
                 $categories = DB::table('categories')->where('school_pid',getSchoolPid())->select('pid', 'category')->get();
+                $sub = DB::table('subject_types')->where('school_pid',getSchoolPid())->select('pid', 'subject_type')->get();
             return datatables($data)
-            ->addColumn('action', function ($data) use ($categories) {
-                return view('school.framework.subject.subject-action-buttons', ['data' => $data, 'categories' => $categories]);
+            ->addColumn('action', function ($data) use ($categories,$sub) {
+                return view('school.framework.subject.subject-action-buttons', ['data' => $data, 'categories' => $categories , 'subs' => $sub]);
 
             })
             // ->editColumn('created_at', function ($data) {
@@ -61,13 +62,13 @@ class SubjectController extends Controller
     public function createSchoolSubject(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            // 'subject.*' => ['required', 'string',Rule::unique('subjects')->where(function($param) use($request){
-            //     $param->where([
-            //         'school_pid'=>getSchoolPid(),
-            //         'category_pid'=>$request->category_pid,
-            //         // 'subject_type_pid'=>$request->subject_type_pid,
-            //     ])->where('pid','<>',$request->pid);
-            // })],
+            'subject.*' => ['required', 'string',Rule::unique('subjects', 'subject')->where(function($param) use($request){
+                $param->where([
+                    'school_pid'=>getSchoolPid(),
+                    'category_pid'=>$request->category_pid,
+                    // 'subject_type_pid'=>$request->subject_type_pid,
+                ])->where('pid','<>',$request->pid);
+            })],
             // 'subject_type_pid' => 'required|string',
             'category_pid.*' => 'required|string'
         ],[
@@ -93,7 +94,8 @@ class SubjectController extends Controller
                     'subject_type' => $subject,
                     'description' => $request->description
                 ];
-                $type = SubjectType::where(['subject_type'=>$subject,'school_pid' =>getSchoolPid()])->first(['pid']);
+                $type = SubjectType::where(['subject_type' => trim($subject) , 'school_pid' => getSchoolPid()])->first(['pid']);
+                logError($type);
                 if(!$type){
                     $type = SubjectTypeController::createOrUpdateSubjectType($data);
                 }
@@ -131,7 +133,8 @@ class SubjectController extends Controller
                     'category_pid' => $request->category_pid,
                 ])->where('pid', '<>', $request->pid);
             })],
-            'category_pid' => 'required|string'
+            'category_pid' => 'required|string',
+            'subject_type' => 'required|string'
         ], [
             'subject.required' => 'Enter Subject Name',
             'category_pid.required' => 'Select School Category',
@@ -142,6 +145,7 @@ class SubjectController extends Controller
                 $subject = Subject::where('pid', $request->pid)->first();
                 $subject->subject = $request->subject;
                 $subject->category_pid = $request->category_pid;
+                $subject->subject_type_pid = $request->subject_type;
 
                 $result = $subject->save();
 
