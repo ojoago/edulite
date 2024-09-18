@@ -127,7 +127,7 @@ class StaffAttendanceController extends Controller
 
                 ];
                 if ($this->attendanceRecord($data)) {
-                    return response()->json(['status' => 2, 'message' => 'You already taken Attendance']);
+                    return response()->json(['status' => 2, 'message' => 'You, already taken Attendance today!!!']);
                 }
 
 
@@ -161,7 +161,7 @@ class StaffAttendanceController extends Controller
 
     private function attendanceRecord($data){
         try {
-            return StaffAttendanceConfig::where(['school_pid' => $data['school_pid'] , 'staff_pid'  => $data['staff_pid'], 'date'  => $data['date']])->exists();
+            return StaffAttendance::where(['school_pid' => $data['school_pid'] , 'staff_pid'  => $data['staff_pid']])->whereDate('created_at',justDate())->exists();
         } catch (\Throwable $e) {
             logError($e->getMessage());
             return false;
