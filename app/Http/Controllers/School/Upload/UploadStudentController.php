@@ -48,7 +48,6 @@ class UploadStudentController extends Controller
                 // $resource = phpWay($path);
                 $header = $resource['header'];
                 $data = $resource['data'];
-            logError($data);
                 $k = 2;$n=0;
                 if ((($header === $this->header))) {
                     foreach ($data as $row) {
@@ -86,7 +85,6 @@ class UploadStudentController extends Controller
                                     'title' => null,
                                     'user_pid' => $user->pid
                                 ];
-                                logError($detail);
                                 $student = [
                                     'gender' => GENDER[(int) $row[9]],
                                     'dob' => $dob,
@@ -116,7 +114,6 @@ class UploadStudentController extends Controller
                                         'school_pid' => $student['school_pid'],
                                         'staff_pid' => getSchoolUserPid(),
                                     ];
-                                    logError($student);
                                     
                                     $studentDetails = SchoolController::createSchoolStudent($student);
                                     if ($studentDetails) {
