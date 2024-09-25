@@ -410,12 +410,12 @@
               <ul id="assignment" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
                   <a href="{{route('lesson.plans')}}">
-                    <i class="bi bi-circle"></i><span>Lession Plans</span>
+                    <i class="bi bi-circle"></i><span>Lesson Plans</span>
                   </a>
                 </li>
                 <li>
                   <a href="{{route('lesson.notes')}}">
-                    <i class="bi bi-circle"></i><span>Lession Note</span>
+                    <i class="bi bi-circle"></i><span>Lesson Note</span>
                   </a>
                 </li>
                 @if (classTeacher() || subjectTeacher())
