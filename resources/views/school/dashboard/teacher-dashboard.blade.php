@@ -42,7 +42,7 @@
             <!-- Revenue Card -->
             <div class="col-md-6">
                 <div class="card info-card">
-                    <a href="{{route('school.student.list')}}" data-bs-toggle="tooltip" title="View Student Details">
+                    <a href="#" data-bs-toggle="tooltip" title="View Student Details">
                         <div class="card-body">
                             <h5 class="card-title">Classe Class</h5>
 
@@ -71,7 +71,7 @@
                                     <i class="bi bi-book-half"></i>
                                 </div>
                                 <div class="ps-3">
-                                    <h6>3</h6>
+                                    {{-- <h6>3</h6> --}}
 
                                 </div>
                             </div>

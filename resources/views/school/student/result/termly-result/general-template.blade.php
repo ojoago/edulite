@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>EDLT - {{$std->fullname}} Report Card</title>
+    <title>EDL - {{$std->fullname}} Report Card</title>
     <meta content="description" name="Upgrade your school with edulite suite, 
                                     and ease the stress of school manual process at less cost.
                                      get accurate and accessible information about students, staff remotely.

@@ -379,6 +379,7 @@ class StudentTermlyResultController extends Controller
 
             $basePath = 'school.student.result.';
             $path = 'termly-result.student-report-card';
+            $path = 'termly-result.general-template';
             // load template path 
             $result_config = DB::table('result_configs as r')->join('classes as c', 'c.category_pid', 'r.category_pid')
                                             ->join('class_arms as a','a.class_pid','c.pid')
