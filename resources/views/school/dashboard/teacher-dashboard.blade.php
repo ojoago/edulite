@@ -16,6 +16,7 @@
               <i class="bi bi-grid"></i>
               <span>Take Attendance</span>
             </a>
+
     <div class="col-md-6">
         <div class="row">
             <!-- Sales Card -->
@@ -93,7 +94,7 @@
                                     <i class="bi bi-house-fill"></i>
                                 </div>
                                 <div class="ps-3">
-                                    <h6>13</h6>
+                                    {{-- <h6>13</h6> --}}
 
                                 </div>
                             </div>
