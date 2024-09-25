@@ -40,7 +40,7 @@
             </div><!-- End Sales Card -->
 
             <!-- Revenue Card -->
-            <div class="col-md-6">
+            {{-- <div class="col-md-6">
                 <div class="card info-card">
                     <a href="#" data-bs-toggle="tooltip" title="View Student Details">
                         <div class="card-body">
@@ -59,8 +59,9 @@
                     </a>
 
                 </div>
-            </div><!-- End Revenue Card -->
-            <div class="col-md-6">
+            </div><!-- End Revenue Card --> --}}
+
+            {{-- <div class="col-md-6">
                 <div class="card info-card sales-card">
                     <a data-bs-toggle="tooltip" title="View Staff Details">
                         <div class="card-body">
@@ -71,19 +72,19 @@
                                     <i class="bi bi-book-half"></i>
                                 </div>
                                 <div class="ps-3">
-                                    {{-- <h6>3</h6> --}}
+                                     <h6>3</h6>
 
                                 </div>
                             </div>
                         </div>
                     </a>
                 </div>
-            </div><!-- End Sales Card -->
+            </div><!-- End Sales Card --> --}}
 
             <!-- Revenue Card -->
             <div class="col-md-6">
                 <div class="card info-card">
-                    <a href="{{route('school.student.list')}}" data-bs-toggle="tooltip" title="View Student Details">
+                    <a href="#" data-bs-toggle="tooltip" title="View Student Details">
                         <div class="card-body">
                             <h5 class="card-title">Submited</h5>
 
