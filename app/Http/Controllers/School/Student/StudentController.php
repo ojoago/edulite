@@ -105,6 +105,7 @@ class StudentController extends Controller
     public function find($pid){
         return view('school.registration.student.register-student',compact('pid'));
     }
+
     public function loadStudentDetailsById(Request $request){
         $data = DB::table('students as s')->leftjoin('users as u', 'u.pid', 's.user_pid')
             ->leftjoin('user_details as d', 'd.user_pid', 's.user_pid')
@@ -112,6 +113,7 @@ class StudentController extends Controller
             ->where(['s.pid' => base64Decode($request->pid), 's.school_pid' => getSchoolPid()])->first();
         return response()->json($data);
     }
+
     public function viewStudentProfile(Request $request){
 
         $data = DB::table('users as u')->join('user_details as d', 'd.user_pid', 'u.pid')
@@ -136,6 +138,7 @@ class StudentController extends Controller
             logError($e->getMessage());
         }
     }
+
     public function viewStudentResult(Request $request){
         $data = StudentClass::where([
                     'student_classes.school_pid' => getSchoolPid(),
@@ -211,6 +214,8 @@ class StudentController extends Controller
             logError($error);
         }
     }
+
+
     public static function studentName($pid){
 
        return DB::table('students as s')->join('user_details as d','s.user_pid','d.user_pid')->where(['s.pid'=>$pid, 's.school_pid'=>getSchoolPid()])->select('s.reg_number', 's.fullname','s.passport','s.gender', 's.pid','s.height','s.weight','d.dob')->first();
@@ -373,7 +378,7 @@ class StudentController extends Controller
         if (!$validator->fails()) {
             $data = [
                 'account_status' => 1,
-                'password' => DEFAULT_PASSWORD,
+                'password' => DEFAULT_PASSWORD ,
                 'username' => $request->username ?? AuthController::uniqueUsername($request->firstname),
                 'gsm' => $request->gsm,
                 'pid' => $request->user_pid,

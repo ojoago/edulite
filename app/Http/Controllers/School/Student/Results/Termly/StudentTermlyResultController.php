@@ -386,22 +386,25 @@ class StudentTermlyResultController extends Controller
                                             ->join('student_class_result_params as p','p.arm_pid','a.pid')->where('p.pid',$param)->select('r.*')->first();
             if($result_config){
                 $basePath = $result_config->base_dir;
-                $path = $result_config->sub_dir. $result_config->file_name;
+                $path = '.' . $result_config->sub_dir . '.' . $result_config->file_name;
             }
             $cache = [
                 'path' => $basePath . $path,  'subResult' => $subResult, 'std' =>$std , 'scoreSettings' => $scoreSettings , 'param' => $param , 
                 'psycho' => $psycho, 'result' => $result , 'grades' => $grades , 'school' => $school , 'terms' => $terms, 'result_config' => $result_config
             ];
+            // dd($cache['path']);
+            
             Cache::pull($param . $spid);
             Cache::add($param . $spid,$cache);
             if(view()->exists($basePath . $path)){
                 return view($basePath.$path, compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'result', 'grades', 'school', 'terms', 'result_config'));
             }else{
-                $path = 'termly-result.student-report-card';
+                $path = '.termly-result.student-report-card';
                 $cache = [
                     'path' => $basePath . $path,  'subResult' => $subResult, 'std' => $std, 'scoreSettings' => $scoreSettings, 'param' => $param,
                     'psycho' => $psycho, 'result' => $result, 'grades' => $grades, 'school' => $school, 'terms' => $terms, 'result_config' => $result_config
                 ];
+                // dd($cache['path']);
                 Cache::pull($param . $spid);
                 Cache::add($param . $spid, $cache);
                 return view($basePath. $path, compact('subResult', 'std', 'scoreSettings', 'param', 'psycho', 'result', 'grades', 'school', 'terms', 'result_config'));

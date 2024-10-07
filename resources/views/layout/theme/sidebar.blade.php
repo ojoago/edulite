@@ -70,12 +70,12 @@
 
           <li>
             <a href="{{route('subjects')}}">
-              <i class="bi bi-circle"></i><span>Subjects</span>
+              <i class="bi bi-circle"></i><span>Individual Subjects</span>
             </a>
           </li>
            <li>
             <a href="{{route('subject.types')}}">
-              <i class="bi bi-circle"></i><span>Subject Type</span>
+              <i class="bi bi-circle"></i><span>Grouped Subject (Type)</span>
             </a>
           </li> 
 

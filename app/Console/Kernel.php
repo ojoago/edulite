@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('setup:reminder')->weekdays()->at('10:45')->runInBackground();
         $schedule->command('custom:greeting')->yearlyOn(9, 9, '10:45')->runInBackground();
         $schedule->command('newmonth:greeting')->monthly()->runInBackground();
-        $schedule->command('seasonal:greeting')->yearlyOn(6, 12, '06:45')->runInBackground();
+        $schedule->command('seasonal:greeting')->yearlyOn(6, 12, '06:45')->runInBackground();//democracy day
         // $schedule->command('seasonal:greeting')->yearlyOn(1, 1, '00:00')->runInBackground(); // happy new year
         $schedule->command('xmas:greeting')->yearlyOn(12, 25, '06:45')->runInBackground();
     }
