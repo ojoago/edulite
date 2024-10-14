@@ -14,6 +14,7 @@ define('STAFF_ROLE', ['200' => 'School Super Admin','205' => 'School Admin','300
 // '505'=> 'Head Teacher',
 ]);
 define('ACCOUNT_STATUS', ['Deactivated','Activated']);
+define('SETUP_STATUS', [' Suspended', ' Active',' Incomplete setup']);
 define('STUDENT_STATUS', ['0' => 'Disabled','1' => 'Active Student', '3' => 'Left School',  '4' => 'Suspended', '2' => 'Graduated' , '' => '' ]);
 define('SCHOOL_SETUP', ['pr','Activated']);
 define('ER_500', 'Something Went Wrong ...error logged');

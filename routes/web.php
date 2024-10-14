@@ -44,6 +44,7 @@ use App\Http\Controllers\School\Student\Attendance\StudentAttendanceController;
 use App\Http\Controllers\School\Framework\Psychomotor\PsychomotorBaseController;
 use App\Http\Controllers\School\Framework\Result\ResultConfigController;
 use App\Http\Controllers\School\Payment\ResultRecordController;
+use App\Http\Controllers\School\SchoolListController;
 use App\Http\Controllers\School\Staff\StaffAttendanceController;
 use App\Http\Controllers\School\Student\Assessment\LessonNoteController;
 use App\Http\Controllers\School\Student\Assessment\LessonPlanController;
@@ -74,6 +75,8 @@ Route::get('verify/{id}', [AuthController::class, 'verifyAccount'])->middleware(
 Route::view('login', 'auths.login')->name('login')->middleware('guest');
 // login in 
 Route::post('login', [AuthController::class, 'login']);
+Route::view('sign-in', 'auths.sign-in')->name('sign.in')->middleware('guest');
+Route::post('sign-in', [AuthController::class, 'signIn']);
 // reset password 
 Route::get('reset/{id}', [AuthController::class, 'resetPasswordForm'])->name('reset')->middleware('guest');
 
@@ -117,6 +120,11 @@ Route::middleware('auth')->group(function(){
     Route::get('users-dashboard', [UserController::class, 'index'])->name('users.dashboard');
     Route::get('users-home', [UserController::class, 'dashboard'])->name('users.home');
     Route::view('create-school', 'school.create-school')->name('create.school');
+
+    // user dashboard 
+    Route::get('school-lists', [SchoolListController::class, 'list'])->name('school.list');
+    Route::get('users-list', [SchoolListController::class, 'users'])->name('users.list');
+    Route::get('users-home', [UserController::class, 'dashboard'])->name('users.home');
     
 });
 
