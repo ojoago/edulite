@@ -16,12 +16,13 @@
                 <form action="" method="post" class="" id="feeAmountForm{{$data->pid}}">
                     @csrf
                     <label for="">Fee Name</label>
-                    <select name="fee_item_pid" class="form-control form-control-sm" >
+                    <input type="text" readonly class="form-control form-control-sm" value="{{ $data->fee_name }}">
+                    {{-- <select name="fee_item_pid" class="form-control form-control-sm" >
                         <option disabled selected>Select Account</option>
                         @foreach ($fees as $fee)
                             <option value="{{$fee->pid}}" {{$fee->fee_name == $data->fee_name ? 'selected' :''}} >{{$fee->fee_name}}</option>
                         @endforeach
-                    </select>
+                    </select> --}}
                     {{-- <input type="text" disabled value="{{$data->fee_name}}" class="form-control form-control-sm" placeholder="example school fee"><br> --}}
                     <label for="">Class Arm</label>
                     <select name="arm" class="form-control form-control-sm" >
@@ -38,7 +39,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary feeConfigBtn btn-sm" id="id{{$data->pid}}" pid="{{$data->pid}}">Update</button>
+                <button type="button" class="btn btn-primary feeAmountConfigBtn btn-sm" id="id{{$data->pid}}" pid="{{$data->pid}}">Update</button>
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
             </div>
         </div>

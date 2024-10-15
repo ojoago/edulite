@@ -51,13 +51,13 @@ class User extends Authenticatable
     protected function username(): Attribute
     {
         return new Attribute(
-            set:fn ($val) => strtolower(str_replace('-', '_', str_replace(' ', '', trim($val)))),
+            set:fn ($val) => strtolower(str_replace('-', '_', str_replace(' ', '_', trim($val)))),
         );
     }
     protected function email(): Attribute
     {
         return new Attribute(
-            set:fn ($val) => strtolower($val),
+            set:fn ($val) => str_replace(' ','_',strtolower($val)),
         );
     }
 

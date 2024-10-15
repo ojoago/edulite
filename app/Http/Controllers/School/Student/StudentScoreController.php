@@ -597,9 +597,14 @@ class StudentScoreController extends Controller
             $count = $params['scoreParams']->count();
             $title = $params['scoreParams'];
             $data = $params['data'];
-            $name = $class->arm . ' ' . $class->subject;
+            $titleName = $name = $class->arm . ' ' . $class->subject;
+            if(str_word_count($name)>30){
+                $titleName = 'Sheet1';
+            }
             $file = new Spreadsheet();
-            $file->getActiveSheet()->setTitle($name)->getColumnDimension('B')->setVisible(false); //->setTitle($name);//get the first shee
+            $file->getActiveSheet()
+            ->setTitle($titleName)
+            ->getColumnDimension('B')->setVisible(false); //->setTitle($name);//get the first shee
             $file->getActiveSheet()->getRowDimension(2)->setVisible(false); //->setTitle($name);//get the first shee
             $active_sheet = $file->getActiveSheet(); //->setTitle($name);//get the first shee
             $l  = $letters[$count + 4];
@@ -619,7 +624,7 @@ class StudentScoreController extends Controller
                 $active_sheet->setCellValue('D' . $k, $row->fullname);
                 $k++;
             }
-            $path =  $name . ' ' .  activeTermName() .  ' ' . activeSessionName() . ".xlsx";
+            $path = 'Edlt '. $name . ' ' .  activeTermName() .  ' ' . activeSessionName() . ".xlsx";
             $fileName = str_replace('/', '-', $path);
             // Headers for download 
             $writer = new Xlsx($file);

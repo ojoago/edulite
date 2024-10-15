@@ -233,7 +233,8 @@ Route::middleware('schoolAuth')->group(function(){
     // load subject type 
     Route::get('load-subject-type', [SubjectTypeController::class, 'index'])->name('load.school.subject.type');
     // create subject type 
-    Route::post('subjects', [SubjectTypeController::class, 'createSubjectType'])->name('create.school.subject.type');
+    Route::post('subjects', [SubjectTypeController::class, 'createSubjectType'])->name('create.subject.type');
+    Route::post('create-group-subjects', [SubjectTypeController::class, 'createGroupSubject'])->name('create.group.subject');
     // load subjects 
     Route::post('load-school-subject', [SubjectController::class, 'index'])->name('load.school.subject');
     // create school category subject 
@@ -314,6 +315,7 @@ Route::middleware('schoolAuth')->group(function(){
     Route::post('create-fee-name', [FeeItemController::class, 'createFeeName'])->name('create.fee.name');
     
     Route::post('configure-fee', [FeeItemController::class, 'feeConfigurationAndAmount'])->name('configure.fee');
+    Route::post('update-fee-amount', [FeeItemController::class, 'updateFeeAmount'])->name('update.fee.amount');
     // award 
     Route::view('student-award-config', 'school.framework.award.award-config')->name('student.award.config');
     Route::get('load-student-award', [AwardKeyController::class, 'index'])->name('load.student.award');

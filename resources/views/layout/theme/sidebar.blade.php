@@ -66,17 +66,18 @@
             </a>
           </li>
           
-          {{-- <li>
-            <a href="{{route('subject.types')}}">
-              <i class="bi bi-circle"></i><span>Subject Type</span>
-            </a>
-          </li> --}}
+        
 
           <li>
             <a href="{{route('subjects')}}">
-              <i class="bi bi-circle"></i><span>Subjects</span>
+              <i class="bi bi-circle"></i><span>Individual Subjects</span>
             </a>
           </li>
+           <li>
+            <a href="{{route('subject.types')}}">
+              <i class="bi bi-circle"></i><span>Grouped Subject (Type)</span>
+            </a>
+          </li> 
 
         
           <li>
@@ -153,7 +154,7 @@
           <li>
             <a href="{{route('manage.invoice')}}">
               <i class="bi bi-circle"></i><span>
-                Payments
+                Invoices
               </span>
             </a>
           </li>
@@ -231,11 +232,13 @@
               <i class="bi bi-circle"></i><span>Parents</span>
             </a>
           </li>
-          <li>
+
+          {{-- <li>
             <a href="{{route('school.rider.form')}}">
               <i class="bi bi-circle"></i><span> PickUps Rider</span>
             </a>
-          </li>
+          </li> --}}
+
         </ul>
       </li>
       <!-- End create account nav -->
@@ -260,17 +263,19 @@
               <i class="bi bi-circle"></i><span>Parents</span>
             </a>
           </li>
-          <li>
+
+          {{-- <li>
             <a href="{{route('upload.rider')}}">
               <i class="bi bi-circle"></i><span> PickUps Rider</span>
             </a>
-          </li>
+          </li> --}}
+
         </ul>
       </li>
       <!-- end of uploads -->
       <!-- add/link users   -->
 
-      {{-- <li class="nav-item">
+      <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#add-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-file-spreadsheet-fill"></i><span>Add</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -291,13 +296,13 @@
             </a>
           </li>
 
-          <li>
+          {{-- <li>
             <a href="#" data-bs-target="#addRiderModal" data-bs-toggle="modal">
               <i class="bi bi-circle"></i><span>Rider List</span>
             </a>
-          </li>
+          </li> --}}
         </ul>
-      </li> --}}
+      </li>
 
       <!-- End add/link users -->
       <!-- user list  -->
@@ -321,11 +326,13 @@
               <i class="bi bi-circle"></i><span>Parents</span>
             </a>
           </li>
-          <li>
+
+          {{-- <li>
             <a href="{{route('school.rider.list')}}">
               <i class="bi bi-circle"></i><span>Rider List</span>
             </a>
-          </li>
+          </li> --}}
+
         </ul>
       </li>
       <!-- End Forms Nav -->
@@ -409,12 +416,12 @@
               <ul id="assignment" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
                   <a href="{{route('lesson.plans')}}">
-                    <i class="bi bi-circle"></i><span>Lession Plans</span>
+                    <i class="bi bi-circle"></i><span>Lesson Plans</span>
                   </a>
                 </li>
                 <li>
                   <a href="{{route('lesson.notes')}}">
-                    <i class="bi bi-circle"></i><span>Lession Note</span>
+                    <i class="bi bi-circle"></i><span>Lesson Note</span>
                   </a>
                 </li>
                 @if (classTeacher() || subjectTeacher())

@@ -882,7 +882,7 @@
             let form = $(this).attr('id');
             $('.overlay').show();
             $.ajax({
-                url: "{{route('create.school.subject.type')}}",
+                url: "{{route('create.subject.type')}}",
                 type: "POST",
                 data: new FormData($('#' + form)[0]),
                 dataType: "JSON",
@@ -1390,7 +1390,7 @@
                     $('.overlay').hide();
                     console.log(data);
                     alert_toast('Something Went Wrong', 'error');
-                    location.reload()
+                    // location.reload()
                     reject(true);
                 }
             });

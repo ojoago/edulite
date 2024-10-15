@@ -11,7 +11,7 @@ use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Student\StudentController;
 use App\Models\School\Student\Student;
-
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 class UploadStudentController extends Controller
 {
     // private $pwd = 1234567;
@@ -52,9 +52,12 @@ class UploadStudentController extends Controller
                 if ((($header === $this->header))) {
                     foreach ($data as $row) {
                         if (!empty($row[0]) && !empty($row[1])) {
+                            $dob = $row[4];
+                            $dob = ExcelDate::excelToDateTimeObject($dob);
+                            $dob = $dob->format('Y-m-d'); // Format as needed
                             $username = $row[6] ?? '';
                             $email = $row[5] ?? '';
-                            $gsm = $row[3]=='' ? false : AuthController::findGsm($row[3]);
+                            $gsm = $row[3] =='' ? false : AuthController::findGsm($row[3]);
                             if (!$gsm) {
                                 $data = [
                                     'gsm' => ($row[3]),
@@ -74,7 +77,7 @@ class UploadStudentController extends Controller
                                     'lastname' => $row[1],
                                     'othername' => $row[2],
                                     'gender' => (int) $row[9],
-                                    'dob' => $row[4],
+                                    'dob' => $dob,
                                     'religion' => (int) $row[8],
                                     'state' => null,
                                     'lga' => null,
@@ -82,15 +85,14 @@ class UploadStudentController extends Controller
                                     'title' => null,
                                     'user_pid' => $user->pid
                                 ];
-
                                 $student = [
                                     'gender' => GENDER[(int) $row[9]],
-                                    'dob' => $row[4],
+                                    'dob' => $dob,
                                     'religion' => RELIGION[(int) $row[8]],
                                     'state' => null,
                                     'lga' => null,
                                     'address' => $row[7],
-                                    'type' => $request->type ?? 1,
+                                    'type' => $row[10] ?? 1,
                                     'pid' => public_id(),
                                     'staff_pid' => getSchoolUserPid(),
                                     'school_pid' => getSchoolPid(),

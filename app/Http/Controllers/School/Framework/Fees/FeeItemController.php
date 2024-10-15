@@ -406,6 +406,36 @@ class FeeItemController extends Controller
         return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
 
     }
+    // fee and amount configuration goes here 
+    public function  updateFeeAmount(Request $request){
+
+        $validator = Validator::make($request->all(),[
+            'pid' => 'required',
+            'amount' => 'required|numeric',
+            'arm' => 'required',
+        ],[
+            'pid.required'=>'Select Fee Item',
+            'arm.required'=>'Enter This or Remove it',
+            'amount.required'=>'Enter Amount',
+        ]);
+
+        if(!$validator->fails()){
+            $data['amount'] = $request->amount;
+            $data['arm_pid'] = $request->arm;
+            $data['pid'] = $request->pid;
+            $fee = FeeItemAmount::where('pid', $request->pid)->first();
+            $fee->amount = $request->amount;
+            $fee->arm_pid = $request->arm;
+            $result = $fee->save();
+            if($result){
+                return response()->json(['status'=>1,'message'=>'Fee amount updated successfully']);
+            }
+            return response()->json(['status'=>'error','message'=>'Something Went Wrong... error log']);
+        }
+
+        return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+
+    }
 
     private function updateOrCreateFeeAccount(array $data) {
         try {

@@ -17,7 +17,7 @@
               <span>Take Attendance</span>
             </a>
     <!-- Sales Card -->
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="card info-card sales-card">
             <a href="{{ route('school.staff.list') }}" data-bs-toggle="tooltip" title="View Staff Details">
                 <div class="card-body">
@@ -40,7 +40,7 @@
     </div><!-- End Sales Card -->
 
     <!-- Revenue Card -->
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="card info-card">
             <a href="{{route('school.student.list')}}" data-bs-toggle="tooltip" title="View Student Details">
                 <div class="card-body">
@@ -62,7 +62,7 @@
         </div>
     </div><!-- End Revenue Card -->
     <!-- Customers Card -->
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="card info-card">
             <a href="{{route('school.parent.list')}}" data-bs-toggle="tooltip" title="View Parent Details">
                 <div class="card-body">
@@ -83,7 +83,8 @@
         </div>
 
     </div>
-    <div class="col-md-3">
+
+    {{-- <div class="col-md-3">
         <div class="card info-card">
             <a href="{{route('school.rider.list')}}" data-bs-toggle="tooltip" title="View Details">
                 <div class="card-body">
@@ -103,7 +104,7 @@
                 </div>
             </a>
         </div>
-    </div>
+    </div> --}}
 
 
 </div>

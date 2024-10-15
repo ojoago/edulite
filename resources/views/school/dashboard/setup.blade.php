@@ -149,7 +149,7 @@
 
         // step 7 create session 
         // $('#createSubjectTypeBtn').click(async function() {
-        //     let s = await submitFormAjax('createSubjectTypeForm', 'createSubjectTypeBtn', "{{route('create.school.subject.type')}}");
+        //     let s = await submitFormAjax('createSubjectTypeForm', 'createSubjectTypeBtn', "{{route('create.subject.type')}}");
 
         //     if (s.status === 1) {
         //         $('#setupStepForm').show(500)

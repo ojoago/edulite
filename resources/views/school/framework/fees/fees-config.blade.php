@@ -556,6 +556,14 @@
             let btnId = 'id' + pid;
             submitFormAjax(formId, btnId, "{{route('create.fee.name')}}");
         })
+        
+        // update fee item 
+        $(document).on('click', '.feeAmountConfigBtn', function() {
+            let pid = $(this).attr('pid');
+            let formId = 'feeAmountForm' + pid;
+            let btnId = 'id' + pid;
+            submitFormAjax(formId, btnId, "{{route('update.fee.amount')}}");
+        })
 
         // fee amount configuartion 
         $('#addMoreArm').click(function() {
