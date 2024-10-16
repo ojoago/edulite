@@ -125,7 +125,7 @@ class ParentController extends Controller
             'othername' => "nullable|string|regex:/^[a-zA-Z0-9'\s]+$/",
             'gsm' => 'required|min:11|max:11|unique:users,gsm',
             'username' => "string|nullable|unique:users,username|regex:/^[a-zA-Z0-9\s]+$/",
-            'email' => 'string|email|nullable|unique:users,email|regex:/^[a-zA-Z0-9\s]+$/',
+            'email' => 'string|email|nullable|unique:users,email',
             'gender' => 'required',
             'dob' => 'nullable|before:' . confrimYear(),
             // 'religion'=>'required|string|',
