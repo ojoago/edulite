@@ -596,6 +596,7 @@ class StaffController extends Controller
                     $message .=++$n.': '. ClassController::getClassArmNameByPid($row).'<br>';
                         $dupParams['arm_pid'] = $data['arm_pid'] = $row;
                         $result = StaffClass::updateOrCreate($dupParams,$data);
+                        logError(['$result', $result]);
                     }
                     if ($result) {
                         SchoolNotificationController::notifyIndividualStaff(message:$message,pid: $request->teacher_pid);
