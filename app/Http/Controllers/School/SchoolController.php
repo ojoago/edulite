@@ -185,7 +185,7 @@ class SchoolController extends Controller
     public function classTeacherDashboard(){
         $class1 = DB::table('staff_classes as c')->where(['c.school_pid' => getSchoolPid(), 'c.teacher_pid' => getSchoolUserPid(), 'c.term_pid' => activeTerm(), 'c.session_pid' => activeSession()])->select('*')->get();
         $class = DB::table('staff_classes as c')->join('class_arms as a','a.pid','c.arm_pid')->where(['c.school_pid' => getSchoolPid(), 'c.teacher_pid' => getSchoolUserPid(), 'c.term_pid' => activeTerm(), 'c.session_pid' => activeSession()])->select('arm')->get();
-        dd([$class, $class1]);
+        dd([$class, $class1,'teacher_pid' => getSchoolUserPid(), 'term_pid' => activeTerm(), 'session_pid' => activeSession()]);
         $subjects = DB::table('staff_subjects as s')->join('class_arm_subjects as c','c.pid', 's.arm_subject_pid')->join('class_arms as a','c.arm_pid','a.pid')->join('subjects as b','b.pid','c.subject_pid')->where(['s.school_pid' => getSchoolPid(), 's.teacher_pid' => getSchoolUserPid(), 's.term_pid' => activeTerm(), 's.session_pid' => activeSession()])->select('arm','subject')->get();
         // $class = StaffClass::where(['school_pid' => getSchoolPid(), 'teacher_pid' => getSchoolUserPid() , 'term_pid' => activeTerm(), 'session_pid' => activeSession() ])->count();
         // $subjects = StaffSubject::where(['school_pid' => getSchoolPid(), 'teacher_pid' => getSchoolUserPid(), 'term_pid' => activeTerm() , 'session_pid' => activeSession() ])->count();
