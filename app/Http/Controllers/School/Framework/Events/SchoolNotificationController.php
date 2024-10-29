@@ -263,7 +263,8 @@ class SchoolNotificationController extends Controller
                 email
                 fullname 
             */
-            if(isset($param['user']->email)){
+            
+            if(isset($param['user']->email) && filter_var($param['user']->email, FILTER_VALIDATE_EMAIL)){
                 // send mail 
                 $schoolData = SchoolController::loadSchoolNotificationDetail(getSchoolPid());
                 self::sendSchoolMail($schoolData,$param['user'], str_replace('{you}','You',$param['message']));
@@ -360,16 +361,20 @@ class SchoolNotificationController extends Controller
 
     public static function sendSchoolMail($schoolData,$userData,$message,$subject='Notification'){
         try {
-            $data = [
-                'email' => $userData->email,
-                'name' => matchGenderTitle($userData->gender) . ' ' . $userData->fullname,
-                'blade' => 'school',
-                'message' => $message,
-                // 'url' => 'verify/' . base64Encode($user->pid),
-                'subject' => $subject .' from '. getSchoolName(),
-                'school' => $schoolData,
-            ];
-            return sendMail($data);
+            if(filter_var($userData->email, FILTER_VALIDATE_EMAIL)){
+                $data = [
+                    'email' => $userData->email,
+                    'name' => matchGenderTitle($userData->gender) . ' ' . $userData->fullname,
+                    'blade' => 'school',
+                    'message' => $message,
+                    // 'url' => 'verify/' . base64Encode($user->pid),
+                    'subject' => $subject . ' from ' . getSchoolName(),
+                    'school' => $schoolData,
+                ];
+                return sendMail($data);
+            }
+            return false;
+            
         } catch (\Throwable $e) {
             logError($e->getMessage());
             return false;
