@@ -459,7 +459,7 @@ class SchoolController extends Controller
     {
         $id = $this->countSchool() + 1;
         $id = strlen($id) == 1 ? '0' . $id : $id;
-        return strtoupper(date('yM')) . $id;
+        return strtoupper(date('yMd')) . $id;
     }
 
 

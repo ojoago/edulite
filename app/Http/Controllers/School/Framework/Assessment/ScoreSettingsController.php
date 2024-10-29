@@ -59,6 +59,10 @@ class ScoreSettingsController extends Controller
 
                 return response()->json(['status' => 'error', 'message' => 'Sum of scores, not equal to 100, total entered ('. $total.')']);
             }
+            if (!isset($request->class_pid)) {
+
+                return response()->json(['status' => 'error', 'message' => 'No Class Selected']);
+            }
             $data = [
                 'school_pid' => getSchoolPid(),
                 // 'class_pid' => $request->class_pid,

@@ -104,6 +104,10 @@ class SubjectTypeController extends Controller
         ]);
         if (!$validator->fails()) {
 
+            if (!isset($request->category_pid)) {
+
+                return response()->json(['status' => 'error', 'message' => 'No Category  Selected']);
+            }
             foreach ($request->subject as $subject):
                 $data = [
                     'school_pid' => getSchoolPid(),
