@@ -585,13 +585,13 @@ class StaffController extends Controller
                         'term_pid'=>activeTerm(),
                         'session_pid'=>activeSession(),
                     ];
-                    $data['teacher_pid']=$request->teacher_pid;
+                    $data['teacher_pid'] = $request->teacher_pid;
                 // 'arm_pid'=>'',
                     $message = 'The following class(es) has been assigned to {you} <br>';
                     // if(count($request->arm_pid)==1){
                     //     $msg = '';
                     // }
-                    $n=0;
+                    $n = 0;
                     foreach($request->arm_pid as $row){
                     $message .= ++$n.': '. ClassController::getClassArmNameByPid($row).'<br>';
                         $dupParams['arm_pid'] = $data['arm_pid'] = $row;
