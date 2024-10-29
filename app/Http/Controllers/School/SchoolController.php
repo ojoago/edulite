@@ -315,12 +315,16 @@ class SchoolController extends Controller
                 'school_code' => $request->school_code,
             ];
 
-            if(!$request->pid){
+            if(!isset($request->pid)){
                 $data['user_pid'] = getUserPid();
-                $data['school_handle'] = $this->schoolHandle();
+                if(!$data['school_handle'] = $this->schoolHandle()){
+                    return response()->json(['status' => 'error', 'message' => 'Contack']);
+                    $data['school_handle'] = public_id();
+
+                }
             }
             if ($request->school_logo) {
-                $name = $data['school_name'] . '-logo';
+                $name = 'EDLT '.$data['school_name'] . '-logo';
                 $data['school_logo'] = saveImg($request->file('school_logo'), name: $name, path: 'logo');
             }
             try {
@@ -458,14 +462,23 @@ class SchoolController extends Controller
     public function schoolHandle()
     {
         $id = $this->countSchool() + 1;
-        $id = strlen($id) == 1 ? '0' . $id : $id;
-        return strtoupper(date('yMd')) . $id;
+        if($count  = $this->countSchool()){
+            $id = strlen($count) == 1 ? '0' . $id : $count;
+            return strtoupper(date('yM')) . $id;
+        }
+        return false;
+        
     }
 
 
     public function countSchool()
     {
-        return School::where('school_handle', 'like', '%' . date('yM') . '%')->count('id');
+        try {
+            return School::where('school_handle', 'like', '%' . date('yM') . '%')->count('id');
+        } catch (\Throwable $e) {
+            logError($e->getMessage());
+            return false;
+        }
     }
 
     public static function getSchoolHandle()

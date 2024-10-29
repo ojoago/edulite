@@ -593,7 +593,7 @@ class StaffController extends Controller
                     // }
                     $n=0;
                     foreach($request->arm_pid as $row){
-                    $message .=++$n.': '. ClassController::getClassArmNameByPid($row).'<br>';
+                    $message .= ++$n.': '. ClassController::getClassArmNameByPid($row).'<br>';
                         $dupParams['arm_pid'] = $data['arm_pid'] = $row;
                         $result = StaffClass::updateOrCreate($dupParams,$data);
                         logError(['$result', $result]);

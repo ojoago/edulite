@@ -115,7 +115,7 @@
 </div>
     {{-- subject result  --}}
 
-        @include('school.student.result.termly-result.subject-table',['subResult'=>$subResult,'setting' =>$setting , 'terms' => $terms, 'grades' => $grades])
+        @include('school.student.result.termly-result.grouped-subject-table',['subResult'=>$subResult,'setting' =>$setting , 'terms' => $terms, 'grades' => $grades])
 
     {{-- subject result  --}}
 

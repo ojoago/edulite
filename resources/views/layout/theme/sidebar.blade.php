@@ -377,11 +377,13 @@
               <i class="bi bi-circle"></i><span>Link Student To Parent</span>
             </a>
           </li>
-          <li>
+
+          {{-- <li>
             <a class="pointer" data-bs-target="#assignArmToRepModal" data-bs-toggle="modal">
               <i class="bi bi-circle"></i><span>Class Rep</span>
             </a>
           </li>
+           --}}
           @if(getSchoolType() == 2 || getSchoolType() == 3)
           <li>
             <a class="pointer" data-bs-target="#assignHostelToPortalModal" data-bs-toggle="modal">

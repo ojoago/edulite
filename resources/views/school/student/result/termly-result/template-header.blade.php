@@ -51,7 +51,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('{{asset("/files/logo/".$school->school_logo)}}') no-repeat center center;
+            /* background: url('{{asset("/files/logo/".$school->school_logo)}}') no-repeat center center; */
             background-size: 50%;
             opacity: 0.2; /* Adjust the opacity as needed */
             z-index: -1;
@@ -64,11 +64,12 @@
             flex-basis: 25%;
         }
         .text-content{
-            flex-basis: 50%;
+            flex-basis: 75%;
             color: #000;
         }
         .school-name{
             font-weight: bold;
+            font-size: 48px !important;
         }
 
         #moto{

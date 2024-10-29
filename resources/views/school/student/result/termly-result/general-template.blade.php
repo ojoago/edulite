@@ -69,7 +69,6 @@
         $setting = json_decode(@$config->settings); 
     @endphp
 <div class="result-header">
-    
     <table border="1" cellpadding="pixels" class="table table-hover table-striped table-bordered examTable text-uppercase">
         <tr>
             <td colspan="3">name: {{$std->fullname}}</td>
@@ -93,7 +92,7 @@
             <td >session: {{$result->session}}</td>
             <td>class average</td>
             <td>{{number_format($result->class_average,1)}}</td>
-            <td>ATTENDANCE</td>
+            <td colspan="2" align="center">ATTENDANCE</td>
             
         </tr>
         <tr>
@@ -121,50 +120,11 @@
         </tr>
     </table>
 
-    <div class="f-row">
-        <div class="lf solid">
-            Name of Pupil: {{$std->fullname}}
-        </div>
-        {{-- <div class="rt solid">Gender: </div> --}}
-    </div>
-
-    <div class="f-row">
-
-        <div class="f1 solid">
-            Class: {{$result->arm}}
-        </div>
-        <div class="f2 solid">Term: {{$result->term}} </div>
-        <div class="f3 solid">Age: {{dateToAge($std->dob)}} </div>
-        {{--  --}}
-        
-    </div>
-    
-    <div class="s-row">
-        <div class="f1 solid">Next Term Begins:  {{formatDate($result->next_term)}}</div>
-        <div class="f2 solid">Gender: {{$std->gender}} </div>
-        <div class="f3 solid">Session: {{$result->session}} </div>
-        <div class="f4 solid">Pupil's Total: {{number_format($result->total,1)}} </div>
-
-    </div>
-    
-    <div class="f-row">
-        <div class="f1 solid">
-            Pupil's Average: {{number_format($result->average,1)}}
-        </div>
-        <div class="f2 solid">Class Average: {{number_format($result->class_average,1)}} </div>
-        <div class="f3 solid">
-             @if($result->average >= @$setting->pass_mark)
-                Promoted 
-            @else
-                Not Promoted 
-            @endif 
-        </div>
-    </div>
 
 </div>
     {{-- subject result  --}}
 
-        @include('school.student.result.termly-result.subject-table',['subResult'=>$subResult,'setting' =>$setting , 'terms' => $terms, 'grades' => $grades])
+        @include('school.student.result.termly-result.single-subject-table',['subResult'=>$subResult,'setting' =>$setting , 'terms' => $terms, 'grades' => $grades])
 
     {{-- subject result  --}}
 

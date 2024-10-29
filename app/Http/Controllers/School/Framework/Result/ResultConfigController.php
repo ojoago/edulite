@@ -41,7 +41,7 @@ class ResultConfigController extends Controller
                 $config = ResultConfig::where(['school_pid' => getSchoolPid() , 'category_pid' => $cat ])->first();
                 if($config){
                     $config->file_name = $temp;
-                   $result = $config->save();
+                    $result = $config->save();
                 }else{
                     $data = [
                         'sub_dir' => getSchoolCode(). '.' ,

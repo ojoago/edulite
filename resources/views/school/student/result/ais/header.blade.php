@@ -224,10 +224,10 @@
 <div class="result-title">
     @php
         $settings = null;
-        if($result_config->settings){
-            $settings = $result_config->settings ;
+        if(@$result_config->settings){
+            $settings = @$result_config->settings ;
         }
     @endphp
-    <h3 class="text-uppercase">{{$result_config->title ?? 'Continuous Assessment Report' }}</h3>
+    <h3 class="text-uppercase">{{@$result_config->title ?? 'Continuous Assessment Report' }}</h3>
 </div>
 
