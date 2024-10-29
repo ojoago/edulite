@@ -700,8 +700,8 @@ class StaffController extends Controller
                 'staff_pid'=> getSchoolUserPid(),
             ];
             $result = $this->assignClassArmSubjectToTeacher($data);
-            logError($data);
-            logError($result);
+            logError(['data',$data]);
+            logError(['re',$result]);
             if($result){
                 // GetClassSubjectAndName
                 $msg = 'The following class subject(s) has been assigned to {you} <br>';
