@@ -11,6 +11,7 @@ use App\Http\Controllers\Auths\AuthController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Staff\StaffController;
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
 class UploadStaffController extends Controller
 {
@@ -48,12 +49,20 @@ class UploadStaffController extends Controller
                                 DB::beginTransaction();
                                 $user = AuthController::createUser($data);
                                 // dd($user, $data);
+                                if(isset($row[4])){
+                                    $dob = $row[4];
+                                    $dob = ExcelDate::excelToDateTimeObject($dob);
+                                    $dob = $dob->format('Y-m-d'); // Format as needed
+                                }else{
+                                    $dob = null;
+                                }
+                               
                                 $detail = [
                                     'firstname' => $row[0],
                                     'lastname' => $row[1],
                                     'othername' => $row[2],
                                     'gender' => GENDER[(int) $row[9]],
-                                    'dob' => $row[4],
+                                    'dob' => $dob,
                                     'religion' => RELIGION[(int) $row[8]],
                                     'state' => null,
                                     'lga' => null,

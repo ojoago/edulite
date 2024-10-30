@@ -52,9 +52,14 @@ class UploadStudentController extends Controller
                 if ((($header === $this->header))) {
                     foreach ($data as $row) {
                         if (!empty($row[0]) && !empty($row[1])) {
-                            $dob = $row[4];
-                            $dob = ExcelDate::excelToDateTimeObject($dob);
-                            $dob = $dob->format('Y-m-d'); // Format as needed
+                            if (isset($row[4])) {
+                                $dob = $row[4];
+                                $dob = ExcelDate::excelToDateTimeObject($dob);
+                                $dob = $dob->format('Y-m-d'); // Format as needed
+                            } else {
+                                $dob = null;
+                            }
+                               
                             $username = $row[6] ?? '';
                             $email = $row[5] ?? '';
                             $gsm = $row[3] =='' ? false : AuthController::findGsm($row[3]);

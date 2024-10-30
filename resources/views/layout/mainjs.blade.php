@@ -238,6 +238,49 @@
         });
 
 
+        // assign class to teacher 
+        
+        $(document).on('click', '.assignClass', function() {
+            let pid = $(this).attr('pid')
+            $('#selectedClassTeacher').val(pid);
+            $('#assignClassArmToTeacherDirectModal').modal('show');
+        })
+        multiSelect2('.categorySelect22', 'assignClassArmToTeacherDirectModal', 'category', 'Select Category');
+        multiSelect2('.sessionSelect22', 'assignClassArmToTeacherDirectModal', 'session', 'Select Session');
+        multiSelect2('.termSelect22', 'assignClassArmToTeacherDirectModal', 'term', 'Select Term');
+        $('.categorySelect22').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('.classSelect22', 'assignClassArmToTeacherDirectModal', 'class', id, 'Select Class');
+        });
+        $('.classSelect22').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('.armSelect22', 'assignClassArmToTeacherDirectModal', 'class-arm', id, 'Select Class Arm');
+        });
+
+        // assign subject to teacher 
+        
+        $(document).on('click', '.assignSubject', function() {
+            let pid = $(this).attr('pid')
+            $('#selectedSubjectTeacher').val(pid);
+            $('#assignArmSubjectTeacherDirectModal').modal('show');
+        })
+       
+        // assign class subject to staff
+   
+        multiSelect2('#categorySelect22s', 'assignArmSubjectTeacherDirectModal', 'category', 'Select Category');
+        $('#categorySelect22s').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#classSelect22s', 'assignArmSubjectTeacherDirectModal', 'class', id, 'Select Class');
+        });
+        $('#classSelect22s').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#armSelect22s', 'assignArmSubjectTeacherDirectModal', 'class-arm', id, 'Select Class Arm');
+        });
+        $('#armSelect22s').on('change', function(e) {
+            var id = $(this).val();
+            multiSelect2Post('#subjectSelect22s', 'assignArmSubjectTeacherDirectModal', 'class-arm-subject', id, 'Select Class Subject');
+        });
+
 
         // link portal to hostel 
         // assigning portal to hostel is default to active term and session 
@@ -266,6 +309,8 @@
             $('#linkMyWardsPid').val(pid);
             $('#linkMyWardsModal').modal('show');
         })
+
+
         // link student to parent 
         $('#linkStudentParentDynamicBtn').click(function() {
             var route = "{{route('link.student.parent')}}";
@@ -378,15 +423,24 @@
             var route = "{{route('assign.class.arm.rep')}}";
             submitFormAjax('assignArmToRepForm', 'assignArmToRepBtn', route);
         });
-        // subject class arm subject teacher 
+        // subject class arm  teacher 
         $('#assignClassArmToTeacherBtn').click(function() {
             var route = "{{route('assign.staff.class')}}";
             submitFormAjax('assignClassArmToTeacherForm', 'assignClassArmToTeacherBtn', route);
+        });
+        $('#assignClassArmDirectToTeacherBtn').click(function() {
+            var route = "{{route('assign.staff.class')}}";
+            submitFormAjax('assignClassArmDirectToTeacherForm', 'assignClassArmDirectToTeacherBtn', route);
         });
         // subject class arm subject teacher 
         $('#assignArmSubjectTeacherBtn').click(function() {
             var route = "{{route('school.staff.subject')}}";
             submitFormAjax('assignArmSubjectTeacherForm', 'assignArmSubjectTeacherBtn', route);
+        });
+        // subject class arm subject teacher direct
+        $('#assignArmSubjectTeacherDirectBtn').click(function() {
+            var route = "{{route('school.staff.subject')}}";
+            submitFormAjax('assignArmSubjectTeacherDirectForm', 'assignArmSubjectTeacherDirectBtn', route);
         });
         // register parent 
         $('#createParentBtn').click(function() {
@@ -1266,6 +1320,7 @@
             $(idOrClass).val(pre).trigger('change')
         }    
     }
+
 
     function multiSelect2Post(idOrClass, modal, route, pid, plh, pre = null) {
         if (pid != null) {

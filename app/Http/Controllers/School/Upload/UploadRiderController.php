@@ -11,6 +11,7 @@ use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Users\UserDetailsController;
 use App\Http\Controllers\School\Rider\RiderController;
 use App\Models\School\Rider\SchoolRider;
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
 class UploadRiderController extends Controller
 {
@@ -48,12 +49,19 @@ class UploadRiderController extends Controller
                                 DB::beginTransaction(); 
                                 $user = AuthController::createUser($data);
                                 if ($user) {
+                                    if (isset($row[3])) {
+                                        $dob = $row[3];
+                                        $dob = ExcelDate::excelToDateTimeObject($dob);
+                                        $dob = $dob->format('Y-m-d'); // Format as needed
+                                    } else {
+                                        $dob = null;
+                                    }
                                     $userDetail = [
                                         'firstname' => $row[0],
                                         'lastname' => $row[1],
                                         'othername' => $row[2],
                                         'gender' => GENDER[(int) $row[8]],
-                                        'dob' => $row[3],
+                                        'dob' => $dob,
                                         'religion' => RELIGION[(int) $row[7]],
                                         'state' => null,
                                         'lga' => null,

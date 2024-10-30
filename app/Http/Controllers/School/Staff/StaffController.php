@@ -568,8 +568,8 @@ class StaffController extends Controller
             // 'term_pid'=>'required',
             // 'session_pid'=>'required',
             'teacher_pid'=>'required',
-            'category_pid'=>'required',
-            'class_pid'=>'required',           
+            // 'category_pid'=>'required',
+            // 'class_pid'=>'required',           
             ],[
                 'arm_pid.required'=>'Select at least one class Arm from the list',
                 // 'term_pid.required'=>'Select Term from the list',

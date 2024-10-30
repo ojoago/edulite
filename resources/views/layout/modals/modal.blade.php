@@ -16,24 +16,14 @@
                             </select>
                             <p class="text-danger category_pid_error"></p>
                         </div>
-                        <!-- <div class="col-md-6">
-                            <label for="session_pid">Session</label>
-                            <select name="session_pid" id="sessionSelect2s" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
-                            </select>
-                            <p class="text-danger session_pid_error"></p>
-                        </div> -->
+                       
                         <div class="col-md-6">
                             <label for="class_pid">Class</label>
                             <select name="class_pid" id="classSelect2s" placeholder="select" class="classSelect2 form-control form-control-sm" style="width: 100%;">
                             </select>
                             <p class="text-danger class_pid_error"></p>
                         </div>
-                        <!-- <div class="col-md-6">
-                            <label for="term_pid">Term</label>
-                            <select name="term_pid" id="termSelect2s" placeholder="select" class="termSelect2 form-control form-control-sm" style="width: 100%;">
-                            </select>
-                            <p class="text-danger term_pid_error"></p>
-                        </div> -->
+                       
                     </div>
                     <!-- no need to select class cos subject already belong to class  -->
                     <label for="arm_pid">Arm</label>
@@ -57,6 +47,57 @@
         </div>
     </div>
 </div>
+
+<!-- create class subject to teacher modal  -->
+<div class="modal fade" id="assignArmSubjectTeacherDirectModal" tabindex="-1" data-bs-backdrop="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign Class Arm Subject to Teacher</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="assignArmSubjectTeacherDirectForm">
+                    @csrf
+                    selectedSubjectTeacher
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="category_pid">Category</label>
+                            <select name="category_pid" id="categorySelect22s" placeholder="select" class="categorySelect22s form-control form-control-sm" style="width: 100%;">
+                            </select>
+                            <p class="text-danger category_pid_error"></p>
+                        </div>
+                       
+                        <div class="col-md-6">
+                            <label for="class_pid">Class</label>
+                            <select name="class_pid" id="classSelect22s" placeholder="select" class="classSelect22s form-control form-control-sm" style="width: 100%;">
+                            </select>
+                            <p class="text-danger class_pid_error"></p>
+                        </div>
+                       
+                    </div>
+                    <!-- no need to select class cos subject already belong to class  -->
+                    <label for="arm_pid">Arm</label>
+                    <select name="arm_pid" id="armSelect22s" placeholder="select" class="armSelect22s form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger arm_pid_error"></p>
+                    <label for="subject_pid">Subject</label>
+                    <select name="subject_pid[]" id="subjectSelect22s" placeholder="select" multiple="multiple" class="subjectSelect22s form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger subject_pid_error"></p>
+                    <input type="hidden" name="teacher_pid" id="selectedSubjectTeacher">
+
+                    <p class="text-danger teacher_pid_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="assignArmSubjectTeacherDirectBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- assign class arm rep modal  -->
 <div class="modal fade" id="assignArmToRepModal" tabindex="-1" data-bs-backdrop="false">
@@ -104,6 +145,7 @@
         </div>
     </div>
 </div>
+
 <!-- assign class to class arm teacher modal  -->
 <div class="modal fade" id="assignClassArmTeacherModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
@@ -115,14 +157,7 @@
             <div class="modal-body">
                 <form action="" method="post" class="" id="assignClassArmToTeacherForm">
                     @csrf
-                    <!-- <label for="session_pid">Session</label>
-                    <select name="session_pid" id="sessionSelect24t" placeholder="select" class="sessionSelect2 form-control form-control-sm" style="width: 100%;">
-                    </select>
-                    <p class="text-danger session_pid_error"></p>
-                    <label for="session_pid">Term</label>
-                    <select name="term_pid" id="termSelect2" placeholder="select" class="termSelect2 form-control form-control-sm" style="width: 100%;">
-                    </select>
-                    <p class="text-danger term_pid_error"></p> -->
+                  
                     <label for="category_pid">Category</label>
                     <select name="category_pid" id="categorySelect2" placeholder="select" class="categorySelect2 form-control form-control-sm" style="width: 100%;">
                     </select>
@@ -148,6 +183,46 @@
         </div>
     </div>
 </div>
+
+<!-- assign class to class arm teacher modal  -->
+<div class="modal fade" id="assignClassArmToTeacherDirectModal" tabindex="-1" data-bs-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign Class Arm To Teacher</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post" class="" id="assignClassArmDirectToTeacherForm">
+                    @csrf
+                   
+                    <label for="category_pid">Category</label>
+                    <select name="category_pid" id="categorySelect22" placeholder="select" class="categorySelect22 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger category_pid_error"></p>
+                    <label for="session_pid">Class</label>
+                    <select name="class_pid" id="classSelect22" placeholder="select" class="classSelect22 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger class_pid_error"></p>
+                    <label for="arm_pid">Arm</label>
+                    <select name="arm_pid[]" id="armSelect22" multiple="multiple" placeholder="select" class="armSelect22 form-control form-control-sm" style="width: 100%;">
+                    </select>
+                    <p class="text-danger arm_pid_error"></p>
+                   
+                    <input type="hidden" name="teacher_pid" id="selectedClassTeacher">
+                    {{-- <select name="teacher_pid" id="teacherSelect2" style="width: 100%;" class="teacherSelect2 form-control form-control-sm">
+                    </select> --}}
+                    <p class="text-danger teacher_pid_error"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="assignClassArmDirectToTeacherBtn">Submit</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- link students to parent modal  -->
 <div class="modal fade" id="awardStudentModal" tabindex="-1" data-bs-backdrop="false">

@@ -3,6 +3,8 @@
         <i class="bi bi-tools"></i>
     </button>
     <ul class="dropdown-menu">
+        <li class="assignClass pointer" pid="{{$data->pid}}" ><a class="dropdown-item" >Assign Class</a></li>
+        <li class="assignSubject pointer" pid="{{$data->pid}}" ><a class="dropdown-item" >Assign Subject</a></li>
         <li><a class="dropdown-item" href="{{route('staff.profile',['id'=>base64Encode($data->pid)])}}">Profile</a></li>
         <li>
             <a class="dropdown-item pointer" href="#">
