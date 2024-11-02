@@ -170,73 +170,199 @@ class StudentTermlyResultController extends Controller
             // StudentScoreParam::join('student_score_sheets','score_param_pid','subject_score_params.pid')->where('class_param_pid',$param)->get()->dd();
             if (!$classParam) {
             } else {
+                // load template path 
+                $result_config = DB::table('result_configs as r')->join('classes as c', 'c.category_pid', 'r.category_pid')
+                    ->join('class_arms as a', 'a.class_pid', 'c.pid')
+                    ->join('student_class_result_params as p', 'p.arm_pid', 'a.pid')->where('p.pid', $param)->select('r.*')->first();
+
                 $terms = DB::table('student_class_result_params as p')->join('student_class_results as r', 'r.class_param_pid','p.pid')->where(['session_pid' => $classParam->session_pid, 'r.student_pid' => $spid])->orderByDesc('p.id')->get(['p.pid', 'term', 'session_pid']);
                 $scoreSettings = ScoreSettingsController::loadClassScoreSettings($param);
                 $std = StudentController::studentName($spid);
                 // query subject result 
-                $subdtl = DB::table('student_subject_results as sr')
-                    // this join bring subject teahcer name and subject name
-                    ->join('subject_score_params AS p', function($q){
-                        $q->on('p.class_param_pid', 'sr.class_param_pid')
-                            ->on('p.subject_type', 'sr.subject_type');
-                    })
-                    ->join('subject_totals AS st', 'p.pid', 'st.subject_param_pid')
-                    ->where([
-                        'st.seated' => 1,
-                        'sr.class_param_pid' => $param,
-                        'sr.school_pid' => getSchoolPid()
-                    ])->select(DB::raw('sr.subject_type,p.subject_type_name as subject,MIN(sr.total) AS min, 
+                // query subject result base on subject type: 
+                    // if subject type equal 1 then load take average of individual subject from student_subject_results table
+                    // if subject type equal 2 then load take average of individual subject from subject_total
+                    // if subject type equal 2 then load take average of individual subject from subject_total and display them under the subject type 
+                if($result_config->subject_type == 3){
+                    $subdtl = DB::table('student_subject_results as sr')
+                        // this join bring subject teahcer name and subject name
+                        ->join('subject_score_params AS p', function ($q) {
+                            $q->on('p.class_param_pid', 'sr.class_param_pid')
+                                ->on('p.subject_type', 'sr.subject_type');
+                        })
+                        ->join('subject_totals AS st', 'p.pid', 'st.subject_param_pid')
+                        ->where([
+                            'st.seated' => 1,
+                            'sr.class_param_pid' => $param,
+                            'sr.school_pid' => getSchoolPid()
+                        ])->select(DB::raw('sr.subject_type,p.subject_type_name as subject,MIN(sr.total) AS min, 
                                         MAX(sr.total) AS max, AVG(sr.total) AS avg, SUM(sr.total) AS subTotal,p.subject_teacher_name')) // subTotal is the sum of all student score for eacher subject 
-                    ->groupBy('sr.subject_type')
-                    ->groupBy('p.subject_teacher_name')
-                    ->groupBy('p.subject_type_name');//->get()->dd();
-                $subRank = DB::table('student_subject_results as sr')->joinSub($subdtl, 'd', function ($d) {
-                    $d->on('sr.subject_type', '=', 'd.subject_type');
-                })
-                    ->where([
-                        'sr.class_param_pid' => $param,
-                        'sr.school_pid' => getSchoolPid() ,
-                        // 'sr.student_pid' => $spid
-                    ])
-                    ->select(DB::raw('total, sr.subject_type AS type,sr.student_pid,min,max,avg,subTotal,subject,
+                        ->groupBy('sr.subject_type')
+                        ->groupBy('p.subject_teacher_name')
+                        ->groupBy('p.subject_type_name'); //->get()->dd();
+                    $subRank = DB::table('student_subject_results as sr')->joinSub($subdtl, 'd', function ($d) {
+                        $d->on('sr.subject_type', '=', 'd.subject_type');
+                    })
+                        ->where([
+                            'sr.class_param_pid' => $param,
+                            'sr.school_pid' => getSchoolPid(),
+                            // 'sr.student_pid' => $spid
+                        ])
+                        ->select(DB::raw('total, sr.subject_type AS type,sr.student_pid,min,max,avg,subTotal,subject,
                                     RANK() OVER (PARTITION BY sr.subject_type ORDER BY total DESC) AS position,d.subject_teacher_name
                                     '))
-                    ->groupBy('sr.subject_type')         ->groupBy('sr.student_pid')
-                    ->groupBy('d.subject')                    ->groupBy('d.min')
-                    ->groupBy('d.max')                    ->groupBy('d.avg')
-                    ->groupBy('d.subTotal')                    ->groupBy('d.subject_teacher_name')
-                    ->groupBy('total');//->get()->dd();
-                // $select = DB::table('student_subject_results as sr');
-                // $ca = DB::table('subject_score_params as ssp')
-                //             ->join('student_score_sheets as sss','score_param_pid','ssp.pid')
-                //             ->joinSub($strSub,'sb',function($sb){
-                //                 $sb->on('ssp.subject_type','=','sb.subject_type');
-                //             })
-                //             ->select(DB::raw("ca_type_pid,sb.subject_type"))
-                //             ->where(['class_param_pid'=> $param,'ssp.school_pid'=>getSchoolPid()])
-                //             ->groupBy('ca_type_pid');//->get()->dd();//->toArray();
-                // $value = DB::table('subject_score_params as ssp')
-                //             ->join('student_score_sheets as sss','score_param_pid','ssp.pid')
-                //             ->joinSub($ca,'ca',function($sub){
-                //                 $sub->on('ssp.subject_type','=','sb.subject_type');
-                //             })
-                //             ->select(DB::raw("MAX(CASE())"))
-                //             ->where(['class_param_pid'=> $param,'ssp.school_pid'=>getSchoolPid()])
-                //             ->groupBy('ca_type_pid')->get()->dd();
-                
-                $subResult = DB::table('student_subject_results as sr')
-                    ->joinSub($subRank, 'sub', function ($sub) {
-                        $sub->on('sr.subject_type', '=', 'sub.type');
-                        $sub->on('sr.student_pid', '=', 'sub.student_pid');
+                        ->groupBy('sr.subject_type')->groupBy('sr.student_pid')
+                        ->groupBy('d.subject')->groupBy('d.min')
+                        ->groupBy('d.max')->groupBy('d.avg')
+                        ->groupBy('d.subTotal')->groupBy('d.subject_teacher_name')
+                        ->groupBy('total'); //->get()->dd();
+
+                    $subResult = DB::table('student_subject_results as sr')
+                        ->joinSub($subRank, 'sub', function ($sub) {
+                            $sub->on('sr.subject_type', '=', 'sub.type');
+                            $sub->on('sr.student_pid', '=', 'sub.student_pid');
+                        })
+                        ->where([
+                            'sr.class_param_pid' => $param,
+                            'sr.school_pid' => getSchoolPid(),
+                            'sub.student_pid' => $spid,
+                        ])
+                        ->select('sub.*', 'sr.class_param_pid', 'sr.grade', 'sr.title')
+                        // ->groupBy('sr.subject_type')
+                        ->get();//->dd();
+
+                }
+                elseif($result_config->subject_type == 2){
+                    $subdtl = DB::table('student_subject_results as sr')
+                        // this join bring subject teahcer name and subject name
+                        ->join('subject_score_params AS p', function ($q) {
+                            $q->on('p.class_param_pid', 'sr.class_param_pid')
+                                ->on('p.subject_type', 'sr.subject_type');
+                        })
+                        ->join('subject_totals AS st', 'p.pid', 'st.subject_param_pid')
+                        ->where([
+                            'st.seated' => 1,
+                            'sr.class_param_pid' => $param,
+                            'sr.school_pid' => getSchoolPid()
+                        ])->select(DB::raw('sr.subject_type,p.subject_type_name as subject,MIN(sr.total) AS min, 
+                                        MAX(sr.total) AS max, AVG(sr.total) AS avg, SUM(sr.total) AS subTotal,p.subject_teacher_name')) // subTotal is the sum of all student score for eacher subject 
+                        ->groupBy('sr.subject_type')
+                        ->groupBy('p.subject_teacher_name')
+                        ->groupBy('p.subject_type_name'); //->get()->dd();
+                    $subRank = DB::table('student_subject_results as sr')->joinSub($subdtl, 'd', function ($d) {
+                        $d->on('sr.subject_type', '=', 'd.subject_type');
                     })
-                    ->where([
-                        'sr.class_param_pid' => $param,
-                        'sr.school_pid' => getSchoolPid(),
-                        'sub.student_pid' => $spid,
-                    ])
-                    ->select('sub.*', 'sr.class_param_pid','sr.grade', 'sr.title')
-                    // ->groupBy('sr.subject_type')
-                    ->get();//->dd();
+                        ->where([
+                            'sr.class_param_pid' => $param,
+                            'sr.school_pid' => getSchoolPid(),
+                            // 'sr.student_pid' => $spid
+                        ])
+                        ->select(DB::raw('total, sr.subject_type AS type,sr.student_pid,min,max,avg,subTotal,subject,
+                                    RANK() OVER (PARTITION BY sr.subject_type ORDER BY total DESC) AS position,d.subject_teacher_name
+                                    '))
+                        ->groupBy('sr.subject_type')->groupBy('sr.student_pid')
+                        ->groupBy('d.subject')->groupBy('d.min')
+                        ->groupBy('d.max')->groupBy('d.avg')
+                        ->groupBy('d.subTotal')->groupBy('d.subject_teacher_name')
+                        ->groupBy('total'); //->get()->dd();
+                    // $select = DB::table('student_subject_results as sr');
+                    // $ca = DB::table('subject_score_params as ssp')
+                    //             ->join('student_score_sheets as sss','score_param_pid','ssp.pid')
+                    //             ->joinSub($strSub,'sb',function($sb){
+                    //                 $sb->on('ssp.subject_type','=','sb.subject_type');
+                    //             })
+                    //             ->select(DB::raw("ca_type_pid,sb.subject_type"))
+                    //             ->where(['class_param_pid'=> $param,'ssp.school_pid'=>getSchoolPid()])
+                    //             ->groupBy('ca_type_pid');//->get()->dd();//->toArray();
+                    // $value = DB::table('subject_score_params as ssp')
+                    //             ->join('student_score_sheets as sss','score_param_pid','ssp.pid')
+                    //             ->joinSub($ca,'ca',function($sub){
+                    //                 $sub->on('ssp.subject_type','=','sb.subject_type');
+                    //             })
+                    //             ->select(DB::raw("MAX(CASE())"))
+                    //             ->where(['class_param_pid'=> $param,'ssp.school_pid'=>getSchoolPid()])
+                    //             ->groupBy('ca_type_pid')->get()->dd();
+
+                    $subResult = DB::table('student_subject_results as sr')
+                        ->joinSub($subRank, 'sub', function ($sub) {
+                            $sub->on('sr.subject_type', '=', 'sub.type');
+                            $sub->on('sr.student_pid', '=', 'sub.student_pid');
+                        })
+                        ->where([
+                            'sr.class_param_pid' => $param,
+                            'sr.school_pid' => getSchoolPid(),
+                            'sub.student_pid' => $spid,
+                        ])
+                        ->select('sub.*', 'sr.class_param_pid', 'sr.grade', 'sr.title')
+                        // ->groupBy('sr.subject_type')
+                        ->get();//->dd();
+
+                }else{
+                    $subdtl = DB::table('student_subject_results as sr')
+                        // this join bring subject teahcer name and subject name
+                        ->join('subject_score_params AS p', function ($q) {
+                            $q->on('p.class_param_pid', 'sr.class_param_pid')
+                                ->on('p.subject_type', 'sr.subject_type');
+                        })
+                        ->join('subject_totals AS st', 'p.pid', 'st.subject_param_pid')
+                        ->where([
+                            'st.seated' => 1,
+                            'sr.class_param_pid' => $param,
+                            'sr.school_pid' => getSchoolPid()
+                        ])->select(DB::raw('sr.subject_type,p.subject_type_name as subject,MIN(sr.total) AS min, 
+                                        MAX(sr.total) AS max, AVG(sr.total) AS avg, SUM(sr.total) AS subTotal,p.subject_teacher_name')) // subTotal is the sum of all student score for eacher subject 
+                        ->groupBy('sr.subject_type')
+                        ->groupBy('p.subject_teacher_name')
+                        ->groupBy('p.subject_type_name'); //->get()->dd();
+                    $subRank = DB::table('student_subject_results as sr')->joinSub($subdtl, 'd', function ($d) {
+                        $d->on('sr.subject_type', '=', 'd.subject_type');
+                    })
+                        ->where([
+                            'sr.class_param_pid' => $param,
+                            'sr.school_pid' => getSchoolPid(),
+                            // 'sr.student_pid' => $spid
+                        ])
+                        ->select(DB::raw('total, sr.subject_type AS type,sr.student_pid,min,max,avg,subTotal,subject,
+                                    RANK() OVER (PARTITION BY sr.subject_type ORDER BY total DESC) AS position,d.subject_teacher_name
+                                    '))
+                        ->groupBy('sr.subject_type')->groupBy('sr.student_pid')
+                        ->groupBy('d.subject')->groupBy('d.min')
+                        ->groupBy('d.max')->groupBy('d.avg')
+                        ->groupBy('d.subTotal')->groupBy('d.subject_teacher_name')
+                        ->groupBy('total'); //->get()->dd();
+                    // $select = DB::table('student_subject_results as sr');
+                    // $ca = DB::table('subject_score_params as ssp')
+                    //             ->join('student_score_sheets as sss','score_param_pid','ssp.pid')
+                    //             ->joinSub($strSub,'sb',function($sb){
+                    //                 $sb->on('ssp.subject_type','=','sb.subject_type');
+                    //             })
+                    //             ->select(DB::raw("ca_type_pid,sb.subject_type"))
+                    //             ->where(['class_param_pid'=> $param,'ssp.school_pid'=>getSchoolPid()])
+                    //             ->groupBy('ca_type_pid');//->get()->dd();//->toArray();
+                    // $value = DB::table('subject_score_params as ssp')
+                    //             ->join('student_score_sheets as sss','score_param_pid','ssp.pid')
+                    //             ->joinSub($ca,'ca',function($sub){
+                    //                 $sub->on('ssp.subject_type','=','sb.subject_type');
+                    //             })
+                    //             ->select(DB::raw("MAX(CASE())"))
+                    //             ->where(['class_param_pid'=> $param,'ssp.school_pid'=>getSchoolPid()])
+                    //             ->groupBy('ca_type_pid')->get()->dd();
+
+                    $subResult = DB::table('student_subject_results as sr')
+                        ->joinSub($subRank, 'sub', function ($sub) {
+                            $sub->on('sr.subject_type', '=', 'sub.type');
+                            $sub->on('sr.student_pid', '=', 'sub.student_pid');
+                        })
+                        ->where([
+                            'sr.class_param_pid' => $param,
+                            'sr.school_pid' => getSchoolPid(),
+                            'sub.student_pid' => $spid,
+                        ])
+                        ->select('sub.*', 'sr.class_param_pid', 'sr.grade', 'sr.title')
+                        // ->groupBy('sr.subject_type')
+                        ->get();//->dd();
+
+                }
 
 
                 // query class result 
@@ -377,17 +503,16 @@ class StudentTermlyResultController extends Controller
                 // $grades = DB::table('grade_keys AS g')->where('class_param_pid', $param)->get([]);
             }
 
+            // default template 
+
             $basePath = 'school.student.result.';
             $path = 'termly-result.student-report-card';
             $path = 'termly-result.general-template';
-            // load template path 
-            $result_config = DB::table('result_configs as r')->join('classes as c', 'c.category_pid', 'r.category_pid')
-                                            ->join('class_arms as a','a.class_pid','c.pid')
-                                            ->join('student_class_result_params as p','p.arm_pid','a.pid')->where('p.pid',$param)->select('r.*')->first();
-            if($result_config){
-                $basePath = $result_config->base_dir;
-                $path = '.' . $result_config->sub_dir . '.' . $result_config->file_name;
-            }
+            
+            // if($result_config){
+            //     $basePath = $result_config->base_dir;
+            //     $path = '.' . $result_config->sub_dir . '.' . $result_config->file_name;
+            // }
             $cache = [
                 'path' => $basePath . $path,  'subResult' => $subResult, 'std' =>$std , 'scoreSettings' => $scoreSettings , 'param' => $param , 
                 'psycho' => $psycho, 'result' => $result , 'grades' => $grades , 'school' => $school , 'terms' => $terms, 'result_config' => $result_config

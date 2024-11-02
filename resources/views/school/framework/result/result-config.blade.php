@@ -160,6 +160,15 @@
                                                             <label for="">Subject Teacher Name</label>
                                                             <input type="checkbox" name="subject_teacher" value="1" {{@$setting->subject_teacher == 1 ? 'checked' : ''}}>
                                                         </div>
+                                                     
+                                                        <div class="form-group p-4">
+                                                            <label for="">Subject Listing Type</label> <br>
+                                                            <input type="radio" name="subject_type" value="1" class="mb-2" {{$item->subject_type == '1'? 'checked' : ''}}> Grouped Subject <br>
+                                                            
+                                                            <input type="radio" name="subject_type" value="2"  class="mb-2" {{$item->subject_type == '2'? 'checked' : ''}}> Individual <br>
+                                                            <input type="radio" name="subject_type" value="3"  class="mb-2" {{$item->subject_type == '3'? 'checked' : ''}}> Individual with Group as Heading <br>
+
+                                                        </div>
                                                         <div class="form-group">
                                                             <label for="">Display Chart</label>
                                                             <input type="checkbox" name="show_chart" value="1" {{@$setting->show_chart == 1 ? 'checked' : ''}}>

@@ -91,10 +91,11 @@ class ResultConfigController extends Controller
                 $data = [
                     'school_pid' => getSchoolPid() ,
                     'category_pid' => $request->category ,
-                    'title' => $request->title ,
-                    'student_name' => $request->student_name ,
-                    'head_teacher' => $request->head_teacher ,
-                    'class_teacher' => $request->class_teacher ,
+                    'title' => strtoupper($request->title) ,
+                    'subject_type' => strtoupper($request->subject_type) ,
+                    'student_name' => strtoupper($request->student_name) ,
+                    'head_teacher' => strtoupper($request->head_teacher) ,
+                    'class_teacher' => strtoupper($request->class_teacher) ,
                     'settings' => json_encode($config)
                 ];
 
